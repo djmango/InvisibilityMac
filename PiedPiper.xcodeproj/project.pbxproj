@@ -12,6 +12,7 @@
 		4D6B6D342B0B9D93002E1FD3 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B6D332B0B9D93002E1FD3 /* Item.swift */; };
 		4D6B6D362B0B9D94002E1FD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B6D352B0B9D94002E1FD3 /* Assets.xcassets */; };
 		4D6B6D392B0B9D94002E1FD3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B6D382B0B9D94002E1FD3 /* Preview Assets.xcassets */; };
+		4D6B6D412B0ECC54002E1FD3 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B6D402B0ECC54002E1FD3 /* ChatView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,8 @@
 		4D6B6D352B0B9D94002E1FD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4D6B6D382B0B9D94002E1FD3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4D6B6D3A2B0B9D94002E1FD3 /* PiedPiper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PiedPiper.entitlements; sourceTree = "<group>"; };
+		4D6B6D402B0ECC54002E1FD3 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		4D6B6D422B0ECF15002E1FD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +57,10 @@
 		4D6B6D2E2B0B9D93002E1FD3 /* PiedPiper */ = {
 			isa = PBXGroup;
 			children = (
+				4D6B6D422B0ECF15002E1FD3 /* Info.plist */,
 				4D6B6D2F2B0B9D93002E1FD3 /* PiedPiperApp.swift */,
 				4D6B6D312B0B9D93002E1FD3 /* ContentView.swift */,
+				4D6B6D402B0ECC54002E1FD3 /* ChatView.swift */,
 				4D6B6D332B0B9D93002E1FD3 /* Item.swift */,
 				4D6B6D352B0B9D94002E1FD3 /* Assets.xcassets */,
 				4D6B6D3A2B0B9D94002E1FD3 /* PiedPiper.entitlements */,
@@ -142,6 +147,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D6B6D412B0ECC54002E1FD3 /* ChatView.swift in Sources */,
 				4D6B6D322B0B9D93002E1FD3 /* ContentView.swift in Sources */,
 				4D6B6D342B0B9D93002E1FD3 /* Item.swift in Sources */,
 				4D6B6D302B0B9D93002E1FD3 /* PiedPiperApp.swift in Sources */,
@@ -281,6 +287,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"PiedPiper/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PiedPiper/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -307,6 +314,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"PiedPiper/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PiedPiper/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
