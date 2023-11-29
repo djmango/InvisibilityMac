@@ -7,112 +7,262 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4D6B6D302B0B9D93002E1FD3 /* PiedPiperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B6D2F2B0B9D93002E1FD3 /* PiedPiperApp.swift */; };
-		4D6B6D322B0B9D93002E1FD3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B6D312B0B9D93002E1FD3 /* ContentView.swift */; };
-		4D6B6D342B0B9D93002E1FD3 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B6D332B0B9D93002E1FD3 /* Item.swift */; };
-		4D6B6D362B0B9D94002E1FD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B6D352B0B9D94002E1FD3 /* Assets.xcassets */; };
-		4D6B6D392B0B9D94002E1FD3 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D6B6D382B0B9D94002E1FD3 /* Preview Assets.xcassets */; };
-		4D6B6D412B0ECC54002E1FD3 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6B6D402B0ECC54002E1FD3 /* ChatView.swift */; };
+		4DE673552B17F46B00A5F9AE /* PromptEditorExpandedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673272B17F35700A5F9AE /* PromptEditorExpandedView.swift */; };
+		4DE673562B17F46B00A5F9AE /* TextError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673292B17F35700A5F9AE /* TextError.swift */; };
+		4DE673572B17F46B00A5F9AE /* ModelContext+SaveChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6731E2B17F35700A5F9AE /* ModelContext+SaveChanges.swift */; };
+		4DE673582B17F46B00A5F9AE /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6730D2B17F35700A5F9AE /* UpdaterViewModel.swift */; };
+		4DE673592B17F46B00A5F9AE /* OllamaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6731A2B17F35700A5F9AE /* OllamaModel.swift */; };
+		4DE6735A2B17F46B00A5F9AE /* ChatSidebarListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673242B17F35700A5F9AE /* ChatSidebarListView.swift */; };
+		4DE6735B2B17F46B00A5F9AE /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6732C2B17F35700A5F9AE /* MessageView.swift */; };
+		4DE6735C2B17F46B00A5F9AE /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673252B17F35700A5F9AE /* AppView.swift */; };
+		4DE6735D2B17F46B00A5F9AE /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6730C2B17F35700A5F9AE /* MessageViewModel.swift */; };
+		4DE6735E2B17F46B00A5F9AE /* OllamaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6730E2B17F35700A5F9AE /* OllamaViewModel.swift */; };
+		4DE6735F2B17F46B00A5F9AE /* AppMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673162B17F35700A5F9AE /* AppMessages.swift */; };
+		4DE673602B17F46B00A5F9AE /* RenameChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673212B17F35700A5F9AE /* RenameChatView.swift */; };
+		4DE673612B17F46B00A5F9AE /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673182B17F35700A5F9AE /* Chat.swift */; };
+		4DE673622B17F46B00A5F9AE /* ChatContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673222B17F35700A5F9AE /* ChatContextMenu.swift */; };
+		4DE673632B17F46B00A5F9AE /* OllamacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673102B17F35700A5F9AE /* OllamacApp.swift */; };
+		4DE673642B17F46B00A5F9AE /* PromptEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673282B17F35700A5F9AE /* PromptEditor.swift */; };
+		4DE673652B17F46B00A5F9AE /* AddChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673232B17F35700A5F9AE /* AddChatView.swift */; };
+		4DE673662B17F46B00A5F9AE /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6730A2B17F35700A5F9AE /* ChatViewModel.swift */; };
+		4DE673672B17F46B00A5F9AE /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE673192B17F35700A5F9AE /* Message.swift */; };
+		4DE673682B17F46B00A5F9AE /* CommandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6730B2B17F35700A5F9AE /* CommandViewModel.swift */; };
+		4DE673692B17F46B00A5F9AE /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE6732B2B17F35700A5F9AE /* MessageListItemView.swift */; };
+		4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673502B17F46B00A5F9AE /* Sparkle */; };
+		4DE6736C2B17F46B00A5F9AE /* OptionalKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673462B17F46B00A5F9AE /* OptionalKit */; };
+		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
+		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
+		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
+		4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */; };
+		4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673522B17F46B00A5F9AE /* OllamaKit */; };
+		4DE673732B17F46B00A5F9AE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4DE673142B17F35700A5F9AE /* Info.plist */; };
+		4DE673742B17F46B00A5F9AE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DE6731C2B17F35700A5F9AE /* Preview Assets.xcassets */; };
+		4DE673752B17F46B00A5F9AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DE673132B17F35700A5F9AE /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		4D6B6D2C2B0B9D93002E1FD3 /* PiedPiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PiedPiper.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		4D6B6D2F2B0B9D93002E1FD3 /* PiedPiperApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiedPiperApp.swift; sourceTree = "<group>"; };
-		4D6B6D312B0B9D93002E1FD3 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		4D6B6D332B0B9D93002E1FD3 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
-		4D6B6D352B0B9D94002E1FD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4D6B6D382B0B9D94002E1FD3 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		4D6B6D3A2B0B9D94002E1FD3 /* PiedPiper.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PiedPiper.entitlements; sourceTree = "<group>"; };
-		4D6B6D402B0ECC54002E1FD3 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		4D6B6D422B0ECF15002E1FD3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4DE6730A2B17F35700A5F9AE /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
+		4DE6730B2B17F35700A5F9AE /* CommandViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandViewModel.swift; sourceTree = "<group>"; };
+		4DE6730C2B17F35700A5F9AE /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
+		4DE6730D2B17F35700A5F9AE /* UpdaterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
+		4DE6730E2B17F35700A5F9AE /* OllamaViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OllamaViewModel.swift; sourceTree = "<group>"; };
+		4DE673102B17F35700A5F9AE /* OllamacApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OllamacApp.swift; sourceTree = "<group>"; };
+		4DE673132B17F35700A5F9AE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4DE673142B17F35700A5F9AE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4DE673162B17F35700A5F9AE /* AppMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppMessages.swift; sourceTree = "<group>"; };
+		4DE673182B17F35700A5F9AE /* Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		4DE673192B17F35700A5F9AE /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		4DE6731A2B17F35700A5F9AE /* OllamaModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OllamaModel.swift; sourceTree = "<group>"; };
+		4DE6731C2B17F35700A5F9AE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		4DE6731E2B17F35700A5F9AE /* ModelContext+SaveChanges.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ModelContext+SaveChanges.swift"; sourceTree = "<group>"; };
+		4DE673212B17F35700A5F9AE /* RenameChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenameChatView.swift; sourceTree = "<group>"; };
+		4DE673222B17F35700A5F9AE /* ChatContextMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatContextMenu.swift; sourceTree = "<group>"; };
+		4DE673232B17F35700A5F9AE /* AddChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddChatView.swift; sourceTree = "<group>"; };
+		4DE673242B17F35700A5F9AE /* ChatSidebarListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatSidebarListView.swift; sourceTree = "<group>"; };
+		4DE673252B17F35700A5F9AE /* AppView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
+		4DE673272B17F35700A5F9AE /* PromptEditorExpandedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromptEditorExpandedView.swift; sourceTree = "<group>"; };
+		4DE673282B17F35700A5F9AE /* PromptEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromptEditor.swift; sourceTree = "<group>"; };
+		4DE673292B17F35700A5F9AE /* TextError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextError.swift; sourceTree = "<group>"; };
+		4DE6732B2B17F35700A5F9AE /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
+		4DE6732C2B17F35700A5F9AE /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		4DE673792B17F46B00A5F9AE /* PiedPiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PiedPiper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4DE6737A2B17F5ED00A5F9AE /* PiedPiper.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = PiedPiper.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		4D6B6D292B0B9D93002E1FD3 /* Frameworks */ = {
+		4DE6736A2B17F46B00A5F9AE /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */,
+				4DE6736C2B17F46B00A5F9AE /* OptionalKit in Frameworks */,
+				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
+				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
+				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
+				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
+				4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4D6B6D232B0B9D93002E1FD3 = {
+		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
-				4D6B6D2E2B0B9D93002E1FD3 /* PiedPiper */,
-				4D6B6D2D2B0B9D93002E1FD3 /* Products */,
+				4DE673082B17F35700A5F9AE /* PiedPiper */,
+				0A4D35822AF541D900846890 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		4D6B6D2D2B0B9D93002E1FD3 /* Products */ = {
+		0A4D35822AF541D900846890 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4D6B6D2C2B0B9D93002E1FD3 /* PiedPiper.app */,
+				4DE673792B17F46B00A5F9AE /* PiedPiper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4D6B6D2E2B0B9D93002E1FD3 /* PiedPiper */ = {
+		4DE673082B17F35700A5F9AE /* PiedPiper */ = {
 			isa = PBXGroup;
 			children = (
-				4D6B6D422B0ECF15002E1FD3 /* Info.plist */,
-				4D6B6D2F2B0B9D93002E1FD3 /* PiedPiperApp.swift */,
-				4D6B6D312B0B9D93002E1FD3 /* ContentView.swift */,
-				4D6B6D402B0ECC54002E1FD3 /* ChatView.swift */,
-				4D6B6D332B0B9D93002E1FD3 /* Item.swift */,
-				4D6B6D352B0B9D94002E1FD3 /* Assets.xcassets */,
-				4D6B6D3A2B0B9D94002E1FD3 /* PiedPiper.entitlements */,
-				4D6B6D372B0B9D94002E1FD3 /* Preview Content */,
+				4DE673092B17F35700A5F9AE /* ViewModels */,
+				4DE6730F2B17F35700A5F9AE /* App */,
+				4DE673112B17F35700A5F9AE /* Resources */,
+				4DE673152B17F35700A5F9AE /* Utils */,
+				4DE673172B17F35700A5F9AE /* Models */,
+				4DE6731B2B17F35700A5F9AE /* Preview Content */,
+				4DE6731D2B17F35700A5F9AE /* Extensions */,
+				4DE6731F2B17F35700A5F9AE /* Views */,
 			);
 			path = PiedPiper;
-			sourceTree = "<group>";
+			sourceTree = SOURCE_ROOT;
 		};
-		4D6B6D372B0B9D94002E1FD3 /* Preview Content */ = {
+		4DE673092B17F35700A5F9AE /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				4D6B6D382B0B9D94002E1FD3 /* Preview Assets.xcassets */,
+				4DE6730A2B17F35700A5F9AE /* ChatViewModel.swift */,
+				4DE6730B2B17F35700A5F9AE /* CommandViewModel.swift */,
+				4DE6730C2B17F35700A5F9AE /* MessageViewModel.swift */,
+				4DE6730D2B17F35700A5F9AE /* UpdaterViewModel.swift */,
+				4DE6730E2B17F35700A5F9AE /* OllamaViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		4DE6730F2B17F35700A5F9AE /* App */ = {
+			isa = PBXGroup;
+			children = (
+				4DE673102B17F35700A5F9AE /* OllamacApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		4DE673112B17F35700A5F9AE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4DE6737A2B17F5ED00A5F9AE /* PiedPiper.entitlements */,
+				4DE673132B17F35700A5F9AE /* Assets.xcassets */,
+				4DE673142B17F35700A5F9AE /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4DE673152B17F35700A5F9AE /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				4DE673162B17F35700A5F9AE /* AppMessages.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		4DE673172B17F35700A5F9AE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4DE673182B17F35700A5F9AE /* Chat.swift */,
+				4DE673192B17F35700A5F9AE /* Message.swift */,
+				4DE6731A2B17F35700A5F9AE /* OllamaModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		4DE6731B2B17F35700A5F9AE /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				4DE6731C2B17F35700A5F9AE /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		4DE6731D2B17F35700A5F9AE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				4DE6731E2B17F35700A5F9AE /* ModelContext+SaveChanges.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		4DE6731F2B17F35700A5F9AE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4DE673202B17F35700A5F9AE /* ChatViews */,
+				4DE673252B17F35700A5F9AE /* AppView.swift */,
+				4DE673262B17F35700A5F9AE /* CommonViews */,
+				4DE6732A2B17F35700A5F9AE /* MessageViews */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		4DE673202B17F35700A5F9AE /* ChatViews */ = {
+			isa = PBXGroup;
+			children = (
+				4DE673212B17F35700A5F9AE /* RenameChatView.swift */,
+				4DE673222B17F35700A5F9AE /* ChatContextMenu.swift */,
+				4DE673232B17F35700A5F9AE /* AddChatView.swift */,
+				4DE673242B17F35700A5F9AE /* ChatSidebarListView.swift */,
+			);
+			path = ChatViews;
+			sourceTree = "<group>";
+		};
+		4DE673262B17F35700A5F9AE /* CommonViews */ = {
+			isa = PBXGroup;
+			children = (
+				4DE673272B17F35700A5F9AE /* PromptEditorExpandedView.swift */,
+				4DE673282B17F35700A5F9AE /* PromptEditor.swift */,
+				4DE673292B17F35700A5F9AE /* TextError.swift */,
+			);
+			path = CommonViews;
+			sourceTree = "<group>";
+		};
+		4DE6732A2B17F35700A5F9AE /* MessageViews */ = {
+			isa = PBXGroup;
+			children = (
+				4DE6732B2B17F35700A5F9AE /* MessageListItemView.swift */,
+				4DE6732C2B17F35700A5F9AE /* MessageView.swift */,
+			);
+			path = MessageViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4D6B6D2B2B0B9D93002E1FD3 /* PiedPiper */ = {
+		4DE673452B17F46B00A5F9AE /* PiedPiper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4D6B6D3D2B0B9D94002E1FD3 /* Build configuration list for PBXNativeTarget "PiedPiper" */;
+			buildConfigurationList = 4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "PiedPiper" */;
 			buildPhases = (
-				4D6B6D282B0B9D93002E1FD3 /* Sources */,
-				4D6B6D292B0B9D93002E1FD3 /* Frameworks */,
-				4D6B6D2A2B0B9D93002E1FD3 /* Resources */,
+				4DE673542B17F46B00A5F9AE /* Sources */,
+				4DE6736A2B17F46B00A5F9AE /* Frameworks */,
+				4DE673722B17F46B00A5F9AE /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = PiedPiper;
-			productName = PiedPiper;
-			productReference = 4D6B6D2C2B0B9D93002E1FD3 /* PiedPiper.app */;
+			packageProductDependencies = (
+				4DE673462B17F46B00A5F9AE /* OptionalKit */,
+				4DE673482B17F46B00A5F9AE /* ViewState */,
+				4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */,
+				4DE6734C2B17F46B00A5F9AE /* ViewCondition */,
+				4DE6734E2B17F46B00A5F9AE /* MarkdownUI */,
+				4DE673502B17F46B00A5F9AE /* Sparkle */,
+				4DE673522B17F46B00A5F9AE /* OllamaKit */,
+			);
+			productName = Ollamac;
+			productReference = 4DE673792B17F46B00A5F9AE /* PiedPiper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		4D6B6D242B0B9D93002E1FD3 /* Project object */ = {
+		0A4D35792AF541D900846890 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
-				TargetAttributes = {
-					4D6B6D2B2B0B9D93002E1FD3 = {
-						CreatedOnToolsVersion = 15.0;
-					};
-				};
 			};
-			buildConfigurationList = 4D6B6D272B0B9D93002E1FD3 /* Build configuration list for PBXProject "PiedPiper" */;
+			buildConfigurationList = 0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "PiedPiper" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -120,44 +270,71 @@
 				en,
 				Base,
 			);
-			mainGroup = 4D6B6D232B0B9D93002E1FD3;
-			productRefGroup = 4D6B6D2D2B0B9D93002E1FD3 /* Products */;
+			mainGroup = 0A4D35782AF541D900846890;
+			packageReferences = (
+				0AA41A122AF613BF0053B8DB /* XCRemoteSwiftPackageReference "OptionalKit" */,
+				0AA41A152AF635AD0053B8DB /* XCRemoteSwiftPackageReference "ViewState" */,
+				0ACA4D5C2AF7AC43000DA76F /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
+				0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */,
+				0ACA4D742AF89C27000DA76F /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
+				0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */,
+				0AE024892AFEA24600347C18 /* XCRemoteSwiftPackageReference "OllamaKit" */,
+			);
+			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4D6B6D2B2B0B9D93002E1FD3 /* PiedPiper */,
+				4DE673452B17F46B00A5F9AE /* PiedPiper */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		4D6B6D2A2B0B9D93002E1FD3 /* Resources */ = {
+		4DE673722B17F46B00A5F9AE /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D6B6D392B0B9D94002E1FD3 /* Preview Assets.xcassets in Resources */,
-				4D6B6D362B0B9D94002E1FD3 /* Assets.xcassets in Resources */,
+				4DE673732B17F46B00A5F9AE /* Info.plist in Resources */,
+				4DE673742B17F46B00A5F9AE /* Preview Assets.xcassets in Resources */,
+				4DE673752B17F46B00A5F9AE /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		4D6B6D282B0B9D93002E1FD3 /* Sources */ = {
+		4DE673542B17F46B00A5F9AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D6B6D412B0ECC54002E1FD3 /* ChatView.swift in Sources */,
-				4D6B6D322B0B9D93002E1FD3 /* ContentView.swift in Sources */,
-				4D6B6D342B0B9D93002E1FD3 /* Item.swift in Sources */,
-				4D6B6D302B0B9D93002E1FD3 /* PiedPiperApp.swift in Sources */,
+				4DE673552B17F46B00A5F9AE /* PromptEditorExpandedView.swift in Sources */,
+				4DE673562B17F46B00A5F9AE /* TextError.swift in Sources */,
+				4DE673572B17F46B00A5F9AE /* ModelContext+SaveChanges.swift in Sources */,
+				4DE673582B17F46B00A5F9AE /* UpdaterViewModel.swift in Sources */,
+				4DE673592B17F46B00A5F9AE /* OllamaModel.swift in Sources */,
+				4DE6735A2B17F46B00A5F9AE /* ChatSidebarListView.swift in Sources */,
+				4DE6735B2B17F46B00A5F9AE /* MessageView.swift in Sources */,
+				4DE6735C2B17F46B00A5F9AE /* AppView.swift in Sources */,
+				4DE6735D2B17F46B00A5F9AE /* MessageViewModel.swift in Sources */,
+				4DE6735E2B17F46B00A5F9AE /* OllamaViewModel.swift in Sources */,
+				4DE6735F2B17F46B00A5F9AE /* AppMessages.swift in Sources */,
+				4DE673602B17F46B00A5F9AE /* RenameChatView.swift in Sources */,
+				4DE673612B17F46B00A5F9AE /* Chat.swift in Sources */,
+				4DE673622B17F46B00A5F9AE /* ChatContextMenu.swift in Sources */,
+				4DE673632B17F46B00A5F9AE /* OllamacApp.swift in Sources */,
+				4DE673642B17F46B00A5F9AE /* PromptEditor.swift in Sources */,
+				4DE673652B17F46B00A5F9AE /* AddChatView.swift in Sources */,
+				4DE673662B17F46B00A5F9AE /* ChatViewModel.swift in Sources */,
+				4DE673672B17F46B00A5F9AE /* Message.swift in Sources */,
+				4DE673682B17F46B00A5F9AE /* CommandViewModel.swift in Sources */,
+				4DE673692B17F46B00A5F9AE /* MessageListItemView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		4D6B6D3B2B0B9D94002E1FD3 /* Debug */ = {
+		0A4D35902AF541DA00846890 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -220,7 +397,7 @@
 			};
 			name = Debug;
 		};
-		4D6B6D3C2B0B9D94002E1FD3 /* Release */ = {
+		0A4D35912AF541DA00846890 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -275,54 +452,64 @@
 			};
 			name = Release;
 		};
-		4D6B6D3E2B0B9D94002E1FD3 /* Debug */ = {
+		4DE673772B17F46B00A5F9AE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = PiedPiper/PiedPiper.entitlements;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PiedPiper/Resources/PiedPiper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PiedPiper/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_ASSET_PATHS = "PiedPiper/Preview\\ Content";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PiedPiper/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PIedPiper;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © TBD (Sulaiman & Tye). All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.swiftink.PiedPiper;
+				MARKETING_VERSION = 1.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "pro.piedpiper.app-debug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		4D6B6D3F2B0B9D94002E1FD3 /* Release */ = {
+		4DE673782B17F46B00A5F9AE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = PiedPiper/PiedPiper.entitlements;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
+				CODE_SIGN_ENTITLEMENTS = PiedPiper/Resources/PiedPiper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"PiedPiper/Preview Content\"";
+				CURRENT_PROJECT_VERSION = 5;
+				DEVELOPMENT_ASSET_PATHS = "PiedPiper/Preview\\ Content";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PiedPiper/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = PIedPiper;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © TBD (Sulaiman & Tye). All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.swiftink.PiedPiper;
+				MARKETING_VERSION = 1.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = pro.piedpiper.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -332,25 +519,178 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4D6B6D272B0B9D93002E1FD3 /* Build configuration list for PBXProject "PiedPiper" */ = {
+		0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "PiedPiper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4D6B6D3B2B0B9D94002E1FD3 /* Debug */,
-				4D6B6D3C2B0B9D94002E1FD3 /* Release */,
+				0A4D35902AF541DA00846890 /* Debug */,
+				0A4D35912AF541DA00846890 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4D6B6D3D2B0B9D94002E1FD3 /* Build configuration list for PBXNativeTarget "PiedPiper" */ = {
+		4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "PiedPiper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				4D6B6D3E2B0B9D94002E1FD3 /* Debug */,
-				4D6B6D3F2B0B9D94002E1FD3 /* Release */,
+				4DE673772B17F46B00A5F9AE /* Debug */,
+				4DE673782B17F46B00A5F9AE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0AA41A122AF613BF0053B8DB /* XCRemoteSwiftPackageReference "OptionalKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kevinhermawan/OptionalKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		0AA41A152AF635AD0053B8DB /* XCRemoteSwiftPackageReference "ViewState" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kevinhermawan/ViewState.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+		0ACA4D5C2AF7AC43000DA76F /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
+		0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kevinhermawan/ViewCondition";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		0ACA4D742AF89C27000DA76F /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
+		0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+		0AE024892AFEA24600347C18 /* XCRemoteSwiftPackageReference "OllamaKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kevinhermawan/OllamaKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		4DE673472B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OptionalKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kevinhermawan/OptionalKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kevinhermawan/ViewState.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+		4DE6734B2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/swiftui-introspect";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
+		4DE6734D2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewCondition" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kevinhermawan/ViewCondition";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		4DE6734F2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.0;
+			};
+		};
+		4DE673512B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+		4DE673532B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OllamaKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kevinhermawan/OllamaKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4DE673462B17F46B00A5F9AE /* OptionalKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DE673472B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OptionalKit" */;
+			productName = OptionalKit;
+		};
+		4DE673482B17F46B00A5F9AE /* ViewState */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */;
+			productName = ViewState;
+		};
+		4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DE6734B2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
+			productName = SwiftUIIntrospect;
+		};
+		4DE6734C2B17F46B00A5F9AE /* ViewCondition */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DE6734D2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewCondition" */;
+			productName = ViewCondition;
+		};
+		4DE6734E2B17F46B00A5F9AE /* MarkdownUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DE6734F2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
+			productName = MarkdownUI;
+		};
+		4DE673502B17F46B00A5F9AE /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DE673512B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+		4DE673522B17F46B00A5F9AE /* OllamaKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DE673532B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OllamaKit" */;
+			productName = OllamaKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = 4D6B6D242B0B9D93002E1FD3 /* Project object */;
+	rootObject = 0A4D35792AF541D900846890 /* Project object */;
 }
