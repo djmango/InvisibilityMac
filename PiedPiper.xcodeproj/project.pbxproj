@@ -467,7 +467,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_FILE = PiedPiper/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PIedPiper;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © TBD (Sulaiman & Tye). All rights reserved.";
@@ -499,7 +499,7 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_FILE = PiedPiper/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = PIedPiper;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © TBD (Sulaiman & Tye). All rights reserved.";
