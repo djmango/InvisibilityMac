@@ -35,7 +35,6 @@
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
 		4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */; };
 		4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673522B17F46B00A5F9AE /* OllamaKit */; };
-		4DE673732B17F46B00A5F9AE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4DE673142B17F35700A5F9AE /* Info.plist */; };
 		4DE673742B17F46B00A5F9AE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DE6731C2B17F35700A5F9AE /* Preview Assets.xcassets */; };
 		4DE673752B17F46B00A5F9AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4DE673132B17F35700A5F9AE /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -294,7 +293,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DE673732B17F46B00A5F9AE /* Info.plist in Resources */,
 				4DE673742B17F46B00A5F9AE /* Preview Assets.xcassets in Resources */,
 				4DE673752B17F46B00A5F9AE /* Assets.xcassets in Resources */,
 			);
