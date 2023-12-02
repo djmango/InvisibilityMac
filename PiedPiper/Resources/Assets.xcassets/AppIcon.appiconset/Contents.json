@@ -26,12 +26,12 @@
       "size" : "128x128"
     },
     {
-      "filename" : "piedpiper_logo_256.png",
       "idiom" : "mac",
       "scale" : "2x",
       "size" : "128x128"
     },
     {
+      "filename" : "piedpiper_logo_256.png",
       "idiom" : "mac",
       "scale" : "1x",
       "size" : "256x256"
