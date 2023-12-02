@@ -1,10 +1,3 @@
-//
-//  ChatContextMenu.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 06/11/23.
-//
-
 import SwiftUI
 
 struct ChatContextMenu: View {

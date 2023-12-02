@@ -1,10 +1,3 @@
-//
-//  UpdaterViewModel.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 08/11/23.
-//
-
 import Combine
 import Sparkle
 import SwiftUI

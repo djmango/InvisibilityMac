@@ -1,10 +1,3 @@
-//
-//  TextError.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 20/11/23.
-//
-
 import SwiftUI
 
 struct TextError: View {

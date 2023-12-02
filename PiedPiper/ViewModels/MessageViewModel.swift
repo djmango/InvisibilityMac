@@ -1,10 +1,3 @@
-//
-//  MessageViewModel.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 04/11/23.
-//
-
 import Combine
 import Foundation
 import OllamaKit

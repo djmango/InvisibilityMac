@@ -1,10 +1,3 @@
-//
-//  ChatViewModel.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 04/11/23.
-//
-
 import SwiftData
 import SwiftUI
 

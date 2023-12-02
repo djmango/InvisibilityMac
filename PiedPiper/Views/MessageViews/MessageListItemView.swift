@@ -1,10 +1,3 @@
-//
-//  MessageListItemView.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 04/11/23.
-//
-
 import MarkdownUI
 import SwiftUI
 import ViewCondition

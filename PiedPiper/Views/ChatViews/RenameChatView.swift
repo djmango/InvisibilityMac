@@ -1,10 +1,3 @@
-//
-//  RenameChatView.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 05/11/23.
-//
-
 import SwiftUI
 import ViewState
 

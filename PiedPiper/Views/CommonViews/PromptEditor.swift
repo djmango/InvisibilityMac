@@ -1,10 +1,3 @@
-//
-//  PromptEditor.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 12/11/23.
-//
-
 import SwiftUI
 import SwiftUIIntrospect
 

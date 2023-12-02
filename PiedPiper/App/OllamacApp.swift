@@ -1,10 +1,3 @@
-//
-//  OllamacApp.swift
-//  Ollamac
-//
-//  Created by Kevin Hermawan on 03/11/23.
-//
-
 import OllamaKit
 import Sparkle
 import SwiftUI
