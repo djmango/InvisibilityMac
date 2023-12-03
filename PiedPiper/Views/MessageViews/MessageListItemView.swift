@@ -35,7 +35,7 @@ struct MessageListItemView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(isAssistant ? "Assistant" : "You")
+            Text(isAssistant ? "piedpiper" : "Richard Hendrix")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.accent)
             

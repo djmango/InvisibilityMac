@@ -86,6 +86,7 @@ struct MessageView: View {
                     Button(action: sendAction) {
                         Image(systemName: "paperplane.fill")
                             .padding(8)
+                            .opacity(1)
                             .help("Send message")
                     }
                     .buttonStyle(.borderedProminent)

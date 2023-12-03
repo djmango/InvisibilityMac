@@ -1,6 +1,13 @@
 import SwiftUI
 import ViewState
 
+struct YourView_Previews: PreviewProvider {
+    static var previews: some View {
+        AppView()
+    }
+}
+
+
 struct AppView: View {
     @Environment(CommandViewModel.self) private var commandViewModel
     
