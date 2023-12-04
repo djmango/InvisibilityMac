@@ -64,7 +64,7 @@
 		4DE673292B17F35700A5F9AE /* TextError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextError.swift; sourceTree = "<group>"; };
 		4DE6732B2B17F35700A5F9AE /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
 		4DE6732C2B17F35700A5F9AE /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
-		4DE673792B17F46B00A5F9AE /* PiedPiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PiedPiper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4DE673792B17F46B00A5F9AE /* piedpiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = piedpiper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DE6737A2B17F5ED00A5F9AE /* PiedPiper.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = PiedPiper.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,7 +97,7 @@
 		0A4D35822AF541D900846890 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4DE673792B17F46B00A5F9AE /* PiedPiper.app */,
+				4DE673792B17F46B00A5F9AE /* piedpiper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -225,9 +225,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4DE673452B17F46B00A5F9AE /* PiedPiper */ = {
+		4DE673452B17F46B00A5F9AE /* piedpiper */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "PiedPiper" */;
+			buildConfigurationList = 4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "piedpiper" */;
 			buildPhases = (
 				4DE673542B17F46B00A5F9AE /* Sources */,
 				4DE6736A2B17F46B00A5F9AE /* Frameworks */,
@@ -237,7 +237,7 @@
 			);
 			dependencies = (
 			);
-			name = PiedPiper;
+			name = piedpiper;
 			packageProductDependencies = (
 				4DE673462B17F46B00A5F9AE /* OptionalKit */,
 				4DE673482B17F46B00A5F9AE /* ViewState */,
@@ -248,7 +248,7 @@
 				4DE673522B17F46B00A5F9AE /* OllamaKit */,
 			);
 			productName = Ollamac;
-			productReference = 4DE673792B17F46B00A5F9AE /* PiedPiper.app */;
+			productReference = 4DE673792B17F46B00A5F9AE /* piedpiper.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -261,7 +261,7 @@
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 			};
-			buildConfigurationList = 0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "PiedPiper" */;
+			buildConfigurationList = 0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "piedpiper" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -283,7 +283,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4DE673452B17F46B00A5F9AE /* PiedPiper */,
+				4DE673452B17F46B00A5F9AE /* piedpiper */,
 			);
 		};
 /* End PBXProject section */
@@ -518,7 +518,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "PiedPiper" */ = {
+		0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "piedpiper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A4D35902AF541DA00846890 /* Debug */,
@@ -527,7 +527,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "PiedPiper" */ = {
+		4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "piedpiper" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4DE673772B17F46B00A5F9AE /* Debug */,

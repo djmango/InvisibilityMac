@@ -99,7 +99,7 @@ struct MessageView: View {
             .hide(if: isEditorExpanded)
         }
         .navigationTitle(chat.name)
-        .navigationSubtitle(chat.model?.name ?? "")
+        .navigationSubtitle(chat.model?.name ?? "") // MODEL NAME PIEDPIPER for demo
         .task {
             initAction()
         }
