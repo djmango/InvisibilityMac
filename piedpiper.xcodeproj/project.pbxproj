@@ -43,6 +43,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D8B53802B2E6C840020FA6A /* ChatField */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ChatField; path = ../../invisibility_inc/ChatField; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandViewModel.swift; sourceTree = "<group>"; };
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
@@ -112,6 +113,7 @@
 		4D8E05272B2516DE00B60D0D /* piedpiper */ = {
 			isa = PBXGroup;
 			children = (
+				4D8B53802B2E6C840020FA6A /* ChatField */,
 				4D98E90D2B2C54F800505014 /* OllamaKit */,
 				4D8E05282B2516DE00B60D0D /* ViewModels */,
 				4D8E052E2B2516DE00B60D0D /* App */,
