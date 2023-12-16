@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "chatfield",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/djmango/ChatField",
+      "state" : {
+        "branch" : "master",
+        "revision" : "36833e4ddc23308c3754083d4bdcfa837fa17799"
+      }
+    },
+    {
       "identity" : "networkimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/gonzalezreal/NetworkImage",

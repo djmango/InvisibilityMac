@@ -58,8 +58,7 @@ final class MessageViewModel {
                         self?.handleError(error.localizedDescription)
                     }
                 }, receiveValue: { [weak self] response in
-                    self?.handleReceive(response) // THIS IS THE BUG WITH FIRST MESSAGE
-                    print("Finished Handle Recieeveveveveve")
+                    self?.handleReceive(response)
                 })
         } else {
             self.handleError(AppMessages.ollamaServerUnreachable)

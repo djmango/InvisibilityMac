@@ -1,8 +1,8 @@
-import OptionalKit
 import SwiftUI
 import SwiftUIIntrospect
 import ViewCondition
 import ViewState
+import ChatField
 
 struct MessageView: View {
     private var chat: Chat
@@ -16,6 +16,7 @@ struct MessageView: View {
     @State private var isEditorExpanded: Bool = false
     @State private var viewState: ViewState? = nil
     
+    @FocusState private var promptFocused: Bool
     @State private var prompt: String = ""
     
     init(for chat: Chat) {
@@ -26,92 +27,156 @@ struct MessageView: View {
         messageViewModel.sendViewState == .loading
     }
     
+//    var body: some View {
+//        ScrollViewReader { scrollViewProxy in
+//            List(messageViewModel.messages.indices, id: \.self) { index in
+//                let message = messageViewModel.messages[index]
+//                
+//                MessageListItemView(message.prompt ?? "")
+//                    .assistant(false)
+//                
+//                MessageListItemView(message.response ?? "") {
+//                    regenerateAction(for: message)
+//                }
+//                .assistant(true)
+//                .generating(message.response.isNil && isGenerating)
+//                .finalMessage(index == messageViewModel.messages.endIndex - 1)
+//                .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
+//                .id(message)
+//            }
+//            .onAppear {
+//                scrollToBottom(scrollViewProxy)
+//            }
+//            .onChange(of: messageViewModel.messages) {
+//                scrollToBottom(scrollViewProxy)
+//            }
+//            .onChange(of: messageViewModel.messages.last?.response) {
+//                scrollToBottom(scrollViewProxy)
+//            }
+//            
+////            VStack(spacing: 8) {
+////                HStack(alignment: .bottom, spacing: 16) {
+////                    PromptEditor(prompt: $prompt, large: false)
+////                        .overlay(alignment: .topTrailing) {
+////                            Button {
+////                                isEditorExpanded = true
+////                            } label: {
+////                                Image(systemName: "arrow.up.left.and.arrow.down.right")
+////                                    .font(.footnote)
+////                                    .foregroundStyle(.secondary)
+////                            }
+////                            .padding(8)
+////                            .buttonStyle(.plain)
+////                            .keyboardShortcut("e", modifiers: .command)
+////                            .help("Expand editor (⌘ + E)")
+////                        }
+////                        .focused($isEditorFocused)
+////                        .onSubmit(sendAction)
+////                    
+////                    Button(action: messageViewModel.stopGenerate) {
+////                        Image(systemName: "stop.circle.fill")
+////                            .padding(8)
+////                            .help("Stop generate")
+////                    }
+////                    .buttonStyle(.borderedProminent)
+////                    .visible(if: isGenerating, removeCompletely: true)
+////                    
+////                    Button(action: sendAction) {
+////                        Image(systemName: "paperplane.fill")
+////                            .padding(8)
+////                            .opacity(1)
+////                            .help("Send message")
+////                    }
+////                    .buttonStyle(.borderedProminent)
+////                    .hide(if: isGenerating, removeCompletely: true)
+////                }
+////                .padding(.horizontal)
+////            }
+//            
+//            .padding(.top, 8)
+//            .padding(.bottom, 16)
+//            .hide(if: isEditorExpanded)
+//        }
+//        .navigationTitle(chat.name)
+//        .navigationSubtitle(chat.model?.name ?? "") // MODEL NAME PIEDPIPER for demo
+//        .task {
+//            initAction()
+//        }
+//        .onChange(of: chat) {
+//            initAction()
+//        }
+//        .sheet(isPresented: $isEditorExpanded, onDismiss: { isEditorFocused = true }) {
+//            PromptEditorExpandedView(prompt: $prompt) {
+//                sendAction()
+//            }
+//        }
+//    }
     var body: some View {
-        ScrollViewReader { scrollViewProxy in
-            List(messageViewModel.messages.indices, id: \.self) { index in
-                let message = messageViewModel.messages[index]
-                
-                MessageListItemView(message.prompt ?? "")
-                    .assistant(false)
-                
-                MessageListItemView(message.response ?? "") {
-                    regenerateAction(for: message)
+            ScrollViewReader { scrollViewProxy in
+                List(messageViewModel.messages.indices, id: \.self) { index in
+                    let message = messageViewModel.messages[index]
+                    
+                    MessageListItemView(message.prompt ?? "")
+                        .assistant(false)
+                    
+                    MessageListItemView(message.response ?? "") {
+                        regenerateAction(for: message)
+                    }
+                    .assistant(true)
+                    .generating(message.response.isNil && isGenerating)
+                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                    .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
+                    .id(message)
                 }
-                .assistant(true)
-                .generating(message.response.isNil && isGenerating)
-                .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
-                .id(message)
-            }
-            .onAppear {
-                scrollToBottom(scrollViewProxy)
-            }
-            .onChange(of: messageViewModel.messages) {
-                scrollToBottom(scrollViewProxy)
-            }
-            .onChange(of: messageViewModel.messages.last?.response) {
-                scrollToBottom(scrollViewProxy)
-            }
-//            .onChange(of: messageViewModel.messages.first?.response) {
-//                messageViewModel.stopGenerate()
-//            } Why?
-            
-            VStack(spacing: 8) {
-                HStack(alignment: .bottom, spacing: 16) {
-                    PromptEditor(prompt: $prompt, large: false)
-                        .overlay(alignment: .topTrailing) {
-                            Button {
-                                isEditorExpanded = true
-                            } label: {
-                                Image(systemName: "arrow.up.left.and.arrow.down.right")
-                                    .font(.footnote)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .padding(8)
-                            .buttonStyle(.plain)
-                            .keyboardShortcut("e", modifiers: .command)
-                            .help("Expand editor (⌘ + E)")
-                        }
-                        .focused($isEditorFocused)
-                        .onSubmit(sendAction)
+                .onAppear {
+                    scrollToBottom(scrollViewProxy)
+                }
+                .onChange(of: messageViewModel.messages) {
+                    scrollToBottom(scrollViewProxy)
+                }
+                .onChange(of: messageViewModel.messages.last?.response) {
+                    scrollToBottom(scrollViewProxy)
+                }
+//                .onChange(of: messageViewModel.messages.first?.response) {
+//                    messageViewModel.stopGenerate()
+//                }
+                
+                HStack(alignment: .bottom) {
+                    ChatField("Message", text: $prompt, action: sendAction)
+                        .textFieldStyle(CapsuleChatFieldStyle())
+                        .focused($promptFocused)
+                    
+                    Button(action: sendAction) {
+                        Image(systemName: "arrow.up.circle.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Send message")
+                    .hide(if: isGenerating, removeCompletely: true)
                     
                     Button(action: messageViewModel.stopGenerate) {
                         Image(systemName: "stop.circle.fill")
-                            .padding(8)
-                            .help("Stop generate")
+                            .resizable()
+                            .frame(width: 28, height: 28)
                     }
-                    .buttonStyle(.borderedProminent)
+                    .buttonStyle(.plain)
+                    .help("Stop generation")
                     .visible(if: isGenerating, removeCompletely: true)
-                    
-                    Button(action: sendAction) {
-                        Image(systemName: "paperplane.fill")
-                            .padding(8)
-                            .opacity(1)
-                            .help("Send message")
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .hide(if: isGenerating, removeCompletely: true)
                 }
+                .padding(.top, 8)
+                .padding(.bottom, 16)
                 .padding(.horizontal)
             }
-            .padding(.top, 8)
-            .padding(.bottom, 16)
-            .hide(if: isEditorExpanded)
-        }
-        .navigationTitle(chat.name)
-        .navigationSubtitle(chat.model?.name ?? "") // MODEL NAME PIEDPIPER for demo
-        .task {
-            initAction()
-        }
-        .onChange(of: chat) {
-            initAction()
-        }
-        .sheet(isPresented: $isEditorExpanded, onDismiss: { isEditorFocused = true }) {
-            PromptEditorExpandedView(prompt: $prompt) {
-                sendAction()
+            .navigationTitle(chat.name)
+            .navigationSubtitle(chat.model?.name ?? "")
+            .task {
+                initAction()
+            }
+            .onChange(of: chat) {
+                initAction()
             }
         }
-    }
     
     // MARK: - Actions
     private func initAction() {

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B53782B2E49900020FA6A /* OllamaKit */; };
+		4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537B2B2E499A0020FA6A /* OllamaKit */; };
+		4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537E2B2E4A250020FA6A /* ChatField */; };
 		4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */; };
 		4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */; };
 		4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */; };
@@ -14,7 +17,6 @@
 		4D8E05502B2516DE00B60D0D /* OllamaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */; };
 		4D8E05512B2516DE00B60D0D /* OllamacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052F2B2516DE00B60D0D /* OllamacApp.swift */; };
 		4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E05322B2516DE00B60D0D /* Assets.xcassets */; };
-		4D8E05532B2516DE00B60D0D /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E05332B2516DE00B60D0D /* Info.plist */; };
 		4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05352B2516DE00B60D0D /* AppMessages.swift */; };
 		4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05372B2516DE00B60D0D /* Chat.swift */; };
 		4D8E05562B2516DE00B60D0D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05382B2516DE00B60D0D /* Message.swift */; };
@@ -80,8 +82,11 @@
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
+				4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */,
+				4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */,
 				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
 				4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */,
+				4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +254,9 @@
 				4DE6734E2B17F46B00A5F9AE /* MarkdownUI */,
 				4DE673502B17F46B00A5F9AE /* Sparkle */,
 				4DE673522B17F46B00A5F9AE /* OllamaKit */,
+				4D8B53782B2E49900020FA6A /* OllamaKit */,
+				4D8B537B2B2E499A0020FA6A /* OllamaKit */,
+				4D8B537E2B2E4A250020FA6A /* ChatField */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* piedpiper.app */;
@@ -280,7 +288,8 @@
 				0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */,
 				0ACA4D742AF89C27000DA76F /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */,
-				0AE024892AFEA24600347C18 /* XCRemoteSwiftPackageReference "OllamaKit" */,
+				4D8B537A2B2E499A0020FA6A /* XCRemoteSwiftPackageReference "OllamaKit" */,
+				4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -296,7 +305,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D8E05532B2516DE00B60D0D /* Info.plist in Resources */,
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
 			);
@@ -474,7 +482,7 @@
 				INFOPLIST_FILE = piedpiper/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = piedpiper;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © TBD (Sulaiman & Tye). All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © Invisiblity Inc. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -505,7 +513,7 @@
 				INFOPLIST_FILE = piedpiper/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = piedpiper;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © TBD (Sulaiman & Tye). All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © Invisiblity Inc. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -591,12 +599,20 @@
 				minimumVersion = 2.5.1;
 			};
 		};
-		0AE024892AFEA24600347C18 /* XCRemoteSwiftPackageReference "OllamaKit" */ = {
+		4D8B537A2B2E499A0020FA6A /* XCRemoteSwiftPackageReference "OllamaKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kevinhermawan/OllamaKit";
+			repositoryURL = "https://github.com/djmango/OllamaKit";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				minimumVersion = 1.0.0;
+			};
+		};
+		4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/djmango/ChatField";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		4DE673472B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OptionalKit" */ = {
@@ -658,6 +674,20 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4D8B53782B2E49900020FA6A /* OllamaKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OllamaKit;
+		};
+		4D8B537B2B2E499A0020FA6A /* OllamaKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D8B537A2B2E499A0020FA6A /* XCRemoteSwiftPackageReference "OllamaKit" */;
+			productName = OllamaKit;
+		};
+		4D8B537E2B2E4A250020FA6A /* ChatField */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */;
+			productName = ChatField;
+		};
 		4DE673462B17F46B00A5F9AE /* OptionalKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4DE673472B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OptionalKit" */;
