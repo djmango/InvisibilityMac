@@ -66,6 +66,7 @@
 		4D8E05482B2516DE00B60D0D /* TextError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextError.swift; sourceTree = "<group>"; };
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		4D98E90D2B2C54F800505014 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../../OllamaKit; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* piedpiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = piedpiper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -106,6 +107,7 @@
 		4D8E05272B2516DE00B60D0D /* piedpiper */ = {
 			isa = PBXGroup;
 			children = (
+				4D98E90D2B2C54F800505014 /* OllamaKit */,
 				4D8E05282B2516DE00B60D0D /* ViewModels */,
 				4D8E052E2B2516DE00B60D0D /* App */,
 				4D8E05302B2516DE00B60D0D /* Resources */,

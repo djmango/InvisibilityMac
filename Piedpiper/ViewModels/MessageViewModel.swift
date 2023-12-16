@@ -44,6 +44,12 @@ final class MessageViewModel {
             let data = message.convertToOKGenerateRequestData()
             
             generation = ollamaKit.generate(data: data)
+                .handleEvents(
+                        receiveSubscription: { _ in print("Received Subscription") },
+                        receiveOutput: { _ in print("Received Output") },
+                        receiveCompletion: { _ in print("Received Completion") },
+                        receiveCancel: { print("Received Cancel") }
+                    )
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
                     case .finished:
@@ -52,7 +58,8 @@ final class MessageViewModel {
                         self?.handleError(error.localizedDescription)
                     }
                 }, receiveValue: { [weak self] response in
-                    self?.handleReceive(response)
+                    self?.handleReceive(response) // THIS IS THE BUG WITH FIRST MESSAGE
+                    print("Finished Handle Recieeveveveveve")
                 })
         } else {
             self.handleError(AppMessages.ollamaServerUnreachable)

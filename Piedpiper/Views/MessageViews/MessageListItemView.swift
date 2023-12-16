@@ -26,16 +26,16 @@ struct MessageListItemView: View {
     @State private var isCopied: Bool = false
     
     private var isCopyButtonVisible: Bool {
-        isHovered && isAssistant && !isGenerating
+        isHovered && !isGenerating
     }
     
     private var isRegenerateButtonVisible: Bool {
-        isCopyButtonVisible && isFinalMessage
+        isCopyButtonVisible && isAssistant && isFinalMessage
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(isAssistant ? "piedpiper" : "Richard Hendrix")
+            Text(isAssistant ? "piedpiper" : "You")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.accent)
             
@@ -93,7 +93,7 @@ struct MessageListItemView: View {
                 .visible(if: isRegenerateButtonVisible)
             }
             .padding(.top, 8)
-            .visible(if: isAssistant, removeCompletely: true)
+//            .visible(if: isHovered, removeCompletely: true)
         }
         .padding(.vertical)
         .frame(maxWidth: .infinity, alignment: .leading)
