@@ -605,8 +605,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/djmango/OllamaKit";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 		4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */ = {
