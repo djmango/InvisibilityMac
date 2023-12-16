@@ -52,9 +52,9 @@ struct MessageView: View {
             .onChange(of: messageViewModel.messages.last?.response) {
                 scrollToBottom(scrollViewProxy)
             }
-            .onChange(of: messageViewModel.messages.first?.response) {
-                messageViewModel.stopGenerate()
-            }
+//            .onChange(of: messageViewModel.messages.first?.response) {
+//                messageViewModel.stopGenerate()
+//            } Why?
             
             VStack(spacing: 8) {
                 HStack(alignment: .bottom, spacing: 16) {
