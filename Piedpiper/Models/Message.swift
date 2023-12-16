@@ -1,6 +1,6 @@
 import OllamaKit
 import Foundation
-Import SwiftData
+import SwiftData
 
 @Model
 final class Message: Identifiable {

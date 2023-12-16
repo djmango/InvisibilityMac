@@ -5,7 +5,7 @@ import SwiftData
 import ViewState
 
 @Observable
-final class MessageViewModel {
+final class MessageViewModel: ObservableObject {
     private var generation: AnyCancellable?
     
     private var modelContext: ModelContext
@@ -128,5 +128,11 @@ final class MessageViewModel {
         
         try? self.modelContext.saveChanges()
         self.sendViewState = nil
+    }
+    
+    static func example(modelContainer: ModelContainer) -> MessageViewModel {
+        let ollamaURL = URL(string: "http://localhost:11434")!
+        let example = MessageViewModel(modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit(baseURL: ollamaURL))
+        return example
     }
 }

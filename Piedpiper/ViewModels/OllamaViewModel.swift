@@ -4,7 +4,7 @@ import ViewState
 import OllamaKit
 
 @Observable
-final class OllamaViewModel {
+final class OllamaViewModel: ObservableObject {
     private var modelContext: ModelContext
     private var ollamaKit: OllamaKit
     
@@ -56,5 +56,11 @@ final class OllamaViewModel {
         let models = try modelContext.fetch(fetchDescriptor)
         
         return models
+    }
+    
+    static func example(modelContainer: ModelContainer) -> OllamaViewModel {
+        let ollamaURL = URL(string: "http://localhost:11434")!
+        let example = OllamaViewModel(modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit(baseURL: ollamaURL))
+        return example
     }
 }

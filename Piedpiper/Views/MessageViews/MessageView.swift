@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 import SwiftUIIntrospect
 import ViewCondition
 import ViewState
@@ -27,90 +28,6 @@ struct MessageView: View {
         messageViewModel.sendViewState == .loading
     }
     
-//    var body: some View {
-//        ScrollViewReader { scrollViewProxy in
-//            List(messageViewModel.messages.indices, id: \.self) { index in
-//                let message = messageViewModel.messages[index]
-//                
-//                MessageListItemView(message.prompt ?? "")
-//                    .assistant(false)
-//                
-//                MessageListItemView(message.response ?? "") {
-//                    regenerateAction(for: message)
-//                }
-//                .assistant(true)
-//                .generating(message.response.isNil && isGenerating)
-//                .finalMessage(index == messageViewModel.messages.endIndex - 1)
-//                .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
-//                .id(message)
-//            }
-//            .onAppear {
-//                scrollToBottom(scrollViewProxy)
-//            }
-//            .onChange(of: messageViewModel.messages) {
-//                scrollToBottom(scrollViewProxy)
-//            }
-//            .onChange(of: messageViewModel.messages.last?.response) {
-//                scrollToBottom(scrollViewProxy)
-//            }
-//            
-////            VStack(spacing: 8) {
-////                HStack(alignment: .bottom, spacing: 16) {
-////                    PromptEditor(prompt: $prompt, large: false)
-////                        .overlay(alignment: .topTrailing) {
-////                            Button {
-////                                isEditorExpanded = true
-////                            } label: {
-////                                Image(systemName: "arrow.up.left.and.arrow.down.right")
-////                                    .font(.footnote)
-////                                    .foregroundStyle(.secondary)
-////                            }
-////                            .padding(8)
-////                            .buttonStyle(.plain)
-////                            .keyboardShortcut("e", modifiers: .command)
-////                            .help("Expand editor (⌘ + E)")
-////                        }
-////                        .focused($isEditorFocused)
-////                        .onSubmit(sendAction)
-////                    
-////                    Button(action: messageViewModel.stopGenerate) {
-////                        Image(systemName: "stop.circle.fill")
-////                            .padding(8)
-////                            .help("Stop generate")
-////                    }
-////                    .buttonStyle(.borderedProminent)
-////                    .visible(if: isGenerating, removeCompletely: true)
-////                    
-////                    Button(action: sendAction) {
-////                        Image(systemName: "paperplane.fill")
-////                            .padding(8)
-////                            .opacity(1)
-////                            .help("Send message")
-////                    }
-////                    .buttonStyle(.borderedProminent)
-////                    .hide(if: isGenerating, removeCompletely: true)
-////                }
-////                .padding(.horizontal)
-////            }
-//            
-//            .padding(.top, 8)
-//            .padding(.bottom, 16)
-//            .hide(if: isEditorExpanded)
-//        }
-//        .navigationTitle(chat.name)
-//        .navigationSubtitle(chat.model?.name ?? "") // MODEL NAME PIEDPIPER for demo
-//        .task {
-//            initAction()
-//        }
-//        .onChange(of: chat) {
-//            initAction()
-//        }
-//        .sheet(isPresented: $isEditorExpanded, onDismiss: { isEditorFocused = true }) {
-//            PromptEditorExpandedView(prompt: $prompt) {
-//                sendAction()
-//            }
-//        }
-//    }
     var body: some View {
             ScrollViewReader { scrollViewProxy in
                 List(messageViewModel.messages.indices, id: \.self) { index in
@@ -137,9 +54,6 @@ struct MessageView: View {
                 .onChange(of: messageViewModel.messages.last?.response) {
                     scrollToBottom(scrollViewProxy)
                 }
-//                .onChange(of: messageViewModel.messages.first?.response) {
-//                    messageViewModel.stopGenerate()
-//                }
                 
                 HStack(alignment: .bottom) {
                     ChatField("Message", text: $prompt, action: sendAction)
@@ -147,11 +61,12 @@ struct MessageView: View {
                         .focused($promptFocused)
                     
                     Button(action: sendAction) {
-                        Image(systemName: "arrow.up.circle.fill")
+                        Image(systemName: "paperplane.fill")
                             .resizable()
-                            .frame(width: 28, height: 28)
+                            .padding(4)
+                            .frame(width: 24, height: 24)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.borderedProminent)
                     .help("Send message")
                     .hide(if: isGenerating, removeCompletely: true)
                     
@@ -224,5 +139,24 @@ struct MessageView: View {
         let lastMessage = messageViewModel.messages[lastIndex]
         
         proxy.scrollTo(lastMessage, anchor: .bottom)
+    }
+}
+
+var mockModelContainer: ModelContainer {
+        do {
+            let schema = Schema([Chat.self, Message.self, OllamaModel.self])
+            let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            return try ModelContainer(for: schema, configurations: [modelConfiguration])
+        } catch {
+            fatalError("ModelContainer initialization failed: \(error)")
+        }
+    }
+
+struct MessageView_Previews: PreviewProvider {
+    static var previews: some View {
+            MessageView(for: Chat.example())
+                .environmentObject(ChatViewModel.example(modelContainer: mockModelContainer, chats: [Chat.example()]))
+                .environmentObject(MessageViewModel.example(modelContainer: mockModelContainer))
+                .environmentObject(OllamaViewModel.example(modelContainer: mockModelContainer))
     }
 }

@@ -18,4 +18,10 @@ final class Chat: Identifiable {
     init(name: String) {
         self.name = name
     }
+    
+    static func example() -> Chat {
+        let example = Chat(name: "Example")
+        example.messages = [Message(prompt: "Yo", response: "Hello!")]
+        return example
+    }
 }

@@ -2,7 +2,7 @@ import SwiftData
 import SwiftUI
 
 @Observable
-final class ChatViewModel {
+final class ChatViewModel: ObservableObject {
     private var modelContext: ModelContext
         
     var chats: [Chat] = []
@@ -49,5 +49,10 @@ final class ChatViewModel {
         }
 
         try self.modelContext.saveChanges()
+    }
+    
+    static func example(modelContainer: ModelContainer, chats: [Chat]) -> ChatViewModel {
+        let example = ChatViewModel(modelContext: ModelContext(modelContainer))
+        return example
     }
 }
