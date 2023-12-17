@@ -4,7 +4,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct OllamacApp: App {
+struct PiedpiperApp: App {
     private var updater: SPUUpdater
     
     @State private var updaterViewModel: UpdaterViewModel
@@ -72,6 +72,18 @@ struct OllamacApp: App {
                     commandViewModel.isAddChatViewPresented = true
                 }
                 .keyboardShortcut("n", modifiers: .command)
+            }
+            
+            CommandGroup(after: .newItem) {
+                Button("Open File") {
+                    FilePicker.openFile { url in
+                        // Handle the selected file URL
+                        if let url = url {
+                            print(url)
+                        }
+                    }
+                }
+                .keyboardShortcut("o", modifiers: .command)
             }
             
             CommandGroup(replacing: .textEditing) {
