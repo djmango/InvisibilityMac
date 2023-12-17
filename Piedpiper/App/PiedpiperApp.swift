@@ -3,6 +3,22 @@ import Sparkle
 import SwiftUI
 import SwiftData
 
+import CoreGraphics
+import Vision
+func recognizeTextHandler(request: VNRequest, error: Error?) {
+    guard let observations =
+            request.results as? [VNRecognizedTextObservation] else {
+        return
+    }
+    let recognizedStrings = observations.compactMap { observation in
+        // Return the string of the top VNRecognizedText instance.
+        return observation.topCandidates(1).first?.string
+    }
+    
+    // Process the recognized strings.
+    print(recognizedStrings)
+}
+
 @main
 struct PiedpiperApp: App {
     private var updater: SPUUpdater
@@ -80,6 +96,28 @@ struct PiedpiperApp: App {
                         // Handle the selected file URL
                         if let url = url {
                             print(url)
+                            guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+                                return
+                            }
+
+                            guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
+                                return
+                            }
+                            
+                            // Create a new image-request handler.
+                            let requestHandler = VNImageRequestHandler(cgImage: cgImage)
+
+
+                            // Create a new request to recognize text.
+                            let request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
+
+
+                            do {
+                                // Perform the text-recognition request.
+                                try requestHandler.perform([request])
+                            } catch {
+                                print("Unable to perform the requests: \(error).")
+                            }
                         }
                     }
                 }
