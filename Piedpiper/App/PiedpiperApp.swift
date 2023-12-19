@@ -3,31 +3,16 @@ import Sparkle
 import SwiftUI
 import SwiftData
 
-import CoreGraphics
-import Vision
-func recognizeTextHandler(request: VNRequest, error: Error?) {
-    guard let observations =
-            request.results as? [VNRecognizedTextObservation] else {
-        return
-    }
-    let recognizedStrings = observations.compactMap { observation in
-        // Return the string of the top VNRecognizedText instance.
-        return observation.topCandidates(1).first?.string
-    }
-    
-    // Process the recognized strings.
-    print(recognizedStrings)
-}
-
 @main
 struct PiedpiperApp: App {
     private var updater: SPUUpdater
     
-    @State private var updaterViewModel: UpdaterViewModel
-    @State private var commandViewModel: CommandViewModel
-    @State private var ollamaViewModel: OllamaViewModel
-    @State private var chatViewModel: ChatViewModel
-    @State private var messageViewModel: MessageViewModel
+    @StateObject private var updaterViewModel: UpdaterViewModel
+    @StateObject private var commandViewModel: CommandViewModel
+    @StateObject private var ollamaViewModel: OllamaViewModel
+    @StateObject private var chatViewModel: ChatViewModel
+    @StateObject private var messageViewModel: MessageViewModel
+    @StateObject private var fileOpener: FileOpener
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([Chat.self, Message.self, OllamaModel.self])
@@ -47,32 +32,36 @@ struct PiedpiperApp: App {
         updater = updaterController.updater
         
         let updaterViewModel = UpdaterViewModel(updater)
-        _updaterViewModel = State(initialValue: updaterViewModel)
+        _updaterViewModel = StateObject(wrappedValue: updaterViewModel)
         
         let commandViewModel = CommandViewModel()
-        _commandViewModel = State(initialValue: commandViewModel)
+        _commandViewModel = StateObject(wrappedValue: commandViewModel)
         
         let ollamaURL = URL(string: "http://localhost:11434")!
         let ollamaKit = OllamaKit(baseURL: ollamaURL)
                 
         let ollamaViewModel = OllamaViewModel(modelContext: modelContext, ollamaKit: ollamaKit)
-        _ollamaViewModel = State(initialValue: ollamaViewModel)
+        _ollamaViewModel = StateObject(wrappedValue: ollamaViewModel)
         
         let messageViewModel = MessageViewModel(modelContext: modelContext, ollamaKit: ollamaKit)
-        _messageViewModel = State(initialValue: messageViewModel)
+        _messageViewModel = StateObject(wrappedValue: messageViewModel)
         
         let chatViewModel = ChatViewModel(modelContext: modelContext)
-        _chatViewModel = State(initialValue: chatViewModel)
+        _chatViewModel = StateObject(wrappedValue: chatViewModel)
+        
+        let fileOpener = FileOpener(messageViewModel: messageViewModel)
+        _fileOpener = StateObject(wrappedValue: fileOpener)
     }
     
     var body: some Scene {
         WindowGroup {
             AppView()
-                .environment(updaterViewModel)
-                .environment(commandViewModel)
-                .environment(chatViewModel)
-                .environment(messageViewModel)
-                .environment(ollamaViewModel)
+                .environmentObject(updaterViewModel)
+                .environmentObject(commandViewModel)
+                .environmentObject(chatViewModel)
+                .environmentObject(messageViewModel)
+                .environmentObject(ollamaViewModel)
+                .environmentObject(fileOpener)
         }
         .modelContainer(sharedModelContainer)
         .commands {
@@ -92,34 +81,7 @@ struct PiedpiperApp: App {
             
             CommandGroup(after: .newItem) {
                 Button("Open File") {
-                    FilePicker.openFile { url in
-                        // Handle the selected file URL
-                        if let url = url {
-                            print(url)
-                            guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
-                                return
-                            }
-
-                            guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
-                                return
-                            }
-                            
-                            // Create a new image-request handler.
-                            let requestHandler = VNImageRequestHandler(cgImage: cgImage)
-
-
-                            // Create a new request to recognize text.
-                            let request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
-
-
-                            do {
-                                // Perform the text-recognition request.
-                                try requestHandler.perform([request])
-                            } catch {
-                                print("Unable to perform the requests: \(error).")
-                            }
-                        }
-                    }
+                    fileOpener.openFile()
                 }
                 .keyboardShortcut("o", modifiers: .command)
             }

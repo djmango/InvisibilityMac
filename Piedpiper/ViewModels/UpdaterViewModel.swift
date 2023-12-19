@@ -3,7 +3,7 @@ import Sparkle
 import SwiftUI
 
 @Observable
-final class UpdaterViewModel {
+final class UpdaterViewModel: ObservableObject {
     private var cancellable: AnyCancellable?
 
     var canCheckForUpdates = false

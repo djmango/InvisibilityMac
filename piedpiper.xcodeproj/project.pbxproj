@@ -10,7 +10,7 @@
 		4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B53782B2E49900020FA6A /* OllamaKit */; };
 		4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537B2B2E499A0020FA6A /* OllamaKit */; };
 		4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537E2B2E4A250020FA6A /* ChatField */; };
-		4D8B53832B2ED3EA0020FA6A /* FilePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B53822B2ED3EA0020FA6A /* FilePicker.swift */; };
+		4D8B53852B313EA90020FA6A /* FileOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B53842B313EA90020FA6A /* FileOpener.swift */; };
 		4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */; };
 		4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */; };
 		4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */; };
@@ -45,7 +45,7 @@
 
 /* Begin PBXFileReference section */
 		4D8B53812B2E708A0020FA6A /* ChatField */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ChatField; path = ../../ChatField; sourceTree = "<group>"; };
-		4D8B53822B2ED3EA0020FA6A /* FilePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilePicker.swift; sourceTree = "<group>"; };
+		4D8B53842B313EA90020FA6A /* FileOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOpener.swift; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandViewModel.swift; sourceTree = "<group>"; };
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
@@ -162,8 +162,8 @@
 		4D8E05342B2516DE00B60D0D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				4D8B53842B313EA90020FA6A /* FileOpener.swift */,
 				4D8E05352B2516DE00B60D0D /* AppMessages.swift */,
-				4D8B53822B2ED3EA0020FA6A /* FilePicker.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -329,9 +329,9 @@
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
 				4D8E054F2B2516DE00B60D0D /* UpdaterViewModel.swift in Sources */,
 				4D8E05572B2516DE00B60D0D /* OllamaModel.swift in Sources */,
+				4D8B53852B313EA90020FA6A /* FileOpener.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */,
-				4D8B53832B2ED3EA0020FA6A /* FilePicker.swift in Sources */,
 				4D8E05502B2516DE00B60D0D /* OllamaViewModel.swift in Sources */,
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,

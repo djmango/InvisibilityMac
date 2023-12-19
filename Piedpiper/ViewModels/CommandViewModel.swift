@@ -2,7 +2,7 @@ import Foundation
 import OptionalKit
 
 @Observable
-final class CommandViewModel {
+final class CommandViewModel: ObservableObject {
     var isAddChatViewPresented: Bool = false
     var isRenameChatViewPresented: Bool = false
     var isDeleteChatConfirmationPresented: Bool = false
