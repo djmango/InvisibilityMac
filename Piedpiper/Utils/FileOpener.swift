@@ -83,6 +83,7 @@ class FileOpener: ObservableObject {
         print(recognizedStrings)
         
         let joined = recognizedStrings.joined(separator: " ")
-        messageViewModel.messages.append(Message(prompt: "Take a a look at this image for me", response: "It says: \(joined)"))
+        messageViewModel.messages.append(Message(content: "Take a a look at this image for me", role: Role.user))
+        messageViewModel.messages.append(Message(content: "It says: \(joined)", role: Role.assistant))
     }
 }

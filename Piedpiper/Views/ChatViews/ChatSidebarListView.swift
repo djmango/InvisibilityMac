@@ -88,6 +88,7 @@ struct ChatSidebarListView: View {
         }
         .navigationDestination(for: Chat.self) { chat in
             MessageView(for: chat)
+//                .environmentObject(chatViewModel)
         }
         .sheet(
             isPresented: $commandViewModelBindable.isAddChatViewPresented

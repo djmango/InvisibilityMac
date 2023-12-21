@@ -8,17 +8,17 @@ import ChatField
 struct MessageView: View {
     private var chat: Chat
     
-    @Environment(\.modelContext) private var modelContext
-    @Environment(ChatViewModel.self) private var chatViewModel
-    @Environment(MessageViewModel.self) private var messageViewModel
-    @Environment(OllamaViewModel.self) private var ollamaViewModel
+    @Environment(\.modelContext) private var modelContext: ModelContext
+    @Environment(ChatViewModel.self) private var chatViewModel: ChatViewModel
+    @Environment(MessageViewModel.self) private var messageViewModel: MessageViewModel
+    @Environment(OllamaViewModel.self) private var ollamaViewModel: OllamaViewModel
     
     @FocusState private var isEditorFocused: Bool
     @State private var isEditorExpanded: Bool = false
     @State private var viewState: ViewState? = nil
     
     @FocusState private var promptFocused: Bool
-    @State private var prompt: String = ""
+    @State private var content: String = ""
     
     init(for chat: Chat) {
         self.chat = chat
@@ -30,39 +30,44 @@ struct MessageView: View {
     
     var body: some View {
             ScrollViewReader { scrollViewProxy in
+//                List(messageViewModel.messages, id: \.self) { message in
+//                    let index = messageViewModel.messages.firstIndex(where: { $0.id == message.id }) ?? 0
+//                                    
+//                    MessageListItemView(text: message.content ?? "", role: message.role ?? Role.user)
+//                        .assistant(message.role == .assistant)
+//                        .generating(isGenerating)
+//                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
+//                        .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
+//                        .id(message)
+//                }
                 List(messageViewModel.messages.indices, id: \.self) { index in
                     let message = messageViewModel.messages[index]
-                    
-                    MessageListItemView(message.prompt ?? "")
-                        .assistant(false)
-                    
-                    MessageListItemView(message.response ?? "") {
-                        regenerateAction(for: message)
-                    }
-                    .assistant(true)
-                    .generating(message.response.isNil && isGenerating)
-                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                    .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
-                    .id(message)
+                        
+                    MessageListItemView(text: message.content ?? "", role: message.role ?? Role.assistant)
+                        .assistant(message.role == .assistant)
+                        .generating(message.content.isNil && isGenerating)
+                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                        .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
+                        .id(message)
                 }
+
                 .onAppear {
                     scrollToBottom(scrollViewProxy)
                 }
                 .onChange(of: messageViewModel.messages) {
                     scrollToBottom(scrollViewProxy)
                 }
-                .onChange(of: messageViewModel.messages.last?.response) {
-                    scrollToBottom(scrollViewProxy)
-                }
+//                .onChange(of: messageViewModel.messages.last?.content) {
+//                    scrollToBottom(scrollViewProxy)
+//                }
                 
                 HStack(alignment: .bottom) {
-                    ChatField("Message", text: $prompt, action: sendAction)
+                    ChatField("Message", text: $content, action: sendAction)
                         .textFieldStyle(CapsuleChatFieldStyle())
                         .focused($promptFocused)
                     
                     Button(action: sendAction) {
                         Image(systemName: "paperplane.fill")
-//                            .resizable()
                             .padding(8)
                             .frame(width: 28, height: 28)
                     }
@@ -102,15 +107,14 @@ struct MessageView: View {
     
     private func sendAction() {
         guard messageViewModel.sendViewState.isNil else { return }
-        guard prompt.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
+        guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
         
-        let message = Message(prompt: prompt, response: nil)
-        message.context = messageViewModel.messages.last?.context ?? []
+        let message = Message(content: content, role: Role.user)
         message.chat = chat
         
         Task {
             try chatViewModel.modify(chat)
-            prompt = ""
+            content = ""
             await messageViewModel.send(message)
         }
     }
@@ -118,14 +122,7 @@ struct MessageView: View {
     private func regenerateAction(for message: Message) {
         guard messageViewModel.sendViewState.isNil else { return }
         
-        message.context = []
-        message.response = nil
-        
-        let lastIndex = messageViewModel.messages.count - 1
-        
-        if lastIndex > 0 {
-            message.context = messageViewModel.messages[lastIndex - 1].context
-        }
+        message.done = false
         
         Task {
             try chatViewModel.modify(chat)

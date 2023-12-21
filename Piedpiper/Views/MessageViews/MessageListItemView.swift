@@ -4,6 +4,7 @@ import ViewCondition
 
 struct MessageListItemView: View {
     private var isAssistant: Bool = false
+    private var role: Role
     private var isGenerating: Bool = false
     private var isFinalMessage: Bool = false
     private var isError: Bool = false
@@ -12,15 +13,16 @@ struct MessageListItemView: View {
     let text: String
     let regenerateAction: () -> Void
     
-    init(_ text: String) {
+    init(text: String, role: Role) {
         self.text = text
+        self.role = role
         self.regenerateAction = {}
     }
     
-    init(_ text: String, regenerateAction: @escaping () -> Void) {
-        self.text = text
-        self.regenerateAction = regenerateAction
-    }
+//    init(text: String, regenerateAction: @escaping () -> Void) {
+//        self.text = text
+//        self.regenerateAction = regenerateAction
+//    }
     
     @State private var isHovered: Bool = false
     @State private var isCopied: Bool = false
@@ -35,7 +37,7 @@ struct MessageListItemView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(isAssistant ? "piedpiper" : "You")
+            Text(isAssistant ? "Piedpiper" : "You")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.accent)
             
