@@ -41,9 +41,11 @@ final class MessageViewModel: ObservableObject {
         try? modelContext.saveChanges()
         
         if await ollamaKit.reachable() {
-            // Maybe guard this or something? to avoid ! nil crash
+            // TODO Maybe guard this or something? to avoid ! nil crash
             let data = OkChatRequestData(model: message.model, messages: messages.map { $0.toChatMessage()! })
             
+            let assistantMessage = Message(content: nil, role: .assistant)
+            messages.append(assistantMessage)
             generation = ollamaKit.chat(data: data)
                 .handleEvents(
                         receiveSubscription: { _ in print("Received Subscription") },
@@ -75,7 +77,7 @@ final class MessageViewModel: ObservableObject {
         
         if await ollamaKit.reachable() {
             let data = OkChatRequestData(model: message.model, messages: messages.map { $0.toChatMessage()! })
-
+ 
             generation = ollamaKit.chat(data: data)
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
@@ -100,18 +102,16 @@ final class MessageViewModel: ObservableObject {
     
     private func handleReceive(_ response: OKChatResponse) {
         if self.messages.isEmpty { return }
-        guard let message = response.message else {
-            print("empty message")
-            return
-        }
+        guard let message = response.message else { return }
        
         // Check if there are any messages and the last message is from an assistant and is not complete
         if let lastMessage = messages.last, lastMessage.role == .assistant && !lastMessage.done {
             // Append the new content to the last message
+            if lastMessage.content.isNil { lastMessage.content = "" }
             lastMessage.content?.append(message.content)
         } else {
             // Create a new message with the received content
-            let newMessage = Message(content: message.content, role: .assistant) // Assuming the new message is always from the assistant
+            let newMessage = Message(content: message.content, role: .assistant)
             messages.append(newMessage)
         }
         
@@ -121,9 +121,8 @@ final class MessageViewModel: ObservableObject {
     private func handleError(_ errorMessage: String) {
         if self.messages.isEmpty { return }
         
-        let lastIndex = self.messages.count - 1
-        self.messages[lastIndex].error = true
-        self.messages[lastIndex].done = false
+        self.messages.last?.error = true
+        self.messages.last?.done = false
         
         try? self.modelContext.saveChanges()
         self.sendViewState = .error(message: errorMessage)
@@ -132,10 +131,8 @@ final class MessageViewModel: ObservableObject {
     private func handleComplete() {
         if self.messages.isEmpty { return }
         
-        let lastIndex = self.messages.count - 1
-        print(self.messages)
-        self.messages[lastIndex].error = false
-        self.messages[lastIndex].done = true
+        self.messages.last?.error = false
+        self.messages.last?.done = true
         
         try? self.modelContext.saveChanges()
         self.sendViewState = nil

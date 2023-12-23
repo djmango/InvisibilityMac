@@ -41,6 +41,5 @@ extension Message {
 extension Message: CustomStringConvertible {
     var description: String {
         return "\(role?.rawValue ?? ""): \(content ?? "")"
-//        return "\(content ?? "")"
     }
 }

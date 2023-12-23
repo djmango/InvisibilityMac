@@ -30,16 +30,6 @@ struct MessageView: View {
     
     var body: some View {
             ScrollViewReader { scrollViewProxy in
-//                List(messageViewModel.messages, id: \.self) { message in
-//                    let index = messageViewModel.messages.firstIndex(where: { $0.id == message.id }) ?? 0
-//                                    
-//                    MessageListItemView(text: message.content ?? "", role: message.role ?? Role.user)
-//                        .assistant(message.role == .assistant)
-//                        .generating(isGenerating)
-//                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
-//                        .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
-//                        .id(message)
-//                }
                 List(messageViewModel.messages.indices, id: \.self) { index in
                     let message = messageViewModel.messages[index]
                         
@@ -57,9 +47,10 @@ struct MessageView: View {
                 .onChange(of: messageViewModel.messages) {
                     scrollToBottom(scrollViewProxy)
                 }
-//                .onChange(of: messageViewModel.messages.last?.content) {
-//                    scrollToBottom(scrollViewProxy)
-//                }
+                .onChange(of: messageViewModel.messages.last?.content) {
+                    scrollToBottom(scrollViewProxy)
+                }
+                // TODO Should add some kind of scroll lock, if at bottom, follow, otherwise allow free scroll.
                 
                 HStack(alignment: .bottom) {
                     ChatField("Message", text: $content, action: sendAction)
@@ -109,7 +100,7 @@ struct MessageView: View {
         guard messageViewModel.sendViewState.isNil else { return }
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
         
-        let message = Message(content: content, role: Role.user)
+        let message = Message(content: content, role: .user)
         message.chat = chat
         
         Task {
