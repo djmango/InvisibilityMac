@@ -20,9 +20,10 @@ final class Message: Identifiable {
     
     @Relationship var chat: Chat?
         
-    init(content: String?, role: Role?) {
+    init(content: String? = nil, role: Role? = nil, chat: Chat? = nil) {
         self.content = content
         self.role = role
+        self.chat = chat
     }
     
     @Transient var model: String {

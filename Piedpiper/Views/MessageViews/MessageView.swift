@@ -100,8 +100,7 @@ struct MessageView: View {
         guard messageViewModel.sendViewState.isNil else { return }
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
         
-        let message = Message(content: content, role: .user)
-        message.chat = chat
+        let message = Message(content: content, role: .user, chat: chat)
         
         Task {
             try chatViewModel.modify(chat)

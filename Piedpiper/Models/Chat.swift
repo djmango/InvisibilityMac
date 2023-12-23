@@ -21,7 +21,7 @@ final class Chat: Identifiable {
     
     static func example() -> Chat {
         let example = Chat(name: "Example")
-        example.messages = [Message(content: "Yo", role: Role.user)]
+        example.messages = [Message(content: "Yo", role: Role.user, chat: example)]
         return example
     }
 }

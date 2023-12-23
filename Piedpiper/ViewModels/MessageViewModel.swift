@@ -38,14 +38,17 @@ final class MessageViewModel: ObservableObject {
         
         messages.append(message)
         modelContext.insert(message)
+        
+        let assistantMessage = Message(content: nil, role: .assistant, chat: message.chat)
+        messages.append(assistantMessage)
+        modelContext.insert(message)
+        
         try? modelContext.saveChanges()
         
         if await ollamaKit.reachable() {
-            // TODO Maybe guard this or something? to avoid ! nil crash
-            let data = OkChatRequestData(model: message.model, messages: messages.map { $0.toChatMessage()! })
+            // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
+            let data = OkChatRequestData(model: message.model, messages: messages.dropLast().compactMap { $0.toChatMessage() })
             
-            let assistantMessage = Message(content: nil, role: .assistant)
-            messages.append(assistantMessage)
             generation = ollamaKit.chat(data: data)
                 .handleEvents(
                         receiveSubscription: { _ in print("Received Subscription") },
@@ -103,17 +106,10 @@ final class MessageViewModel: ObservableObject {
     private func handleReceive(_ response: OKChatResponse) {
         if self.messages.isEmpty { return }
         guard let message = response.message else { return }
-       
-        // Check if there are any messages and the last message is from an assistant and is not complete
-        if let lastMessage = messages.last, lastMessage.role == .assistant && !lastMessage.done {
-            // Append the new content to the last message
-            if lastMessage.content.isNil { lastMessage.content = "" }
-            lastMessage.content?.append(message.content)
-        } else {
-            // Create a new message with the received content
-            let newMessage = Message(content: message.content, role: .assistant)
-            messages.append(newMessage)
-        }
+        guard let lastMessage = messages.last else { return }
+        
+        if lastMessage.content.isNil { lastMessage.content = "" }
+        lastMessage.content?.append(message.content)
         
         self.sendViewState = .loading
     }
@@ -134,7 +130,12 @@ final class MessageViewModel: ObservableObject {
         self.messages.last?.error = false
         self.messages.last?.done = true
         
-        try? self.modelContext.saveChanges()
+        do {
+            try self.modelContext.saveChanges()
+        } catch {
+            print("Error saving changes: \(error)")
+        }
+
         self.sendViewState = nil
     }
     
