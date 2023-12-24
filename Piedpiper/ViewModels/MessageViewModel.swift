@@ -3,6 +3,8 @@ import Foundation
 import OllamaKit
 import SwiftData
 import ViewState
+import CoreGraphics
+import Vision
 
 @Observable
 final class MessageViewModel: ObservableObject {
@@ -11,6 +13,7 @@ final class MessageViewModel: ObservableObject {
     private var chatID: UUID
     private var modelContext: ModelContext
     private var ollamaKit: OllamaKit
+    private var fileOpener: FileOpener
     
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
@@ -19,6 +22,8 @@ final class MessageViewModel: ObservableObject {
         self.modelContext = modelContext
         self.ollamaKit = ollamaKit
         self.chatID = chatID
+        self.fileOpener = FileOpener()
+
     }
     
     deinit {
@@ -141,10 +146,35 @@ final class MessageViewModel: ObservableObject {
         self.sendViewState = nil
     }
     
+    
     static func example(modelContainer: ModelContainer) -> MessageViewModel {
         let ollamaURL = URL(string: "http://localhost:11434")!
         let chat = Chat(name: "Example chat")
         let example = MessageViewModel(chatID: chat.id, modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit(baseURL: ollamaURL))
         return example
     }
+}
+
+// @MARK Image Handler
+extension MessageViewModel {
+    
+    // Public function that can be called to begin the file open process
+    func openFile() {
+        self.fileOpener.openFile(completionHandler: self.recognizeTextHandler)
+    }
+    
+    private func recognizeTextHandler(request: VNRequest, error: Error?) {
+        guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
+        
+        let recognizedStrings = observations.compactMap { observation in
+            // Return the string of the top VNRecognizedText instance.
+            return observation.topCandidates(1).first?.string
+        }
+        
+        // Append the recognized strings to chat. Should design this better, just appending is dumb.
+        let joined = recognizedStrings.joined(separator: " ")
+        self.messages.append(Message(content: "Take a a look at this image for me", role: Role.user))
+        self.messages.append(Message(content: "It says: \(joined)", role: Role.assistant))
+    }
+
 }

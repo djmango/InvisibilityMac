@@ -8,9 +8,9 @@ import ChatField
 struct MessageView: View {
     private var chat: Chat
     
+    @EnvironmentObject var globalState: GlobalState
     @Environment(\.modelContext) private var modelContext: ModelContext
     @Environment(ChatViewModel.self) private var chatViewModel: ChatViewModel
-//    @Environment(MessageViewModel.self) private var messageViewModel: MessageViewModel
     @Environment(OllamaViewModel.self) private var ollamaViewModel: OllamaViewModel
     
     @FocusState private var isEditorFocused: Bool
@@ -96,6 +96,8 @@ struct MessageView: View {
     // MARK: - Actions
     private func initAction() {
         try? messageViewModel.fetch(for: chat)
+        
+        globalState.activeChatID = self.chat.id
         
         isEditorFocused = true
     }
