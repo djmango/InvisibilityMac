@@ -28,7 +28,7 @@ struct MessageListItemView: View {
     @State private var isCopied: Bool = false
     
     private var isCopyButtonVisible: Bool {
-        isHovered && !isGenerating
+        isHovered && isAssistant && !isGenerating
     }
     
     private var isRegenerateButtonVisible: Bool {
@@ -95,7 +95,7 @@ struct MessageListItemView: View {
                 .visible(if: isRegenerateButtonVisible)
             }
             .padding(.top, 8)
-//            .visible(if: isHovered, removeCompletely: true)
+            .visible(if: isAssistant, removeCompletely: true)
         }
         .padding(.vertical)
         .frame(maxWidth: .infinity, alignment: .leading)

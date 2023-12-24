@@ -11,8 +11,8 @@ struct PiedpiperApp: App {
     @StateObject private var commandViewModel: CommandViewModel
     @StateObject private var ollamaViewModel: OllamaViewModel
     @StateObject private var chatViewModel: ChatViewModel
-    @StateObject private var messageViewModel: MessageViewModel
-    @StateObject private var fileOpener: FileOpener
+//    @StateObject private var messageViewModel: MessageViewModel
+//    @StateObject private var fileOpener: FileOpener
     
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([Chat.self, Message.self, OllamaModel.self])
@@ -43,14 +43,15 @@ struct PiedpiperApp: App {
         let ollamaViewModel = OllamaViewModel(modelContext: modelContext, ollamaKit: ollamaKit)
         _ollamaViewModel = StateObject(wrappedValue: ollamaViewModel)
         
-        let messageViewModel = MessageViewModel(modelContext: modelContext, ollamaKit: ollamaKit)
-        _messageViewModel = StateObject(wrappedValue: messageViewModel)
+//        let messageViewModel = MessageViewModel(modelContext: modelContext, ollamaKit: ollamaKit)
+//        _messageViewModel = StateObject(wrappedValue: messageViewModel)
+        MessageViewModelManager.shared = MessageViewModelManager(modelContext: modelContext, ollamaKit: ollamaKit)
         
         let chatViewModel = ChatViewModel(modelContext: modelContext)
         _chatViewModel = StateObject(wrappedValue: chatViewModel)
         
-        let fileOpener = FileOpener(messageViewModel: messageViewModel)
-        _fileOpener = StateObject(wrappedValue: fileOpener)
+//        let fileOpener = FileOpener()
+//        _fileOpener = StateObject(wrappedValue: fileOpener)
     }
     
     var body: some Scene {
@@ -59,9 +60,9 @@ struct PiedpiperApp: App {
                 .environmentObject(updaterViewModel)
                 .environmentObject(commandViewModel)
                 .environmentObject(chatViewModel)
-                .environmentObject(messageViewModel)
+//                .environmentObject(messageViewModel)
                 .environmentObject(ollamaViewModel)
-                .environmentObject(fileOpener)
+//                .environmentObject(fileOpener)
         }
         .modelContainer(sharedModelContainer)
         .commands {
@@ -79,12 +80,12 @@ struct PiedpiperApp: App {
                 .keyboardShortcut("n", modifiers: .command)
             }
             
-            CommandGroup(after: .newItem) {
-                Button("Open File") {
-                    fileOpener.openFile()
-                }
-                .keyboardShortcut("o", modifiers: .command)
-            }
+//            CommandGroup(after: .newItem) {
+//                Button("Open File") {
+//                    fileOpener.openFile()
+//                }
+//                .keyboardShortcut("o", modifiers: .command)
+//            }
             
             CommandGroup(replacing: .textEditing) {
                 if let selectedChat = commandViewModel.selectedChat {

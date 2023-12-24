@@ -10,7 +10,7 @@ struct MessageView: View {
     
     @Environment(\.modelContext) private var modelContext: ModelContext
     @Environment(ChatViewModel.self) private var chatViewModel: ChatViewModel
-    @Environment(MessageViewModel.self) private var messageViewModel: MessageViewModel
+//    @Environment(MessageViewModel.self) private var messageViewModel: MessageViewModel
     @Environment(OllamaViewModel.self) private var ollamaViewModel: OllamaViewModel
     
     @FocusState private var isEditorFocused: Bool
@@ -22,6 +22,10 @@ struct MessageView: View {
     
     init(for chat: Chat) {
         self.chat = chat
+    }
+    
+    var messageViewModel: MessageViewModel {
+        return MessageViewModelManager.shared.viewModel(for: chat.id)
     }
     
     var isGenerating: Bool {

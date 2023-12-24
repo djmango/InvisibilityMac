@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */; };
 		4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B53782B2E49900020FA6A /* OllamaKit */; };
 		4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537B2B2E499A0020FA6A /* OllamaKit */; };
 		4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537E2B2E4A250020FA6A /* ChatField */; };
@@ -44,6 +45,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
 		4D8B53812B2E708A0020FA6A /* ChatField */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ChatField; path = ../../ChatField; sourceTree = "<group>"; };
 		4D8B53842B313EA90020FA6A /* FileOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOpener.swift; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */,
 				4D8E052C2B2516DE00B60D0D /* UpdaterViewModel.swift */,
 				4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */,
+				4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -328,6 +331,7 @@
 				4D8E055D2B2516DE00B60D0D /* ChatSidebarListView.swift in Sources */,
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
 				4D8E054F2B2516DE00B60D0D /* UpdaterViewModel.swift in Sources */,
+				4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */,
 				4D8E05572B2516DE00B60D0D /* OllamaModel.swift in Sources */,
 				4D8B53852B313EA90020FA6A /* FileOpener.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,

@@ -8,15 +8,17 @@ import ViewState
 final class MessageViewModel: ObservableObject {
     private var generation: AnyCancellable?
     
+    private var chatID: UUID
     private var modelContext: ModelContext
     private var ollamaKit: OllamaKit
     
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
     
-    init(modelContext: ModelContext, ollamaKit: OllamaKit) {
+    init(chatID: UUID, modelContext: ModelContext, ollamaKit: OllamaKit) {
         self.modelContext = modelContext
         self.ollamaKit = ollamaKit
+        self.chatID = chatID
     }
     
     deinit {
@@ -24,8 +26,8 @@ final class MessageViewModel: ObservableObject {
     }
     
     func fetch(for chat: Chat) throws {
-        let chatId = chat.id
-        let predicate = #Predicate<Message>{ $0.chat?.id == chatId }
+        let chatID = chat.id
+        let predicate = #Predicate<Message>{ $0.chat?.id == chatID }
         let sortDescriptor = SortDescriptor(\Message.createdAt)
         let fetchDescriptor = FetchDescriptor<Message>(predicate: predicate, sortBy: [sortDescriptor])
         
@@ -141,7 +143,8 @@ final class MessageViewModel: ObservableObject {
     
     static func example(modelContainer: ModelContainer) -> MessageViewModel {
         let ollamaURL = URL(string: "http://localhost:11434")!
-        let example = MessageViewModel(modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit(baseURL: ollamaURL))
+        let chat = Chat(name: "Example chat")
+        let example = MessageViewModel(chatID: chat.id, modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit(baseURL: ollamaURL))
         return example
     }
 }

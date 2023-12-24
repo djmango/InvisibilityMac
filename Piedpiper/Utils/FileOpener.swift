@@ -75,15 +75,12 @@ class FileOpener: ObservableObject {
         }
         let recognizedStrings = observations.compactMap { observation in
             // Return the string of the top VNRecognizedText instance.
-            print(observation)
             return observation.topCandidates(1).first?.string
         }
         
         // Append the recognized strings to chat. Should design this better, just appending is dumb.
-        print(recognizedStrings)
-        
         let joined = recognizedStrings.joined(separator: " ")
-        messageViewModel.messages.append(Message(content: "Take a a look at this image for me", role: Role.user))
-        messageViewModel.messages.append(Message(content: "It says: \(joined)", role: Role.assistant))
+//        messageViewModel.messages.append(Message(content: "Take a a look at this image for me", role: Role.user))
+//        messageViewModel.messages.append(Message(content: "It says: \(joined)", role: Role.assistant))
     }
 }
