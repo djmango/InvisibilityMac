@@ -150,9 +150,8 @@ final class MessageViewModel: ObservableObject {
     
     
     static func example(modelContainer: ModelContainer) -> MessageViewModel {
-        let ollamaURL = URL(string: "http://localhost:11434")!
         let chat = Chat(name: "Example chat")
-        let example = MessageViewModel(chatID: chat.id, modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit(baseURL: ollamaURL))
+        let example = MessageViewModel(chatID: chat.id, modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit.shared)
         return example
     }
 }

@@ -6,7 +6,7 @@ import OllamaKit
 @Observable
 final class OllamaViewModel: ObservableObject {
     private var modelContext: ModelContext
-    private var ollamaKit: OllamaKit
+    public var ollamaKit: OllamaKit
     
     var models: [OllamaModel] = []
     
@@ -64,8 +64,7 @@ final class OllamaViewModel: ObservableObject {
     }
     
     static func example(modelContainer: ModelContainer) -> OllamaViewModel {
-        let ollamaURL = URL(string: "http://localhost:11434")!
-        let example = OllamaViewModel(modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit(baseURL: ollamaURL))
+        let example = OllamaViewModel(modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit.shared)
         return example
     }
 }

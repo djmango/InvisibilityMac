@@ -17,6 +17,8 @@ struct PiedpiperApp: App {
     @StateObject private var ollamaViewModel: OllamaViewModel
     @StateObject private var chatViewModel: ChatViewModel
     
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([Chat.self, Message.self, OllamaModel.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
@@ -40,8 +42,7 @@ struct PiedpiperApp: App {
         let commandViewModel = CommandViewModel()
         _commandViewModel = StateObject(wrappedValue: commandViewModel)
         
-        let ollamaURL = URL(string: "http://localhost:11434")!
-        let ollamaKit = OllamaKit(baseURL: ollamaURL)
+        let ollamaKit = OllamaKit.shared
                 
         let ollamaViewModel = OllamaViewModel(modelContext: modelContext, ollamaKit: ollamaKit)
         _ollamaViewModel = StateObject(wrappedValue: ollamaViewModel)
