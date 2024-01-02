@@ -66,8 +66,10 @@ final class MessageViewModel: ObservableObject {
                 .sink(receiveCompletion: { [weak self] completion in
                     switch completion {
                     case .finished:
+                        print("Success completion")
                         self?.handleComplete()
                     case .failure(let error):
+                        print("Failure completion \(error)")
                         self?.handleError(error.localizedDescription)
                     }
                 }, receiveValue: { [weak self] response in

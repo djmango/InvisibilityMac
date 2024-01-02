@@ -35,6 +35,7 @@
 		4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05482B2516DE00B60D0D /* TextError.swift */; };
 		4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */; };
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
+		4DCA621C2B40FDB500D12660 /* ollama-darwin in Resources */ = {isa = PBXBuildFile; fileRef = 4DCA621B2B40FDB500D12660 /* ollama-darwin */; };
 		4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673502B17F46B00A5F9AE /* Sparkle */; };
 		4DE6736C2B17F46B00A5F9AE /* OptionalKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673462B17F46B00A5F9AE /* OptionalKit */; };
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
@@ -54,7 +55,7 @@
 		4D8E052C2B2516DE00B60D0D /* UpdaterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OllamaViewModel.swift; sourceTree = "<group>"; };
 		4D8E052F2B2516DE00B60D0D /* PiedpiperApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PiedpiperApp.swift; sourceTree = "<group>"; };
-		4D8E05312B2516DE00B60D0D /* PiedPiper.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = PiedPiper.entitlements; sourceTree = "<group>"; };
+		4D8E05312B2516DE00B60D0D /* piedpiper.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = piedpiper.entitlements; sourceTree = "<group>"; };
 		4D8E05322B2516DE00B60D0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4D8E05332B2516DE00B60D0D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D8E05352B2516DE00B60D0D /* AppMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppMessages.swift; sourceTree = "<group>"; };
@@ -74,6 +75,7 @@
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		4D98E90D2B2C54F800505014 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../../OllamaKit; sourceTree = "<group>"; };
+		4DCA621B2B40FDB500D12660 /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* piedpiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = piedpiper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -155,7 +157,8 @@
 		4D8E05302B2516DE00B60D0D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4D8E05312B2516DE00B60D0D /* PiedPiper.entitlements */,
+				4DCA621B2B40FDB500D12660 /* ollama-darwin */,
+				4D8E05312B2516DE00B60D0D /* piedpiper.entitlements */,
 				4D8E05322B2516DE00B60D0D /* Assets.xcassets */,
 				4D8E05332B2516DE00B60D0D /* Info.plist */,
 			);
@@ -314,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
+				4DCA621C2B40FDB500D12660 /* ollama-darwin in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -518,6 +522,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"piedpiper/Preview Content\"";
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = piedpiper/Resources/Info.plist;

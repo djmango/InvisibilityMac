@@ -19,10 +19,11 @@ struct MessageListItemView: View {
         self.regenerateAction = {}
     }
     
-//    init(text: String, regenerateAction: @escaping () -> Void) {
-//        self.text = text
-//        self.regenerateAction = regenerateAction
-//    }
+    init(text: String, role: Role, regenerateAction: @escaping () -> Void) {
+        self.text = text
+        self.role = role
+        self.regenerateAction = regenerateAction
+    }
     
     @State private var isHovered: Bool = false
     @State private var isCopied: Bool = false

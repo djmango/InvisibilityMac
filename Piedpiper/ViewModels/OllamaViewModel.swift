@@ -45,6 +45,11 @@ final class OllamaViewModel: ObservableObject {
     
     private func fetchFromRemote() async throws -> [OKModelResponse.Model] {
         let response = try await ollamaKit.models()
+        
+        // TODO FIND A PLACE FOR THIS
+//        let req = OKPullModelRequestData(name: "mistral:latest")
+//        let res = try await ollamaKit.pullModel(data: req)
+//        print(res)
         let models = response.models
         
         return models
