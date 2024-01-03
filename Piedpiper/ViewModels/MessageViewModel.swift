@@ -12,15 +12,14 @@ final class MessageViewModel: ObservableObject {
     
     private var chatID: UUID
     private var modelContext: ModelContext
-    private var ollamaKit: OllamaKit
+    private let ollamaKit = OllamaKit.shared
     private var fileOpener: FileOpener
     
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
     
-    init(chatID: UUID, modelContext: ModelContext, ollamaKit: OllamaKit) {
+    init(chatID: UUID, modelContext: ModelContext) {
         self.modelContext = modelContext
-        self.ollamaKit = ollamaKit
         self.chatID = chatID
         self.fileOpener = FileOpener()
 
@@ -151,7 +150,7 @@ final class MessageViewModel: ObservableObject {
     
     static func example(modelContainer: ModelContainer) -> MessageViewModel {
         let chat = Chat(name: "Example chat")
-        let example = MessageViewModel(chatID: chat.id, modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit.shared)
+        let example = MessageViewModel(chatID: chat.id, modelContext: ModelContext(modelContainer))
         return example
     }
 }

@@ -19,11 +19,9 @@ class MessageViewModelManager {
     private var viewModels: [UUID: MessageViewModel] = [:]
     // Dependencies required by MessageViewModels.
     private var modelContext: ModelContext
-    private var ollamaKit: OllamaKit
     
-    init(modelContext: ModelContext, ollamaKit: OllamaKit) {
+    init(modelContext: ModelContext) {
         self.modelContext = modelContext
-        self.ollamaKit = ollamaKit
     }
     
     // Function to retrieve a MessageViewModel for a given chatID.
@@ -32,7 +30,7 @@ class MessageViewModelManager {
         if let viewModel = viewModels[chatID] {
             return viewModel
         } else {
-            let viewModel = MessageViewModel(chatID: chatID, modelContext: self.modelContext, ollamaKit: self.ollamaKit)
+            let viewModel = MessageViewModel(chatID: chatID, modelContext: self.modelContext)
             viewModels[chatID] = viewModel
             return viewModel
         }

@@ -41,16 +41,14 @@ struct PiedpiperApp: App {
         
         let commandViewModel = CommandViewModel()
         _commandViewModel = StateObject(wrappedValue: commandViewModel)
-        
-        let ollamaKit = OllamaKit.shared
                 
-        let ollamaViewModel = OllamaViewModel(modelContext: modelContext, ollamaKit: ollamaKit)
+        let ollamaViewModel = OllamaViewModel(modelContext: modelContext)
         _ollamaViewModel = StateObject(wrappedValue: ollamaViewModel)
         
         let chatViewModel = ChatViewModel(modelContext: modelContext)
         _chatViewModel = StateObject(wrappedValue: chatViewModel)
         
-        MessageViewModelManager.shared = MessageViewModelManager(modelContext: modelContext, ollamaKit: ollamaKit)
+        MessageViewModelManager.shared = MessageViewModelManager(modelContext: modelContext)
     }
     
     var body: some Scene {

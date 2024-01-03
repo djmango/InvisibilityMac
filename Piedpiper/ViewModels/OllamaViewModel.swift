@@ -6,13 +6,12 @@ import OllamaKit
 @Observable
 final class OllamaViewModel: ObservableObject {
     private var modelContext: ModelContext
-    public var ollamaKit: OllamaKit
+    public let ollamaKit = OllamaKit.shared
     
     var models: [OllamaModel] = []
     
-    init(modelContext: ModelContext, ollamaKit: OllamaKit) {
+    init(modelContext: ModelContext) {
         self.modelContext = modelContext
-        self.ollamaKit = ollamaKit
     }
     
     func isReachable() async -> Bool {
@@ -64,7 +63,7 @@ final class OllamaViewModel: ObservableObject {
     }
     
     static func example(modelContainer: ModelContainer) -> OllamaViewModel {
-        let example = OllamaViewModel(modelContext: ModelContext(modelContainer), ollamaKit: OllamaKit.shared)
+        let example = OllamaViewModel(modelContext: ModelContext(modelContainer))
         return example
     }
 }
