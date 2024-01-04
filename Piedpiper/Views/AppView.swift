@@ -1,8 +1,11 @@
 import SwiftUI
 import ViewState
+import os
 
 struct AppView: View {
     @Environment(CommandViewModel.self) private var commandViewModel
+    @Environment(OllamaViewModel.self) private var ollamaViewModel
+    private let logger = Logger(subsystem: "pro.piedpiper.app", category: "OllamaViewModel")
     
     var body: some View {
         NavigationSplitView {
@@ -17,5 +20,6 @@ struct AppView: View {
                 }
             }
         }
+        .environmentObject(ollamaViewModel)
     }
 }

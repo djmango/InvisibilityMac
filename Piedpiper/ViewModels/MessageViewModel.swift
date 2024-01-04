@@ -53,7 +53,7 @@ final class MessageViewModel: ObservableObject {
         
         if await ollamaKit.reachable() {
             // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
-            let data = OkChatRequestData(model: message.model, messages: messages.dropLast().compactMap { $0.toChatMessage() })
+            let data = OKChatRequestData(model: message.model, messages: messages.dropLast().compactMap { $0.toChatMessage() })
             
             generation = ollamaKit.chat(data: data)
                 .handleEvents(
@@ -82,26 +82,27 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func regenerate(_ message: Message) async {
         self.sendViewState = .loading
-        
-        messages[messages.endIndex - 1] = message
-        try? modelContext.saveChanges()
-        
-        if await ollamaKit.reachable() {
-            let data = OkChatRequestData(model: message.model, messages: messages.map { $0.toChatMessage()! })
- 
-            generation = ollamaKit.chat(data: data)
-                .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        self?.handleComplete()
-                    case .failure(let error):
-                        self?.handleError(error.localizedDescription)
-                    }
-                }, receiveValue: { [weak self] response in
-                    self?.handleReceive(response)
-                })
+        let restarted = await OllamaKit.shared.restartBinaryAndWaitForAPI()
+        if restarted {
+            // Handle the case when the API restarts successfully
+            print("API restarted successfully.")
+            // Update the UI or proceed with the next steps
         } else {
-            self.handleError(AppMessages.ollamaServerUnreachable)
+            // Handle the failure case
+            print("Failed to restart the API.")
+            self.sendViewState = .error(message: "Failed to restart the API. Please try again later.")
+            // Update the UI to show an error message
+        }
+        
+        // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
+        // So for that, we'll recreate the original send scenario, when the new user message was sent
+        // We'll delete it the last two messages, the user message and the assistant message we want to regenerate
+        // This assumes chat structure is always user -> assistant -> user
+        
+        if messages.count < 2 { return }
+        messages.removeLast() // Removes the assistant message we are regenerating
+        if let userMessage = messages.popLast() { // Removes the user message and presents a fresh send scenario
+            await self.send(userMessage)
         }
     }
     

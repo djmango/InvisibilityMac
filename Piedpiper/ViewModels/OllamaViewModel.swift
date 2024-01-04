@@ -2,22 +2,42 @@ import SwiftData
 import SwiftUI
 import ViewState
 import OllamaKit
+import os
 
 @Observable
 final class OllamaViewModel: ObservableObject {
-    private var modelContext: ModelContext
     public let ollamaKit = OllamaKit.shared
+    private var modelContext: ModelContext
+    private var healthCheckTimer: Timer?
+    private let logger = Logger(subsystem: "pro.piedpiper.app", category: "OllamaViewModel")
     
     var models: [OllamaModel] = []
     
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
+//        self.startHealthCheck()
     }
     
     func isReachable() async -> Bool {
         await ollamaKit.reachable()
     }
     
+    func startHealthCheck() {
+        healthCheckTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
+            // Call the async function from the main queue
+            DispatchQueue.main.async {
+                Task {
+                    let reachable = await self.ollamaKit.reachable()
+                    self.logger.debug("Reachable: \(reachable)")
+                }
+            }
+        }
+    }
+    
+    func stopHealthCheck() {
+        healthCheckTimer?.invalidate()
+    }
+
     @MainActor
     func fetch() async throws {
         let prevModels = try self.fetchFromLocal()
@@ -46,9 +66,9 @@ final class OllamaViewModel: ObservableObject {
         let response = try await ollamaKit.models()
         
         // TODO FIND A PLACE FOR THIS
-//        let req = OKPullModelRequestData(name: "mistral:latest")
-//        let res = try await ollamaKit.pullModel(data: req)
-//        print(res)
+        let req = OKPullModelRequestData(name: "mistral:latest")
+        try await ollamaKit.pullModel(data: req)
+        
         let models = response.models
         
         return models

@@ -3,25 +3,17 @@ import SwiftUI
 import ViewCondition
 
 struct MessageListItemView: View {
+    private var message: Message
+    let regenerateAction: () -> Void
+    
     private var isAssistant: Bool = false
-    private var role: Role
     private var isGenerating: Bool = false
     private var isFinalMessage: Bool = false
     private var isError: Bool = false
     private var errorMessage: String? = nil
     
-    let text: String
-    let regenerateAction: () -> Void
-    
-    init(text: String, role: Role) {
-        self.text = text
-        self.role = role
-        self.regenerateAction = {}
-    }
-    
-    init(text: String, role: Role, regenerateAction: @escaping () -> Void) {
-        self.text = text
-        self.role = role
+    init(message: Message, regenerateAction: @escaping () -> Void) {
+        self.message = message
         self.regenerateAction = regenerateAction
     }
     
@@ -44,7 +36,7 @@ struct MessageListItemView: View {
             
             ProgressView()
                 .controlSize(.small)
-                .visible(if: isGenerating, removeCompletely: true)
+                .visible(if: isGenerating && isFinalMessage, removeCompletely: true)
             
             if let errorMessage {
                 TextError(errorMessage)
@@ -52,7 +44,7 @@ struct MessageListItemView: View {
                     .hide(if: isGenerating, removeCompletely: true)
             }
             
-            Markdown(text)
+            Markdown(message.content ?? "")
                 .textSelection(.enabled)
                 .markdownTextStyle(\.text) {
                     FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
@@ -108,7 +100,7 @@ struct MessageListItemView: View {
     
     // MARK: - Actions
     private func copyAction() {
-        let content = MarkdownContent(text)
+        let content = MarkdownContent(message.content ?? "")
         let plainText = content.renderPlainText()
         
         let pasteBoard = NSPasteboard.general

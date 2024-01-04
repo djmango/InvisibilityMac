@@ -35,9 +35,18 @@ struct MessageView: View {
     var body: some View {
             ScrollViewReader { scrollViewProxy in
                 List(messageViewModel.messages.indices, id: \.self) { index in
-                    let message = messageViewModel.messages[index]
+                    let message: Message = messageViewModel.messages[index]
+                    let action: () -> Void = {
+                        if message.role == .assistant {
+                            return {
+                                self.regenerateAction(for: message)
+                            }
+                        } else {
+                            return {}
+                        }
+                    }()
                         
-                    MessageListItemView(text: message.content ?? "", role: message.role ?? Role.assistant)
+                    MessageListItemView(message: message, regenerateAction: action)
                         .assistant(message.role == .assistant)
                         .generating(message.content.isNil && isGenerating)
                         .finalMessage(index == messageViewModel.messages.endIndex - 1)
