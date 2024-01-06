@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */; };
+		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D7454F02B44F48500ABBB3A /* DMRetry in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7454EF2B44F48500ABBB3A /* DMRetry */; };
 		4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B53782B2E49900020FA6A /* OllamaKit */; };
 		4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537B2B2E499A0020FA6A /* OllamaKit */; };
 		4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537E2B2E4A250020FA6A /* ChatField */; };
-		4D8B53852B313EA90020FA6A /* FileOpener.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8B53842B313EA90020FA6A /* FileOpener.swift */; };
 		4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */; };
 		4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */; };
 		4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */; };
@@ -37,7 +37,6 @@
 		4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05482B2516DE00B60D0D /* TextError.swift */; };
 		4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */; };
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
-		4DCA621C2B40FDB500D12660 /* ollama-darwin in Resources */ = {isa = PBXBuildFile; fileRef = 4DCA621B2B40FDB500D12660 /* ollama-darwin */; };
 		4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673502B17F46B00A5F9AE /* Sparkle */; };
 		4DE6736C2B17F46B00A5F9AE /* OptionalKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673462B17F46B00A5F9AE /* OptionalKit */; };
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
@@ -45,13 +44,14 @@
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
 		4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */; };
 		4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673522B17F46B00A5F9AE /* OllamaKit */; };
+		4DEF3F342B491CE200256ADE /* ollama-darwin in Resources */ = {isa = PBXBuildFile; fileRef = 4DEF3F332B491CE200256ADE /* ollama-darwin */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
+		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D8B53812B2E708A0020FA6A /* ChatField */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ChatField; path = ../../ChatField; sourceTree = "<group>"; };
-		4D8B53842B313EA90020FA6A /* FileOpener.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileOpener.swift; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandViewModel.swift; sourceTree = "<group>"; };
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
@@ -78,8 +78,8 @@
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		4D98E90D2B2C54F800505014 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../../OllamaKit; sourceTree = "<group>"; };
-		4DCA621B2B40FDB500D12660 /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* piedpiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = piedpiper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,7 +162,7 @@
 		4D8E05302B2516DE00B60D0D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4DCA621B2B40FDB500D12660 /* ollama-darwin */,
+				4DEF3F332B491CE200256ADE /* ollama-darwin */,
 				4D8E05312B2516DE00B60D0D /* piedpiper.entitlements */,
 				4D8E05322B2516DE00B60D0D /* Assets.xcassets */,
 				4D8E05332B2516DE00B60D0D /* Info.plist */,
@@ -173,7 +173,7 @@
 		4D8E05342B2516DE00B60D0D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				4D8B53842B313EA90020FA6A /* FileOpener.swift */,
+				4D5B4BC42B48F3320067C543 /* ImageUtils.swift */,
 				4D8E05352B2516DE00B60D0D /* AppMessages.swift */,
 			);
 			path = Utils;
@@ -324,7 +324,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
-				4DCA621C2B40FDB500D12660 /* ollama-darwin in Resources */,
+				4DEF3F342B491CE200256ADE /* ollama-darwin in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,7 +345,6 @@
 				4D8E054F2B2516DE00B60D0D /* UpdaterViewModel.swift in Sources */,
 				4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */,
 				4D8E05572B2516DE00B60D0D /* OllamaModel.swift in Sources */,
-				4D8B53852B313EA90020FA6A /* FileOpener.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */,
 				4D8E05502B2516DE00B60D0D /* OllamaViewModel.swift in Sources */,
@@ -360,6 +359,7 @@
 				4D8E055F2B2516DE00B60D0D /* PromptEditorExpandedView.swift in Sources */,
 				4D8E055A2B2516DE00B60D0D /* RenameChatView.swift in Sources */,
 				4D8E05592B2516DE00B60D0D /* ModelContext+SaveChanges.swift in Sources */,
+				4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

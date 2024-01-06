@@ -16,7 +16,7 @@ class MessageViewModelManager {
     // The shared static instance allows global access to the MessageViewModelManager.
     static var shared: MessageViewModelManager!
     // A dictionary to store and reuse MessageViewModel instances, keyed by chatID.
-    private var viewModels: [UUID: MessageViewModel] = [:]
+    private var viewModels: [Chat: MessageViewModel] = [:]
     // Dependencies required by MessageViewModels.
     private var modelContext: ModelContext
     
@@ -26,12 +26,12 @@ class MessageViewModelManager {
     
     // Function to retrieve a MessageViewModel for a given chatID.
     // It reuses existing view models or creates a new one if not already present.
-    func viewModel(for chatID: UUID) -> MessageViewModel {
-        if let viewModel = viewModels[chatID] {
+    func viewModel(for chat: Chat) -> MessageViewModel {
+        if let viewModel = viewModels[chat] {
             return viewModel
         } else {
-            let viewModel = MessageViewModel(chatID: chatID, modelContext: self.modelContext)
-            viewModels[chatID] = viewModel
+            let viewModel = MessageViewModel(chat: chat, modelContext: self.modelContext)
+            viewModels[chat] = viewModel
             return viewModel
         }
     }

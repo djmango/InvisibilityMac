@@ -5,23 +5,24 @@ import SwiftData
 import ViewState
 import CoreGraphics
 import Vision
+import Cocoa
+import SwiftUI
+import UniformTypeIdentifiers
 
 @Observable
 final class MessageViewModel: ObservableObject {
     private var generation: AnyCancellable?
     
-    private var chatID: UUID
+    private var chat: Chat
     private var modelContext: ModelContext
-    private let ollamaKit = OllamaKit.shared
-    private var fileOpener: FileOpener
+    private var lastOpenedImage: String?
     
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
     
-    init(chatID: UUID, modelContext: ModelContext) {
+    init(chat: Chat, modelContext: ModelContext) {
         self.modelContext = modelContext
-        self.chatID = chatID
-        self.fileOpener = FileOpener()
+        self.chat = chat
 
     }
     
@@ -45,17 +46,17 @@ final class MessageViewModel: ObservableObject {
         messages.append(message)
         modelContext.insert(message)
         
-        let assistantMessage = Message(content: nil, role: .assistant, chat: message.chat)
+        let assistantMessage = Message(content: nil, role: .assistant, chat: self.chat)
         messages.append(assistantMessage)
-        modelContext.insert(message)
+        modelContext.insert(assistantMessage)
         
         try? modelContext.saveChanges()
         
-        if await ollamaKit.reachable() {
+        if await OllamaKit.shared.reachable() {
             // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
             let data = OKChatRequestData(model: message.model, messages: messages.dropLast().compactMap { $0.toChatMessage() })
             
-            generation = ollamaKit.chat(data: data)
+            generation = OllamaKit.shared.chat(data: data)
                 .handleEvents(
                         receiveSubscription: { _ in print("Received Subscription") },
                         receiveOutput: { _ in print("Received Output") },
@@ -151,7 +152,7 @@ final class MessageViewModel: ObservableObject {
     
     static func example(modelContainer: ModelContainer) -> MessageViewModel {
         let chat = Chat(name: "Example chat")
-        let example = MessageViewModel(chatID: chat.id, modelContext: ModelContext(modelContainer))
+        let example = MessageViewModel(chat: chat, modelContext: ModelContext(modelContainer))
         return example
     }
 }
@@ -159,13 +160,61 @@ final class MessageViewModel: ObservableObject {
 // @MARK Image Handler
 extension MessageViewModel {
     
-    // Public function that can be called to begin the file open process
+    /// Public function that can be called to begin the file open process
     func openFile() {
-        self.fileOpener.openFile(completionHandler: self.recognizeTextHandler)
+        let openPanel = NSOpenPanel()
+        openPanel.allowsMultipleSelection = false
+        openPanel.canChooseFiles = true
+        openPanel.canChooseDirectories = false
+        
+        // Define allowed content types using UTType
+        openPanel.allowedContentTypes = [
+            UTType.png,
+            UTType.jpeg,
+            UTType.gif,
+            UTType.bmp,
+            UTType.tiff,
+            UTType.heif
+        ]
+        
+        openPanel.begin { result in
+            if result == .OK, let url = openPanel.url {
+                guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+                    return
+                }
+                guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
+                    return
+                }
+
+                self.sendViewState = .loading
+
+                // Convert the image to a base64 string and store it in the view model
+                // But first, resize the image to a smaller size
+                if let resizedImage = resizeCGImage(cgImage, toMaxSize: 1024) {
+                    self.lastOpenedImage = resizedImage.toBase64String()
+                }
+                
+                // Create a new image-request handler.
+                let requestHandler = VNImageRequestHandler(cgImage: cgImage)
+
+                // Create a new request to recognize text.
+                let request = VNRecognizeTextRequest(completionHandler: self.recognizeTextHandler)
+        do {
+            // Perform the text-recognition request.
+            try requestHandler.perform([request])
+        } catch {
+            print("Unable to perform the requests: \(error).")
+        }
+            } else {
+                print("ERROR: Couldn't grab file url for some reason")
+            }
+        }
     }
     
+    /// Async callback handler, takes the OCR results and spawns messages from them
     private func recognizeTextHandler(request: VNRequest, error: Error?) {
         guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
+        guard let image = self.lastOpenedImage else { return }
         
         let recognizedStrings = observations.compactMap { observation in
             // Return the string of the top VNRecognizedText instance.
@@ -174,8 +223,22 @@ extension MessageViewModel {
         
         // Append the recognized strings to chat. Should design this better, just appending is dumb.
         let joined = recognizedStrings.joined(separator: " ")
-        self.messages.append(Message(content: "Take a a look at this image for me", role: Role.user))
-        self.messages.append(Message(content: "It says: \(joined)", role: Role.assistant))
-    }
 
+
+        // Create a new message with the recognized text
+        let userMessage = Message(content: "Take a a look at this image for me", role: Role.user, chat: self.chat, images: [image])
+        let assistantMessage = Message(content: "It says: \(joined)", role: Role.assistant, chat: self.chat)
+
+        // Add the messages to the view model and save them to the database
+        self.messages.append(userMessage)
+        self.messages.append(assistantMessage)
+        self.modelContext.insert(userMessage)
+        self.modelContext.insert(assistantMessage)
+        do {
+            try self.modelContext.saveChanges()
+        } catch {
+            print("Error saving changes: \(error)")
+        }
+        self.sendViewState = nil
+    }
 }

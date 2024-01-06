@@ -1,6 +1,7 @@
 import MarkdownUI
 import SwiftUI
 import ViewCondition
+import CoreGraphics
 
 struct MessageListItemView: View {
     private var message: Message
@@ -11,6 +12,9 @@ struct MessageListItemView: View {
     private var isFinalMessage: Bool = false
     private var isError: Bool = false
     private var errorMessage: String? = nil
+
+    @State private var imageWidth: CGFloat?
+    @State private var imageExpanded = false
     
     init(message: Message, regenerateAction: @escaping () -> Void) {
         self.message = message
@@ -69,6 +73,24 @@ struct MessageListItemView: View {
                 }
                 .hide(if: isGenerating, removeCompletely: true)
                 .hide(if: isError, removeCompletely: true)
+
+            if let images = message.images {
+                    HStack(alignment: .center, spacing: 8) {
+                        ForEach(images, id: \.self) { base64String in
+                            if let nsImage = base64String.base64ToImage() {
+                                Image(nsImage: nsImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth: 256)
+                            }
+                        }
+                    }
+                    .animation(.easeInOut, value: imageExpanded)
+                    .shadow(radius: imageExpanded ? 10 : 5)
+                    .border(Color.gray, width: imageExpanded ? 2 : 1)
+//                    .background(imageExpanded ? LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .top, endPoint: .bottom) : Color.white)
+                    .cornerRadius(imageExpanded ? 20 : 10)
+            }
             
             HStack(alignment: .center, spacing: 8) {
                 Button(action: copyAction) {

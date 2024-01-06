@@ -4,7 +4,7 @@ import SwiftUI
 import SwiftData
 
 class GlobalState: ObservableObject {
-    @Published var activeChatID: UUID?
+    @Published var activeChat: Chat?
 }
 
 @main
@@ -78,7 +78,7 @@ struct PiedpiperApp: App {
             
             CommandGroup(after: .newItem) {
                 Button("Open File") {
-                    guard let activeChatID = self.globalState.activeChatID else {
+                    guard let activeChatID = self.globalState.activeChat else {
                         print("NOCHAT") // TODO make it spawn a chat
                         return
                     }

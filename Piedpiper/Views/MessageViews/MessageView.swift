@@ -25,7 +25,7 @@ struct MessageView: View {
     }
     
     var messageViewModel: MessageViewModel {
-        return MessageViewModelManager.shared.viewModel(for: chat.id)
+        return MessageViewModelManager.shared.viewModel(for: chat)
     }
     
     var isGenerating: Bool {
@@ -106,7 +106,7 @@ struct MessageView: View {
     private func initAction() {
         try? messageViewModel.fetch(for: chat)
         
-        globalState.activeChatID = self.chat.id
+        globalState.activeChat = self.chat
         
         isEditorFocused = true
     }
