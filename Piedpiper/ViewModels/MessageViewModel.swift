@@ -188,10 +188,9 @@ extension MessageViewModel {
 
                 self.sendViewState = .loading
 
-                // Convert the image to a base64 string and store it in the view model
-                // But first, resize the image to a smaller size
-                if let resizedImage = resizeCGImage(cgImage, toMaxSize: 1024) {
-                    self.lastOpenedImage = resizedImage.toBase64String()
+                // Standardize and convert the image to a base64 string and store it in the view model
+                if let standardizedImage = standardizeImage(cgImage) {
+                    self.lastOpenedImage = standardizedImage.base64EncodedString()
                 }
                 
                 // Create a new image-request handler.
@@ -240,5 +239,6 @@ extension MessageViewModel {
             print("Error saving changes: \(error)")
         }
         self.sendViewState = nil
+        self.lastOpenedImage = nil
     }
 }

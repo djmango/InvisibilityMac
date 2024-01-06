@@ -25,3 +25,14 @@ final class Chat: Identifiable {
         return example
     }
 }
+
+// MARK: - Hashable
+extension Chat: Hashable {
+    static func == (lhs: Chat, rhs: Chat) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
