@@ -15,7 +15,7 @@ final class MessageViewModel: ObservableObject {
 
     private var chat: Chat
     private var modelContext: ModelContext
-    private var lastOpenedImage: String?
+    private var lastOpenedImage: Data?
 
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
@@ -196,7 +196,7 @@ extension MessageViewModel {
 
                 // Standardize and convert the image to a base64 string and store it in the view model
                 if let standardizedImage = standardizeImage(cgImage) {
-                    self.lastOpenedImage = standardizedImage.base64EncodedString()
+                    self.lastOpenedImage = standardizedImage
                 }
 
                 // Create a new image-request handler.

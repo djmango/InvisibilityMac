@@ -14,10 +14,14 @@ struct MessageListItemView: View {
     private var isError: Bool = false
     private var errorMessage: String? = nil
 
-    var onImageExpand: (CGRect) -> Void
+    var onImageExpand: (Image, CGRect) -> Void
     private var geometry: GeometryProxy
 
-    init(message: Message, geometry: GeometryProxy, regenerateAction: @escaping () -> Void, onImageExpand: @escaping (CGRect) -> Void = { _ in }) {
+    init(message: Message,
+         geometry: GeometryProxy,
+         regenerateAction: @escaping () -> Void,
+         onImageExpand: @escaping (Image, CGRect) -> Void)
+    {
         self.message = message
         self.geometry = geometry
         self.regenerateAction = regenerateAction
@@ -79,18 +83,18 @@ struct MessageListItemView: View {
 
             if let images = message.images {
                 HStack(alignment: .center, spacing: 8) {
-                    ForEach(images, id: \.self) { base64String in
-                        if let nsImage = base64String.base64ToImage() {
+                    ForEach(images, id: \.self) { imageData in
+                        if let nsImage = NSImage(data: imageData) {
                             Image(nsImage: nsImage)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxWidth: 256)
                                 .onTapGesture {
                                     let frame = geometry.frame(in: .global)
-                                    onImageExpand(frame)
+                                    onImageExpand(Image(nsImage: nsImage), frame)
                                 }
-                                .shadow(radius: 5)
-                                .border(Color.gray, width: 1)
+                                .shadow(radius: 25)
+                                // .border(Color.gray, width: 1)
                                 .cornerRadius(10)
                         }
                     }

@@ -11,14 +11,14 @@ enum Role: String, Codable {
 
 @Model
 final class Message: Identifiable {
-    @Attribute(.unique) var id: UUID = UUID.init()
+    @Attribute(.unique) var id: UUID = UUID()
 
     /// Message textual content
     var content: String?
     /// Role for message sender, system, user, or assistant
     var role: Role?
-    /// Optional list of base64 encoded image
-    var images: [String]?
+    /// Optional list of images stored externally to avoid bloating the database
+    @Attribute(.externalStorage) var images: [Data]?
 
     var done: Bool = false
     var error: Bool = false
@@ -26,7 +26,7 @@ final class Message: Identifiable {
 
     @Relationship var chat: Chat?
 
-    init(content: String? = nil, role: Role? = nil, chat: Chat? = nil, images: [String]? = nil) {
+    init(content: String? = nil, role: Role? = nil, chat: Chat? = nil, images: [Data]? = nil) {
         self.content = content
         self.role = role
         self.chat = chat
@@ -40,14 +40,14 @@ final class Message: Identifiable {
 
 extension Message {
     func toChatMessage() -> ChatMessage? {
-        guard let content = content else { return nil }
-        guard let role = role else { return nil }
+        guard let content else { return nil }
+        guard let role else { return nil }
         return ChatMessage(role: role.rawValue, content: content)
     }
 }
 
 extension Message: CustomStringConvertible {
     var description: String {
-        return "\(role?.rawValue ?? ""): \(content ?? "")"
+        "\(role?.rawValue ?? ""): \(content ?? "")"
     }
 }

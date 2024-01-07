@@ -20,9 +20,8 @@ struct MessageView: View {
     @FocusState private var promptFocused: Bool
     @State private var content: String = ""
 
-    // Image expansion
-    @State private var expandedMessage: Message? = nil
-    @State private var imageFrame: CGRect = .zero
+    /// A tuple to store the image and its original frame
+    @State private var expandedImage: (Image, CGRect)? = nil
 
     init(for chat: Chat) {
         self.chat = chat
@@ -41,6 +40,7 @@ struct MessageView: View {
             ScrollViewReader { scrollViewProxy in
                 List(messageViewModel.messages.indices, id: \.self) { index in
                     let message: Message = messageViewModel.messages[index]
+                    // Generate the action for the message, if it is an assistant message.
                     let action: () -> Void = {
                         if message.role == .assistant {
                             return {
@@ -51,12 +51,20 @@ struct MessageView: View {
                         }
                     }()
 
-                    MessageListItemView(message: message, geometry: geometry, regenerateAction: action)
-                        .assistant(message.role == .assistant)
-                        .generating(message.content.isNil && isGenerating)
-                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                        .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
-                        .id(message)
+                    // Generate the view for the individual message.
+                    MessageListItemView(
+                        message: message,
+                        geometry: geometry,
+                        regenerateAction: action,
+                        onImageExpand: { image, frame in
+                            expandedImage = (image, frame)
+                        }
+                    )
+                    .assistant(message.role == .assistant)
+                    .generating(message.content.isNil && isGenerating)
+                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                    .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
+                    .id(message)
                 }
 
                 .onAppear {
