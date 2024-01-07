@@ -6,9 +6,9 @@ final class CommandViewModel: ObservableObject {
     var isAddChatViewPresented: Bool = false
     var isRenameChatViewPresented: Bool = false
     var isDeleteChatConfirmationPresented: Bool = false
-    
+
     var selectedChat: Chat? = nil
-    
+
     var chatToRename: Chat? {
         didSet {
             if chatToRename.isNotNil {
@@ -16,7 +16,7 @@ final class CommandViewModel: ObservableObject {
             }
         }
     }
-    
+
     var chatToDelete: Chat? {
         didSet {
             if chatToDelete.isNotNil {

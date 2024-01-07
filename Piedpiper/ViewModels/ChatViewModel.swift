@@ -4,54 +4,54 @@ import SwiftUI
 @Observable
 final class ChatViewModel: ObservableObject {
     private var modelContext: ModelContext
-        
+
     var chats: [Chat] = []
-    
+
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
-    
+
     func fetch() throws {
         let sortDescriptor = SortDescriptor(\Chat.modifiedAt, order: .reverse)
         let fetchDescriptor = FetchDescriptor<Chat>(sortBy: [sortDescriptor])
-        
-        self.chats = try self.modelContext.fetch(fetchDescriptor)
+
+        chats = try modelContext.fetch(fetchDescriptor)
     }
-    
+
     func create(_ chat: Chat) throws {
-        self.modelContext.insert(chat)
-        self.chats.insert(chat, at: 0)
-        
-        try self.modelContext.saveChanges()
+        modelContext.insert(chat)
+        chats.insert(chat, at: 0)
+
+        try modelContext.saveChanges()
     }
-    
+
     func rename(_ chat: Chat) throws {
-        if let index = self.chats.firstIndex(where: { $0.id == chat.id }) {
-            self.chats[index] = chat
+        if let index = chats.firstIndex(where: { $0.id == chat.id }) {
+            chats[index] = chat
         }
-        
-        try self.modelContext.saveChanges()
+
+        try modelContext.saveChanges()
     }
-    
+
     func delete(_ chat: Chat) throws {
-        self.modelContext.delete(chat)
-        self.chats.removeAll(where: { $0.id == chat.id })
-        
-        try self.modelContext.saveChanges()
+        modelContext.delete(chat)
+        chats.removeAll(where: { $0.id == chat.id })
+
+        try modelContext.saveChanges()
     }
-    
+
     func modify(_ chat: Chat) throws {
         chat.modifiedAt = .now
 
-        if let index = self.chats.firstIndex(where: { $0.id == chat.id }) {
-            self.chats.remove(at: index)
-            self.chats.insert(chat, at: 0)
+        if let index = chats.firstIndex(where: { $0.id == chat.id }) {
+            chats.remove(at: index)
+            chats.insert(chat, at: 0)
         }
 
-        try self.modelContext.saveChanges()
+        try modelContext.saveChanges()
     }
-    
-    static func example(modelContainer: ModelContainer, chats: [Chat]) -> ChatViewModel {
+
+    static func example(modelContainer: ModelContainer, chats _: [Chat]) -> ChatViewModel {
         let example = ChatViewModel(modelContext: ModelContext(modelContainer))
         return example
     }

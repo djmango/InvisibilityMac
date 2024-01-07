@@ -3,8 +3,8 @@ import SwiftData
 
 @Model
 final class Chat: Identifiable {
-    @Attribute(.unique) var id: UUID = UUID()
-    
+    @Attribute(.unique) var id: UUID = UUID.init()
+
     var name: String
     var createdAt: Date = Date.now
     var modifiedAt: Date = Date.now
@@ -14,11 +14,11 @@ final class Chat: Identifiable {
 
     @Relationship(deleteRule: .cascade, inverse: \Message.chat)
     var messages: [Message] = []
-    
+
     init(name: String) {
         self.name = name
     }
-    
+
     static func example() -> Chat {
         let example = Chat(name: "Example")
         example.messages = [Message(content: "Yo", role: Role.user, chat: example)]
@@ -27,6 +27,7 @@ final class Chat: Identifiable {
 }
 
 // MARK: - Hashable
+
 extension Chat: Hashable {
     static func == (lhs: Chat, rhs: Chat) -> Bool {
         lhs.id == rhs.id

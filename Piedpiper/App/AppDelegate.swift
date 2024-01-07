@@ -6,11 +6,11 @@
 //
 
 import Foundation
-import SwiftUI
 import OllamaKit
+import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    func applicationWillTerminate(_ aNotification: Notification) {
+    func applicationWillTerminate(_: Notification) {
         print("App will terminate")
         OllamaKit.shared.terminateBinaryProcess()
     }

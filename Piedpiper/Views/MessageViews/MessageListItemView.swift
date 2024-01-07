@@ -1,53 +1,56 @@
+import CoreGraphics
 import MarkdownUI
 import SwiftUI
 import ViewCondition
-import CoreGraphics
 
 struct MessageListItemView: View {
     private var message: Message
     let regenerateAction: () -> Void
-    
+
+    // Message state
     private var isAssistant: Bool = false
     private var isGenerating: Bool = false
     private var isFinalMessage: Bool = false
     private var isError: Bool = false
     private var errorMessage: String? = nil
 
-    @State private var imageWidth: CGFloat?
-    @State private var imageExpanded = false
-    
-    init(message: Message, regenerateAction: @escaping () -> Void) {
+    var onImageExpand: (CGRect) -> Void
+    private var geometry: GeometryProxy
+
+    init(message: Message, geometry: GeometryProxy, regenerateAction: @escaping () -> Void, onImageExpand: @escaping (CGRect) -> Void = { _ in }) {
         self.message = message
+        self.geometry = geometry
         self.regenerateAction = regenerateAction
+        self.onImageExpand = onImageExpand
     }
-    
+
     @State private var isHovered: Bool = false
     @State private var isCopied: Bool = false
-    
+
     private var isCopyButtonVisible: Bool {
         isHovered && isAssistant && !isGenerating
     }
-    
+
     private var isRegenerateButtonVisible: Bool {
         isCopyButtonVisible && isAssistant && isFinalMessage
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(isAssistant ? "Piedpiper" : "You")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.accent)
-            
+
             ProgressView()
                 .controlSize(.small)
                 .visible(if: isGenerating && isFinalMessage, removeCompletely: true)
-            
+
             if let errorMessage {
                 TextError(errorMessage)
                     .visible(if: isError, removeCompletely: true)
                     .hide(if: isGenerating, removeCompletely: true)
             }
-            
+
             Markdown(message.content ?? "")
                 .textSelection(.enabled)
                 .markdownTextStyle(\.text) {
@@ -75,23 +78,25 @@ struct MessageListItemView: View {
                 .hide(if: isError, removeCompletely: true)
 
             if let images = message.images {
-                    HStack(alignment: .center, spacing: 8) {
-                        ForEach(images, id: \.self) { base64String in
-                            if let nsImage = base64String.base64ToImage() {
-                                Image(nsImage: nsImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(maxWidth: 256)
-                            }
+                HStack(alignment: .center, spacing: 8) {
+                    ForEach(images, id: \.self) { base64String in
+                        if let nsImage = base64String.base64ToImage() {
+                            Image(nsImage: nsImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: 256)
+                                .onTapGesture {
+                                    let frame = geometry.frame(in: .global)
+                                    onImageExpand(frame)
+                                }
+                                .shadow(radius: 5)
+                                .border(Color.gray, width: 1)
+                                .cornerRadius(10)
                         }
                     }
-                    .animation(.easeInOut, value: imageExpanded)
-                    .shadow(radius: imageExpanded ? 10 : 5)
-                    .border(Color.gray, width: imageExpanded ? 2 : 1)
-//                    .background(imageExpanded ? LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .top, endPoint: .bottom) : Color.white)
-                    .cornerRadius(imageExpanded ? 20 : 10)
+                }
             }
-            
+
             HStack(alignment: .center, spacing: 8) {
                 Button(action: copyAction) {
                     Image(systemName: isCopied ? "list.clipboard.fill" : "clipboard")
@@ -100,7 +105,7 @@ struct MessageListItemView: View {
                 .clipShape(.circle)
                 .help("Copy")
                 .visible(if: isCopyButtonVisible)
-                
+
                 Button(action: regenerateAction) {
                     Image(systemName: "arrow.triangle.2.circlepath")
                 }
@@ -119,46 +124,48 @@ struct MessageListItemView: View {
             isCopied = false
         }
     }
-    
+
     // MARK: - Actions
+
     private func copyAction() {
         let content = MarkdownContent(message.content ?? "")
         let plainText = content.renderPlainText()
-        
+
         let pasteBoard = NSPasteboard.general
         pasteBoard.clearContents()
         pasteBoard.setString(plainText, forType: .string)
-        
+
         isCopied = true
     }
-    
+
     // MARK: - Modifiers
+
     public func assistant(_ isAssistant: Bool) -> MessageListItemView {
         var view = self
         view.isAssistant = isAssistant
-        
+
         return view
     }
-    
+
     public func generating(_ isGenerating: Bool) -> MessageListItemView {
         var view = self
         view.isGenerating = isGenerating
-        
+
         return view
     }
-    
+
     public func finalMessage(_ isFinalMessage: Bool) -> MessageListItemView {
         var view = self
         view.isFinalMessage = isFinalMessage
-        
+
         return view
     }
-    
+
     public func error(_ isError: Bool, message: String?) -> MessageListItemView {
         var view = self
         view.isError = isError
         view.errorMessage = message ?? AppMessages.generalErrorMessage
-        
+
         return view
     }
 }

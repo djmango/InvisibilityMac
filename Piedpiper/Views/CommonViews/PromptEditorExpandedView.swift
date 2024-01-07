@@ -3,16 +3,16 @@ import SwiftUIIntrospect
 
 struct PromptEditorExpandedView: View {
     @Environment(\.dismiss) private var dismiss
-    
+
     @Binding var prompt: String
     let sendAction: () -> Void
-    
+
     private var sendButtonDisabled: Bool {
         if prompt.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { return true }
-        
+
         return false
     }
-    
+
     var body: some View {
         NavigationStack {
             VStack {
@@ -32,11 +32,11 @@ struct PromptEditorExpandedView: View {
                     .keyboardShortcut("w", modifiers: .command)
                     .help("Dismiss editor (⌘ + W)")
                 }
-                
+
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
                         sendAction()
-                        
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                             dismiss()
                         }

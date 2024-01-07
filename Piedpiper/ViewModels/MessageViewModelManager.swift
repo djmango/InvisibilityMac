@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftData
 import OllamaKit
+import SwiftData
 
 // MessageViewModelManager is a singleton class responsible for managing instances of MessageViewModel.
 // It ensures that only one instance of MessageViewModel is created and used per chat.
@@ -19,18 +19,18 @@ class MessageViewModelManager {
     private var viewModels: [Chat: MessageViewModel] = [:]
     // Dependencies required by MessageViewModels.
     private var modelContext: ModelContext
-    
+
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
     }
-    
+
     // Function to retrieve a MessageViewModel for a given chatID.
     // It reuses existing view models or creates a new one if not already present.
     func viewModel(for chat: Chat) -> MessageViewModel {
         if let viewModel = viewModels[chat] {
             return viewModel
         } else {
-            let viewModel = MessageViewModel(chat: chat, modelContext: self.modelContext)
+            let viewModel = MessageViewModel(chat: chat, modelContext: modelContext)
             viewModels[chat] = viewModel
             return viewModel
         }

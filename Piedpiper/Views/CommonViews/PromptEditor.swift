@@ -4,7 +4,7 @@ import SwiftUIIntrospect
 struct PromptEditor: View {
     @Binding var prompt: String
     let large: Bool
-    
+
     var body: some View {
         if large {
             TextEditor(text: $prompt)
@@ -31,8 +31,9 @@ struct PromptStyleModifier: ViewModifier {
             .font(.title3.weight(.regular))
             .background(Color(nsColor: .textBackgroundColor))
             .clipShape(RoundedRectangle(cornerRadius: 6))
-            .overlay(RoundedRectangle(cornerRadius: 6)
-                .stroke(Color(nsColor: .separatorColor))
+            .overlay(
+                RoundedRectangle(cornerRadius: 6)
+                    .stroke(Color(nsColor: .separatorColor))
             )
     }
 }

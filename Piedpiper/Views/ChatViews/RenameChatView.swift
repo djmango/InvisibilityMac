@@ -3,19 +3,19 @@ import ViewState
 
 struct RenameChatView: View {
     private var chat: Chat
-    
+
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(ChatViewModel.self) private var chatViewModel
-    
+
     @State private var name: String
-    
+
     init(for chat: Chat) {
         self.chat = chat
-        
+
         _name = State(initialValue: chat.name)
     }
-    
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
@@ -30,7 +30,7 @@ struct RenameChatView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done", action: saveAction)
                         .disabled(name.isEmpty)
@@ -38,11 +38,11 @@ struct RenameChatView: View {
             }
         }
     }
-    
+
     func saveAction() {
         chat.name = name
         try? chatViewModel.rename(chat)
-        
+
         dismiss()
     }
 }
