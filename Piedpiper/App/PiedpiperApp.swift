@@ -16,6 +16,7 @@ struct PiedpiperApp: App {
     @StateObject private var commandViewModel: CommandViewModel
     @StateObject private var ollamaViewModel: OllamaViewModel
     @StateObject private var chatViewModel: ChatViewModel
+    @StateObject private var imageViewModel: ImageViewModel
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
@@ -50,6 +51,9 @@ struct PiedpiperApp: App {
         let chatViewModel = ChatViewModel(modelContext: modelContext)
         _chatViewModel = StateObject(wrappedValue: chatViewModel)
 
+        let imageViewModel = ImageViewModel()
+        _imageViewModel = StateObject(wrappedValue: imageViewModel)
+
         MessageViewModelManager.shared = MessageViewModelManager(modelContext: modelContext)
     }
 
@@ -61,6 +65,7 @@ struct PiedpiperApp: App {
                 .environmentObject(commandViewModel)
                 .environmentObject(chatViewModel)
                 .environmentObject(ollamaViewModel)
+                .environmentObject(imageViewModel)
         }
         .modelContainer(sharedModelContainer)
         .commands {
@@ -80,7 +85,7 @@ struct PiedpiperApp: App {
 
             CommandGroup(after: .newItem) {
                 Button("Open File") {
-                    guard let activeChatID = self.globalState.activeChat else {
+                    guard let activeChatID = globalState.activeChat else {
                         print("NOCHAT") // TODO: make it spawn a chat
                         return
                     }

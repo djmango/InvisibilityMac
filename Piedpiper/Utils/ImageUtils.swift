@@ -62,7 +62,7 @@ func resizeCGImage(_ cgImage: CGImage, toMaxSize maxSize: CGFloat) -> CGImage? {
     return context.makeImage()
 }
 
-func standardizeImage(_ image: CGImage, compressionQuality: CGFloat = 0.8) -> Data? {
+func standardizeImage(_ image: CGImage, compressionQuality: CGFloat = 0.8, maxSize: CGFloat = 2048) -> Data? {
     let mutableData = NSMutableData()
     let jpegUTI = "public.jpeg" as CFString
 
@@ -70,7 +70,7 @@ func standardizeImage(_ image: CGImage, compressionQuality: CGFloat = 0.8) -> Da
         return nil
     }
 
-    guard let resizedImage = resizeCGImage(image, toMaxSize: 1024) else {
+    guard let resizedImage = resizeCGImage(image, toMaxSize: maxSize) else {
         return nil
     }
 

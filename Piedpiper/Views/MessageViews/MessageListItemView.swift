@@ -4,6 +4,8 @@ import SwiftUI
 import ViewCondition
 
 struct MessageListItemView: View {
+    @EnvironmentObject private var imageViewModel: ImageViewModel
+
     private var message: Message
     let regenerateAction: () -> Void
 
@@ -14,18 +16,15 @@ struct MessageListItemView: View {
     private var isError: Bool = false
     private var errorMessage: String? = nil
 
-    var onImageExpand: (Image, CGRect) -> Void
     private var geometry: GeometryProxy
 
     init(message: Message,
          geometry: GeometryProxy,
-         regenerateAction: @escaping () -> Void,
-         onImageExpand: @escaping (Image, CGRect) -> Void)
+         regenerateAction: @escaping () -> Void)
     {
         self.message = message
         self.geometry = geometry
         self.regenerateAction = regenerateAction
-        self.onImageExpand = onImageExpand
     }
 
     @State private var isHovered: Bool = false
@@ -88,14 +87,14 @@ struct MessageListItemView: View {
                             Image(nsImage: nsImage)
                                 .resizable()
                                 .scaledToFit()
-                                .frame(maxWidth: 256)
+                                // https://developer.apple.com/documentation/swiftui/view/frame(minwidth:idealwidth:maxwidth:minheight:idealheight:maxheight:alignment:)
+                                .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
                                 .onTapGesture {
                                     let frame = geometry.frame(in: .global)
-                                    onImageExpand(Image(nsImage: nsImage), frame)
+                                    imageViewModel.setImage(image: nsImage, originalFrame: frame)
                                 }
-                                .shadow(radius: 25)
-                                // .border(Color.gray, width: 1)
-                                .cornerRadius(10)
+                                .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
+                                .shadow(radius: 2)
                         }
                     }
                 }

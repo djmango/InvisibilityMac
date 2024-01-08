@@ -12,6 +12,7 @@ struct MessageView: View {
     @Environment(\.modelContext) private var modelContext: ModelContext
     @Environment(ChatViewModel.self) private var chatViewModel: ChatViewModel
     @Environment(OllamaViewModel.self) private var ollamaViewModel: OllamaViewModel
+    @EnvironmentObject private var imageViewModel: ImageViewModel
 
     @FocusState private var isEditorFocused: Bool
     @State private var viewState: ViewState? = nil
@@ -20,15 +21,12 @@ struct MessageView: View {
     @FocusState private var promptFocused: Bool
     @State private var content: String = ""
 
-    /// A tuple to store the image and its original frame
-    @State private var expandedImage: (Image, CGRect)? = nil
-
     init(for chat: Chat) {
         self.chat = chat
     }
 
     var messageViewModel: MessageViewModel {
-        return MessageViewModelManager.shared.viewModel(for: chat)
+        MessageViewModelManager.shared.viewModel(for: chat)
     }
 
     var isGenerating: Bool {
@@ -43,11 +41,11 @@ struct MessageView: View {
                     // Generate the action for the message, if it is an assistant message.
                     let action: () -> Void = {
                         if message.role == .assistant {
-                            return {
-                                self.regenerateAction(for: message)
+                            {
+                                regenerateAction(for: message)
                             }
                         } else {
-                            return {}
+                            {}
                         }
                     }()
 
@@ -55,16 +53,14 @@ struct MessageView: View {
                     MessageListItemView(
                         message: message,
                         geometry: geometry,
-                        regenerateAction: action,
-                        onImageExpand: { image, frame in
-                            expandedImage = (image, frame)
-                        }
+                        regenerateAction: action
                     )
                     .assistant(message.role == .assistant)
                     .generating(message.content.isNil && isGenerating)
                     .finalMessage(index == messageViewModel.messages.endIndex - 1)
                     .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
                     .id(message)
+                    .environmentObject(imageViewModel)
                 }
 
                 .onAppear {

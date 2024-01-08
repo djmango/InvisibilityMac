@@ -11,6 +11,9 @@
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D7454F02B44F48500ABBB3A /* DMRetry in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7454EF2B44F48500ABBB3A /* DMRetry */; };
+		4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */; };
+		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
+		4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4252B4CB639007F025B /* ImageViewModel.swift */; };
 		4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B53782B2E49900020FA6A /* OllamaKit */; };
 		4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537B2B2E499A0020FA6A /* OllamaKit */; };
 		4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537E2B2E4A250020FA6A /* ChatField */; };
@@ -51,6 +54,8 @@
 		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedImageView.swift; sourceTree = "<group>"; };
+		4D7AB4252B4CB639007F025B /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 		4D8B53812B2E708A0020FA6A /* ChatField */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ChatField; path = ../../ChatField; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandViewModel.swift; sourceTree = "<group>"; };
@@ -96,6 +101,7 @@
 				4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */,
 				4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */,
 				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
+				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
 				4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */,
 				4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */,
 			);
@@ -146,6 +152,7 @@
 				4D8E052C2B2516DE00B60D0D /* UpdaterViewModel.swift */,
 				4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */,
 				4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */,
+				4D7AB4252B4CB639007F025B /* ImageViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -242,6 +249,7 @@
 			children = (
 				4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */,
 				4D8E054B2B2516DE00B60D0D /* MessageView.swift */,
+				4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */,
 			);
 			path = MessageViews;
 			sourceTree = "<group>";
@@ -274,6 +282,7 @@
 				4D8B537B2B2E499A0020FA6A /* OllamaKit */,
 				4D8B537E2B2E4A250020FA6A /* ChatField */,
 				4D7454EF2B44F48500ABBB3A /* DMRetry */,
+				4D7AB4232B4CB469007F025B /* Pow */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* piedpiper.app */;
@@ -308,6 +317,7 @@
 				4D8B537A2B2E499A0020FA6A /* XCRemoteSwiftPackageReference "OllamaKit" */,
 				4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */,
 				4D7454EE2B44F48500ABBB3A /* XCRemoteSwiftPackageReference "swift-retry" */,
+				4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -348,8 +358,10 @@
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */,
 				4D8E05502B2516DE00B60D0D /* OllamaViewModel.swift in Sources */,
+				4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */,
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,
+				4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* PiedpiperApp.swift in Sources */,
 				4D8E05602B2516DE00B60D0D /* PromptEditor.swift in Sources */,
@@ -630,6 +642,14 @@
 				minimumVersion = 0.1.2;
 			};
 		};
+		4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/EmergeTools/Pow.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
 		4D8B537A2B2E499A0020FA6A /* XCRemoteSwiftPackageReference "OllamaKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/djmango/OllamaKit";
@@ -709,6 +729,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D7454EE2B44F48500ABBB3A /* XCRemoteSwiftPackageReference "swift-retry" */;
 			productName = DMRetry;
+		};
+		4D7AB4232B4CB469007F025B /* Pow */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */;
+			productName = Pow;
 		};
 		4D8B53782B2E49900020FA6A /* OllamaKit */ = {
 			isa = XCSwiftPackageProductDependency;

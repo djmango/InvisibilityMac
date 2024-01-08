@@ -9,15 +9,15 @@ import Foundation
 import OllamaKit
 import SwiftData
 
-// MessageViewModelManager is a singleton class responsible for managing instances of MessageViewModel.
-// It ensures that only one instance of MessageViewModel is created and used per chat.
-// It is initiated only one time in PiedpiperApp.init
+/// MessageViewModelManager is a singleton class responsible for managing instances of MessageViewModel.
+/// It ensures that only one instance of MessageViewModel is created and used per chat.
+/// It is initiated only one time in PiedpiperApp.init
 class MessageViewModelManager {
-    // The shared static instance allows global access to the MessageViewModelManager.
+    /// The shared static instance allows global access to the MessageViewModelManager.
     static var shared: MessageViewModelManager!
-    // A dictionary to store and reuse MessageViewModel instances, keyed by chatID.
+    /// A dictionary to store and reuse MessageViewModel instances, keyed by chatID.
     private var viewModels: [Chat: MessageViewModel] = [:]
-    // Dependencies required by MessageViewModels.
+    /// Dependencies required by MessageViewModels.
     private var modelContext: ModelContext
 
     init(modelContext: ModelContext) {
