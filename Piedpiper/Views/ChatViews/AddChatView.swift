@@ -22,7 +22,7 @@ struct AddChatView: View {
 
     private var createButtonDisabled: Bool {
         if name.isEmpty { return true }
-        if selectedModel.isNil { return true }
+        if selectedModel == nil { return true }
         if let selectedModel, selectedModel.isNotAvailable { return true }
 
         return false

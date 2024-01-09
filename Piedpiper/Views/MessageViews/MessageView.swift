@@ -56,7 +56,7 @@ struct MessageView: View {
                         regenerateAction: action
                     )
                     .assistant(message.role == .assistant)
-                    .generating(message.content.isNil && isGenerating)
+                    .generating(message.content == nil && isGenerating)
                     .finalMessage(index == messageViewModel.messages.endIndex - 1)
                     .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
                     .id(message)
@@ -101,14 +101,14 @@ struct MessageView: View {
                 .padding(.bottom, 16)
                 .padding(.horizontal)
             }
-        }
-        .navigationTitle(chat.name)
-        .navigationSubtitle(chat.model?.name ?? "")
-        .task {
-            initAction()
-        }
-        .onChange(of: chat) {
-            initAction()
+
+            .navigationTitle(chat.name)
+            .task {
+                initAction()
+            }
+            .onChange(of: chat) {
+                initAction()
+            }
         }
     }
 
@@ -123,7 +123,7 @@ struct MessageView: View {
     }
 
     private func sendAction() {
-        guard messageViewModel.sendViewState.isNil else { return }
+        guard messageViewModel.sendViewState == nil else { return }
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
         let message = Message(content: content, role: .user, chat: chat)
@@ -136,7 +136,7 @@ struct MessageView: View {
     }
 
     private func regenerateAction(for message: Message) {
-        guard messageViewModel.sendViewState.isNil else { return }
+        guard messageViewModel.sendViewState == nil else { return }
 
         message.done = false
 

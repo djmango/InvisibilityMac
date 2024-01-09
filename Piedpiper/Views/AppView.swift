@@ -1,5 +1,6 @@
 import os
 import SwiftUI
+import SwiftUIImageViewer
 import ViewState
 
 struct AppView: View {
@@ -17,7 +18,6 @@ struct AppView: View {
                 } detail: {
                     if let selectedChat = commandViewModel.selectedChat {
                         MessageView(for: selectedChat)
-                            .environmentObject(imageViewModel)
                     } else {
                         ContentUnavailableView {
                             Text("No Chat Selected")

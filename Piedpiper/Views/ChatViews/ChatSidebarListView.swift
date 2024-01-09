@@ -87,15 +87,16 @@ struct ChatSidebarListView: View {
                 .help("New Chat (⌘ + N)")
             }
         }
-        .navigationDestination(for: Chat.self) { chat in
-            MessageView(for: chat)
-            //                .environmentObject(chatViewModel)
-        }
+        // .toolbar(.visible)
+        // .navigationDestination(for: Chat.self) { chat in
+        //     MessageView(for: chat)
+        //         .environmentObject(chatViewModel)
+        // }
         .sheet(
             isPresented: $commandViewModelBindable.isAddChatViewPresented
         ) {
             AddChatView { createdChat in
-                self.commandViewModel.selectedChat = createdChat
+                commandViewModel.selectedChat = createdChat
             }
         }
         .sheet(

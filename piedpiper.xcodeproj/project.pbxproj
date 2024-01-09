@@ -10,7 +10,6 @@
 		4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
-		4D7454F02B44F48500ABBB3A /* DMRetry in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7454EF2B44F48500ABBB3A /* DMRetry */; };
 		4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
 		4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4252B4CB639007F025B /* ImageViewModel.swift */; };
@@ -41,7 +40,6 @@
 		4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */; };
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
 		4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673502B17F46B00A5F9AE /* Sparkle */; };
-		4DE6736C2B17F46B00A5F9AE /* OptionalKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673462B17F46B00A5F9AE /* OptionalKit */; };
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
@@ -93,11 +91,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */,
-				4DE6736C2B17F46B00A5F9AE /* OptionalKit in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
-				4D7454F02B44F48500ABBB3A /* DMRetry in Frameworks */,
 				4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */,
 				4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */,
 				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
@@ -271,7 +267,6 @@
 			);
 			name = piedpiper;
 			packageProductDependencies = (
-				4DE673462B17F46B00A5F9AE /* OptionalKit */,
 				4DE673482B17F46B00A5F9AE /* ViewState */,
 				4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */,
 				4DE6734C2B17F46B00A5F9AE /* ViewCondition */,
@@ -281,7 +276,6 @@
 				4D8B53782B2E49900020FA6A /* OllamaKit */,
 				4D8B537B2B2E499A0020FA6A /* OllamaKit */,
 				4D8B537E2B2E4A250020FA6A /* ChatField */,
-				4D7454EF2B44F48500ABBB3A /* DMRetry */,
 				4D7AB4232B4CB469007F025B /* Pow */,
 			);
 			productName = Ollamac;
@@ -308,7 +302,6 @@
 			);
 			mainGroup = 0A4D35782AF541D900846890;
 			packageReferences = (
-				0AA41A122AF613BF0053B8DB /* XCRemoteSwiftPackageReference "OptionalKit" */,
 				0AA41A152AF635AD0053B8DB /* XCRemoteSwiftPackageReference "ViewState" */,
 				0ACA4D5C2AF7AC43000DA76F /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 				0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */,
@@ -316,7 +309,6 @@
 				0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				4D8B537A2B2E499A0020FA6A /* XCRemoteSwiftPackageReference "OllamaKit" */,
 				4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */,
-				4D7454EE2B44F48500ABBB3A /* XCRemoteSwiftPackageReference "swift-retry" */,
 				4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
@@ -586,14 +578,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0AA41A122AF613BF0053B8DB /* XCRemoteSwiftPackageReference "OptionalKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kevinhermawan/OptionalKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		0AA41A152AF635AD0053B8DB /* XCRemoteSwiftPackageReference "ViewState" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kevinhermawan/ViewState.git";
@@ -634,14 +618,6 @@
 				minimumVersion = 2.5.1;
 			};
 		};
-		4D7454EE2B44F48500ABBB3A /* XCRemoteSwiftPackageReference "swift-retry" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/fumoboy007/swift-retry.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.2;
-			};
-		};
 		4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/Pow.git";
@@ -664,14 +640,6 @@
 			requirement = {
 				branch = master;
 				kind = branch;
-			};
-		};
-		4DE673472B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OptionalKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kevinhermawan/OptionalKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
 			};
 		};
 		4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */ = {
@@ -725,11 +693,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4D7454EF2B44F48500ABBB3A /* DMRetry */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4D7454EE2B44F48500ABBB3A /* XCRemoteSwiftPackageReference "swift-retry" */;
-			productName = DMRetry;
-		};
 		4D7AB4232B4CB469007F025B /* Pow */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */;
@@ -748,11 +711,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */;
 			productName = ChatField;
-		};
-		4DE673462B17F46B00A5F9AE /* OptionalKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DE673472B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OptionalKit" */;
-			productName = OptionalKit;
 		};
 		4DE673482B17F46B00A5F9AE /* ViewState */ = {
 			isa = XCSwiftPackageProductDependency;

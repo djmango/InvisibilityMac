@@ -18,22 +18,22 @@ struct ExpandedImageView: View {
     var body: some View {
         ZStack {
             // Blurred background
-            Color.black.opacity(0.5).edgesIgnoringSafeArea(.all)
+            Color.black.opacity(0.5)
+                .edgesIgnoringSafeArea(.all)
                 .onTapGesture {
-                    withAnimation {
-                        onDismiss()
-                    }
+                    onDismiss()
                 }
 
             // Image view
             Image(nsImage: nsImage)
                 .resizable()
                 .scaledToFit()
+                .padding()
                 .frame(width: originalFrame.size.width, height: originalFrame.size.height)
                 .scaleEffect(scale)
                 .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
                 .onAppear {
-                    withAnimation(.easeInOut(duration: 0.5)) {
+                    withAnimation(.easeInOut(duration: 0.2)) {
                         scale = 1.0 // Animate to full size
                     }
                 }
@@ -54,6 +54,7 @@ struct ExpandedImageView: View {
             //     Spacer()
             // }
         }
+        .edgesIgnoringSafeArea(.all)
     }
 }
 

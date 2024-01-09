@@ -3,6 +3,8 @@ import MarkdownUI
 import SwiftUI
 import ViewCondition
 
+import SwiftUIImageViewer
+
 struct MessageListItemView: View {
     @EnvironmentObject private var imageViewModel: ImageViewModel
 
@@ -17,6 +19,8 @@ struct MessageListItemView: View {
     private var errorMessage: String? = nil
 
     private var geometry: GeometryProxy
+
+    @State private var isImagePresented = false
 
     init(message: Message,
          geometry: GeometryProxy,
@@ -92,9 +96,22 @@ struct MessageListItemView: View {
                                 .onTapGesture {
                                     let frame = geometry.frame(in: .global)
                                     imageViewModel.setImage(image: nsImage, originalFrame: frame)
+                                    isImagePresented = true
                                 }
                                 .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
                                 .shadow(radius: 2)
+                            // .sheet(isPresented: $isImagePresented) {
+                            //     SwiftUIImageViewer(image: Image(nsImage: nsImage))
+                            //         .overlay(alignment: .topTrailing) {
+                            //             Button(action: {
+                            //                 isImagePresented = false
+                            //             }) {
+                            //                 Image(systemName: "xmark.circle.fill")
+                            //                     .font(.title)
+                            //                     .padding()
+                            //             }
+                            //         }
+                            // }
                         }
                     }
                 }

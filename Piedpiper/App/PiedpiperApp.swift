@@ -67,6 +67,7 @@ struct PiedpiperApp: App {
                 .environmentObject(ollamaViewModel)
                 .environmentObject(imageViewModel)
         }
+        .windowStyle(HiddenTitleBarWindowStyle())
         .modelContainer(sharedModelContainer)
         .commands {
             CommandGroup(after: .appInfo) {

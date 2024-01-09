@@ -126,7 +126,7 @@ final class MessageViewModel: ObservableObject {
         guard let message = response.message else { return }
         guard let lastMessage = messages.last else { return }
 
-        if lastMessage.content.isNil { lastMessage.content = "" }
+        if lastMessage.content == nil { lastMessage.content = "" }
         lastMessage.content?.append(message.content)
 
         sendViewState = .loading

@@ -1,5 +1,4 @@
 import Foundation
-import OptionalKit
 
 @Observable
 final class CommandViewModel: ObservableObject {
@@ -11,7 +10,7 @@ final class CommandViewModel: ObservableObject {
 
     var chatToRename: Chat? {
         didSet {
-            if chatToRename.isNotNil {
+            if chatToRename != nil {
                 isRenameChatViewPresented = true
             }
         }
@@ -19,7 +18,7 @@ final class CommandViewModel: ObservableObject {
 
     var chatToDelete: Chat? {
         didSet {
-            if chatToDelete.isNotNil {
+            if chatToDelete != nil {
                 isDeleteChatConfirmationPresented = true
             }
         }

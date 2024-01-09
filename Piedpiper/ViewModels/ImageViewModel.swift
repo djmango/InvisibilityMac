@@ -12,6 +12,7 @@ import SwiftUI
 final class ImageViewModel: ObservableObject {
     @Published var image: NSImage? = nil
     @Published var originalFrame: CGRect? = nil
+    // @Binding var isExpanded: Bool
 
     func setImage(image: NSImage, originalFrame: CGRect) {
         self.image = image
