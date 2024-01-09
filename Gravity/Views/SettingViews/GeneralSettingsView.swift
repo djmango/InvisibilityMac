@@ -55,7 +55,7 @@ struct GeneralSettingsView: View {
             }
             .padding(.horizontal)
         }
-        .focusEffectDisabled()
+        // .focusEffectDisabled()
         .focusable(false)
         .frame(minWidth: 500, maxWidth: .infinity, minHeight: 150, maxHeight: .infinity, alignment: .top)
         .padding()

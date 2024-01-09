@@ -108,17 +108,11 @@ struct GravityApp: App {
             }
             .frame()
             SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {
-                SettingsSubtab(.noSelection, id: "advanced") {
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            Text("Advanced Settings")
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                }
+                SettingsSubtab(.noSelection, id: "advanced") { AdvancedSettingsView() }
+            }
+            .frame()
+            SettingsTab(.new(title: "About", icon: .info), id: "about") {
+                SettingsSubtab(.noSelection, id: "about") { AboutSettingsView() }
             }
             .frame()
         }

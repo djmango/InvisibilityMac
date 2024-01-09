@@ -43,6 +43,8 @@
 		4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */; };
 		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
 		4DD282E12B4DF7530041690B /* Shortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E02B4DF7530041690B /* Shortcuts.swift */; };
+		4DD282E32B4E05B80041690B /* AdvancedSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E22B4E05B80041690B /* AdvancedSettingsView.swift */; };
+		4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E42B4E08660041690B /* AboutSettingsView.swift */; };
 		4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673502B17F46B00A5F9AE /* Sparkle */; };
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
@@ -87,6 +89,8 @@
 		4D98E90D2B2C54F800505014 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../../OllamaKit; sourceTree = "<group>"; };
 		4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		4DD282E02B4DF7530041690B /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
+		4DD282E22B4E05B80041690B /* AdvancedSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSettingsView.swift; sourceTree = "<group>"; };
+		4DD282E42B4E08660041690B /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -264,6 +268,8 @@
 			isa = PBXGroup;
 			children = (
 				4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */,
+				4DD282E22B4E05B80041690B /* AdvancedSettingsView.swift */,
+				4DD282E42B4E08660041690B /* AboutSettingsView.swift */,
 			);
 			path = SettingViews;
 			sourceTree = "<group>";
@@ -369,6 +375,7 @@
 				4D8E054F2B2516DE00B60D0D /* UpdaterViewModel.swift in Sources */,
 				4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */,
 				4D8E05572B2516DE00B60D0D /* OllamaModel.swift in Sources */,
+				4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */,
 				4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */,
@@ -376,6 +383,7 @@
 				4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */,
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,
+				4DD282E32B4E05B80041690B /* AdvancedSettingsView.swift in Sources */,
 				4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */,
 				4DD282E12B4DF7530041690B /* Shortcuts.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
