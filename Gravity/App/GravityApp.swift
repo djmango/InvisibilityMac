@@ -1,4 +1,5 @@
 import OllamaKit
+import SettingsKit
 import Sparkle
 import SwiftData
 import SwiftUI
@@ -100,6 +101,14 @@ struct GravityApp: App {
                     ChatContextMenu(commandViewModel, for: selectedChat)
                 }
             }
+        }
+        .settings {
+            SettingsTab(.new(title: "General", icon: .gearshape), id: "general", color: .gray) {
+                SettingsSubtab(.noSelection, id: "no-selection") {
+                    GeneralSettingsView()
+                }
+            }
+            // .frame(minWidth: 400, idealWidth: 400, minHeight: 300, idealHeight: 300, alignment: .topLeading)
         }
     }
 }

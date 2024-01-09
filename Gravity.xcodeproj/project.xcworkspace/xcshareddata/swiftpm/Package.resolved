@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "colibricomponents-macos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/david-swift/ColibriComponents-macOS",
+      "state" : {
+        "revision" : "ce8b4accee3361a904831a3c659de0c99369e8bf",
+        "version" : "0.1.11"
+      }
+    },
+    {
       "identity" : "networkimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/gonzalezreal/NetworkImage",
@@ -25,6 +34,24 @@
       "state" : {
         "revision" : "cc014eba4b65f689cadc281ad925de5607f2adc9",
         "version" : "1.0.3"
+      }
+    },
+    {
+      "identity" : "settingskit-macos",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/david-swift/SettingsKit-macOS",
+      "state" : {
+        "revision" : "eca48656b1ccf01b64e8162710e6ff0aacbfd738",
+        "version" : "0.2.3"
+      }
+    },
+    {
+      "identity" : "sfsafesymbols",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SFSafeSymbols/SFSafeSymbols",
+      "state" : {
+        "revision" : "7cca2d60925876b5953a2cf7341cd80fbeac983c",
+        "version" : "4.1.1"
       }
     },
     {
@@ -61,6 +88,15 @@
       "state" : {
         "revision" : "5df8a4adedd6ae4eb2455ef60ff75183984daeb8",
         "version" : "2.2.0"
+      }
+    },
+    {
+      "identity" : "swiftlintplugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lukepistrol/SwiftLintPlugin",
+      "state" : {
+        "revision" : "ea6d3ca895b49910f790e98e4b4ca658e0fe490e",
+        "version" : "0.54.0"
       }
     },
     {

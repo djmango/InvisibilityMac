@@ -39,6 +39,8 @@
 		4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05482B2516DE00B60D0D /* TextError.swift */; };
 		4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */; };
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
+		4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282D82B4DEB6E0041690B /* SettingsKit */; };
+		4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */; };
 		4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673502B17F46B00A5F9AE /* Sparkle */; };
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
@@ -81,6 +83,7 @@
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		4D98E90D2B2C54F800505014 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../../OllamaKit; sourceTree = "<group>"; };
+		4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,6 +93,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
 				4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
@@ -211,6 +215,7 @@
 		4D8E053E2B2516DE00B60D0D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4DD282DA2B4DEF6E0041690B /* SettingViews */,
 				4D8E053F2B2516DE00B60D0D /* ChatViews */,
 				4D8E05442B2516DE00B60D0D /* AppView.swift */,
 				4D8E05452B2516DE00B60D0D /* CommonViews */,
@@ -250,6 +255,14 @@
 			path = MessageViews;
 			sourceTree = "<group>";
 		};
+		4DD282DA2B4DEF6E0041690B /* SettingViews */ = {
+			isa = PBXGroup;
+			children = (
+				4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */,
+			);
+			path = SettingViews;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -277,6 +290,7 @@
 				4D8B537B2B2E499A0020FA6A /* OllamaKit */,
 				4D8B537E2B2E4A250020FA6A /* ChatField */,
 				4D7AB4232B4CB469007F025B /* Pow */,
+				4DD282D82B4DEB6E0041690B /* SettingsKit */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Gravity.app */;
@@ -310,6 +324,7 @@
 				4D8B537A2B2E499A0020FA6A /* XCRemoteSwiftPackageReference "OllamaKit" */,
 				4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */,
 				4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */,
+				4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -349,6 +364,7 @@
 				4D8E05572B2516DE00B60D0D /* OllamaModel.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */,
+				4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */,
 				4D8E05502B2516DE00B60D0D /* OllamaViewModel.swift in Sources */,
 				4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */,
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
@@ -642,6 +658,14 @@
 				kind = branch;
 			};
 		};
+		4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/david-swift/SettingsKit-macOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.3;
+			};
+		};
 		4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kevinhermawan/ViewState.git";
@@ -711,6 +735,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */;
 			productName = ChatField;
+		};
+		4DD282D82B4DEB6E0041690B /* SettingsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */;
+			productName = SettingsKit;
 		};
 		4DE673482B17F46B00A5F9AE /* ViewState */ = {
 			isa = XCSwiftPackageProductDependency;

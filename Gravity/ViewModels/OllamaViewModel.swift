@@ -42,6 +42,7 @@ final class OllamaViewModel: ObservableObject {
     func fetch() async throws {
         let prevModels = try fetchFromLocal()
         let newModels = try await fetchFromRemote()
+        logger.debug("Fetched \(newModels.count) models")
 
         for model in prevModels {
             if newModels.contains(where: { $0.name == model.name }) {
@@ -66,8 +67,14 @@ final class OllamaViewModel: ObservableObject {
         let response = try await ollamaKit.models()
 
         // TODO: FIND A PLACE FOR THIS
+        logger.debug("Pulling model")
         let req = OKPullModelRequestData(name: "mistral:latest")
-        try await ollamaKit.pullModel(data: req)
+        do {
+            try await ollamaKit.pullModel(data: req)
+            logger.debug("Pulled model")
+        } catch {
+            logger.error("Failed to pull model: \(error)")
+        }
 
         let models = response.models
 
