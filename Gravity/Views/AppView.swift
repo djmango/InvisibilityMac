@@ -1,6 +1,5 @@
 import os
 import SwiftUI
-import SwiftUIImageViewer
 import ViewState
 
 struct AppView: View {

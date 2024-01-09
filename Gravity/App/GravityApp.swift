@@ -8,7 +8,7 @@ class GlobalState: ObservableObject {
 }
 
 @main
-struct PiedpiperApp: App {
+struct GravityApp: App {
     private var updater: SPUUpdater
 
     @StateObject private var globalState: GlobalState = .init()

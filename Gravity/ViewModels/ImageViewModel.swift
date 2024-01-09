@@ -1,6 +1,6 @@
 //
 //  ImageViewModel.swift
-//  piedpiper
+//  Gravity
 //
 //  Created by Sulaiman Ghori on 1/8/24.
 //

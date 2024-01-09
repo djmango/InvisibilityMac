@@ -9,7 +9,7 @@ final class OllamaViewModel: ObservableObject {
     public let ollamaKit = OllamaKit.shared
     private var modelContext: ModelContext
     private var healthCheckTimer: Timer?
-    private let logger = Logger(subsystem: "pro.piedpiper.app", category: "OllamaViewModel")
+    private let logger = Logger(subsystem: "ai.grav.app", category: "OllamaViewModel")
 
     var models: [OllamaModel] = []
 

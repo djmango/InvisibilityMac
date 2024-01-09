@@ -3,8 +3,6 @@ import MarkdownUI
 import SwiftUI
 import ViewCondition
 
-import SwiftUIImageViewer
-
 struct MessageListItemView: View {
     @EnvironmentObject private var imageViewModel: ImageViewModel
 
@@ -44,7 +42,7 @@ struct MessageListItemView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(isAssistant ? "Piedpiper" : "You")
+            Text(isAssistant ? "Gravity" : "You")
                 .font(.title3.weight(.semibold))
                 .foregroundStyle(.accent)
 

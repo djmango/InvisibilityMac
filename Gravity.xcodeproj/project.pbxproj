@@ -21,7 +21,7 @@
 		4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */; };
 		4D8E054F2B2516DE00B60D0D /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052C2B2516DE00B60D0D /* UpdaterViewModel.swift */; };
 		4D8E05502B2516DE00B60D0D /* OllamaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */; };
-		4D8E05512B2516DE00B60D0D /* PiedpiperApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052F2B2516DE00B60D0D /* PiedpiperApp.swift */; };
+		4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052F2B2516DE00B60D0D /* GravityApp.swift */; };
 		4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E05322B2516DE00B60D0D /* Assets.xcassets */; };
 		4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05352B2516DE00B60D0D /* AppMessages.swift */; };
 		4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05372B2516DE00B60D0D /* Chat.swift */; };
@@ -60,7 +60,7 @@
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 		4D8E052C2B2516DE00B60D0D /* UpdaterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OllamaViewModel.swift; sourceTree = "<group>"; };
-		4D8E052F2B2516DE00B60D0D /* PiedpiperApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PiedpiperApp.swift; sourceTree = "<group>"; };
+		4D8E052F2B2516DE00B60D0D /* GravityApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GravityApp.swift; sourceTree = "<group>"; };
 		4D8E05312B2516DE00B60D0D /* piedpiper.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = piedpiper.entitlements; sourceTree = "<group>"; };
 		4D8E05322B2516DE00B60D0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4D8E05332B2516DE00B60D0D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -81,7 +81,7 @@
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		4D98E90D2B2C54F800505014 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../../OllamaKit; sourceTree = "<group>"; };
-		4DE673792B17F46B00A5F9AE /* piedpiper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = piedpiper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,7 +109,7 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
-				4D8E05272B2516DE00B60D0D /* piedpiper */,
+				4D8E05272B2516DE00B60D0D /* Gravity */,
 				0A4D35822AF541D900846890 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -117,12 +117,12 @@
 		0A4D35822AF541D900846890 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				4DE673792B17F46B00A5F9AE /* piedpiper.app */,
+				4DE673792B17F46B00A5F9AE /* Gravity.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4D8E05272B2516DE00B60D0D /* piedpiper */ = {
+		4D8E05272B2516DE00B60D0D /* Gravity */ = {
 			isa = PBXGroup;
 			children = (
 				4D8B53812B2E708A0020FA6A /* ChatField */,
@@ -136,7 +136,7 @@
 				4D8E053C2B2516DE00B60D0D /* Extensions */,
 				4D8E053E2B2516DE00B60D0D /* Views */,
 			);
-			path = piedpiper;
+			path = Gravity;
 			sourceTree = "<group>";
 		};
 		4D8E05282B2516DE00B60D0D /* ViewModels */ = {
@@ -156,7 +156,7 @@
 		4D8E052E2B2516DE00B60D0D /* App */ = {
 			isa = PBXGroup;
 			children = (
-				4D8E052F2B2516DE00B60D0D /* PiedpiperApp.swift */,
+				4D8E052F2B2516DE00B60D0D /* GravityApp.swift */,
 				4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */,
 			);
 			path = App;
@@ -253,9 +253,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		4DE673452B17F46B00A5F9AE /* piedpiper */ = {
+		4DE673452B17F46B00A5F9AE /* Gravity */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "piedpiper" */;
+			buildConfigurationList = 4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "Gravity" */;
 			buildPhases = (
 				4DE673542B17F46B00A5F9AE /* Sources */,
 				4DE6736A2B17F46B00A5F9AE /* Frameworks */,
@@ -265,7 +265,7 @@
 			);
 			dependencies = (
 			);
-			name = piedpiper;
+			name = Gravity;
 			packageProductDependencies = (
 				4DE673482B17F46B00A5F9AE /* ViewState */,
 				4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */,
@@ -279,7 +279,7 @@
 				4D7AB4232B4CB469007F025B /* Pow */,
 			);
 			productName = Ollamac;
-			productReference = 4DE673792B17F46B00A5F9AE /* piedpiper.app */;
+			productReference = 4DE673792B17F46B00A5F9AE /* Gravity.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -292,7 +292,7 @@
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
 			};
-			buildConfigurationList = 0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "piedpiper" */;
+			buildConfigurationList = 0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "Gravity" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -315,7 +315,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				4DE673452B17F46B00A5F9AE /* piedpiper */,
+				4DE673452B17F46B00A5F9AE /* Gravity */,
 			);
 		};
 /* End PBXProject section */
@@ -355,7 +355,7 @@
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,
 				4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
-				4D8E05512B2516DE00B60D0D /* PiedpiperApp.swift in Sources */,
+				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
 				4D8E05602B2516DE00B60D0D /* PromptEditor.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
@@ -496,18 +496,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = piedpiper/Resources/piedpiper.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Gravity/Resources/piedpiper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 5;
-				DEVELOPMENT_ASSET_PATHS = "\"piedpiper/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Gravity/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = piedpiper/Resources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = piedpiper;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_FILE = Gravity/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Gravity;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © Invisiblity Inc. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -515,7 +515,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "pro.piedpiper.app-debug";
+				PRODUCT_BUNDLE_IDENTIFIER = "ai.grav.app-debug";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -528,18 +528,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
-				CODE_SIGN_ENTITLEMENTS = piedpiper/Resources/piedpiper.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Gravity/Resources/piedpiper.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"piedpiper/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Gravity/Preview Content\"";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = piedpiper/Resources/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = piedpiper;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_FILE = Gravity/Resources/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Gravity;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © Invisiblity Inc. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -547,7 +547,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = pro.piedpiper.app;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -557,7 +557,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "piedpiper" */ = {
+		0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "Gravity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0A4D35902AF541DA00846890 /* Debug */,
@@ -566,7 +566,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "piedpiper" */ = {
+		4DE673762B17F46B00A5F9AE /* Build configuration list for PBXNativeTarget "Gravity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4DE673772B17F46B00A5F9AE /* Debug */,

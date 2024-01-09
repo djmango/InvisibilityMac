@@ -12,8 +12,8 @@
 	"argv": [
 		"/usr/local/bin/xcode-build-server"
 	],
-	"workspace": "/Users/djmango/github/invisibility_inc/piedpiper/piedpiper.xcodeproj/project.xcworkspace",
-	"build_root": "/Users/djmango/Library/Developer/Xcode/DerivedData/piedpiper-actaesumyejxfegnkfnvoiasituf",
-	"scheme": "piedpiper",
+	"workspace": "/Users/djmango/github/invisibility_inc/Gravity/Gravity.xcodeproj/project.xcworkspace",
+	"build_root": "/Users/djmango/Library/Developer/Xcode/DerivedData/Gravity-fllpiguwvjazjyfukrjfuvvkvmpo",
+	"scheme": "Gravity",
 	"kind": "xcode"
 }
