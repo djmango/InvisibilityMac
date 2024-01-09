@@ -41,6 +41,8 @@
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
 		4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282D82B4DEB6E0041690B /* SettingsKit */; };
 		4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */; };
+		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
+		4DD282E12B4DF7530041690B /* Shortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E02B4DF7530041690B /* Shortcuts.swift */; };
 		4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673502B17F46B00A5F9AE /* Sparkle */; };
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
@@ -84,6 +86,7 @@
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		4D98E90D2B2C54F800505014 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../../OllamaKit; sourceTree = "<group>"; };
 		4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
+		4DD282E02B4DF7530041690B /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -98,6 +101,7 @@
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
+				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
 				4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */,
 				4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */,
 				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
@@ -162,6 +166,7 @@
 			children = (
 				4D8E052F2B2516DE00B60D0D /* GravityApp.swift */,
 				4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */,
+				4DD282E02B4DF7530041690B /* Shortcuts.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -291,6 +296,7 @@
 				4D8B537E2B2E4A250020FA6A /* ChatField */,
 				4D7AB4232B4CB469007F025B /* Pow */,
 				4DD282D82B4DEB6E0041690B /* SettingsKit */,
+				4DD282DE2B4DF7050041690B /* KeyboardShortcuts */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Gravity.app */;
@@ -325,6 +331,7 @@
 				4D8B537D2B2E4A250020FA6A /* XCRemoteSwiftPackageReference "ChatField" */,
 				4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */,
 				4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */,
+				4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -370,6 +377,7 @@
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,
 				4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */,
+				4DD282E12B4DF7530041690B /* Shortcuts.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
 				4D8E05602B2516DE00B60D0D /* PromptEditor.swift in Sources */,
@@ -666,6 +674,14 @@
 				minimumVersion = 0.2.3;
 			};
 		};
+		4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.16.1;
+			};
+		};
 		4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kevinhermawan/ViewState.git";
@@ -740,6 +756,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */;
 			productName = SettingsKit;
+		};
+		4DD282DE2B4DF7050041690B /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
 		};
 		4DE673482B17F46B00A5F9AE /* ViewState */ = {
 			isa = XCSwiftPackageProductDependency;

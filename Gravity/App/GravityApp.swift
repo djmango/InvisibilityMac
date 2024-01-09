@@ -104,11 +104,23 @@ struct GravityApp: App {
         }
         .settings {
             SettingsTab(.new(title: "General", icon: .gearshape), id: "general", color: .gray) {
-                SettingsSubtab(.noSelection, id: "no-selection") {
-                    GeneralSettingsView()
+                SettingsSubtab(.noSelection, id: "general") { GeneralSettingsView() }
+            }
+            .frame()
+            SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {
+                SettingsSubtab(.noSelection, id: "advanced") {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("Advanced Settings")
+                            Spacer()
+                        }
+                        Spacer()
+                    }
                 }
             }
-            // .frame(minWidth: 400, idealWidth: 400, minHeight: 300, idealHeight: 300, alignment: .topLeading)
+            .frame()
         }
     }
 }
