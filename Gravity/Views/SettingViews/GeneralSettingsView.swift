@@ -6,12 +6,13 @@
 //
 
 import KeyboardShortcuts
+import LaunchAtLogin
 import SwiftUI
 
 struct GeneralSettingsView: View {
-    @State private var autoLaunch: Bool = true
-    @State private var analytics: Bool = false
-    @State private var newFeatures: Bool = false
+    @AppStorage("autoLaunch") private var autoLaunch: Bool = false
+    @AppStorage("analytics") private var analytics: Bool = false
+    @AppStorage("betaFeatures") private var betaFeatures: Bool = false
 
     var body: some View {
         VStack(alignment: .center) {
@@ -24,16 +25,14 @@ struct GeneralSettingsView: View {
                     }
                 }
 
+                LaunchAtLogin.Toggle()
+
                 Section {
-                    Toggle("Open Gravity at Login", isOn: $autoLaunch).bold()
+                    Toggle("Share crash reports & analytics", isOn: $analytics).bold()
                 }
 
                 Section {
-                    Toggle("Sharing crash reports & analytics", isOn: $analytics).bold()
-                }
-
-                Section {
-                    Toggle("Enable beta features", isOn: $newFeatures).bold()
+                    Toggle("Enable beta features", isOn: $betaFeatures).bold()
                 }
             }
             .frame(width: 500)
