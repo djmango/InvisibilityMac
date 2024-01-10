@@ -11,7 +11,7 @@ import SwiftUI
 
 struct GeneralSettingsView: View {
     @AppStorage("autoLaunch") private var autoLaunch: Bool = false
-    @AppStorage("analytics") private var analytics: Bool = false
+    @AppStorage("analytics") private var analytics: Bool = true
     @AppStorage("betaFeatures") private var betaFeatures: Bool = false
 
     var body: some View {

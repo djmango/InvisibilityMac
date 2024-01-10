@@ -164,14 +164,3 @@ var mockModelContainer: ModelContainer {
         fatalError("ModelContainer initialization failed: \(error)")
     }
 }
-
-struct MessageView_Previews: PreviewProvider {
-    static var previews: some View {
-        MessageView(for: Chat.example())
-            .environmentObject(
-                ChatViewModel.example(modelContainer: mockModelContainer, chats: [Chat.example()])
-            )
-            .environmentObject(MessageViewModel.example(modelContainer: mockModelContainer))
-            .environmentObject(OllamaViewModel.example(modelContainer: mockModelContainer))
-    }
-}

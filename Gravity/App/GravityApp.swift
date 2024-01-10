@@ -3,6 +3,7 @@ import SettingsKit
 import Sparkle
 import SwiftData
 import SwiftUI
+import TelemetryClient
 
 class GlobalState: ObservableObject {
     @Published var activeChat: Chat?
@@ -18,6 +19,9 @@ struct GravityApp: App {
     @StateObject private var ollamaViewModel: OllamaViewModel
     @StateObject private var chatViewModel: ChatViewModel
     @StateObject private var imageViewModel: ImageViewModel
+
+    @AppStorage("analytics") private var analytics: Bool = true
+    @AppStorage("userIdentifier") private var userIdentifier: String = ""
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
@@ -56,6 +60,20 @@ struct GravityApp: App {
         _imageViewModel = StateObject(wrappedValue: imageViewModel)
 
         MessageViewModelManager.shared = MessageViewModelManager(modelContext: modelContext)
+
+        if analytics {
+            if userIdentifier.isEmpty {
+                userIdentifier = UUID().uuidString
+            }
+
+            let telemetryConfig = TelemetryManagerConfiguration(
+                appID: "3F0E42B4-8F78-4047-B648-6C262EB5D9BE"
+            )
+            TelemetryManager.initialize(with: telemetryConfig)
+            TelemetryManager.updateDefaultUser(to: userIdentifier)
+
+            TelemetryManager.send("ApplicationLaunched")
+        }
     }
 
     var body: some Scene {

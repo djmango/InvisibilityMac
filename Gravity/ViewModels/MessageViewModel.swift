@@ -5,6 +5,7 @@ import Foundation
 import OllamaKit
 import SwiftData
 import SwiftUI
+ import TelemetryClient
 import UniformTypeIdentifiers
 import ViewState
 import Vision
@@ -30,6 +31,7 @@ final class MessageViewModel: ObservableObject {
     }
 
     func fetch(for chat: Chat) throws {
+        TelemetryManager.send("MessageViewModel.fetch")
         let chatID = chat.id
         let predicate = #Predicate<Message> { $0.chat?.id == chatID }
         let sortDescriptor = SortDescriptor(\Message.createdAt)
@@ -42,6 +44,7 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func send(_ message: Message) async {
+        TelemetryManager.send("MessageViewModel.send")
         sendViewState = .loading
 
         messages.append(message)
@@ -89,6 +92,7 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func regenerate(_: Message) async {
+        TelemetryManager.send("MessageViewModel.regenerate")
         sendViewState = .loading
         let restarted = await OllamaKit.shared.restartBinaryAndWaitForAPI()
         if restarted {
@@ -116,6 +120,7 @@ final class MessageViewModel: ObservableObject {
     }
 
     func stopGenerate() {
+        TelemetryManager.send("MessageViewModel.stopGenerate")
         sendViewState = nil
         generation?.cancel()
         try? modelContext.saveChanges()
@@ -133,6 +138,7 @@ final class MessageViewModel: ObservableObject {
     }
 
     private func handleError(_ errorMessage: String) {
+        TelemetryManager.send("MessageViewModel.handleError")
         if messages.isEmpty { return }
 
         messages.last?.error = true
@@ -143,6 +149,7 @@ final class MessageViewModel: ObservableObject {
     }
 
     private func handleComplete() {
+        TelemetryManager.send("MessageViewModel.handleComplete")
         if messages.isEmpty { return }
 
         messages.last?.error = false
@@ -156,18 +163,13 @@ final class MessageViewModel: ObservableObject {
 
         sendViewState = nil
     }
-
-    static func example(modelContainer: ModelContainer) -> MessageViewModel {
-        let chat = Chat(name: "Example chat")
-        let example = MessageViewModel(chat: chat, modelContext: ModelContext(modelContainer))
-        return example
-    }
 }
 
 // @MARK Image Handler
 extension MessageViewModel {
     /// Public function that can be called to begin the file open process
     func openFile() {
+        TelemetryManager.send("MessageViewModel.openFile")
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseFiles = true
