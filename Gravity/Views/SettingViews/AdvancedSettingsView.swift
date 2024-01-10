@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct AdvancedSettingsView: View {
-    @State private var selectedModel = "mistral:latest"
-    @State private var systemInstruction = ""
-    @State private var temperature: Double = 0.7
-    @State private var maxContextLength: Int = 6000
+    @AppStorage("selectedModel") private var selectedModel = "mistral:latest"
+    @AppStorage("systemInstruction") private var systemInstruction = ""
+    @AppStorage("temperature") private var temperature: Double = 0.7
+    @AppStorage("maxContextLength") private var maxContextLength: Double = 6000
+
     @State private var isEditingInstruction = false
     @State private var showingModelPicker = false
 
@@ -22,7 +23,7 @@ struct AdvancedSettingsView: View {
         VStack {
             Spacer()
             Form {
-                Picker("Models:", selection: $selectedModel) {
+                Picker("Default Model:", selection: $selectedModel) {
                     ForEach(models, id: \.self) { model in
                         Text(model).tag(model)
                     }
@@ -36,7 +37,7 @@ struct AdvancedSettingsView: View {
                     Image(systemName: "plus")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 10, height: 10)
+                        .frame(width: 9, height: 9)
                 }
                 .sheet(isPresented: $showingModelPicker) {
                     ModelPickerView(selectedModels: models)
@@ -48,7 +49,7 @@ struct AdvancedSettingsView: View {
             // Divider()
 
             HStack {
-                Text("System Instruction:").bold()
+                Text("Default System Instruction:").bold()
                 Button("Edit System Instruction") {
                     isEditingInstruction.toggle()
                 }
@@ -60,17 +61,17 @@ struct AdvancedSettingsView: View {
             }
 
             HStack {
-                Text("Temperature:").bold()
+                Text("Default Temperature:").bold()
                 Slider(value: $temperature, in: 0.0 ... 1.0, step: 0.1)
                     .frame(width: 200)
                 Text("\(temperature, specifier: "%.1f")")
             }
 
             HStack {
-                Text("Max Context Length:").bold()
-                Stepper(value: $maxContextLength, in: 1000 ... 8000, step: 1000) {
-                    Text("\(maxContextLength) Tokens")
-                }
+                Text("Default Context Length:").bold()
+                Slider(value: $maxContextLength, in: 1000 ... 8000, step: 500)
+                    .frame(width: 200)
+                Text("\(maxContextLength, specifier: "%.0f")")
             }
             .padding(.bottom, 10)
             Spacer()

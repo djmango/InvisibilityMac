@@ -78,7 +78,7 @@ struct AboutSettingsView: View {
             .padding(.top, 10)
 
             Spacer()
-            // All rights reserved.
+
             Text("© 2024 Invisibility, Inc. All rights reserved.")
                 .font(.caption)
                 .foregroundColor(.gray)
