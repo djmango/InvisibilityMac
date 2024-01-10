@@ -5,7 +5,7 @@ import Foundation
 import OllamaKit
 import SwiftData
 import SwiftUI
- import TelemetryClient
+import TelemetryClient
 import UniformTypeIdentifiers
 import ViewState
 import Vision

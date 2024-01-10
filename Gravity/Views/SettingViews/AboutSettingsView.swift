@@ -11,39 +11,78 @@ struct AboutSettingsView: View {
     var body: some View {
         VStack {
             Spacer()
-
-            // Logo or image view placeholder
-            Image(systemName: "eye") // Replace with your logo
+            Image("GravityLogo")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 120, height: 120)
 
-            Text("Founded by Sulaiman Ghori and Tye Daniel")
-                .font(.headline)
-                .padding(.top, 20)
+            HStack(spacing: 0) {
+                Text("Founded by ")
+                    .font(.headline)
+                Text("Sulaiman Ghori")
+                    .font(.headline)
+                    // .foregroundColor(.blue)
+                    .onHover { inside in
+                        if inside {
+                            NSCursor.pointingHand.push()
+                        } else {
+                            NSCursor.pop()
+                        }
+                    }
+                    .onTapGesture {
+                        if let url = URL(string: "https://x.com/sulaimanghori") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                Text(" and ")
+                    .font(.headline)
+                Text("Tye Daniel")
+                    .font(.headline)
+                    // .foregroundColor(.blue)
+                    .onHover { inside in
+                        if inside {
+                            NSCursor.pointingHand.push()
+                        } else {
+                            NSCursor.pop()
+                        }
+                    }
+                    .onTapGesture {
+                        if let url = URL(string: "https://x.com/TyeDan") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+            }
 
-            // Buttons for feedback, acknowledgments, and privacy
             HStack {
                 Button("Feedback") {
-                    // Action for feedback
+                    if let url = URL(string: "https://grav.ai") {
+                        NSWorkspace.shared.open(url)
+                    }
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.bordered)
 
                 Button("Acknowledgments") {
-                    // Action for acknowledgments
+                    if let url = URL(string: "https://grav.ai/tos") {
+                        NSWorkspace.shared.open(url)
+                    }
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.bordered)
 
                 Button("Privacy") {
-                    // Action for privacy
+                    if let url = URL(string: "https://grav.ai/privacy") {
+                        NSWorkspace.shared.open(url)
+                    }
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.bordered)
             }
             .padding(.top, 10)
 
             Spacer()
+            // All rights reserved.
+            Text("© 2024 Invisibility, Inc. All rights reserved.")
+                .font(.caption)
+                .foregroundColor(.gray)
+                .padding(.bottom, 10)
         }
-        .frame(minWidth: 400, maxWidth: .infinity, minHeight: 150, maxHeight: .infinity)
-        .padding()
     }
 }

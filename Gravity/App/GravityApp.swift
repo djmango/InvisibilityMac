@@ -124,15 +124,15 @@ struct GravityApp: App {
             SettingsTab(.new(title: "General", icon: .gearshape), id: "general") {
                 SettingsSubtab(.noSelection, id: "general") { GeneralSettingsView() }
             }
-            .frame()
+            .frame(width: 550, height: 200)
             SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {
                 SettingsSubtab(.noSelection, id: "advanced") { AdvancedSettingsView() }
             }
-            .frame()
+            .frame(width: 550, height: 300)
             SettingsTab(.new(title: "About", icon: .info), id: "about") {
                 SettingsSubtab(.noSelection, id: "about") { AboutSettingsView() }
             }
-            .frame()
+            .frame(width: 550, height: 250)
         }
     }
 }

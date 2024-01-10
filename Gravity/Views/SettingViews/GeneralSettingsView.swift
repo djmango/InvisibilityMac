@@ -37,7 +37,7 @@ struct GeneralSettingsView: View {
             }
             .frame(width: 500)
             .fixedSize()
-            .padding()
+            // .padding()
 
             Spacer()
             HStack {
