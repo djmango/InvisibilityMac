@@ -103,7 +103,7 @@ struct GravityApp: App {
             }
         }
         .settings {
-            SettingsTab(.new(title: "General", icon: .gearshape), id: "general", color: .gray) {
+            SettingsTab(.new(title: "General", icon: .gearshape), id: "general") {
                 SettingsSubtab(.noSelection, id: "general") { GeneralSettingsView() }
             }
             .frame()

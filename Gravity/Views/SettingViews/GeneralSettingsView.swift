@@ -14,50 +14,43 @@ struct GeneralSettingsView: View {
     @State private var newFeatures: Bool = false
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
+            Spacer()
             Form {
-                HStack {
-                    Text("Summon Gravity:").bold()
-                    KeyboardShortcuts.Recorder(for: .summon)
-                }
-                .padding(.horizontal, 25)
-                .padding(.top, 6)
-
-                HStack {
-                    Text("Auto-Launch:").bold()
-                    Toggle("Open Gravity at Login", isOn: $autoLaunch)
-                }
-                .padding(.horizontal, 25)
-                .padding(.top, 6)
-
-                HStack {
-                    Text("Analytics:").bold()
-                    Toggle("Opt-in by sharing crash reports & usage data", isOn: $analytics)
-                }
-                .padding(.horizontal, 25)
-                .padding(.top, 6)
-
-                HStack {
-                    Text("New Features:").bold()
-                    Toggle("Enable early access to feature rollouts", isOn: $newFeatures)
-                }
-                .padding(.horizontal, 25)
-                .padding(.top, 6)
-
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button("Wipe All Data") {
-                        print("Wiping all data...")
+                Section {
+                    HStack {
+                        Text("Summon Gravity:").bold()
+                        KeyboardShortcuts.Recorder(for: .summon)
                     }
-                    .foregroundColor(.red)
+                }
+
+                Section {
+                    Toggle("Open Gravity at Login", isOn: $autoLaunch).bold()
+                }
+
+                Section {
+                    Toggle("Sharing crash reports & analytics", isOn: $analytics).bold()
+                }
+
+                Section {
+                    Toggle("Enable beta features", isOn: $newFeatures).bold()
                 }
             }
-            .padding(.horizontal)
+            .frame(width: 500)
+            .fixedSize()
+            .padding()
+
+            Spacer()
+            HStack {
+                Spacer()
+                Button("Wipe All Data") {
+                    print("Wiping all data...")
+                }
+                .foregroundColor(.red)
+                .padding()
+            }
         }
-        // .focusEffectDisabled()
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .focusable(false)
-        .frame(minWidth: 500, maxWidth: .infinity, minHeight: 150, maxHeight: .infinity, alignment: .top)
-        .padding()
     }
 }
