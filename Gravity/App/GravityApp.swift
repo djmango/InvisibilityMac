@@ -77,7 +77,7 @@ struct GravityApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        Window("Gravity", id: "master") {
             AppView()
                 .environmentObject(globalState)
                 .environmentObject(updaterViewModel)

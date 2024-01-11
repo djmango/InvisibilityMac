@@ -25,7 +25,7 @@ struct GeneralSettingsView: View {
                     }
                 }
 
-                LaunchAtLogin.Toggle()
+                LaunchAtLogin.Toggle().bold()
 
                 Section {
                     Toggle("Share crash reports & analytics", isOn: $analytics).bold()
