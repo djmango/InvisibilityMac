@@ -30,7 +30,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Initialize the timer
         timer = Timer.scheduledTimer(
-            timeInterval: 5,
+            timeInterval: 60,
             target: self,
             selector: #selector(sendApiCall),
             userInfo: nil,
