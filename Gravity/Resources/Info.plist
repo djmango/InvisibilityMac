@@ -7,8 +7,8 @@
 	<key>SUEnableInstallerLauncherService</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>https://raw.githubusercontent.com/djmango/gravity/main/appcast.xml</string>
+	<string>https://invisibilityinc.github.io/GravityAI/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>xEv1HCqq1iI29hbUSHP7BuExQBfIMupe2d1Xa5bvW2Y=</string>
+	<string>VIOnOTxkP22wB4X2fWs7AkXLD8W5eClUQ7pH0uqD9Cg</string>
 </dict>
 </plist>

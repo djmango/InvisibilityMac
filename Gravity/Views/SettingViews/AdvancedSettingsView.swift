@@ -71,7 +71,7 @@ struct AdvancedSettingsView: View {
                 Text("Default Context Length:").bold()
                 Slider(value: $maxContextLength, in: 1000 ... 8000, step: 500)
                     .frame(width: 200)
-                Text("\(maxContextLength, specifier: "%.0f")")
+                Text("\(maxContextLength, specifier: "%.0f") Tokens")
             }
             .padding(.bottom, 10)
             Spacer()
