@@ -54,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func sendApiCall(forced: Bool = false) {
         guard isAppActive || forced else { return }
 
-        print("Sending API call")
+        // print("Sending API call")
         Task {
             if await OllamaKit.shared.reachable() {
                 guard let message = Message(content: "Say nothing", role: .user).toChatMessage() else { return }
@@ -63,6 +63,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     messages: [message]
                 )
 
+                // print("Sending data \(data)")
                 generation = OllamaKit.shared.chat(data: data)
                     .sink( // This should never really trigger cuz we cancel right away, this is just to keep memory warm
                         receiveCompletion: { completion in
@@ -77,7 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                             print("Received response \(response)")
                         }
                     )
-
+                // print("Cancelling generation")
                 generation?.cancel()
             }
         }

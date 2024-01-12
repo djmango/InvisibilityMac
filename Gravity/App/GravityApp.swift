@@ -14,6 +14,7 @@ struct GravityApp: App {
     private var updater: SPUUpdater
 
     @StateObject private var globalState: GlobalState = .init()
+
     @StateObject private var updaterViewModel: UpdaterViewModel
     @StateObject private var commandViewModel: CommandViewModel
     @StateObject private var ollamaViewModel: OllamaViewModel
@@ -37,15 +38,16 @@ struct GravityApp: App {
     }()
 
     init() {
-        let modelContext = sharedModelContainer.mainContext
-
-        let updaterController = SPUStandardUpdaterController(
-            startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil
-        )
+        let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
         updater = updaterController.updater
 
-        let updaterViewModel = UpdaterViewModel(updater)
+        let updaterViewModel = UpdaterViewModel(updater: updater)
         _updaterViewModel = StateObject(wrappedValue: updaterViewModel)
+
+        print("Updater controller initialized")
+        print(Bundle.main.infoDictionary ?? "No info dictionary")
+
+        let modelContext = sharedModelContainer.mainContext
 
         let commandViewModel = CommandViewModel()
         _commandViewModel = StateObject(wrappedValue: commandViewModel)
@@ -93,7 +95,7 @@ struct GravityApp: App {
                 Button("Check for Updates...") {
                     updater.checkForUpdates()
                 }
-                .disabled(!updaterViewModel.canCheckForUpdates)
+                // .disabled(!updaterViewModel.canCheckForUpdates)
             }
 
             CommandGroup(replacing: .newItem) {
@@ -130,7 +132,10 @@ struct GravityApp: App {
             }
             .frame(width: 550, height: 200)
             SettingsTab(.new(title: "About", icon: .info), id: "about") {
-                SettingsSubtab(.noSelection, id: "about") { AboutSettingsView() }
+                SettingsSubtab(.noSelection, id: "about") {
+                    AboutSettingsView()
+                        .environmentObject(updaterViewModel)
+                }
             }
             .frame(width: 550, height: 200)
         }

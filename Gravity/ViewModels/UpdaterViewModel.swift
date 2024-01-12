@@ -1,14 +1,24 @@
+//
+//  UpdaterViewModel.swift
+//  Gravity
+//
+//  Created by Sulaiman Ghori on 1/11/24.
+//
+
 import Combine
 import Sparkle
 import SwiftUI
 
-@Observable
+// This view model class publishes when new updates can be checked by the user
 final class UpdaterViewModel: ObservableObject {
     private var cancellable: AnyCancellable?
+    public let updater: SPUUpdater
 
-    var canCheckForUpdates = false
+    @Published var canCheckForUpdates = false
 
-    init(_ updater: SPUUpdater) {
+    init(updater: SPUUpdater) {
+        self.updater = updater
+
         cancellable = updater.publisher(for: \.canCheckForUpdates)
             .assign(to: \.canCheckForUpdates, on: self)
     }

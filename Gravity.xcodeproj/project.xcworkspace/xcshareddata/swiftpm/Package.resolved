@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "chatfield",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/djmango/ChatField",
+      "state" : {
+        "branch" : "master",
+        "revision" : "232ac952f23f99837612c58df037ec2ed1ee0c77"
+      }
+    },
+    {
       "identity" : "colibricomponents-macos",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/david-swift/ColibriComponents-macOS",
@@ -46,6 +55,15 @@
       }
     },
     {
+      "identity" : "ollamakit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/djmango/OllamaKit",
+      "state" : {
+        "branch" : "master",
+        "revision" : "052db13e9945a4d1835b553d03b109a43fe0629f"
+      }
+    },
+    {
       "identity" : "pow",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/EmergeTools/Pow.git",
@@ -77,26 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
-        "revision" : "1f07f4096e52f19b5e7abaa697b7fc592b7ff57c",
-        "version" : "2.5.1"
-      }
-    },
-    {
-      "identity" : "swift-docc-plugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-docc-plugin.git",
-      "state" : {
-        "revision" : "26ac5758409154cc448d7ab82389c520fa8a8247",
-        "version" : "1.3.0"
-      }
-    },
-    {
-      "identity" : "swift-docc-symbolkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-docc-symbolkit",
-      "state" : {
-        "revision" : "b45d1f2ed151d057b54504d653e0da5552844e34",
-        "version" : "1.0.0"
+        "revision" : "47d3d90aee3c52b6f61d04ceae426e607df62347",
+        "version" : "2.5.2"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/gonzalezreal/swift-markdown-ui",
       "state" : {
-        "revision" : "5df8a4adedd6ae4eb2455ef60ff75183984daeb8",
-        "version" : "2.2.0"
+        "revision" : "ae799d015a5374708f7b4c85f3294c05f2a564e2",
+        "version" : "2.3.0"
       }
     },
     {
@@ -113,8 +113,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/TelemetryDeck/SwiftClient",
       "state" : {
-        "revision" : "98500be378267abaa072ed08c2caf7da6493489e",
-        "version" : "1.5.0"
+        "revision" : "d20ccc4b8266cf739eede58cdfc7e9c6ffb41cda",
+        "version" : "1.5.1"
       }
     },
     {
@@ -131,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/siteline/swiftui-introspect",
       "state" : {
-        "revision" : "9e1cc02a65b22e09a8251261cccbccce02731fc5",
-        "version" : "1.1.1"
+        "revision" : "18e965f867e37a558ad13c12d330dbe047099180",
+        "version" : "1.1.2"
       }
     },
     {
@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kevinhermawan/ViewCondition",
       "state" : {
-        "revision" : "3d6ff8a51f31890e091eac6872d966859d11ed76",
-        "version" : "1.0.1"
+        "revision" : "a3d0aaf943271247dfd4870a2a0696693165c884",
+        "version" : "1.0.5"
       }
     },
     {

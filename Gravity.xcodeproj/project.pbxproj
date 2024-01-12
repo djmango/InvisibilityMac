@@ -13,13 +13,11 @@
 		4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
 		4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4252B4CB639007F025B /* ImageViewModel.swift */; };
-		4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B53782B2E49900020FA6A /* OllamaKit */; };
 		4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537B2B2E499A0020FA6A /* OllamaKit */; };
 		4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537E2B2E4A250020FA6A /* ChatField */; };
 		4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */; };
 		4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */; };
 		4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */; };
-		4D8E054F2B2516DE00B60D0D /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052C2B2516DE00B60D0D /* UpdaterViewModel.swift */; };
 		4D8E05502B2516DE00B60D0D /* OllamaViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */; };
 		4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052F2B2516DE00B60D0D /* GravityApp.swift */; };
 		4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E05322B2516DE00B60D0D /* Assets.xcassets */; };
@@ -39,6 +37,7 @@
 		4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05482B2516DE00B60D0D /* TextError.swift */; };
 		4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */; };
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
+		4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */; };
 		4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282D82B4DEB6E0041690B /* SettingsKit */; };
 		4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */; };
 		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
@@ -47,7 +46,8 @@
 		4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E42B4E08660041690B /* AboutSettingsView.swift */; };
 		4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282E72B4E3C4A0041690B /* LaunchAtLogin */; };
 		4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282EA2B4E3D810041690B /* TelemetryClient */; };
-		4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673502B17F46B00A5F9AE /* Sparkle */; };
+		4DDCE8502B509F9800A22B1E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4DDCE84F2B509F9800A22B1E /* Info.plist */; };
+		4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DDCE8522B50BA0900A22B1E /* Sparkle */; };
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
@@ -62,16 +62,13 @@
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedImageView.swift; sourceTree = "<group>"; };
 		4D7AB4252B4CB639007F025B /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
-		4D8B53812B2E708A0020FA6A /* ChatField */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ChatField; path = ../../ChatField; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandViewModel.swift; sourceTree = "<group>"; };
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
-		4D8E052C2B2516DE00B60D0D /* UpdaterViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OllamaViewModel.swift; sourceTree = "<group>"; };
 		4D8E052F2B2516DE00B60D0D /* GravityApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GravityApp.swift; sourceTree = "<group>"; };
 		4D8E05312B2516DE00B60D0D /* Gravity.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Gravity.entitlements; sourceTree = "<group>"; };
 		4D8E05322B2516DE00B60D0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		4D8E05332B2516DE00B60D0D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D8E05352B2516DE00B60D0D /* AppMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppMessages.swift; sourceTree = "<group>"; };
 		4D8E05372B2516DE00B60D0D /* Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
 		4D8E05382B2516DE00B60D0D /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -88,11 +85,12 @@
 		4D8E05482B2516DE00B60D0D /* TextError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextError.swift; sourceTree = "<group>"; };
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
-		4D98E90D2B2C54F800505014 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../../OllamaKit; sourceTree = "<group>"; };
+		4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		4DD282E02B4DF7530041690B /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
 		4DD282E22B4E05B80041690B /* AdvancedSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSettingsView.swift; sourceTree = "<group>"; };
 		4DD282E42B4E08660041690B /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
+		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -103,19 +101,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
-				4DE6736B2B17F46B00A5F9AE /* Sparkle in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
 				4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
+				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
 				4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */,
 				4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */,
 				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
 				4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */,
-				4D8B53792B2E49900020FA6A /* OllamaKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +124,7 @@
 			children = (
 				4D8E05272B2516DE00B60D0D /* Gravity */,
 				0A4D35822AF541D900846890 /* Products */,
+				4DDCE8512B50BA0900A22B1E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -141,8 +139,6 @@
 		4D8E05272B2516DE00B60D0D /* Gravity */ = {
 			isa = PBXGroup;
 			children = (
-				4D8B53812B2E708A0020FA6A /* ChatField */,
-				4D98E90D2B2C54F800505014 /* OllamaKit */,
 				4D8E05282B2516DE00B60D0D /* ViewModels */,
 				4D8E052E2B2516DE00B60D0D /* App */,
 				4D8E05302B2516DE00B60D0D /* Resources */,
@@ -161,10 +157,10 @@
 				4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */,
 				4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */,
 				4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */,
-				4D8E052C2B2516DE00B60D0D /* UpdaterViewModel.swift */,
 				4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */,
 				4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */,
 				4D7AB4252B4CB639007F025B /* ImageViewModel.swift */,
+				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -182,10 +178,10 @@
 		4D8E05302B2516DE00B60D0D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4DDCE84F2B509F9800A22B1E /* Info.plist */,
 				4DEF3F332B491CE200256ADE /* ollama-darwin */,
 				4D8E05312B2516DE00B60D0D /* Gravity.entitlements */,
 				4D8E05322B2516DE00B60D0D /* Assets.xcassets */,
-				4D8E05332B2516DE00B60D0D /* Info.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -278,6 +274,13 @@
 			path = SettingViews;
 			sourceTree = "<group>";
 		};
+		4DDCE8512B50BA0900A22B1E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -299,9 +302,7 @@
 				4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */,
 				4DE6734C2B17F46B00A5F9AE /* ViewCondition */,
 				4DE6734E2B17F46B00A5F9AE /* MarkdownUI */,
-				4DE673502B17F46B00A5F9AE /* Sparkle */,
 				4DE673522B17F46B00A5F9AE /* OllamaKit */,
-				4D8B53782B2E49900020FA6A /* OllamaKit */,
 				4D8B537B2B2E499A0020FA6A /* OllamaKit */,
 				4D8B537E2B2E4A250020FA6A /* ChatField */,
 				4D7AB4232B4CB469007F025B /* Pow */,
@@ -309,6 +310,7 @@
 				4DD282DE2B4DF7050041690B /* KeyboardShortcuts */,
 				4DD282E72B4E3C4A0041690B /* LaunchAtLogin */,
 				4DD282EA2B4E3D810041690B /* TelemetryClient */,
+				4DDCE8522B50BA0900A22B1E /* Sparkle */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Gravity.app */;
@@ -363,6 +365,7 @@
 			files = (
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
 				4DEF3F342B491CE200256ADE /* ollama-darwin in Resources */,
+				4DDCE8502B509F9800A22B1E /* Info.plist in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,7 +383,6 @@
 				4D8E055C2B2516DE00B60D0D /* AddChatView.swift in Sources */,
 				4D8E055D2B2516DE00B60D0D /* ChatSidebarListView.swift in Sources */,
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
-				4D8E054F2B2516DE00B60D0D /* UpdaterViewModel.swift in Sources */,
 				4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */,
 				4D8E05572B2516DE00B60D0D /* OllamaModel.swift in Sources */,
 				4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */,
@@ -395,6 +397,7 @@
 				4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */,
 				4DD282E12B4DF7530041690B /* Shortcuts.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
+				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
 				4D8E05602B2516DE00B60D0D /* PromptEditor.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
@@ -468,9 +471,11 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = Gravity;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -525,8 +530,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = Gravity;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -537,10 +544,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gravity/Resources/Gravity.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 5;
-				DEVELOPMENT_ASSET_PATHS = "\"Gravity/Preview Content\"";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -554,8 +561,8 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "ai.grav.app-debug";
+				MARKETING_VERSION = 1.2.2;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -569,11 +576,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Gravity/Resources/Gravity.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"Gravity/Preview Content\"";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -587,7 +594,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.2.0;
+				MARKETING_VERSION = 1.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -747,14 +754,6 @@
 				minimumVersion = 2.2.0;
 			};
 		};
-		4DE673512B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "Sparkle" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sparkle-project/Sparkle";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.5.1;
-			};
-		};
 		4DE673532B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OllamaKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kevinhermawan/OllamaKit";
@@ -770,10 +769,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */;
 			productName = Pow;
-		};
-		4D8B53782B2E49900020FA6A /* OllamaKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OllamaKit;
 		};
 		4D8B537B2B2E499A0020FA6A /* OllamaKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -805,6 +800,11 @@
 			package = 4DD282E92B4E3D810041690B /* XCRemoteSwiftPackageReference "SwiftClient" */;
 			productName = TelemetryClient;
 		};
+		4DDCE8522B50BA0900A22B1E /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
 		4DE673482B17F46B00A5F9AE /* ViewState */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */;
@@ -824,11 +824,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DE6734F2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
-		};
-		4DE673502B17F46B00A5F9AE /* Sparkle */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DE673512B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "Sparkle" */;
-			productName = Sparkle;
 		};
 		4DE673522B17F46B00A5F9AE /* OllamaKit */ = {
 			isa = XCSwiftPackageProductDependency;

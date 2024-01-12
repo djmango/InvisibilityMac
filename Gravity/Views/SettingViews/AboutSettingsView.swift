@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct AboutSettingsView: View {
+    let bundleVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+
+    @EnvironmentObject private var updaterViewModel: UpdaterViewModel
+
     var body: some View {
         VStack {
             Spacer()
@@ -21,7 +25,6 @@ struct AboutSettingsView: View {
                     .font(.headline)
                 Text("Sulaiman Ghori")
                     .font(.headline)
-                    // .foregroundColor(.blue)
                     .onHover { inside in
                         if inside {
                             NSCursor.pointingHand.push()
@@ -38,7 +41,6 @@ struct AboutSettingsView: View {
                     .font(.headline)
                 Text("Tye Daniel")
                     .font(.headline)
-                    // .foregroundColor(.blue)
                     .onHover { inside in
                         if inside {
                             NSCursor.pointingHand.push()
@@ -61,10 +63,15 @@ struct AboutSettingsView: View {
                 }
                 .buttonStyle(.bordered)
 
-                Button("Acknowledgments") {
-                    if let url = URL(string: "https://grav.ai/tos") {
-                        NSWorkspace.shared.open(url)
-                    }
+                // Button("Acknowledgments") {
+                //     if let url = URL(string: "https://grav.ai/tos") {
+                //         NSWorkspace.shared.open(url)
+                //     }
+                // }
+                // .buttonStyle(.bordered)
+
+                Button("Check for Updates") {
+                    updaterViewModel.updater.checkForUpdates()
                 }
                 .buttonStyle(.bordered)
 
@@ -79,10 +86,12 @@ struct AboutSettingsView: View {
 
             Spacer()
 
-            Text("© 2024 Invisibility, Inc. All rights reserved.")
+            Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
                 .font(.caption)
                 .foregroundColor(.gray)
                 .padding(.bottom, 10)
+
+            Spacer()
         }
     }
 }

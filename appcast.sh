@@ -1,0 +1,1 @@
+/Users/djmango/Library/Developer/Xcode/DerivedData/Gravity-fllpiguwvjazjyfukrjfuvvkvmpo/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_appcast /Users/djmango/github/invisibility_inc/App/Gravity
