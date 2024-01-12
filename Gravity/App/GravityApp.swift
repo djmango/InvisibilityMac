@@ -95,7 +95,7 @@ struct GravityApp: App {
                 Button("Check for Updates...") {
                     updater.checkForUpdates()
                 }
-                // .disabled(!updaterViewModel.canCheckForUpdates)
+                 .disabled(!updaterViewModel.canCheckForUpdates)
             }
 
             CommandGroup(replacing: .newItem) {
