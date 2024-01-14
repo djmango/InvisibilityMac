@@ -17,7 +17,14 @@ final class OllamaViewModel: ObservableObject {
         self.modelContext = modelContext
         Task {
             do {
+                let restarted = await OllamaKit.shared.restartBinaryAndWaitForAPI()
+                if restarted {
+                    logger.debug("Restarted binary")
+                } else {
+                    logger.debug("Binary was already running")
+                }
                 try await fetch()
+                await ModelWarmer.shared.warm()
             } catch {
                 logger.error("Could not fetch models: \(error)")
             }
@@ -67,6 +74,7 @@ final class OllamaViewModel: ObservableObject {
         logger.debug("Pulling model")
         let req = OKPullModelRequestData(name: "mistral:latest")
         let res = OllamaKit.shared.pullModel(data: req).collect()
+        print(res)
         logger.debug("Pulled model")
 
         let models = response.models

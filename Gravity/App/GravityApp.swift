@@ -1,4 +1,3 @@
-import OllamaKit
 import SettingsKit
 import Sparkle
 import SwiftData

@@ -20,9 +20,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set up the observer for when the app resigns active
         NotificationCenter.default.addObserver(self, selector: #selector(appDidResignActive), name: NSApplication.didResignActiveNotification, object: nil)
 
-        Task {
-            await ModelWarmer.shared.warm()
-        }
+        // Task {
+        //     await ModelWarmer.shared.warm()
+        // }
     }
 
     @objc func appDidBecomeActive(notification _: NSNotification) {

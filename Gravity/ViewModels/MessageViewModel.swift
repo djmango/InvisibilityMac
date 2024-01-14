@@ -3,6 +3,7 @@ import Combine
 import CoreGraphics
 import Foundation
 import OllamaKit
+import os
 import SwiftData
 import SwiftUI
 import TelemetryClient
@@ -17,6 +18,8 @@ final class MessageViewModel: ObservableObject {
     private var chat: Chat
     private var modelContext: ModelContext
     private var lastOpenedImage: Data?
+
+    private let logger = Logger(subsystem: "ai.grav.app", category: "MessageViewModel")
 
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
@@ -65,16 +68,16 @@ final class MessageViewModel: ObservableObject {
 
             generation = OllamaKit.shared.chat(data: data)
                 .handleEvents(
-                    receiveSubscription: { _ in print("Received Subscription") },
-                    receiveOutput: { _ in print("Received Output") },
-                    receiveCompletion: { _ in print("Received Completion") },
-                    receiveCancel: { print("Received Cancel") }
+                    receiveSubscription: { _ in self.logger.debug("Received Subscription") },
+                    receiveOutput: { _ in self.logger.debug("Received Output") },
+                    receiveCompletion: { _ in self.logger.debug("Received Completion") },
+                    receiveCancel: { self.logger.debug("Received Cancel") }
                 )
                 .sink(
                     receiveCompletion: { [weak self] completion in
                         switch completion {
                         case .finished:
-                            print("Success completion")
+                            self?.logger.debug("Success completion")
                             self?.handleComplete()
 
                             // When complete, we can autorename the chat if it is a new chat.
@@ -85,7 +88,7 @@ final class MessageViewModel: ObservableObject {
                             }
 
                         case let .failure(error):
-                            print("Failure completion \(error)")
+                            self?.logger.error("Failure completion \(error)")
                             self?.handleError(error.localizedDescription)
                         }
                     },
@@ -105,11 +108,11 @@ final class MessageViewModel: ObservableObject {
         let restarted = await OllamaKit.shared.restartBinaryAndWaitForAPI()
         if restarted {
             // Handle the case when the API restarts successfully
-            print("API restarted successfully.")
+            logger.debug("API restarted successfully.")
             // Update the UI or proceed with the next steps
         } else {
             // Handle the failure case
-            print("Failed to restart the API.")
+            logger.error("Failed to restart the API.")
             sendViewState = .error(
                 message: "Failed to restart the API. Please try again later.")
             // Update the UI to show an error message
@@ -171,7 +174,7 @@ final class MessageViewModel: ObservableObject {
         do {
             try modelContext.saveChanges()
         } catch {
-            print("Error saving changes: \(error)")
+            logger.error("Error saving changes: \(error)")
         }
 
         sendViewState = nil
@@ -196,27 +199,20 @@ extension MessageViewModel {
                 messages: message_history.compactMap { $0.toChatMessage() }
             )
             data.stream = false
-            print("Sending data to OllamaKit: \(data)")
 
             generation = OllamaKit.shared.chat(data: data)
-                .handleEvents(
-                    receiveSubscription: { _ in print("Received Subscription") },
-                    receiveOutput: { _ in print("Received Output") },
-                    receiveCompletion: { _ in print("Received Completion") },
-                    receiveCancel: { print("Received Cancel") }
-                )
                 .sink(
-                    receiveCompletion: { completion in
+                    receiveCompletion: { [weak self] completion in
                         switch completion {
                         case .finished:
-                            print("Success completion")
+                            self?.logger.debug("Success completion")
                         case let .failure(error):
-                            print("Failure completion \(error)")
+                            self?.logger.error("Failure completion \(error)")
                         }
                     },
                     receiveValue: { [weak self] response in
                         guard let message = response.message else { return }
-                        print("Received message: \(message.content)")
+                        self?.logger.debug("Received chat name: \(message.content)")
                         self?.chat.name = message.content
                     }
                 )
@@ -271,10 +267,10 @@ extension MessageViewModel {
                     // Perform the text-recognition request.
                     try requestHandler.perform([request])
                 } catch {
-                    print("Unable to perform the requests: \(error).")
+                    self.logger.error("Unable to perform the requests: \(error).")
                 }
             } else {
-                print("ERROR: Couldn't grab file url for some reason")
+                self.logger.error("ERROR: Couldn't grab file url for some reason")
             }
         }
     }
@@ -309,7 +305,7 @@ extension MessageViewModel {
         do {
             try modelContext.saveChanges()
         } catch {
-            print("Error saving changes: \(error)")
+            logger.error("Error saving changes: \(error)")
         }
         sendViewState = nil
         lastOpenedImage = nil
