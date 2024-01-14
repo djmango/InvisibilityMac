@@ -27,10 +27,6 @@ final class Chat: Identifiable {
         temperature = UserDefaults.standard.double(forKey: "temperature")
         maxContextLength = UserDefaults.standard.double(forKey: "maxContextLength")
 
-        // let selectedModel = UserDefaults.standard.string(forKey: "selectedModel") ?? ""
-        // print("Creating chat with model \(selectedModel)")
-        // model = OllamaModel(name: selectedModel)
-        // print("Created chat with model \(selectedModel)")
         systemInstruction = systemInstruction
         temperature = temperature
         maxContextLength = maxContextLength

@@ -2,8 +2,6 @@ import SwiftUI
 import ViewCondition
 
 struct ChatSidebarListView: View {
-    @Environment(CommandViewModel.self) private var commandViewModel
-
     private var todayChats: [Chat] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -35,14 +33,14 @@ struct ChatSidebarListView: View {
     }
 
     var body: some View {
-        @Bindable var commandViewModelBindable = commandViewModel
+        @Bindable var commandViewModelBindable = CommandViewModel.shared
 
         List(selection: $commandViewModelBindable.selectedChat) {
             Section(header: Text("Today")) {
                 ForEach(todayChats) { chat in
                     Label(chat.name, systemImage: "bubble")
                         .contextMenu {
-                            ChatContextMenu(commandViewModel, for: chat)
+                            ChatContextMenu(for: chat)
                         }
                         .tag(chat)
                 }
@@ -53,7 +51,7 @@ struct ChatSidebarListView: View {
                 ForEach(yesterdayChats) { chat in
                     Label(chat.name, systemImage: "bubble")
                         .contextMenu {
-                            ChatContextMenu(commandViewModel, for: chat)
+                            ChatContextMenu(for: chat)
                         }
                         .tag(chat)
                 }
@@ -64,7 +62,7 @@ struct ChatSidebarListView: View {
                 ForEach(previousDays) { chat in
                     Label(chat.name, systemImage: "bubble")
                         .contextMenu {
-                            ChatContextMenu(commandViewModel, for: chat)
+                            ChatContextMenu(for: chat)
                         }
                         .tag(chat)
                 }
@@ -80,7 +78,7 @@ struct ChatSidebarListView: View {
                 Spacer()
 
                 Button("New Chat", systemImage: "square.and.pencil") {
-                    commandViewModel.addChat()
+                    CommandViewModel.shared.addChat()
                 }
                 .buttonStyle(.accessoryBar)
                 .help("New Chat (⌘ + N)")
@@ -89,7 +87,7 @@ struct ChatSidebarListView: View {
         .sheet(
             isPresented: $commandViewModelBindable.isRenameChatViewPresented
         ) {
-            if let chatToRename = commandViewModel.chatToRename {
+            if let chatToRename = CommandViewModel.shared.chatToRename {
                 RenameChatView(for: chatToRename)
             }
         }
@@ -108,10 +106,10 @@ struct ChatSidebarListView: View {
     // MARK: - Actions
 
     func deleteAction() {
-        guard let chatToDelete = commandViewModel.chatToDelete else { return }
+        guard let chatToDelete = CommandViewModel.shared.chatToDelete else { return }
         try? ChatViewModel.shared.delete(chatToDelete)
 
-        commandViewModel.chatToDelete = nil
-        commandViewModel.selectedChat = nil
+        CommandViewModel.shared.chatToDelete = nil
+        CommandViewModel.shared.selectedChat = nil
     }
 }

@@ -8,7 +8,6 @@ import ViewState
 struct MessageView: View {
     private var chat: Chat
 
-    @EnvironmentObject var globalState: GlobalState
     @Environment(\.modelContext) private var modelContext: ModelContext
     @EnvironmentObject private var imageViewModel: ImageViewModel
 
@@ -115,7 +114,7 @@ struct MessageView: View {
     private func initAction() {
         try? messageViewModel.fetch(for: chat)
 
-        globalState.activeChat = chat
+        CommandViewModel.shared.selectedChat = chat
 
         isEditorFocused = true
     }

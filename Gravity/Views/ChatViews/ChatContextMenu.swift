@@ -1,17 +1,15 @@
 import SwiftUI
 
 struct ChatContextMenu: View {
-    private var viewModel: CommandViewModel
     private var chat: Chat
 
-    init(_ viewModel: CommandViewModel, for chat: Chat) {
-        self.viewModel = viewModel
+    init(for chat: Chat) {
         self.chat = chat
     }
 
     var body: some View {
         Button("Rename \"\(chat.name)\"") {
-            viewModel.chatToRename = chat
+            CommandViewModel.shared.chatToRename = chat
         }
         .keyboardShortcut("r", modifiers: [.command])
 
@@ -22,7 +20,7 @@ struct ChatContextMenu: View {
         Divider()
 
         Button("Delete \"\(chat.name)\"") {
-            viewModel.chatToDelete = chat
+            CommandViewModel.shared.chatToDelete = chat
         }
         .keyboardShortcut(.delete, modifiers: [.shift, .command])
     }

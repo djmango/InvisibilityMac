@@ -10,6 +10,8 @@ import ViewState
 
 @Observable
 final class CommandViewModel: ObservableObject {
+    static var shared = CommandViewModel()
+
     var isRenameChatViewPresented: Bool = false
     var isDeleteChatConfirmationPresented: Bool = false
 
@@ -48,28 +50,21 @@ final class CommandViewModel: ObservableObject {
         }
     }
 
-    func addChat() {
+    @MainActor
+    func addChat(completion: @escaping (Chat?) -> Void = { _ in }) {
         selectedChat = nil
         let chat = Chat()
-        chat.model = OllamaViewModel.shared.models.first
-
-        // print all chat models
-        for model in OllamaViewModel.shared.models {
-            print("Model:")
-            print(model.name)
-        }
+        chat.model = OllamaViewModel.shared.models.first // TODO: Make this configurable
 
         Task {
             await runIfReachable {
                 do {
-                    print("Creating chat")
-                    print(chat)
-                    print(chat.id)
-                    print(chat.model?.name ?? "No name")
                     try ChatViewModel.shared.create(chat)
                     self.selectedChat = chat
+                    completion(chat)
                 } catch {
                     print("Error creating chat: \(error)") // TODO: Show error
+                    completion(nil)
                 }
             }
         }

@@ -5,19 +5,12 @@ import SwiftData
 import SwiftUI
 import TelemetryClient
 
-class GlobalState: ObservableObject {
-    @Published var activeChat: Chat?
-}
-
 @main
 struct GravityApp: App {
     private var updater: SPUUpdater
     public let modelContext: ModelContext
 
-    @StateObject private var globalState: GlobalState = .init()
-
     @StateObject private var updaterViewModel: UpdaterViewModel
-    @StateObject private var commandViewModel: CommandViewModel
     @StateObject private var imageViewModel: ImageViewModel
 
     @AppStorage("analytics") private var analytics: Bool = true
@@ -45,9 +38,6 @@ struct GravityApp: App {
 
         modelContext = sharedModelContainer.mainContext
 
-        let commandViewModel = CommandViewModel()
-        _commandViewModel = StateObject(wrappedValue: commandViewModel)
-
         let imageViewModel = ImageViewModel()
         _imageViewModel = StateObject(wrappedValue: imageViewModel)
 
@@ -73,9 +63,7 @@ struct GravityApp: App {
     var body: some Scene {
         Window("Gravity", id: "master") {
             AppView()
-                .environmentObject(globalState)
                 .environmentObject(updaterViewModel)
-                .environmentObject(commandViewModel)
                 .environmentObject(imageViewModel)
         }
         .windowStyle(HiddenTitleBarWindowStyle())
@@ -90,25 +78,31 @@ struct GravityApp: App {
 
             CommandGroup(replacing: .newItem) {
                 Button("New Chat") {
-                    commandViewModel.addChat()
+                    CommandViewModel.shared.addChat()
                 }
                 .keyboardShortcut("n", modifiers: .command)
             }
 
             CommandGroup(after: .newItem) {
                 Button("Open File") {
-                    guard let activeChatID = globalState.activeChat else {
-                        print("NOCHAT") // TODO: make it spawn a chat
-                        return
+                    if let activeChat = CommandViewModel.shared.selectedChat {
+                        MessageViewModelManager.shared.viewModel(for: activeChat).openFile()
+                    } else {
+                        CommandViewModel.shared.addChat { chat in
+                            if let activeChat = chat {
+                                MessageViewModelManager.shared.viewModel(for: activeChat).openFile()
+                            } else {
+                                print("TODO: Show error")
+                            }
+                        }
                     }
-                    MessageViewModelManager.shared.viewModel(for: activeChatID).openFile()
                 }
                 .keyboardShortcut("o", modifiers: .command)
             }
 
             CommandGroup(replacing: .textEditing) {
-                if let selectedChat = commandViewModel.selectedChat {
-                    ChatContextMenu(commandViewModel, for: selectedChat)
+                if let selectedChat = CommandViewModel.shared.selectedChat {
+                    ChatContextMenu(for: selectedChat)
                 }
             }
         }

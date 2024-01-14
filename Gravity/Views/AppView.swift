@@ -3,9 +3,8 @@ import SwiftUI
 import ViewState
 
 struct AppView: View {
-    @Environment(CommandViewModel.self) private var commandViewModel
     @EnvironmentObject private var imageViewModel: ImageViewModel
-    private let logger = Logger(subsystem: "ai.grav.app", category: "OllamaViewModel")
+    private let logger = Logger(subsystem: "ai.grav.app", category: "AppView")
 
     var body: some View {
         GeometryReader { geometry in
@@ -14,7 +13,7 @@ struct AppView: View {
                     ChatSidebarListView()
                         .navigationSplitViewColumnWidth(min: 240, ideal: 240)
                 } detail: {
-                    if let selectedChat = commandViewModel.selectedChat {
+                    if let selectedChat = CommandViewModel.shared.selectedChat {
                         MessageView(for: selectedChat)
                     } else {
                         ContentUnavailableView {
