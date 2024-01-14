@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sindresorhus/KeyboardShortcuts",
       "state" : {
-        "revision" : "c252200141e4abaecf30c14ea474dc009f56d553",
-        "version" : "1.16.1"
+        "revision" : "ac12762853126cf2e7ad63a6a58e1c9f58c6a0ee",
+        "version" : "1.17.0"
       }
     },
     {
@@ -60,7 +60,7 @@
       "location" : "https://github.com/djmango/OllamaKit",
       "state" : {
         "branch" : "master",
-        "revision" : "0238065aebb29c536a3773dae7a1ef185503434c"
+        "revision" : "8a3ee6dcbd6c19213c16a649d43742c5bf91da91"
       }
     },
     {

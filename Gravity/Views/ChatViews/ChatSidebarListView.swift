@@ -1,3 +1,4 @@
+import Pow
 import SwiftUI
 import ViewCondition
 
@@ -43,6 +44,14 @@ struct ChatSidebarListView: View {
                             ChatContextMenu(for: chat)
                         }
                         .tag(chat)
+                    // .transition(
+                    //     .asymmetric(
+                    //         insertion: .identity
+                    //             .animation(.linear(duration: 1).delay(2))
+                    //             .combined(with: .movingParts.anvil),
+                    //         removal: .identity
+                    //     )
+                    // )
                 }
             }
             .hide(if: todayChats.isEmpty, removeCompletely: true)

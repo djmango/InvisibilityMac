@@ -13,9 +13,11 @@ struct ChatContextMenu: View {
         }
         .keyboardShortcut("r", modifiers: [.command])
 
-        // Button("Auto-rename \"\(chat.name)\"") {
-        //     viewModel.chatToAutorename = chat
-        // }
+        Button("Auto-rename \"\(chat.name)\"") {
+            Task {
+                await MessageViewModelManager.shared.viewModel(for: chat).autorename()
+            }
+        }
 
         Divider()
 

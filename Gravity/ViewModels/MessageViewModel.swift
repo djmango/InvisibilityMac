@@ -63,8 +63,6 @@ final class MessageViewModel: ObservableObject {
                 messages: messages.dropLast().compactMap { $0.toChatMessage() }
             )
 
-            print("Sending data to OllamaKit: \(data)")
-
             generation = OllamaKit.shared.chat(data: data)
                 .handleEvents(
                     receiveSubscription: { _ in print("Received Subscription") },
@@ -78,6 +76,14 @@ final class MessageViewModel: ObservableObject {
                         case .finished:
                             print("Success completion")
                             self?.handleComplete()
+
+                            // When complete, we can autorename the chat if it is a new chat.
+                            if self?.messages.count == 2 {
+                                Task {
+                                    await self?.autorename()
+                                }
+                            }
+
                         case let .failure(error):
                             print("Failure completion \(error)")
                             self?.handleError(error.localizedDescription)
@@ -175,15 +181,22 @@ final class MessageViewModel: ObservableObject {
 // @MARK AutoRename
 extension MessageViewModel {
     @MainActor
-    func autorename(_ message: Message) async {
+    func autorename() async {
         TelemetryManager.send("MessageViewModel.autorename")
 
         if await OllamaKit.shared.reachable() {
-            // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
-            let data = OKChatRequestData(
-                model: message.model,
-                messages: messages.dropLast().compactMap { $0.toChatMessage() }
+            // Copy the messages array and append the instruction message to it
+            var message_history = messages.map { $0 }
+
+            let instructionMessage = Message(content: "Generate a 2-4 word desctriptor of the above chat. Do not write any additional text, return only the short descriptor. Please be concise. For example, \"AI for Industrial Robots\".", role: .user)
+            message_history.append(instructionMessage)
+
+            var data = OKChatRequestData(
+                model: chat.model?.name ?? "",
+                messages: message_history.compactMap { $0.toChatMessage() }
             )
+            data.stream = false
+            print("Sending data to OllamaKit: \(data)")
 
             generation = OllamaKit.shared.chat(data: data)
                 .handleEvents(
@@ -193,18 +206,18 @@ extension MessageViewModel {
                     receiveCancel: { print("Received Cancel") }
                 )
                 .sink(
-                    receiveCompletion: { [weak self] completion in
+                    receiveCompletion: { completion in
                         switch completion {
                         case .finished:
                             print("Success completion")
-                            self?.handleComplete()
                         case let .failure(error):
                             print("Failure completion \(error)")
-                            self?.handleError(error.localizedDescription)
                         }
                     },
                     receiveValue: { [weak self] response in
-                        self?.handleReceive(response)
+                        guard let message = response.message else { return }
+                        print("Received message: \(message.content)")
+                        self?.chat.name = message.content
                     }
                 )
         } else {
