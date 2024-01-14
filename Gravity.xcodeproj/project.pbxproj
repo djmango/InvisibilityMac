@@ -10,6 +10,7 @@
 		4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
+		4D785D7D2B53633200FBCE1A /* ModelWarmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */; };
 		4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
 		4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4252B4CB639007F025B /* ImageViewModel.swift */; };
@@ -46,7 +47,6 @@
 		4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E42B4E08660041690B /* AboutSettingsView.swift */; };
 		4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282E72B4E3C4A0041690B /* LaunchAtLogin */; };
 		4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282EA2B4E3D810041690B /* TelemetryClient */; };
-		4DDCE8502B509F9800A22B1E /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4DDCE84F2B509F9800A22B1E /* Info.plist */; };
 		4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DDCE8522B50BA0900A22B1E /* Sparkle */; };
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
@@ -60,6 +60,7 @@
 		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWarmer.swift; sourceTree = "<group>"; };
 		4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedImageView.swift; sourceTree = "<group>"; };
 		4D7AB4252B4CB639007F025B /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
@@ -191,6 +192,7 @@
 			children = (
 				4D5B4BC42B48F3320067C543 /* ImageUtils.swift */,
 				4D8E05352B2516DE00B60D0D /* AppMessages.swift */,
+				4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -324,7 +326,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1520;
 			};
 			buildConfigurationList = 0A4D357C2AF541D900846890 /* Build configuration list for PBXProject "Gravity" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -365,7 +367,6 @@
 			files = (
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
 				4DEF3F342B491CE200256ADE /* ollama-darwin in Resources */,
-				4DDCE8502B509F9800A22B1E /* Info.plist in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -399,6 +400,7 @@
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
+				4D785D7D2B53633200FBCE1A /* ModelWarmer.swift in Sources */,
 				4D8E05602B2516DE00B60D0D /* PromptEditor.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,

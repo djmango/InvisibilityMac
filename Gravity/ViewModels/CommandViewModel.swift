@@ -13,9 +13,9 @@ final class CommandViewModel: ObservableObject {
     init() {
         KeyboardShortcuts.onKeyUp(for: .summon) {
             // First close all non-main windows
-            NSApp.windows.forEach {
-                if $0.windowController?.window?.identifier != NSUserInterfaceItemIdentifier("master") {
-                    $0.close()
+            for item in NSApp.windows {
+                if item.windowController?.window?.identifier != NSUserInterfaceItemIdentifier("master") {
+                    item.close()
                 }
             }
 

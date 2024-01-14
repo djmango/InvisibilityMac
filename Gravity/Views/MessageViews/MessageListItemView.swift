@@ -146,12 +146,12 @@ struct MessageListItemView: View {
     // MARK: - Actions
 
     private func copyAction() {
-        let content = MarkdownContent(message.content ?? "")
-        let plainText = content.renderPlainText()
+        // let content = MarkdownContent(message.content ?? "")
+        // let plainText = content.renderPlainText()
 
         let pasteBoard = NSPasteboard.general
         pasteBoard.clearContents()
-        pasteBoard.setString(plainText, forType: .string)
+        pasteBoard.setString(message.content ?? "", forType: .string)
 
         isCopied = true
     }

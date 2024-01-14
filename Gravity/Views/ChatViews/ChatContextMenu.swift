@@ -15,6 +15,10 @@ struct ChatContextMenu: View {
         }
         .keyboardShortcut("r", modifiers: [.command])
 
+        // Button("Auto-rename \"\(chat.name)\"") {
+        //     viewModel.chatToAutorename = chat
+        // }
+
         Divider()
 
         Button("Delete \"\(chat.name)\"") {

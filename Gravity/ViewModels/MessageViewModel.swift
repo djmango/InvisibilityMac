@@ -165,6 +165,47 @@ final class MessageViewModel: ObservableObject {
     }
 }
 
+// @MARK AutoRename
+extension MessageViewModel {
+    @MainActor
+    func autorename(_ message: Message) async {
+        TelemetryManager.send("MessageViewModel.autorename")
+
+        if await OllamaKit.shared.reachable() {
+            // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
+            let data = OKChatRequestData(
+                model: message.model,
+                messages: messages.dropLast().compactMap { $0.toChatMessage() }
+            )
+
+            generation = OllamaKit.shared.chat(data: data)
+                .handleEvents(
+                    receiveSubscription: { _ in print("Received Subscription") },
+                    receiveOutput: { _ in print("Received Output") },
+                    receiveCompletion: { _ in print("Received Completion") },
+                    receiveCancel: { print("Received Cancel") }
+                )
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        switch completion {
+                        case .finished:
+                            print("Success completion")
+                            self?.handleComplete()
+                        case let .failure(error):
+                            print("Failure completion \(error)")
+                            self?.handleError(error.localizedDescription)
+                        }
+                    },
+                    receiveValue: { [weak self] response in
+                        self?.handleReceive(response)
+                    }
+                )
+        } else {
+            handleError(AppMessages.ollamaServerUnreachable)
+        }
+    }
+}
+
 // @MARK Image Handler
 extension MessageViewModel {
     /// Public function that can be called to begin the file open process
