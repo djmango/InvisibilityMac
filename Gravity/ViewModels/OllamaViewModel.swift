@@ -82,8 +82,7 @@ final class OllamaViewModel: ObservableObject {
         return models
     }
 
-    static func example(modelContainer: ModelContainer) -> OllamaViewModel {
-        let example = OllamaViewModel(modelContext: ModelContext(modelContainer))
-        return example
+    func fromName(_ name: String) -> OllamaModel? {
+        models.first(where: { $0.name == name })
     }
 }

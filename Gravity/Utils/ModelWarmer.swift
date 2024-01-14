@@ -64,6 +64,8 @@ class ModelWarmer: ObservableObject {
             }
         }
 
+        await OllamaKit.shared.restartBinaryAndWaitForAPI()
+
         // If it wasn't warmed in the last 60 seconds, warm it
         lastWarm = Date()
 

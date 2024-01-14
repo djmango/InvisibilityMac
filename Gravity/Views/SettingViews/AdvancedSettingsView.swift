@@ -17,7 +17,7 @@ struct AdvancedSettingsView: View {
     @State private var showingModelPicker = false
 
     // Models for picker, assuming these are your models
-    let models = ["mistral:latest", "llava:latest"]
+    let models = OllamaViewModel.shared.models
 
     var body: some View {
         VStack {
@@ -25,7 +25,7 @@ struct AdvancedSettingsView: View {
             Form {
                 Picker("Default Model:", selection: $selectedModel) {
                     ForEach(models, id: \.self) { model in
-                        Text(model).tag(model)
+                        Text(model.name).tag(model.name)
                     }
                 }
                 .bold()
@@ -40,7 +40,7 @@ struct AdvancedSettingsView: View {
                         .frame(width: 9, height: 9)
                 }
                 .sheet(isPresented: $showingModelPicker) {
-                    ModelPickerView(selectedModels: models)
+                    ModelPickerView(selectedModels: [selectedModel])
                 }
             }
             .frame(width: 550)

@@ -2,7 +2,6 @@ import AppKit
 import Foundation
 import KeyboardShortcuts
 import OllamaKit
-
 import SwiftData
 import SwiftUI
 import ViewCondition
@@ -14,6 +13,8 @@ final class CommandViewModel: ObservableObject {
 
     var isRenameChatViewPresented: Bool = false
     var isDeleteChatConfirmationPresented: Bool = false
+
+    // @AppStorage("selectedModel") private var selectedModel = "mistral:latest"
 
     var selectedChat: Chat? = nil
 
@@ -54,7 +55,12 @@ final class CommandViewModel: ObservableObject {
     func addChat(completion: @escaping (Chat?) -> Void = { _ in }) {
         selectedChat = nil
         let chat = Chat()
-        chat.model = OllamaViewModel.shared.models.first // TODO: Make this configurable
+
+        let selectedModel = UserDefaults.standard.string(forKey: "selectedModel") ?? "mistral:latest"
+        print("Selected model: \(selectedModel)")
+        chat.model = OllamaViewModel.shared.fromName(selectedModel)
+
+        print("Creating chat")
 
         Task {
             await runIfReachable {
