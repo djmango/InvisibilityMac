@@ -49,12 +49,23 @@ final class CommandViewModel: ObservableObject {
     }
 
     func addChat() {
-        // selectedChat = nil
+        selectedChat = nil
         let chat = Chat()
+        chat.model = OllamaViewModel.shared.models.first
+
+        // print all chat models
+        for model in OllamaViewModel.shared.models {
+            print("Model:")
+            print(model.name)
+        }
 
         Task {
             await runIfReachable {
                 do {
+                    print("Creating chat")
+                    print(chat)
+                    print(chat.id)
+                    print(chat.model?.name ?? "No name")
                     try ChatViewModel.shared.create(chat)
                     self.selectedChat = chat
                 } catch {

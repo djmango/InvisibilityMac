@@ -1,6 +1,5 @@
 import Foundation
 import SwiftData
-import SwiftUI
 
 @Model
 final class Chat: Identifiable {
@@ -24,15 +23,17 @@ final class Chat: Identifiable {
     init(name: String = "New Chat") {
         self.name = name
 
-        @AppStorage("selectedModel") var selectedModel = "mistral:latest"
-        @AppStorage("systemInstruction") var systemInstruction = ""
-        @AppStorage("temperature") var temperature: Double = 0.7
-        @AppStorage("maxContextLength") var maxContextLength: Double = 6000
+        systemInstruction = UserDefaults.standard.string(forKey: "systemInstruction") ?? ""
+        temperature = UserDefaults.standard.double(forKey: "temperature")
+        maxContextLength = UserDefaults.standard.double(forKey: "maxContextLength")
 
-        model = OllamaModel(name: selectedModel)
-        self.systemInstruction = systemInstruction
-        self.temperature = temperature
-        self.maxContextLength = maxContextLength
+        // let selectedModel = UserDefaults.standard.string(forKey: "selectedModel") ?? ""
+        // print("Creating chat with model \(selectedModel)")
+        // model = OllamaModel(name: selectedModel)
+        // print("Created chat with model \(selectedModel)")
+        systemInstruction = systemInstruction
+        temperature = temperature
+        maxContextLength = maxContextLength
     }
 }
 

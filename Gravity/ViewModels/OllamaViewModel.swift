@@ -6,36 +6,26 @@ import ViewState
 
 @Observable
 final class OllamaViewModel: ObservableObject {
-    public let ollamaKit = OllamaKit.shared
+    static var shared: OllamaViewModel!
+
     private var modelContext: ModelContext
-    private var healthCheckTimer: Timer?
     private let logger = Logger(subsystem: "ai.grav.app", category: "OllamaViewModel")
 
     var models: [OllamaModel] = []
 
     init(modelContext: ModelContext) {
         self.modelContext = modelContext
-        //        self.startHealthCheck()
-    }
-
-    func isReachable() async -> Bool {
-        await ollamaKit.reachable()
-    }
-
-    func startHealthCheck() {
-        healthCheckTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
-            // Call the async function from the main queue
-            DispatchQueue.main.async {
-                Task {
-                    let reachable = await self.ollamaKit.reachable()
-                    self.logger.debug("Reachable: \(reachable)")
-                }
+        Task {
+            do {
+                try await fetch()
+            } catch {
+                logger.error("Could not fetch models: \(error)")
             }
         }
     }
 
-    func stopHealthCheck() {
-        healthCheckTimer?.invalidate()
+    func isReachable() async -> Bool {
+        await OllamaKit.shared.reachable()
     }
 
     @MainActor
@@ -59,22 +49,25 @@ final class OllamaViewModel: ObservableObject {
             modelContext.insert(model)
         }
 
+        // Remove models that are no longer available
+        for model in prevModels {
+            if !model.isAvailable {
+                modelContext.delete(model)
+            }
+        }
+
         try modelContext.saveChanges()
         models = try fetchFromLocal()
     }
 
     private func fetchFromRemote() async throws -> [OKModelResponse.Model] {
-        let response = try await ollamaKit.models()
+        let response = try await OllamaKit.shared.models()
 
         // TODO: FIND A PLACE FOR THIS
         logger.debug("Pulling model")
         let req = OKPullModelRequestData(name: "mistral:latest")
-        do {
-            try await ollamaKit.pullModel(data: req)
-            logger.debug("Pulled model")
-        } catch {
-            logger.error("Failed to pull model: \(error)")
-        }
+        let res = OllamaKit.shared.pullModel(data: req).collect()
+        logger.debug("Pulled model")
 
         let models = response.models
 

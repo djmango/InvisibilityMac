@@ -10,7 +10,6 @@ struct MessageView: View {
 
     @EnvironmentObject var globalState: GlobalState
     @Environment(\.modelContext) private var modelContext: ModelContext
-    @Environment(OllamaViewModel.self) private var ollamaViewModel: OllamaViewModel
     @EnvironmentObject private var imageViewModel: ImageViewModel
 
     @FocusState private var isEditorFocused: Bool

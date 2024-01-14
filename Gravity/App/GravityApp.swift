@@ -18,7 +18,6 @@ struct GravityApp: App {
 
     @StateObject private var updaterViewModel: UpdaterViewModel
     @StateObject private var commandViewModel: CommandViewModel
-    @StateObject private var ollamaViewModel: OllamaViewModel
     @StateObject private var imageViewModel: ImageViewModel
 
     @AppStorage("analytics") private var analytics: Bool = true
@@ -44,22 +43,17 @@ struct GravityApp: App {
         let updaterViewModel = UpdaterViewModel(updater: updater)
         _updaterViewModel = StateObject(wrappedValue: updaterViewModel)
 
-        print("Updater controller initialized")
-        print(Bundle.main.infoDictionary ?? "No info dictionary")
-
         modelContext = sharedModelContainer.mainContext
 
         let commandViewModel = CommandViewModel()
         _commandViewModel = StateObject(wrappedValue: commandViewModel)
-
-        let ollamaViewModel = OllamaViewModel(modelContext: modelContext)
-        _ollamaViewModel = StateObject(wrappedValue: ollamaViewModel)
 
         let imageViewModel = ImageViewModel()
         _imageViewModel = StateObject(wrappedValue: imageViewModel)
 
         MessageViewModelManager.shared = MessageViewModelManager(modelContext: modelContext)
         ChatViewModel.shared = ChatViewModel(modelContext: modelContext)
+        OllamaViewModel.shared = OllamaViewModel(modelContext: modelContext)
 
         if analytics {
             if userIdentifier.isEmpty {
@@ -82,7 +76,6 @@ struct GravityApp: App {
                 .environmentObject(globalState)
                 .environmentObject(updaterViewModel)
                 .environmentObject(commandViewModel)
-                .environmentObject(ollamaViewModel)
                 .environmentObject(imageViewModel)
         }
         .windowStyle(HiddenTitleBarWindowStyle())

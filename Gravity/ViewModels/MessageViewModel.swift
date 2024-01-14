@@ -59,9 +59,11 @@ final class MessageViewModel: ObservableObject {
         if await OllamaKit.shared.reachable() {
             // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
             let data = OKChatRequestData(
-                model: message.model,
+                model: chat.model?.name ?? "",
                 messages: messages.dropLast().compactMap { $0.toChatMessage() }
             )
+
+            print("Sending data to OllamaKit: \(data)")
 
             generation = OllamaKit.shared.chat(data: data)
                 .handleEvents(
