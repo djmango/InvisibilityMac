@@ -17,16 +17,6 @@ class ModelWarmer: ObservableObject {
     /// Var to hold the selected model
     @AppStorage("selectedModel") private var selectedModel = "mistral:latest"
 
-    enum GenerationResult {
-        case success(Bool)
-        case failure(Bool)
-    }
-
-    func runGeneration() async -> GenerationResult {
-        await withCheckedContinuation { _ in
-        }
-    }
-
     func warm() async {
         print("Warming model")
 
@@ -54,6 +44,14 @@ class ModelWarmer: ObservableObject {
                         generation?.cancel()
                     }
                 )
+        }
+    }
+
+    func restart(minInterval: TimeInterval = 90) async {
+        // Restart the binary if it has been more than 90 seconds since the last message
+        guard let lastInferenceTime = OllamaKit.shared.lastInferenceTime else { return }
+        if lastInferenceTime < Date.now.addingTimeInterval(-minInterval) {
+            await OllamaKit.shared.restartBinaryAndWaitForAPI()
         }
     }
 }

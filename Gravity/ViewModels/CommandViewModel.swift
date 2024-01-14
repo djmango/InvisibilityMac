@@ -13,9 +13,6 @@ final class CommandViewModel: ObservableObject {
 
     var isRenameChatViewPresented: Bool = false
     var isDeleteChatConfirmationPresented: Bool = false
-
-    // @AppStorage("selectedModel") private var selectedModel = "mistral:latest"
-
     var selectedChat: Chat? = nil
 
     init() {

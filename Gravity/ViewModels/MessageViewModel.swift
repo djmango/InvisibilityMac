@@ -59,6 +59,9 @@ final class MessageViewModel: ObservableObject {
 
         try? modelContext.saveChanges()
 
+        // Restart the binary if it has been more than 90 seconds since the last restart
+        await ModelWarmer.shared.restart()
+
         if await OllamaKit.shared.reachable() {
             // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
             let data = OKChatRequestData(
