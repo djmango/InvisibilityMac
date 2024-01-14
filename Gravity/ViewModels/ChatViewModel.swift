@@ -3,6 +3,8 @@ import SwiftUI
 
 @Observable
 final class ChatViewModel: ObservableObject {
+    static var shared: ChatViewModel!
+
     private var modelContext: ModelContext
 
     var chats: [Chat] = []

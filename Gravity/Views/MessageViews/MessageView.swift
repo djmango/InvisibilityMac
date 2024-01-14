@@ -10,7 +10,6 @@ struct MessageView: View {
 
     @EnvironmentObject var globalState: GlobalState
     @Environment(\.modelContext) private var modelContext: ModelContext
-    @Environment(ChatViewModel.self) private var chatViewModel: ChatViewModel
     @Environment(OllamaViewModel.self) private var ollamaViewModel: OllamaViewModel
     @EnvironmentObject private var imageViewModel: ImageViewModel
 
@@ -129,7 +128,7 @@ struct MessageView: View {
         let message = Message(content: content, role: .user, chat: chat)
 
         Task {
-            try chatViewModel.modify(chat)
+            try ChatViewModel.shared.modify(chat)
             content = ""
             await messageViewModel.send(message)
         }
@@ -141,7 +140,7 @@ struct MessageView: View {
         message.done = false
 
         Task {
-            try chatViewModel.modify(chat)
+            try ChatViewModel.shared.modify(chat)
             await messageViewModel.regenerate(message)
         }
     }

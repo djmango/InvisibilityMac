@@ -1,10 +1,15 @@
 import AppKit
 import Foundation
 import KeyboardShortcuts
+import OllamaKit
+
+import SwiftData
+import SwiftUI
+import ViewCondition
+import ViewState
 
 @Observable
 final class CommandViewModel: ObservableObject {
-    var isAddChatViewPresented: Bool = false
     var isRenameChatViewPresented: Bool = false
     var isDeleteChatConfirmationPresented: Bool = false
 
@@ -31,6 +36,30 @@ final class CommandViewModel: ObservableObject {
                 var frame = window.frame
                 frame.origin = CGPoint(x: mouseLocation.x - frame.size.width / 2, y: mouseLocation.y - frame.size.height / 2)
                 window.setFrame(frame, display: true)
+            }
+        }
+    }
+
+    private func runIfReachable(_ function: @escaping () async -> Void) async {
+        if await OllamaKit.shared.reachable() {
+            await function()
+        } else {
+            print("Not reachable") // TODO: Show error
+        }
+    }
+
+    func addChat() {
+        // selectedChat = nil
+        let chat = Chat()
+
+        Task {
+            await runIfReachable {
+                do {
+                    try ChatViewModel.shared.create(chat)
+                    self.selectedChat = chat
+                } catch {
+                    print("Error creating chat: \(error)") // TODO: Show error
+                }
             }
         }
     }

@@ -27,15 +27,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func appDidBecomeActive(notification _: NSNotification) {
         isAppActive = true
-        print("App became active")
-        Task {
-            await ModelWarmer.shared.warm()
-        }
+        // print("App became active")
+        // Task {
+        //     await ModelWarmer.shared.warm()
+        // }
     }
 
     @objc func appDidResignActive(notification _: NSNotification) {
         isAppActive = false
-        print("App became inactive")
+        // print("App became inactive")
     }
 
     func applicationWillTerminate(_: Notification) {

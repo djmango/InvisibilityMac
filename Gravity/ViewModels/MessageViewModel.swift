@@ -113,8 +113,13 @@ final class MessageViewModel: ObservableObject {
         // This assumes chat structure is always user -> assistant -> user
 
         if messages.count < 2 { return }
-        messages.removeLast() // Removes the assistant message we are regenerating
-        if let userMessage = messages.popLast() { // Removes the user message and presents a fresh send scenario
+        // Remove the assistant message we are regenerating from class and ModelContext
+        if let assistantMessage = messages.popLast() {
+            modelContext.delete(assistantMessage)
+        }
+        // Removes the user message and presents a fresh send scenario
+        if let userMessage = messages.popLast() {
+            modelContext.delete(userMessage)
             await send(userMessage)
         }
     }

@@ -12,13 +12,13 @@ class GlobalState: ObservableObject {
 @main
 struct GravityApp: App {
     private var updater: SPUUpdater
+    public let modelContext: ModelContext
 
     @StateObject private var globalState: GlobalState = .init()
 
     @StateObject private var updaterViewModel: UpdaterViewModel
     @StateObject private var commandViewModel: CommandViewModel
     @StateObject private var ollamaViewModel: OllamaViewModel
-    @StateObject private var chatViewModel: ChatViewModel
     @StateObject private var imageViewModel: ImageViewModel
 
     @AppStorage("analytics") private var analytics: Bool = true
@@ -47,7 +47,7 @@ struct GravityApp: App {
         print("Updater controller initialized")
         print(Bundle.main.infoDictionary ?? "No info dictionary")
 
-        let modelContext = sharedModelContainer.mainContext
+        modelContext = sharedModelContainer.mainContext
 
         let commandViewModel = CommandViewModel()
         _commandViewModel = StateObject(wrappedValue: commandViewModel)
@@ -55,13 +55,11 @@ struct GravityApp: App {
         let ollamaViewModel = OllamaViewModel(modelContext: modelContext)
         _ollamaViewModel = StateObject(wrappedValue: ollamaViewModel)
 
-        let chatViewModel = ChatViewModel(modelContext: modelContext)
-        _chatViewModel = StateObject(wrappedValue: chatViewModel)
-
         let imageViewModel = ImageViewModel()
         _imageViewModel = StateObject(wrappedValue: imageViewModel)
 
         MessageViewModelManager.shared = MessageViewModelManager(modelContext: modelContext)
+        ChatViewModel.shared = ChatViewModel(modelContext: modelContext)
 
         if analytics {
             if userIdentifier.isEmpty {
@@ -84,7 +82,6 @@ struct GravityApp: App {
                 .environmentObject(globalState)
                 .environmentObject(updaterViewModel)
                 .environmentObject(commandViewModel)
-                .environmentObject(chatViewModel)
                 .environmentObject(ollamaViewModel)
                 .environmentObject(imageViewModel)
         }
@@ -95,12 +92,12 @@ struct GravityApp: App {
                 Button("Check for Updates...") {
                     updater.checkForUpdates()
                 }
-                 .disabled(!updaterViewModel.canCheckForUpdates)
+                .disabled(!updaterViewModel.canCheckForUpdates)
             }
 
             CommandGroup(replacing: .newItem) {
                 Button("New Chat") {
-                    commandViewModel.isAddChatViewPresented = true
+                    commandViewModel.addChat()
                 }
                 .keyboardShortcut("n", modifiers: .command)
             }

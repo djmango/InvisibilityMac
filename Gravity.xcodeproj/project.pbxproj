@@ -30,7 +30,6 @@
 		4D8E05592B2516DE00B60D0D /* ModelContext+SaveChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E053D2B2516DE00B60D0D /* ModelContext+SaveChanges.swift */; };
 		4D8E055A2B2516DE00B60D0D /* RenameChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05402B2516DE00B60D0D /* RenameChatView.swift */; };
 		4D8E055B2B2516DE00B60D0D /* ChatContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05412B2516DE00B60D0D /* ChatContextMenu.swift */; };
-		4D8E055C2B2516DE00B60D0D /* AddChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05422B2516DE00B60D0D /* AddChatView.swift */; };
 		4D8E055D2B2516DE00B60D0D /* ChatSidebarListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05432B2516DE00B60D0D /* ChatSidebarListView.swift */; };
 		4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05442B2516DE00B60D0D /* AppView.swift */; };
 		4D8E055F2B2516DE00B60D0D /* PromptEditorExpandedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05462B2516DE00B60D0D /* PromptEditorExpandedView.swift */; };
@@ -78,7 +77,6 @@
 		4D8E053D2B2516DE00B60D0D /* ModelContext+SaveChanges.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ModelContext+SaveChanges.swift"; sourceTree = "<group>"; };
 		4D8E05402B2516DE00B60D0D /* RenameChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RenameChatView.swift; sourceTree = "<group>"; };
 		4D8E05412B2516DE00B60D0D /* ChatContextMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatContextMenu.swift; sourceTree = "<group>"; };
-		4D8E05422B2516DE00B60D0D /* AddChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddChatView.swift; sourceTree = "<group>"; };
 		4D8E05432B2516DE00B60D0D /* ChatSidebarListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatSidebarListView.swift; sourceTree = "<group>"; };
 		4D8E05442B2516DE00B60D0D /* AppView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		4D8E05462B2516DE00B60D0D /* PromptEditorExpandedView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PromptEditorExpandedView.swift; sourceTree = "<group>"; };
@@ -240,7 +238,6 @@
 			children = (
 				4D8E05402B2516DE00B60D0D /* RenameChatView.swift */,
 				4D8E05412B2516DE00B60D0D /* ChatContextMenu.swift */,
-				4D8E05422B2516DE00B60D0D /* AddChatView.swift */,
 				4D8E05432B2516DE00B60D0D /* ChatSidebarListView.swift */,
 			);
 			path = ChatViews;
@@ -381,7 +378,6 @@
 				4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */,
 				4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
-				4D8E055C2B2516DE00B60D0D /* AddChatView.swift in Sources */,
 				4D8E055D2B2516DE00B60D0D /* ChatSidebarListView.swift in Sources */,
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
 				4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */,
@@ -549,7 +545,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -563,7 +559,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.2.6;
+				MARKETING_VERSION = 1.2.7;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -581,7 +577,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -596,7 +592,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.2.6;
+				MARKETING_VERSION = 1.2.7;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

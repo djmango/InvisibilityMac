@@ -6,7 +6,6 @@ struct RenameChatView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @Environment(ChatViewModel.self) private var chatViewModel
 
     @State private var name: String
 
@@ -41,7 +40,7 @@ struct RenameChatView: View {
 
     func saveAction() {
         chat.name = name
-        try? chatViewModel.rename(chat)
+        try? ChatViewModel.shared.rename(chat)
 
         dismiss()
     }

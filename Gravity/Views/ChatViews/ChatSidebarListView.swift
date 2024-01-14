@@ -3,13 +3,12 @@ import ViewCondition
 
 struct ChatSidebarListView: View {
     @Environment(CommandViewModel.self) private var commandViewModel
-    @Environment(ChatViewModel.self) private var chatViewModel
 
     private var todayChats: [Chat] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
 
-        return chatViewModel.chats.filter {
+        return ChatViewModel.shared.chats.filter {
             calendar.isDate($0.modifiedAt, inSameDayAs: today)
         }
     }
@@ -19,7 +18,7 @@ struct ChatSidebarListView: View {
         let today = calendar.startOfDay(for: Date())
         let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
 
-        return chatViewModel.chats.filter {
+        return ChatViewModel.shared.chats.filter {
             calendar.isDate($0.modifiedAt, inSameDayAs: yesterday)
         }
     }
@@ -29,7 +28,7 @@ struct ChatSidebarListView: View {
         let today = calendar.startOfDay(for: Date())
         let yesterday = calendar.date(byAdding: .day, value: -1, to: today)!
 
-        return chatViewModel.chats.filter {
+        return ChatViewModel.shared.chats.filter {
             !calendar.isDate($0.modifiedAt, inSameDayAs: today)
                 && !calendar.isDate($0.modifiedAt, inSameDayAs: yesterday)
         }
@@ -74,29 +73,17 @@ struct ChatSidebarListView: View {
         }
         .listStyle(.sidebar)
         .task {
-            try? chatViewModel.fetch()
+            try? ChatViewModel.shared.fetch()
         }
         .toolbar {
             ToolbarItemGroup {
                 Spacer()
 
                 Button("New Chat", systemImage: "square.and.pencil") {
-                    commandViewModel.isAddChatViewPresented = true
+                    commandViewModel.addChat()
                 }
                 .buttonStyle(.accessoryBar)
                 .help("New Chat (⌘ + N)")
-            }
-        }
-        // .toolbar(.visible)
-        // .navigationDestination(for: Chat.self) { chat in
-        //     MessageView(for: chat)
-        //         .environmentObject(chatViewModel)
-        // }
-        .sheet(
-            isPresented: $commandViewModelBindable.isAddChatViewPresented
-        ) {
-            AddChatView { createdChat in
-                commandViewModel.selectedChat = createdChat
             }
         }
         .sheet(
@@ -122,7 +109,7 @@ struct ChatSidebarListView: View {
 
     func deleteAction() {
         guard let chatToDelete = commandViewModel.chatToDelete else { return }
-        try? chatViewModel.delete(chatToDelete)
+        try? ChatViewModel.shared.delete(chatToDelete)
 
         commandViewModel.chatToDelete = nil
         commandViewModel.selectedChat = nil
