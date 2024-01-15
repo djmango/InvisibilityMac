@@ -42,6 +42,7 @@
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
 		4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */; };
 		4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */; };
+		4DA893B82B54F04C00560DAD /* OnboardingDownloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B72B54F04C00560DAD /* OnboardingDownloadView.swift */; };
 		4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282D82B4DEB6E0041690B /* SettingsKit */; };
 		4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */; };
 		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
@@ -93,6 +94,7 @@
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
 		4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingExplainerView.swift; sourceTree = "<group>"; };
 		4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingEmailView.swift; sourceTree = "<group>"; };
+		4DA893B72B54F04C00560DAD /* OnboardingDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDownloadView.swift; sourceTree = "<group>"; };
 		4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		4DD282E02B4DF7530041690B /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
 		4DD282E22B4E05B80041690B /* AdvancedSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedSettingsView.swift; sourceTree = "<group>"; };
@@ -279,6 +281,7 @@
 				4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */,
 				4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */,
 				4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */,
+				4DA893B72B54F04C00560DAD /* OnboardingDownloadView.swift */,
 			);
 			path = OnboardingViews;
 			sourceTree = "<group>";
@@ -423,6 +426,7 @@
 				4D8E05602B2516DE00B60D0D /* PromptEditor.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
+				4DA893B82B54F04C00560DAD /* OnboardingDownloadView.swift in Sources */,
 				4D8E055B2B2516DE00B60D0D /* ChatContextMenu.swift in Sources */,
 				4D8E055F2B2516DE00B60D0D /* PromptEditorExpandedView.swift in Sources */,
 				4D8E055A2B2516DE00B60D0D /* RenameChatView.swift in Sources */,

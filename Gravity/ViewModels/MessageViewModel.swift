@@ -69,7 +69,7 @@ final class MessageViewModel: ObservableObject {
         if await OllamaKit.shared.reachable() {
             // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
             let data = OKChatRequestData(
-                model: chat.model?.name ?? "",
+                model: chat.model?.name ?? "mistral:latest",
                 messages: messages.dropLast().compactMap { $0.toChatMessage() }
             )
 
@@ -202,7 +202,7 @@ extension MessageViewModel {
             message_history.append(instructionMessage)
 
             var data = OKChatRequestData(
-                model: chat.model?.name ?? "",
+                model: chat.model?.name ?? "mistral:latest",
                 messages: message_history.compactMap { $0.toChatMessage() }
             )
             data.stream = false

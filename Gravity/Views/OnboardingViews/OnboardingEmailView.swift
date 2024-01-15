@@ -58,7 +58,7 @@ struct OnboardingEmailView: View {
                 Spacer()
 
                 Button(action: callback) {
-                    Text("Start Gravity")
+                    Text("Continue")
                         .font(.system(size: 18))
                         .bold()
                         .foregroundColor(.white)

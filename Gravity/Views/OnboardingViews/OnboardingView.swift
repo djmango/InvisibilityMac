@@ -29,8 +29,11 @@ struct OnboardingView: View {
                 OnboardingExplainerView { viewIndex = 2 }
 
             case 2:
-                OnboardingEmailView {
-                    // viewIndex = 3
+                OnboardingEmailView { viewIndex = 3 }
+
+            case 3:
+                OnboardingDownloadView {
+                    // viewIndex = 4
                     onboardingViewed = true
                     if !emailAddress.isEmpty {
                         TelemetryManager.send("UserOnboarded", with: ["email": emailAddress, "analytics": analytics.description])

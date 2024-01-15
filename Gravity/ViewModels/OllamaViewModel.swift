@@ -1,3 +1,4 @@
+import Combine
 import OllamaKit
 import os
 import SwiftData
@@ -11,6 +12,10 @@ final class OllamaViewModel: ObservableObject {
     private var modelContext: ModelContext
     private let logger = Logger(subsystem: "ai.grav.app", category: "OllamaViewModel")
 
+    public var mistralDownloadProgress: Double = 0.0
+    private var mistral_res: AnyCancellable?
+    private var llava_res: AnyCancellable?
+
     var models: [OllamaModel] = []
 
     init(modelContext: ModelContext) {
@@ -23,6 +28,7 @@ final class OllamaViewModel: ObservableObject {
                 } else {
                     logger.debug("Binary was already running")
                 }
+                await pullModels()
                 try await fetch()
                 await ModelWarmer.shared.warm()
             } catch {
@@ -69,14 +75,6 @@ final class OllamaViewModel: ObservableObject {
 
     private func fetchFromRemote() async throws -> [OKModelResponse.Model] {
         let response = try await OllamaKit.shared.models()
-
-        // TODO: FIND A PLACE FOR THIS
-        logger.debug("Pulling model")
-        let req = OKPullModelRequestData(name: "mistral:latest")
-        let res = OllamaKit.shared.pullModel(data: req).collect()
-        print(res)
-        logger.debug("Pulled model")
-
         let models = response.models
 
         return models
@@ -88,6 +86,55 @@ final class OllamaViewModel: ObservableObject {
         let models = try modelContext.fetch(fetchDescriptor)
 
         return models
+    }
+
+    @MainActor
+    func pullModels() async {
+        logger.debug("Pulling models")
+        let mistral = OKPullModelRequestData(name: "mistral:latest")
+        mistral_res = OllamaKit.shared.pullModel(data: mistral)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        self?.logger.debug("Mistral successful download")
+                        self?.mistralDownloadProgress = 1.0
+                    case let .failure(error):
+                        self?.logger.error("Mistral failed download \(error)")
+                    }
+                },
+                receiveValue: { [weak self] response in
+                    let progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
+                    self?.logger.debug("Mistral status \(response.status)")
+                    // We only want to go up, not down
+                    if progress > self?.mistralDownloadProgress ?? 0.0 {
+                        self?.logger.debug("Mistral progress \(progress)")
+                        self?.mistralDownloadProgress = progress
+                    }
+                }
+            )
+
+        let llava = OKPullModelRequestData(name: "llava:latest")
+        llava_res = OllamaKit.shared.pullModel(data: llava)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .finished:
+                        self?.logger.debug("LLava successful download")
+                        self?.mistralDownloadProgress = 1.0
+                    case let .failure(error):
+                        self?.logger.error("Llava failed download \(error)")
+                    }
+                },
+                receiveValue: { [weak self] response in
+                    let progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
+                    self?.logger.debug("Llava status \(response.status)")
+                    // We only want to go up, not down
+                    self?.logger.debug("Llava progress \(progress)")
+                }
+            )
+
+        logger.debug("Pulled models")
     }
 
     func fromName(_ name: String) -> OllamaModel? {
