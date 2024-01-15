@@ -13,6 +13,7 @@ struct GeneralSettingsView: View {
     @AppStorage("autoLaunch") private var autoLaunch: Bool = false
     @AppStorage("analytics") private var analytics: Bool = true
     @AppStorage("betaFeatures") private var betaFeatures: Bool = false
+    @AppStorage("emailAddress") private var emailAddress: String = ""
 
     var body: some View {
         VStack(alignment: .center) {
@@ -33,6 +34,13 @@ struct GeneralSettingsView: View {
 
                 Section {
                     Toggle("Enable beta features", isOn: $betaFeatures).bold()
+                }
+
+                Section {
+                    TextField("Email Address", text: $emailAddress)
+                        .bold()
+                        .textFieldStyle(.roundedBorder)
+                        .frame(width: 350)
                 }
             }
             .frame(width: 500)

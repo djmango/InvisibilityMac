@@ -51,7 +51,7 @@ class ModelWarmer: ObservableObject {
         // Restart the binary if it has been more than 90 seconds since the last message
         guard let lastInferenceTime = OllamaKit.shared.lastInferenceTime else { return }
         if lastInferenceTime < Date.now.addingTimeInterval(-minInterval) {
-            await OllamaKit.shared.restartBinaryAndWaitForAPI()
+            let _ = await OllamaKit.shared.restartBinaryAndWaitForAPI()
         }
     }
 }

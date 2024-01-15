@@ -12,6 +12,7 @@ struct AdvancedSettingsView: View {
     @AppStorage("systemInstruction") private var systemInstruction = ""
     @AppStorage("temperature") private var temperature: Double = 0.7
     @AppStorage("maxContextLength") private var maxContextLength: Double = 6000
+    @AppStorage("onboardingViewed") private var onboardingViewed = false
 
     @State private var isEditingInstruction = false
     @State private var showingModelPicker = false
@@ -22,29 +23,30 @@ struct AdvancedSettingsView: View {
     var body: some View {
         VStack {
             Spacer()
-            Form {
-                Picker("Default Model:", selection: $selectedModel) {
-                    ForEach(models, id: \.self) { model in
-                        Text(model.name).tag(model.name)
-                    }
-                }
-                .bold()
-                .pickerStyle(.radioGroup)
 
-                Button(action: {
-                    showingModelPicker.toggle()
-                }) {
-                    Image(systemName: "plus")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 9, height: 9)
-                }
-                .sheet(isPresented: $showingModelPicker) {
-                    ModelPickerView(selectedModels: [selectedModel])
-                }
-            }
-            .frame(width: 550)
-            .padding(.bottom, 10)
+            // Form {
+            //     Picker("Default Model:", selection: $selectedModel) {
+            //         ForEach(models, id: \.self) { model in
+            //             Text(model.name).tag(model.name)
+            //         }
+            //     }
+            //     .bold()
+            //     .pickerStyle(.radioGroup)
+
+            //     Button(action: {
+            //         showingModelPicker.toggle()
+            //     }) {
+            //         Image(systemName: "plus")
+            //             .resizable()
+            //             .aspectRatio(contentMode: .fit)
+            //             .frame(width: 9, height: 9)
+            //     }
+            //     .sheet(isPresented: $showingModelPicker) {
+            //         ModelPickerView(selectedModels: [selectedModel])
+            //     }
+            // }
+            // .frame(width: 550)
+            // .padding(.bottom, 10)
 
             // Divider()
 
@@ -74,6 +76,13 @@ struct AdvancedSettingsView: View {
                 Text("\(maxContextLength, specifier: "%.0f") Tokens")
             }
             .padding(.bottom, 10)
+
+            Section {
+                Button("Reset Onboarding") {
+                    onboardingViewed = false
+                }
+                .bold()
+            }.padding(.bottom, 10)
             Spacer()
         }
     }
