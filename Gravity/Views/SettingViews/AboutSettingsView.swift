@@ -57,18 +57,18 @@ struct AboutSettingsView: View {
 
             HStack {
                 Button("Feedback") {
-                    if let url = URL(string: "https://grav.ai") {
+                    if let url = URL(string: "mailto:sulaiman@grav.ai") {
                         NSWorkspace.shared.open(url)
                     }
                 }
                 .buttonStyle(.bordered)
 
-                // Button("Acknowledgments") {
-                //     if let url = URL(string: "https://grav.ai/tos") {
-                //         NSWorkspace.shared.open(url)
-                //     }
-                // }
-                // .buttonStyle(.bordered)
+                Button("Acknowledgments") {
+                    if let url = URL(string: "https://github.com/InvisibilityInc/Gravity/tree/master/LICENSES") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.bordered)
 
                 Button("Check for Updates") {
                     updaterViewModel.updater.checkForUpdates()
