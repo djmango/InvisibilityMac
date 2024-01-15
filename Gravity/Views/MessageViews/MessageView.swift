@@ -133,7 +133,7 @@ struct MessageView: View {
     }
 
     private func regenerateAction(for message: Message) {
-        guard messageViewModel.sendViewState == nil else { return }
+        // guard messageViewModel.sendViewState == nil else { return }
 
         message.done = false
 

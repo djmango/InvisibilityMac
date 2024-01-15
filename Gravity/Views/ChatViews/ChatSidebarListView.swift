@@ -1,8 +1,11 @@
+import OllamaKit
 import Pow
 import SwiftUI
 import ViewCondition
 
 struct ChatSidebarListView: View {
+    @State private var isRestarting = false
+
     private var todayChats: [Chat] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -85,6 +88,19 @@ struct ChatSidebarListView: View {
         .toolbar {
             ToolbarItemGroup {
                 Spacer()
+
+                Button(action: {
+                    isRestarting = true
+                    Task {
+                        _ = await OllamaKit.shared.restartBinaryAndWaitForAPI()
+                        isRestarting = false
+                    }
+                }) {
+                    Label("Restart Models", systemImage: "arrow.clockwise")
+                        .rotationEffect(.degrees(isRestarting ? 360 : 0))
+                        .animation(isRestarting ? .linear(duration: 1).repeatForever(autoreverses: false) : .default, value: isRestarting)
+                }
+                .help("Restart Models")
 
                 Button("New Chat", systemImage: "square.and.pencil") {
                     CommandViewModel.shared.addChat()

@@ -169,6 +169,9 @@ final class MessageViewModel: ObservableObject {
 
         try? modelContext.saveChanges()
         sendViewState = .error(message: errorMessage)
+        Task {
+            await OllamaKit.shared.restartBinaryAndWaitForAPI()
+        }
     }
 
     private func handleComplete() {
