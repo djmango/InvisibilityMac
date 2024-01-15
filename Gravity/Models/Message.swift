@@ -42,7 +42,8 @@ extension Message {
     func toChatMessage() -> ChatMessage? {
         guard let content else { return nil }
         guard let role else { return nil }
-        return ChatMessage(role: role.rawValue, content: content)
+        let base64Images = images?.compactMap { $0.base64EncodedString() }
+        return ChatMessage(role: role.rawValue, content: content, images: base64Images)
     }
 }
 

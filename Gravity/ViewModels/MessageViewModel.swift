@@ -59,8 +59,12 @@ final class MessageViewModel: ObservableObject {
 
         try? modelContext.saveChanges()
 
-        // Restart the binary if it has been more than 90 seconds since the last restart
-        await ModelWarmer.shared.restart()
+        // Restart the binary if it has been a while since the last message or if the model has changed
+        if OllamaKit.shared.lastInferenceModel == chat.model?.name {
+            await ModelWarmer.shared.restart()
+        } else {
+            _ = await OllamaKit.shared.restartBinaryAndWaitForAPI()
+        }
 
         if await OllamaKit.shared.reachable() {
             // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
@@ -296,8 +300,14 @@ extension MessageViewModel {
             content: "Take a a look at this image for me", role: Role.user, chat: chat,
             images: [image]
         )
+
+        // If joined is empty, just have an empty string
+        var assistantContent = ""
+        if !joined.isEmpty {
+            assistantContent = "It says: \(joined)\n"
+        }
         let assistantMessage = Message(
-            content: "It says: \(joined)", role: Role.assistant, chat: chat
+            content: assistantContent, role: Role.assistant, chat: chat
         )
 
         // Add the messages to the view model and save them to the database
@@ -310,7 +320,52 @@ extension MessageViewModel {
         } catch {
             logger.error("Error saving changes: \(error)")
         }
-        sendViewState = nil
         lastOpenedImage = nil
+
+        // Okay now send to image model
+
+        Task {
+            // Restart the binary if it has been a while since the last message or if the model has changed
+            if OllamaKit.shared.lastInferenceModel == "llava" {
+                await ModelWarmer.shared.restart()
+            } else {
+                _ = await OllamaKit.shared.restartBinaryAndWaitForAPI()
+            }
+
+            if await OllamaKit.shared.reachable() {
+                let data = OKChatRequestData(
+                    model: "llava",
+                    messages: [userMessage.toChatMessage()!]
+                )
+
+                print("Sending image to llava")
+
+                generation = OllamaKit.shared.chat(data: data)
+                    .handleEvents(
+                        receiveSubscription: { _ in self.logger.debug("Received Subscription") },
+                        receiveOutput: { _ in self.logger.debug("Received Output") },
+                        receiveCompletion: { _ in self.logger.debug("Received Completion") },
+                        receiveCancel: { self.logger.debug("Received Cancel") }
+                    )
+                    .sink(
+                        receiveCompletion: { [weak self] completion in
+                            switch completion {
+                            case .finished:
+                                self?.logger.debug("Success completion")
+                                self?.handleComplete()
+
+                            case let .failure(error):
+                                self?.logger.error("Failure completion \(error)")
+                                self?.handleError(error.localizedDescription)
+                            }
+                        },
+                        receiveValue: { [weak self] response in
+                            self?.handleReceive(response)
+                        }
+                    )
+            } else {
+                handleError(AppMessages.ollamaServerUnreachable)
+            }
+        }
     }
 }
