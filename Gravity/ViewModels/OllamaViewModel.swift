@@ -13,6 +13,7 @@ final class OllamaViewModel: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "OllamaViewModel")
 
     public var mistralDownloadProgress: Double = 0.0
+    public var llavaDownloadProgress: Double = 0.0
     private var mistral_res: AnyCancellable?
     private var llava_res: AnyCancellable?
 
@@ -104,11 +105,15 @@ final class OllamaViewModel: ObservableObject {
                     }
                 },
                 receiveValue: { [weak self] response in
-                    let progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
+                    var progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
                     self?.logger.debug("Mistral status \(response.status)")
                     // We only want to go up, not down
                     if progress > self?.mistralDownloadProgress ?? 0.0 {
                         self?.logger.debug("Mistral progress \(progress)")
+                        // Do not let model go over .99 until we have success completion
+                        if progress > 0.99 {
+                            progress = 0.99
+                        }
                         self?.mistralDownloadProgress = progress
                     }
                 }
@@ -121,16 +126,23 @@ final class OllamaViewModel: ObservableObject {
                     switch completion {
                     case .finished:
                         self?.logger.debug("LLava successful download")
-                        self?.mistralDownloadProgress = 1.0
+                        self?.llavaDownloadProgress = 1.0
                     case let .failure(error):
                         self?.logger.error("Llava failed download \(error)")
                     }
                 },
                 receiveValue: { [weak self] response in
-                    let progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
+                    var progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
                     self?.logger.debug("Llava status \(response.status)")
                     // We only want to go up, not down
-                    self?.logger.debug("Llava progress \(progress)")
+                    if progress > self?.llavaDownloadProgress ?? 0.0 {
+                        self?.logger.debug("Llava progress \(progress)")
+                        // Do not let model go over .99 until we have success completion
+                        if progress > 0.99 {
+                            progress = 0.99
+                        }
+                        self?.llavaDownloadProgress = progress
+                    }
                 }
             )
 

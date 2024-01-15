@@ -47,6 +47,11 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func send(_ message: Message) async {
+        if OllamaViewModel.shared.mistralDownloadProgress < 1.0 {
+            sendViewState = .error(message: "Please wait for the model to finish downloading.")
+            return
+        }
+
         TelemetryManager.send("MessageViewModel.send")
         sendViewState = .loading
 
@@ -110,6 +115,10 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func regenerate(_: Message) async {
+        if OllamaViewModel.shared.mistralDownloadProgress < 1.0 {
+            sendViewState = .error(message: "Please wait for the model to finish downloading.")
+            return
+        }
         TelemetryManager.send("MessageViewModel.regenerate")
         sendViewState = .loading
         let restarted = await OllamaKit.shared.restartBinaryAndWaitForAPI()
@@ -326,6 +335,10 @@ extension MessageViewModel {
         lastOpenedImage = nil
 
         // Okay now send to image model
+        if OllamaViewModel.shared.llavaDownloadProgress < 1.0 {
+            sendViewState = .error(message: "Please wait for the model to finish downloading.")
+            return
+        }
 
         Task {
             // Restart the binary if it has been a while since the last message or if the model has changed
