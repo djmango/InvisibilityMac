@@ -5,6 +5,13 @@ import SwiftData
 import SwiftUI
 import ViewState
 
+enum ModelDownloadStatus: String, Codable {
+    case checking
+    case downloading
+    case complete
+    case failed
+}
+
 @Observable
 final class OllamaViewModel: ObservableObject {
     static var shared: OllamaViewModel!
@@ -13,9 +20,8 @@ final class OllamaViewModel: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "OllamaViewModel")
 
     public var mistralDownloadProgress: Double = 0.0
-    public var llavaDownloadProgress: Double = 0.0
+    public var mistralDownloadStatus: ModelDownloadStatus = .checking
     private var mistral_res: AnyCancellable?
-    private var llava_res: AnyCancellable?
 
     var models: [OllamaModel] = []
 
@@ -95,48 +101,19 @@ final class OllamaViewModel: ObservableObject {
                     case .finished:
                         self?.logger.debug("Mistral successful download")
                         self?.mistralDownloadProgress = 1.0
+                        self?.mistralDownloadStatus = .complete
                     case let .failure(error):
                         self?.logger.error("Mistral failed download \(error)")
                     }
                 },
                 receiveValue: { [weak self] response in
-                    var progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
+                    let progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
+                    self?.mistralDownloadStatus = .downloading
                     self?.logger.debug("Mistral status \(response.status)")
                     // We only want to go up, not down
                     if progress > self?.mistralDownloadProgress ?? 0.0 {
                         self?.logger.debug("Mistral progress \(progress)")
-                        // Do not let model go over .99 until we have success completion
-                        if progress > 0.99 {
-                            progress = 0.99
-                        }
                         self?.mistralDownloadProgress = progress
-                    }
-                }
-            )
-
-        let llava = OKPullModelRequestData(name: "llava:latest")
-        llava_res = OllamaKit.shared.pullModel(data: llava)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        self?.logger.debug("LLava successful download")
-                        self?.llavaDownloadProgress = 1.0
-                    case let .failure(error):
-                        self?.logger.error("Llava failed download \(error)")
-                    }
-                },
-                receiveValue: { [weak self] response in
-                    var progress = Double(response.completed ?? 0) / Double(response.total ?? 1)
-                    self?.logger.debug("Llava status \(response.status)")
-                    // We only want to go up, not down
-                    if progress > self?.llavaDownloadProgress ?? 0.0 {
-                        self?.logger.debug("Llava progress \(progress)")
-                        // Do not let model go over .99 until we have success completion
-                        if progress > 0.99 {
-                            progress = 0.99
-                        }
-                        self?.llavaDownloadProgress = progress
                     }
                 }
             )

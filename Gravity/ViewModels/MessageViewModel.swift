@@ -47,7 +47,7 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func send(_ message: Message) async {
-        if OllamaViewModel.shared.mistralDownloadProgress < 1.0 {
+        if OllamaViewModel.shared.mistralDownloadStatus != .complete {
             sendViewState = .error(message: "Please wait for the model to finish downloading.")
             return
         }
@@ -307,10 +307,11 @@ extension MessageViewModel {
             images: [image]
         )
 
-        // If joined is empty, just have an empty string
-        var assistantContent = ""
-        if !joined.isEmpty {
-            assistantContent = "It says: \(joined)\n"
+        // If joined is empty, we couldn't read anything from the image
+        let assistantContent: String? = if !joined.isEmpty {
+            "It says: \(joined)\n"
+        } else {
+            "I couldn't read anything from this image.\n"
         }
         let assistantMessage = Message(
             content: assistantContent, role: Role.assistant, chat: chat
@@ -328,48 +329,12 @@ extension MessageViewModel {
         }
         lastOpenedImage = nil
 
-        // Okay now send to image model
-        if OllamaViewModel.shared.llavaDownloadProgress < 1.0 {
-            sendViewState = .error(message: "Please wait for the model to finish downloading.")
-            return
+        do {
+            try modelContext.saveChanges()
+        } catch {
+            logger.error("Error saving changes: \(error)")
         }
 
-        Task {
-            let image_messages = [userMessage.toChatMessage()]
-            if await OllamaKit.shared.reachable() {
-                let data = OKChatRequestData(
-                    model: "llava",
-                    messages: image_messages.compactMap { $0 }
-                )
-
-                print("Sending image to llava")
-
-                generation = OllamaKit.shared.chat(data: data)
-                    .handleEvents(
-                        receiveSubscription: { _ in self.logger.debug("Received Subscription") },
-                        receiveOutput: { _ in self.logger.debug("Received Output") },
-                        receiveCompletion: { _ in self.logger.debug("Received Completion") },
-                        receiveCancel: { self.logger.debug("Received Cancel") }
-                    )
-                    .sink(
-                        receiveCompletion: { [weak self] completion in
-                            switch completion {
-                            case .finished:
-                                self?.logger.debug("Success completion")
-                                self?.handleComplete()
-
-                            case let .failure(error):
-                                self?.logger.error("Failure completion \(error)")
-                                self?.handleError(error.localizedDescription)
-                            }
-                        },
-                        receiveValue: { [weak self] response in
-                            self?.handleReceive(response)
-                        }
-                    )
-            } else {
-                handleError(AppMessages.ollamaServerUnreachable)
-            }
-        }
+        sendViewState = nil
     }
 }
