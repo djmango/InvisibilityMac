@@ -64,15 +64,9 @@ final class MessageViewModel: ObservableObject {
 
         try? modelContext.saveChanges()
 
-        // Restart the binary if it has been a while since the last message or if the model has changed
-        if OllamaKit.shared.lastInferenceModel == chat.model?.name {
-            await ModelWarmer.shared.restart()
-        } else {
-            _ = await OllamaKit.shared.restartBinaryAndWaitForAPI()
-        }
-
         if await OllamaKit.shared.reachable() {
-            // Use compactMap to drop nil values and dropLast to drop the assistant message from the context we are sending to the LLM
+            // Use compactMap to drop nil values and dropLast
+            // to drop the assistant message from the context we are sending to the LLM
             let data = OKChatRequestData(
                 model: chat.model?.name ?? "mistral:latest",
                 messages: messages.dropLast().compactMap { $0.toChatMessage() }
@@ -121,12 +115,12 @@ final class MessageViewModel: ObservableObject {
         }
         TelemetryManager.send("MessageViewModel.regenerate")
         sendViewState = .loading
-        let restarted = await OllamaKit.shared.restartBinaryAndWaitForAPI()
-        if restarted {
+        do {
+            try await OllamaKit.shared.waitForAPI(restart: true)
             // Handle the case when the API restarts successfully
             logger.debug("API restarted successfully.")
             // Update the UI or proceed with the next steps
-        } else {
+        } catch {
             // Handle the failure case
             logger.error("Failed to restart the API.")
             sendViewState = .error(
@@ -178,9 +172,9 @@ final class MessageViewModel: ObservableObject {
 
         try? modelContext.saveChanges()
         sendViewState = .error(message: errorMessage)
-        Task {
-            await OllamaKit.shared.restartBinaryAndWaitForAPI()
-        }
+        // Task {
+        //     await OllamaKit.shared.restartBinaryAndWaitForAPI()
+        // }
     }
 
     private func handleComplete() {
@@ -341,17 +335,11 @@ extension MessageViewModel {
         }
 
         Task {
-            // Restart the binary if it has been a while since the last message or if the model has changed
-            if OllamaKit.shared.lastInferenceModel == "llava" {
-                await ModelWarmer.shared.restart()
-            } else {
-                _ = await OllamaKit.shared.restartBinaryAndWaitForAPI()
-            }
-
+            let image_messages = [userMessage.toChatMessage()]
             if await OllamaKit.shared.reachable() {
                 let data = OKChatRequestData(
                     model: "llava",
-                    messages: [userMessage.toChatMessage()!]
+                    messages: image_messages.compactMap { $0 }
                 )
 
                 print("Sending image to llava")

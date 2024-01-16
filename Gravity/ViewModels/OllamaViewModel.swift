@@ -23,12 +23,7 @@ final class OllamaViewModel: ObservableObject {
         self.modelContext = modelContext
         Task {
             do {
-                let restarted = await OllamaKit.shared.restartBinaryAndWaitForAPI()
-                if restarted {
-                    logger.debug("Restarted binary")
-                } else {
-                    logger.debug("Binary was already running")
-                }
+                try await OllamaKit.shared.waitForAPI()
                 await pullModels()
                 try await fetch()
                 await ModelWarmer.shared.warm()

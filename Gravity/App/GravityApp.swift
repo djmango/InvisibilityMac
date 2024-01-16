@@ -1,3 +1,4 @@
+import OllamaKit
 import SettingsKit
 import Sparkle
 import SwiftData
@@ -57,6 +58,8 @@ struct GravityApp: App {
 
             TelemetryManager.send("ApplicationLaunched")
         }
+
+        OllamaKit.shared.runBinaryInBackground(withArguments: ["serve"], forceKill: true)
     }
 
     var body: some Scene {

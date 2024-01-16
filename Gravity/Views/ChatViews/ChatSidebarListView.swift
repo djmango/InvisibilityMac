@@ -92,8 +92,13 @@ struct ChatSidebarListView: View {
                 Button(action: {
                     isRestarting = true
                     Task {
-                        _ = await OllamaKit.shared.restartBinaryAndWaitForAPI()
-                        isRestarting = false
+                        do {
+                            try await OllamaKit.shared.waitForAPI(restart: true)
+                            isRestarting = false
+                        } catch {
+                            print(error)
+                            // TODO: Show error
+                        }
                     }
                 }) {
                     Label("Restart Models", systemImage: "arrow.clockwise")
