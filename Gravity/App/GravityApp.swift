@@ -8,7 +8,6 @@ import TelemetryClient
 @main
 struct GravityApp: App {
     private var updater: SPUUpdater
-    public let modelContext: ModelContext
 
     @StateObject private var updaterViewModel: UpdaterViewModel
     @StateObject private var imageViewModel: ImageViewModel
@@ -18,17 +17,6 @@ struct GravityApp: App {
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-    var sharedModelContainer: ModelContainer = {
-        let schema = Schema([Chat.self, Message.self, OllamaModel.self])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
-        do {
-            return try ModelContainer(for: schema, configurations: [modelConfiguration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
-
     init() {
         let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
         updater = updaterController.updater
@@ -36,14 +24,10 @@ struct GravityApp: App {
         let updaterViewModel = UpdaterViewModel(updater: updater)
         _updaterViewModel = StateObject(wrappedValue: updaterViewModel)
 
-        modelContext = sharedModelContainer.mainContext
+        SharedModelContainer.shared = SharedModelContainer()
 
         let imageViewModel = ImageViewModel()
         _imageViewModel = StateObject(wrappedValue: imageViewModel)
-
-        MessageViewModelManager.shared = MessageViewModelManager(modelContext: modelContext)
-        ChatViewModel.shared = ChatViewModel(modelContext: modelContext)
-        OllamaViewModel.shared = OllamaViewModel(modelContext: modelContext)
 
         if analytics {
             if userIdentifier.isEmpty {
@@ -69,7 +53,7 @@ struct GravityApp: App {
                 .environmentObject(imageViewModel)
         }
         .windowStyle(HiddenTitleBarWindowStyle())
-        .modelContainer(sharedModelContainer)
+        .modelContainer(SharedModelContainer.shared.modelContainer)
         .commands {
             CommandGroup(after: .appInfo) {
                 Button("Check for Updates...") {
@@ -110,7 +94,9 @@ struct GravityApp: App {
         }
         .settings {
             SettingsTab(.new(title: "General", icon: .gearshape), id: "general") {
-                SettingsSubtab(.noSelection, id: "general") { GeneralSettingsView() }
+                SettingsSubtab(.noSelection, id: "general") {
+                    GeneralSettingsView().modelContext(SharedModelContainer.shared.mainContext)
+                }
             }
             .frame(width: 550, height: 200)
             SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {

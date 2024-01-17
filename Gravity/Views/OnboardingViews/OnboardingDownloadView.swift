@@ -86,5 +86,10 @@ struct OnboardingDownloadView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .onAppear {
+            Task {
+                await OllamaViewModel.shared.pullModels()
+            }
+        }
     }
 }

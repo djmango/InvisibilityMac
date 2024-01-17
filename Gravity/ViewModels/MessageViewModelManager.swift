@@ -14,15 +14,9 @@ import SwiftData
 /// It is initiated only one time in GravityApp.init
 class MessageViewModelManager {
     /// The shared static instance allows global access to the MessageViewModelManager.
-    static var shared: MessageViewModelManager!
+    static var shared = MessageViewModelManager()
     /// A dictionary to store and reuse MessageViewModel instances, keyed by chatID.
     private var viewModels: [Chat: MessageViewModel] = [:]
-    /// Dependencies required by MessageViewModels.
-    private var modelContext: ModelContext
-
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
 
     // Function to retrieve a MessageViewModel for a given chatID.
     // It reuses existing view models or creates a new one if not already present.
@@ -30,7 +24,7 @@ class MessageViewModelManager {
         if let viewModel = viewModels[chat] {
             return viewModel
         } else {
-            let viewModel = MessageViewModel(chat: chat, modelContext: modelContext)
+            let viewModel = MessageViewModel(chat: chat)
             viewModels[chat] = viewModel
             return viewModel
         }

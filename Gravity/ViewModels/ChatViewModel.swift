@@ -3,15 +3,10 @@ import SwiftUI
 
 @Observable
 final class ChatViewModel: ObservableObject {
-    static var shared: ChatViewModel!
-
-    private var modelContext: ModelContext
+    static var shared = ChatViewModel()
+    let modelContext = SharedModelContainer.shared.mainContext
 
     var chats: [Chat] = []
-
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
-    }
 
     func fetch() throws {
         let sortDescriptor = SortDescriptor(\Chat.modifiedAt, order: .reverse)
@@ -51,10 +46,5 @@ final class ChatViewModel: ObservableObject {
         }
 
         try modelContext.saveChanges()
-    }
-
-    static func example(modelContainer: ModelContainer, chats _: [Chat]) -> ChatViewModel {
-        let example = ChatViewModel(modelContext: ModelContext(modelContainer))
-        return example
     }
 }

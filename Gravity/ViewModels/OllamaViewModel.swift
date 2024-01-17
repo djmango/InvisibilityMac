@@ -14,9 +14,9 @@ enum ModelDownloadStatus: String, Codable {
 
 @Observable
 final class OllamaViewModel: ObservableObject {
-    static var shared: OllamaViewModel!
+    static let shared = OllamaViewModel()
 
-    private var modelContext: ModelContext
+    private var modelContext = SharedModelContainer.shared.mainContext
     private let logger = Logger(subsystem: "ai.grav.app", category: "OllamaViewModel")
 
     public var mistralDownloadProgress: Double = 0.0
@@ -25,8 +25,7 @@ final class OllamaViewModel: ObservableObject {
 
     var models: [OllamaModel] = []
 
-    init(modelContext: ModelContext) {
-        self.modelContext = modelContext
+    init() {
         Task {
             do {
                 try await OllamaKit.shared.waitForAPI()
@@ -119,6 +118,27 @@ final class OllamaViewModel: ObservableObject {
             )
 
         logger.debug("Pulled models")
+    }
+
+    func wipeOllama() {
+        /// This is a dangerous function. It will wipe all Ollama data from the device.
+        /// This is useful for debugging and resetting the state of the app.
+
+        logger.debug("Wiping Ollama data")
+
+        let fileManager = FileManager.default
+        let ollamaDirectory = fileManager.homeDirectoryForCurrentUser.appendingPathComponent(".ollama")
+
+        do {
+            if fileManager.fileExists(atPath: ollamaDirectory.path) {
+                try fileManager.removeItem(at: ollamaDirectory)
+                logger.debug("Successfully deleted the Ollama folder.")
+            } else {
+                logger.debug("Ollama folder does not exist.")
+            }
+        } catch {
+            logger.error("Failed to delete the Ollama folder: \(error.localizedDescription)")
+        }
     }
 
     func fromName(_ name: String) -> OllamaModel? {

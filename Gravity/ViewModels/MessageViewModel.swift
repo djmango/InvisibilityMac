@@ -16,7 +16,7 @@ final class MessageViewModel: ObservableObject {
     private var generation: AnyCancellable?
 
     private var chat: Chat
-    private var modelContext: ModelContext
+    private let modelContext = SharedModelContainer.shared.mainContext
     private var lastOpenedImage: Data?
 
     private let logger = Logger(subsystem: "ai.grav.app", category: "MessageViewModel")
@@ -24,8 +24,7 @@ final class MessageViewModel: ObservableObject {
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
 
-    init(chat: Chat, modelContext: ModelContext) {
-        self.modelContext = modelContext
+    init(chat: Chat) {
         self.chat = chat
     }
 

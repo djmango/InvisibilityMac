@@ -7,13 +7,25 @@
 
 import KeyboardShortcuts
 import LaunchAtLogin
+import OllamaKit
+import os
+import SwiftData
 import SwiftUI
 
 struct GeneralSettingsView: View {
+    private let logger = Logger(subsystem: "ai.grav.app", category: "GeneralSettingsView")
+
     @AppStorage("autoLaunch") private var autoLaunch: Bool = false
     @AppStorage("analytics") private var analytics: Bool = true
     @AppStorage("betaFeatures") private var betaFeatures: Bool = false
     @AppStorage("emailAddress") private var emailAddress: String = ""
+    @AppStorage("onboardingViewed") private var onboardingViewed = false
+
+    @State private var showDeleteAllDataAlert: Bool = false
+
+    @Query var chats: [Chat]
+    @Query var messages: [Message]
+    @Query var ollamaModels: [OllamaModel]
 
     var body: some View {
         VStack(alignment: .center) {
@@ -50,10 +62,59 @@ struct GeneralSettingsView: View {
             HStack {
                 Spacer()
                 Button("Wipe All Data") {
-                    print("Wiping all data...")
+                    showDeleteAllDataAlert = true
                 }
                 .foregroundColor(.red)
                 .padding()
+                .confirmationDialog(
+                    AppMessages.wipeAllDataTitle,
+                    isPresented: $showDeleteAllDataAlert
+                ) {
+                    Button("Cancel", role: .cancel) {}
+                    Button("Delete", role: .destructive) {
+                        logger.debug("Deleting all data...")
+                        let context = SharedModelContainer.shared.mainContext
+                        for chat in chats {
+                            logger.debug("Deleting chat: \(chat.name)")
+                            context.delete(chat)
+                        }
+                        for message in messages {
+                            logger.debug("Deleting message: \(message.content ?? "")")
+                            context.delete(message)
+                        }
+                        for ollamaModel in ollamaModels {
+                            logger.debug("Deleting ollamaModel: \(ollamaModel.name)")
+                            context.delete(ollamaModel)
+                        }
+
+                        // Reset settings
+                        autoLaunch = false
+                        analytics = true
+                        betaFeatures = false
+                        emailAddress = ""
+
+                        // Reset onboarding
+                        onboardingViewed = false
+
+                        do {
+                            try context.save()
+                        } catch {
+                            logger.error("Error saving context: \(error.localizedDescription)")
+                        }
+
+                        // Wipe models
+                        OllamaViewModel.shared.wipeOllama()
+
+                        // Restart ollama
+                        OllamaKit.shared.restart(minInterval: 0)
+
+                        // Restart app
+                        NSApplication.shared.terminate(self)
+                    }
+                } message: {
+                    Text(AppMessages.wipeAllDataMessage)
+                }
+                .dialogSeverity(.critical)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
