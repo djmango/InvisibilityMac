@@ -8,22 +8,27 @@ struct ChatContextMenu: View {
     }
 
     var body: some View {
-        Button("Rename \"\(chat.name)\"") {
+        Button("Rename") {
             CommandViewModel.shared.chatToRename = chat
         }
         .keyboardShortcut("r", modifiers: [.command])
 
-        Button("Auto-rename \"\(chat.name)\"") {
+        Button("Auto-rename") {
             Task {
                 await MessageViewModelManager.shared.viewModel(for: chat).autorename()
             }
         }
+        .keyboardShortcut("r", modifiers: [.command, .shift])
 
         Divider()
 
-        Button("Delete \"\(chat.name)\"") {
+        Button("Delete") {
             CommandViewModel.shared.chatToDelete = chat
         }
         .keyboardShortcut(.delete, modifiers: [.shift, .command])
+    }
+
+    private func truncateString(_ string: String, toLength length: Int) -> String {
+        String(string.prefix(length))
     }
 }

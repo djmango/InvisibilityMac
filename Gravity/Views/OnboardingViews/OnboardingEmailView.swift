@@ -35,7 +35,6 @@ struct OnboardingEmailView: View {
                     .padding(.top, 10)
 
                 TextField("Enter your email (optional)", text: $emailAddress)
-                    // .padding()
                     .frame(width: 300, height: 50)
                     .textFieldStyle(.plain)
                     .font(.system(size: 20))
@@ -44,8 +43,7 @@ struct OnboardingEmailView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
                             // #FF692E
-                            // rgb(255, 105, 46)
-                            .stroke(Color(red: 255 / 255, green: 105 / 255, blue: 46 / 255, opacity: 1), lineWidth: 1)
+                            .stroke(.accent, lineWidth: 1)
                     )
                     .padding(.top, 10)
 
@@ -66,9 +64,9 @@ struct OnboardingEmailView: View {
                 }
                 .frame(width: 200, height: 50)
                 .buttonStyle(.plain)
-                .background(Color(red: 255 / 255, green: 105 / 255, blue: 46 / 255, opacity: 1))
+                .background(.accent)
                 .cornerRadius(25)
-                .padding(.top, 10)
+                .padding()
                 .focusable(false)
                 .onTapGesture(perform: callback)
                 .onHover { hovering in
@@ -78,8 +76,6 @@ struct OnboardingEmailView: View {
                         NSCursor.pop()
                     }
                 }
-
-                Spacer()
             }
         }
     }

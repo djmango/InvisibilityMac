@@ -83,8 +83,6 @@ struct OnboardingIntroView: View {
                     NSCursor.pop()
                 }
             }
-
-            Spacer()
         }
     }
 }

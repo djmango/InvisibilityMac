@@ -61,10 +61,20 @@ struct GeneralSettingsView: View {
             Spacer()
             HStack {
                 Spacer()
-                Button("Wipe All Data") {
+                Button(action: {
                     showDeleteAllDataAlert = true
+                }) {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
                 }
-                .foregroundColor(.red)
+                .buttonStyle(.plain)
+                .onHover { hovering in
+                    if hovering {
+                        NSCursor.pointingHand.push()
+                    } else {
+                        NSCursor.pop()
+                    }
+                }
                 .padding()
                 .confirmationDialog(
                     AppMessages.wipeAllDataTitle,
