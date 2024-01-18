@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */; };
+		4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E32B590213008D975D /* AlertViewModel.swift */; };
 		4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
@@ -62,6 +64,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckConnectivity.swift; sourceTree = "<group>"; };
+		4D0B52E32B590213008D975D /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -174,6 +178,7 @@
 				4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */,
 				4D7AB4252B4CB639007F025B /* ImageViewModel.swift */,
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
+				4D0B52E32B590213008D975D /* AlertViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -205,6 +210,7 @@
 				4D5B4BC42B48F3320067C543 /* ImageUtils.swift */,
 				4D8E05352B2516DE00B60D0D /* AppMessages.swift */,
 				4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */,
+				4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -422,6 +428,7 @@
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,
 				4DD282E32B4E05B80041690B /* AdvancedSettingsView.swift in Sources */,
+				4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */,
 				4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */,
 				4DD282E12B4DF7530041690B /* Shortcuts.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
@@ -430,6 +437,7 @@
 				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
 				4D785D7D2B53633200FBCE1A /* ModelWarmer.swift in Sources */,
 				4D8E05602B2516DE00B60D0D /* PromptEditor.swift in Sources */,
+				4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
 				4DA893B82B54F04C00560DAD /* OnboardingDownloadView.swift in Sources */,
@@ -579,7 +587,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -593,7 +601,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.3.5;
+				MARKETING_VERSION = 1.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -611,7 +619,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 13;
+				CURRENT_PROJECT_VERSION = 14;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -626,7 +634,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.3.5;
+				MARKETING_VERSION = 1.3.6;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

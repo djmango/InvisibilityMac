@@ -3,8 +3,10 @@ import SwiftUI
 import ViewState
 
 struct AppView: View {
-    @EnvironmentObject private var imageViewModel: ImageViewModel
     private let logger = Logger(subsystem: "ai.grav.app", category: "AppView")
+
+    @EnvironmentObject private var imageViewModel: ImageViewModel
+    @ObservedObject private var alertViewModel = AlertViewModel.shared
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
@@ -91,6 +93,13 @@ struct AppView: View {
                 } else {
                     OnboardingView()
                 }
+            }
+            .alert(isPresented: $alertViewModel.showAlert) {
+                Alert(
+                    title: Text(alertViewModel.alertTitle),
+                    message: Text(alertViewModel.alertMessage),
+                    dismissButton: .default(Text(alertViewModel.alertDismissText))
+                )
             }
         }
     }

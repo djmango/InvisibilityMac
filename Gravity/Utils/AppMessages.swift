@@ -15,4 +15,8 @@ enum AppMessages {
     static let ollamaServerUnreachable = "The Ollama server cannot be reached at the moment."
     static let ollamaModelUnavailable = "This model is currently unavailable or has been removed."
     static let generalErrorMessage = "An error occurred. Please try again later."
+
+    static let modelNotDownloadedTitle = "Model not downloaded"
+    static let modelNotDownloadedMessage =
+        "Please wait for the model to finish downloading.\n\nIf this is taking too long, wipe the models in settings and try again."
 }

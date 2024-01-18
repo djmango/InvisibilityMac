@@ -123,6 +123,16 @@ struct MessageView: View {
         guard messageViewModel.sendViewState == nil else { return }
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
+        // If model download is not complete, alert the user.
+        guard OllamaViewModel.shared.mistralDownloadStatus == .complete ||
+            OllamaViewModel.shared.mistralDownloadStatus == .offline
+        else {
+            AlertViewModel.shared.alertTitle = AppMessages.modelNotDownloadedTitle
+            AlertViewModel.shared.alertMessage = AppMessages.modelNotDownloadedMessage
+            AlertViewModel.shared.showAlert = true
+            return
+        }
+
         let message = Message(content: content, role: .user, chat: chat)
 
         Task {
@@ -133,8 +143,6 @@ struct MessageView: View {
     }
 
     private func regenerateAction(for message: Message) {
-        // guard messageViewModel.sendViewState == nil else { return }
-
         message.done = false
 
         Task {

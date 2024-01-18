@@ -10,6 +10,7 @@ enum ModelDownloadStatus: String, Codable {
     case downloading
     case complete
     case failed
+    case offline
 }
 
 @Observable
@@ -29,7 +30,14 @@ final class OllamaViewModel: ObservableObject {
         Task {
             do {
                 try await OllamaKit.shared.waitForAPI()
-                await pullModels()
+
+                // If we are offline we should not wait for the download to finish and just set the status to offline
+                if await checkInternetConnectivityAsync() == false {
+                    mistralDownloadStatus = .offline
+                    logger.debug("Marking status as offline")
+                } else {
+                    await pullModels()
+                }
                 try await fetch()
                 await ModelWarmer.shared.warm()
             } catch {
@@ -116,8 +124,6 @@ final class OllamaViewModel: ObservableObject {
                     }
                 }
             )
-
-        logger.debug("Pulled models")
     }
 
     func wipeOllama() {

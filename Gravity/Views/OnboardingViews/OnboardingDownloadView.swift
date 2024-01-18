@@ -34,7 +34,9 @@ struct OnboardingDownloadView: View {
                         ), condition: true
                     )
 
-                if OllamaViewModel.shared.mistralDownloadStatus != .complete {
+                if OllamaViewModel.shared.mistralDownloadStatus != .complete,
+                   OllamaViewModel.shared.mistralDownloadStatus != .offline
+                {
                     Text("Downloading models...")
                         .font(.title)
                         .bold()
@@ -82,18 +84,24 @@ struct OnboardingDownloadView: View {
                 .frame(width: 200, height: 50)
                 .buttonStyle(.plain)
                 .background(.accent)
-                .opacity(OllamaViewModel.shared.mistralDownloadStatus == .complete ? 1.0 : 0.5)
+                .opacity((OllamaViewModel.shared.mistralDownloadStatus == .complete || OllamaViewModel.shared.mistralDownloadStatus == .offline)
+                    ? 1.0 : 0.5)
                 .cornerRadius(25)
                 .padding()
                 .focusable(false)
-                .disabled(OllamaViewModel.shared.mistralDownloadStatus != .complete)
+                .disabled(OllamaViewModel.shared.mistralDownloadStatus != .complete &&
+                    OllamaViewModel.shared.mistralDownloadStatus != .offline)
                 .onTapGesture {
-                    if OllamaViewModel.shared.mistralDownloadStatus == .complete {
+                    if OllamaViewModel.shared.mistralDownloadStatus == .complete ||
+                        OllamaViewModel.shared.mistralDownloadStatus == .offline
+                    {
                         callback()
                     }
                 }
                 .onHover { hovering in
-                    if hovering, OllamaViewModel.shared.mistralDownloadStatus == .complete {
+                    if hovering, OllamaViewModel.shared.mistralDownloadStatus == .complete ||
+                        OllamaViewModel.shared.mistralDownloadStatus == .offline
+                    {
                         NSCursor.pointingHand.push()
                     } else {
                         NSCursor.pop()
