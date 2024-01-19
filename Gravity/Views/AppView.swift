@@ -24,14 +24,6 @@ struct AppView: View {
                             VStack {
                                 Spacer()
 
-                                Text("No chat selected")
-                                    .font(.title)
-                                    .bold()
-                                    .foregroundColor(.white.opacity(0.5))
-                                    .padding()
-
-                                Spacer()
-
                                 Button(action: {
                                     CommandViewModel.shared.addChat()
                                 }) {
@@ -57,6 +49,11 @@ struct AppView: View {
                                         NSCursor.pop()
                                     }
                                 }
+
+                                // .conditionalEffect(
+                                //     .glow(color: .white, radius: 10),
+                                //     condition: true
+                                // )
 
                                 Spacer()
 

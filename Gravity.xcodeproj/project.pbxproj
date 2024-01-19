@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */; };
 		4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E32B590213008D975D /* AlertViewModel.swift */; };
+		4D3D05102B59D536009340ED /* WhisperViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3D050F2B59D536009340ED /* WhisperViewModel.swift */; };
+		4D3D05132B59DB32009340ED /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3D05122B59DB32009340ED /* AudioKit */; };
+		4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3D05152B59E1A3009340ED /* SwiftWhisper */; };
 		4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
@@ -66,6 +69,7 @@
 /* Begin PBXFileReference section */
 		4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckConnectivity.swift; sourceTree = "<group>"; };
 		4D0B52E32B590213008D975D /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
+		4D3D050F2B59D536009340ED /* WhisperViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperViewModel.swift; sourceTree = "<group>"; };
 		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -108,7 +112,6 @@
 		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
-		4DF9B06F2B561DA100D3CD95 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../OllamaKit; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +121,7 @@
 			files = (
 				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
+				4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
 				4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */,
@@ -127,6 +131,7 @@
 				4D8B537F2B2E4A250020FA6A /* ChatField in Frameworks */,
 				4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */,
 				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
+				4D3D05132B59DB32009340ED /* AudioKit in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
 				4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */,
 			);
@@ -138,7 +143,6 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
-				4DF9B06F2B561DA100D3CD95 /* OllamaKit */,
 				4D8E05272B2516DE00B60D0D /* Gravity */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
@@ -179,6 +183,7 @@
 				4D7AB4252B4CB639007F025B /* ImageViewModel.swift */,
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 				4D0B52E32B590213008D975D /* AlertViewModel.swift */,
+				4D3D050F2B59D536009340ED /* WhisperViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -344,6 +349,8 @@
 				4DD282E72B4E3C4A0041690B /* LaunchAtLogin */,
 				4DD282EA2B4E3D810041690B /* TelemetryClient */,
 				4DDCE8522B50BA0900A22B1E /* Sparkle */,
+				4D3D05122B59DB32009340ED /* AudioKit */,
+				4D3D05152B59E1A3009340ED /* SwiftWhisper */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Gravity.app */;
@@ -381,6 +388,8 @@
 				4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				4DD282E62B4E3C4A0041690B /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 				4DD282E92B4E3D810041690B /* XCRemoteSwiftPackageReference "SwiftClient" */,
+				4D3D05112B59DB32009340ED /* XCRemoteSwiftPackageReference "AudioKit" */,
+				4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -428,6 +437,7 @@
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,
 				4DD282E32B4E05B80041690B /* AdvancedSettingsView.swift in Sources */,
+				4D3D05102B59D536009340ED /* WhisperViewModel.swift in Sources */,
 				4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */,
 				4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */,
 				4DD282E12B4DF7530041690B /* Shortcuts.swift in Sources */,
@@ -587,7 +597,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -601,7 +611,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.3.6;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -619,7 +629,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 15;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -634,7 +644,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.3.6;
+				MARKETING_VERSION = 1.4.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -704,6 +714,22 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.1;
+			};
+		};
+		4D3D05112B59DB32009340ED /* XCRemoteSwiftPackageReference "AudioKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AudioKit/AudioKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.6.2;
+			};
+		};
+		4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/djmango/SwiftWhisper.git";
+			requirement = {
+				branch = master;
+				kind = branch;
 			};
 		};
 		4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */ = {
@@ -805,6 +831,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4D3D05122B59DB32009340ED /* AudioKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D3D05112B59DB32009340ED /* XCRemoteSwiftPackageReference "AudioKit" */;
+			productName = AudioKit;
+		};
+		4D3D05152B59E1A3009340ED /* SwiftWhisper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */;
+			productName = SwiftWhisper;
+		};
 		4D7AB4232B4CB469007F025B /* Pow */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */;

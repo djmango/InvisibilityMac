@@ -234,42 +234,67 @@ extension MessageViewModel {
 
         // Define allowed content types using UTType
         openPanel.allowedContentTypes = [
+            // Images
             UTType.png,
             UTType.jpeg,
             UTType.gif,
             UTType.bmp,
             UTType.tiff,
             UTType.heif,
+            // Audio
+            UTType.mp3,
+            UTType.wav,
+            UTType.mpeg4Audio,
         ]
 
         openPanel.begin { result in
             if result == .OK, let url = openPanel.url {
-                guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
-                    return
-                }
-                guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
-                    return
-                }
-
-                self.sendViewState = .loading
-
-                // Standardize and convert the image to a base64 string and store it in the view model
-                if let standardizedImage = standardizeImage(cgImage) {
-                    self.lastOpenedImage = standardizedImage
-                }
-
-                // Create a new image-request handler.
-                let requestHandler = VNImageRequestHandler(cgImage: cgImage)
-
-                // Create a new request to recognize text.
-                let request = VNRecognizeTextRequest(completionHandler: self.recognizeTextHandler)
-                do {
-                    // Perform the text-recognition request.
-                    try requestHandler.perform([request])
-                } catch {
-                    self.logger.error("Unable to perform the requests: \(error).")
+                // First determine if we are dealing with an image or audio file
+                if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
+                    // Check if it's an image type
+                    if fileType.conforms(to: .image) {
+                        self.logger.debug("Selected file is an image.")
+                        self.handleImage(url: url)
+                    }
+                    // Check if it's an audio type
+                    else if fileType.conforms(to: .audio) {
+                        self.logger.debug("Selected file is an audio.")
+                        Task {
+                            await self.handleAudio(url: url)
+                        }
+                    } else {
+                        self.logger.error("Selected file is of an unknown type.")
+                    }
                 }
             }
+        }
+    }
+
+    private func handleImage(url: URL) {
+        guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+            return
+        }
+        guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
+            return
+        }
+
+        sendViewState = .loading
+
+        // Standardize and convert the image to a base64 string and store it in the view model
+        if let standardizedImage = standardizeImage(cgImage) {
+            lastOpenedImage = standardizedImage
+        }
+
+        // Create a new image-request handler.
+        let requestHandler = VNImageRequestHandler(cgImage: cgImage)
+
+        // Create a new request to recognize text.
+        let request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
+        do {
+            // Perform the text-recognition request.
+            try requestHandler.perform([request])
+        } catch {
+            logger.error("Unable to perform the requests: \(error).")
         }
     }
 
@@ -307,11 +332,6 @@ extension MessageViewModel {
         messages.append(assistantMessage)
         modelContext.insert(userMessage)
         modelContext.insert(assistantMessage)
-        do {
-            try modelContext.saveChanges()
-        } catch {
-            logger.error("Error saving changes: \(error)")
-        }
         lastOpenedImage = nil
 
         do {
@@ -321,5 +341,71 @@ extension MessageViewModel {
         }
 
         sendViewState = nil
+    }
+
+    private func handleAudio(url: URL) async {
+        do {
+            sendViewState = .loading
+
+            let audioFrames = try await convertAudioFileToPCMArrayAsync(fileURL: url)
+            let audioStatus = AudioStatus()
+            let delegate = await WhisperHandler(audioStatus: audioStatus)
+            WhisperViewModel.shared.whisper.delegate = delegate
+            Task {
+                do {
+                    _ = try await WhisperViewModel.shared.whisper.transcribe(audioFrames: audioFrames)
+                } catch {
+                    logger.error("Error transcribing audio: \(error)")
+                }
+            }
+
+            // Create a new message with the recognized text
+            let userMessage = Message(
+                content: "Hi this is where audio player will go but not today it will go here later probably",
+                role: Role.user,
+                chat: chat
+            )
+
+            // If joined is empty, we couldn't read anything from the image
+            let assistantMessage = Message(
+                content: "ok im robot", role: Role.assistant, chat: chat
+            )
+
+            // Add the messages to the view model and save them to the database
+            messages.append(userMessage)
+            messages.append(assistantMessage)
+            modelContext.insert(userMessage)
+            modelContext.insert(assistantMessage)
+            lastOpenedImage = nil
+
+            // Every few seconds, update the message content with the transcribed text in audioStatus
+            // This is a bit of a hack, but it works for now
+            DispatchQueue.main.async {
+                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
+                    let content = "Hi this i am not a robot here is the thing i heard from ur audio file: \(audioStatus.text)"
+
+                    guard let lastMessage = self?.messages.last else { return }
+
+                    if lastMessage.content == nil { lastMessage.content = "" }
+                    lastMessage.content = content
+
+                    self?.sendViewState = .loading
+                    if audioStatus.completed {
+                        timer.invalidate()
+                    }
+                }
+            }
+
+            do {
+                try modelContext.saveChanges()
+            } catch {
+                logger.error("Error saving changes: \(error)")
+            }
+
+            sendViewState = nil
+
+        } catch {
+            logger.error("Error transcribing audio: \(error)")
+        }
     }
 }
