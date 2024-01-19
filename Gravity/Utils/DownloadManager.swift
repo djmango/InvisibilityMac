@@ -37,6 +37,12 @@ class DownloadManager {
         }
     }
 
+    enum DownloadError: Error {
+        case invalidLocalURL
+        case hashMismatch
+        case downloadFailed(Error)
+    }
+
     private(set) var state: DownloadState = .notStarted {
         didSet {
             let ourself = self
@@ -44,41 +50,40 @@ class DownloadManager {
         }
     }
 
-    func downloadModel(from url: URL, to destinationURL: URL, expectedHash: String) {
+    func download(from url: URL, to destinationURL: URL, expectedHash: String) async throws {
         state = .downloading
 
-        let task = URLSession.shared.downloadTask(with: url) { [weak self] localURL, _, error in
-            guard let self else { return }
-
-            if let error {
-                state = .failed(error)
-                return
+        let localURL: URL = try await withCheckedThrowingContinuation { continuation in
+            let task = URLSession.shared.downloadTask(with: url) { localURL, _, error in
+                if let error {
+                    continuation.resume(throwing: DownloadError.downloadFailed(error))
+                    return
+                }
+                guard let localURL else {
+                    continuation.resume(throwing: DownloadError.invalidLocalURL)
+                    return
+                }
+                continuation.resume(returning: localURL)
             }
-
-            guard let localURL else {
-                state = .failed(DownloadError.invalidLocalURL)
-                return
-            }
-
-            state = .verifying
-            if verifyDownload(fileURL: localURL, expectedHash: expectedHash) {
-                moveFile(from: localURL, to: destinationURL)
-                state = .completed
-            } else {
-                state = .failed(DownloadError.hashMismatch)
-            }
+            task.resume()
         }
 
-        task.resume()
+        state = .verifying
+        if verifyDownload(fileURL: localURL, expectedHash: expectedHash) {
+            do {
+                try moveFile(from: localURL, to: destinationURL)
+                state = .completed
+            } catch {
+                state = .failed(error)
+            }
+        } else {
+            throw DownloadError.hashMismatch
+        }
     }
 
-    private func moveFile(from url: URL, to destinationURL: URL) {
-        do {
-            try FileManager.default.createDirectory(at: destinationURL.deletingLastPathComponent(), withIntermediateDirectories: true)
-            try FileManager.default.moveItem(at: url, to: destinationURL)
-        } catch {
-            state = .failed(error)
-        }
+    private func moveFile(from url: URL, to destinationURL: URL) throws {
+        try FileManager.default.createDirectory(at: destinationURL.deletingLastPathComponent(), withIntermediateDirectories: true)
+        try FileManager.default.moveItem(at: url, to: destinationURL)
     }
 
     private func verifyDownload(fileURL: URL, expectedHash: String) -> Bool {
@@ -89,13 +94,8 @@ class DownloadManager {
             let hashString = hash.compactMap { String(format: "%02x", $0) }.joined()
             return hashString == expectedHash
         } catch {
-            print("Error reading file for hash verification: \(error)")
+            logger.error("Error reading file for hash verification: \(error)")
             return false
         }
-    }
-
-    enum DownloadError: Error {
-        case invalidLocalURL
-        case hashMismatch
     }
 }

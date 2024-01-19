@@ -133,21 +133,35 @@ final class WhisperViewModel {
 
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 
-    public var whisper: Whisper?
+    private var whisperModel: Whisper?
     private let downloadManager = DownloadManager()
 
-    private init() {
-        // logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
-        // WhisperViewModel.downloadWhisper()
-        // logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
-        // whisper = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)
+    public var whisper: Whisper? {
+        get async {
+            while whisperModel == nil {
+                try? await Task.sleep(nanoseconds: 100_000_000) // Sleep for 0.1 second
+            }
+            return whisperModel
+        }
     }
 
-    func downloadWhisper() {
-        downloadManager.downloadModel(
-            from: ModelRepository.WHISPER_SMALL.url,
-            to: ModelRepository.WHISPER_SMALL.localURL,
-            expectedHash: ModelRepository.WHISPER_SMALL.hash
-        )
+    private init() {}
+
+    func setup() {
+        Task {
+            logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+            do {
+                try await downloadManager.download(
+                    from: ModelRepository.WHISPER_SMALL.url,
+                    to: ModelRepository.WHISPER_SMALL.localURL,
+                    expectedHash: ModelRepository.WHISPER_SMALL.hash
+                )
+            } catch {
+                logger.error("Could not download Whisper: \(error)")
+            }
+
+            logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+            whisperModel = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)
+        }
     }
 }

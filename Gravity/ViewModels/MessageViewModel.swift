@@ -14,6 +14,7 @@ import Vision
 @Observable
 final class MessageViewModel: ObservableObject {
     private var generation: AnyCancellable?
+    private var transcribeTask: Task<Void, Error>?
 
     private var chat: Chat
     private let modelContext = SharedModelContainer.shared.mainContext
@@ -139,6 +140,7 @@ final class MessageViewModel: ObservableObject {
         TelemetryManager.send("MessageViewModel.stopGenerate")
         sendViewState = nil
         generation?.cancel()
+        transcribeTask?.cancel()
         try? modelContext.saveChanges()
     }
 
@@ -347,36 +349,26 @@ extension MessageViewModel {
         do {
             sendViewState = .loading
 
-            let audioFrames = try await convertAudioFileToPCMArrayAsync(fileURL: url)
-            let audioStatus = AudioStatus()
-            let delegate = await WhisperHandler(audioStatus: audioStatus)
-            WhisperViewModel.shared.whisper?.delegate = delegate
-            Task {
-                do {
-                    _ = try await WhisperViewModel.shared.whisper?.transcribe(audioFrames: audioFrames)
-                } catch {
-                    logger.error("Error transcribing audio: \(error)")
-                }
-            }
-
-            // Create a new message with the recognized text
+            // Add the messages to the view model
             let userMessage = Message(
                 content: "Hi this is where audio player will go but not today it will go here later probably",
                 role: Role.user,
                 chat: chat
             )
+            let assistantMessage = Message(content: nil, role: Role.assistant, chat: chat)
 
-            // If joined is empty, we couldn't read anything from the image
-            let assistantMessage = Message(
-                content: "ok im robot", role: Role.assistant, chat: chat
-            )
-
-            // Add the messages to the view model and save them to the database
             messages.append(userMessage)
             messages.append(assistantMessage)
             modelContext.insert(userMessage)
             modelContext.insert(assistantMessage)
-            lastOpenedImage = nil
+
+            let audioFrames = try await convertAudioFileToPCMArrayAsync(fileURL: url)
+            let audioStatus = AudioStatus()
+            let delegate = await WhisperHandler(audioStatus: audioStatus)
+            await WhisperViewModel.shared.whisper?.delegate = delegate
+            transcribeTask = Task {
+                _ = try await WhisperViewModel.shared.whisper?.transcribe(audioFrames: audioFrames)
+            }
 
             // Every few seconds, update the message content with the transcribed text in audioStatus
             // This is a bit of a hack, but it works for now
@@ -406,6 +398,7 @@ extension MessageViewModel {
 
         } catch {
             logger.error("Error transcribing audio: \(error)")
+            sendViewState = .error(message: "Error transcribing audio: \(error)")
         }
     }
 }
