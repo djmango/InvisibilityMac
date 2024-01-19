@@ -350,10 +350,10 @@ extension MessageViewModel {
             let audioFrames = try await convertAudioFileToPCMArrayAsync(fileURL: url)
             let audioStatus = AudioStatus()
             let delegate = await WhisperHandler(audioStatus: audioStatus)
-            WhisperViewModel.shared.whisper.delegate = delegate
+            WhisperViewModel.shared.whisper?.delegate = delegate
             Task {
                 do {
-                    _ = try await WhisperViewModel.shared.whisper.transcribe(audioFrames: audioFrames)
+                    _ = try await WhisperViewModel.shared.whisper?.transcribe(audioFrames: audioFrames)
                 } catch {
                     logger.error("Error transcribing audio: \(error)")
                 }

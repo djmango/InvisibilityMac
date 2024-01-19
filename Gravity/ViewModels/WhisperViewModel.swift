@@ -20,6 +20,23 @@ class AudioStatus: ObservableObject {
     @Published var text: String = ""
 }
 
+struct ModelInfo {
+    let url: URL
+    let hash: String
+    let localURL: URL
+}
+
+enum ModelRepository {
+    static let WHISPER_SMALL = ModelInfo(
+        url: URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin?download=true")!,
+        hash: "ae85e4a935d7a567bd102fe55afc16bb595bdb618e11b2fc7591bc08120411bb",
+        localURL: DownloadManager.gravityHomeDir
+            .appendingPathComponent("models")
+            .appendingPathComponent("whisper")
+            .appendingPathComponent("small.bin")
+    )
+}
+
 func convertAudioFileToPCMArray(fileURL: URL, completionHandler: @escaping (Result<[Float], Error>) -> Void) {
     var options = FormatConverter.Options()
     options.format = .wav
@@ -111,17 +128,26 @@ class WhisperHandler: WhisperDelegate {
     }
 }
 
-@Observable
-final class WhisperViewModel: ObservableObject {
+final class WhisperViewModel {
     static let shared = WhisperViewModel()
 
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 
-    public let whisper: Whisper
+    public var whisper: Whisper?
+    private let downloadManager = DownloadManager()
 
-    init() {
-        // whisper = Whisper(fromFileURL: URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin")!)
-        // whisper = Whisper(fromFileURL: URL(string: "/Users/djmango/Downloads/ggml-small-q5_1.bin")!)
-        whisper = Whisper(fromFileURL: URL(string: "/Users/djmango/Downloads/ggml-base.en-q5_1.bin")!)
+    private init() {
+        // logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+        // WhisperViewModel.downloadWhisper()
+        // logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+        // whisper = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)
+    }
+
+    func downloadWhisper() {
+        downloadManager.downloadModel(
+            from: ModelRepository.WHISPER_SMALL.url,
+            to: ModelRepository.WHISPER_SMALL.localURL,
+            expectedHash: ModelRepository.WHISPER_SMALL.hash
+        )
     }
 }

@@ -44,6 +44,7 @@ struct GravityApp: App {
         }
 
         OllamaKit.shared.runBinaryInBackground(withArguments: ["serve"], forceKill: true)
+        WhisperViewModel.shared.downloadWhisper()
     }
 
     var body: some Scene {
