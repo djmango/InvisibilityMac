@@ -14,7 +14,6 @@ import Vision
 @Observable
 final class MessageViewModel: ObservableObject {
     private var generation: AnyCancellable?
-    private var transcribeTask: Task<Void, Error>?
 
     private var chat: Chat
     private let modelContext = SharedModelContainer.shared.mainContext
@@ -138,9 +137,17 @@ final class MessageViewModel: ObservableObject {
 
     func stopGenerate() {
         TelemetryManager.send("MessageViewModel.stopGenerate")
+        logger.debug("Canceling generation")
         sendViewState = nil
         generation?.cancel()
-        transcribeTask?.cancel()
+        Task {
+            do {
+                try await WhisperViewModel.shared.whisper?.cancel()
+            } catch {
+                logger.error("Error canceling whisper: \(error)")
+            }
+        }
+
         try? modelContext.saveChanges()
     }
 
@@ -362,31 +369,32 @@ extension MessageViewModel {
             modelContext.insert(userMessage)
             modelContext.insert(assistantMessage)
 
-            let audioFrames = try await convertAudioFileToPCMArrayAsync(fileURL: url)
+            let audioFrames = try await convertAudioFileToPCMArray(fileURL: url)
             let audioStatus = AudioStatus()
+            audioStatus.message = assistantMessage
             let delegate = await WhisperHandler(audioStatus: audioStatus)
             await WhisperViewModel.shared.whisper?.delegate = delegate
-            transcribeTask = Task {
+            Task {
                 _ = try await WhisperViewModel.shared.whisper?.transcribe(audioFrames: audioFrames)
             }
 
             // Every few seconds, update the message content with the transcribed text in audioStatus
             // This is a bit of a hack, but it works for now
-            DispatchQueue.main.async {
-                Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
-                    let content = "Hi this i am not a robot here is the thing i heard from ur audio file: \(audioStatus.text)"
+            // DispatchQueue.main.async {
+            //     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
+            //         let content = "Hi this i am not a robot here is the thing i heard from ur audio file: \(audioStatus.text)"
 
-                    guard let lastMessage = self?.messages.last else { return }
+            //         guard let lastMessage = self?.messages.last else { return }
 
-                    if lastMessage.content == nil { lastMessage.content = "" }
-                    lastMessage.content = content
+            //         if lastMessage.content == nil { lastMessage.content = "" }
+            //         lastMessage.content = content
 
-                    self?.sendViewState = .loading
-                    if audioStatus.completed {
-                        timer.invalidate()
-                    }
-                }
-            }
+            //         self?.sendViewState = .loading
+            //         if audioStatus.completed {
+            //             timer.invalidate()
+            //         }
+            //     }
+            // }
 
             do {
                 try modelContext.saveChanges()
@@ -394,7 +402,7 @@ extension MessageViewModel {
                 logger.error("Error saving changes: \(error)")
             }
 
-            sendViewState = nil
+            // sendViewState = nil
 
         } catch {
             logger.error("Error transcribing audio: \(error)")

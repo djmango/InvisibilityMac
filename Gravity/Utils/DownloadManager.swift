@@ -50,6 +50,7 @@ class DownloadManager {
         }
     }
 
+    /// Downloads a file from a given URL to a given destination URL, verifying the SHA256 hash of the file
     func download(from url: URL, to destinationURL: URL, expectedHash: String) async throws {
         state = .downloading
 
@@ -69,7 +70,7 @@ class DownloadManager {
         }
 
         state = .verifying
-        if verifyDownload(fileURL: localURL, expectedHash: expectedHash) {
+        if verifyFile(at: localURL, expectedHash: expectedHash) {
             do {
                 try moveFile(from: localURL, to: destinationURL)
                 state = .completed
@@ -81,12 +82,14 @@ class DownloadManager {
         }
     }
 
+    /// Moves a file from one URL to another
     private func moveFile(from url: URL, to destinationURL: URL) throws {
         try FileManager.default.createDirectory(at: destinationURL.deletingLastPathComponent(), withIntermediateDirectories: true)
         try FileManager.default.moveItem(at: url, to: destinationURL)
     }
 
-    private func verifyDownload(fileURL: URL, expectedHash: String) -> Bool {
+    /// Verifies the SHA256 hash of a file at a given URL
+    func verifyFile(at fileURL: URL, expectedHash: String) -> Bool {
         do {
             let data = try Data(contentsOf: fileURL)
             let hash = SHA256.hash(data: data)

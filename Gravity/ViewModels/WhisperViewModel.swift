@@ -18,6 +18,7 @@ class AudioStatus: ObservableObject {
     @Published var progress: Double = 0.0
     @Published var segments: [Segment] = []
     @Published var text: String = ""
+    @Published var message: Message? = nil
 }
 
 struct ModelInfo {
@@ -37,38 +38,7 @@ enum ModelRepository {
     )
 }
 
-func convertAudioFileToPCMArray(fileURL: URL, completionHandler: @escaping (Result<[Float], Error>) -> Void) {
-    var options = FormatConverter.Options()
-    options.format = .wav
-    options.sampleRate = 16000
-    options.bitDepth = 16
-    options.channels = 1
-    options.isInterleaved = false
-
-    let tempURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
-    let converter = FormatConverter(inputURL: fileURL, outputURL: tempURL, options: options)
-    converter.start { error in
-        if let error {
-            completionHandler(.failure(error))
-            return
-        }
-
-        let data = try! Data(contentsOf: tempURL) // Handle error here
-
-        let floats = stride(from: 44, to: data.count, by: 2).map {
-            data[$0 ..< $0 + 2].withUnsafeBytes {
-                let short = Int16(littleEndian: $0.load(as: Int16.self))
-                return max(-1.0, min(Float(short) / 32767.0, 1.0))
-            }
-        }
-
-        try? FileManager.default.removeItem(at: tempURL)
-
-        completionHandler(.success(floats))
-    }
-}
-
-func convertAudioFileToPCMArrayAsync(fileURL: URL) async throws -> [Float] {
+func convertAudioFileToPCMArray(fileURL: URL) async throws -> [Float] {
     var options = FormatConverter.Options()
     options.format = .wav
     options.sampleRate = 16000
@@ -119,6 +89,13 @@ class WhisperHandler: WhisperDelegate {
         audioStatus.segments.append(contentsOf: segments)
         for segment in segments {
             audioStatus.text += segment.text
+            if audioStatus.message != nil {
+                if audioStatus.message?.content == nil { audioStatus.message?.content = "" }
+
+                DispatchQueue.main.async { [weak self] in
+                    self?.audioStatus.message?.content? += segment.text
+                }
+            }
         }
     }
 
@@ -134,7 +111,7 @@ final class WhisperViewModel {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 
     private var whisperModel: Whisper?
-    private let downloadManager = DownloadManager()
+    private let downloadManager: DownloadManager = DownloadManager()
 
     public var whisper: Whisper? {
         get async {
@@ -149,15 +126,22 @@ final class WhisperViewModel {
 
     func setup() {
         Task {
-            logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
-            do {
-                try await downloadManager.download(
-                    from: ModelRepository.WHISPER_SMALL.url,
-                    to: ModelRepository.WHISPER_SMALL.localURL,
-                    expectedHash: ModelRepository.WHISPER_SMALL.hash
-                )
-            } catch {
-                logger.error("Could not download Whisper: \(error)")
+            if downloadManager.verifyFile(
+                at: ModelRepository.WHISPER_SMALL.localURL,
+                expectedHash: ModelRepository.WHISPER_SMALL.hash
+            ) {
+                logger.debug("Verified Whisper at \(ModelRepository.WHISPER_SMALL.localURL)")
+            } else {
+                logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+                do {
+                    try await downloadManager.download(
+                        from: ModelRepository.WHISPER_SMALL.url,
+                        to: ModelRepository.WHISPER_SMALL.localURL,
+                        expectedHash: ModelRepository.WHISPER_SMALL.hash
+                    )
+                } catch {
+                    logger.error("Could not download Whisper: \(error)")
+                }
             }
 
             logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
