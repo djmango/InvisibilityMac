@@ -96,8 +96,7 @@ struct ChatSidebarListView: View {
                             try await OllamaKit.shared.waitForAPI(restart: true)
                             isRestarting = false
                         } catch {
-                            print(error)
-                            // TODO: Show error
+                            AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not restart models. Please try again.")
                         }
                     }
                 }) {

@@ -7,6 +7,8 @@ import TelemetryClient
 
 @main
 struct GravityApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+
     private var updater: SPUUpdater
 
     @StateObject private var updaterViewModel: UpdaterViewModel
@@ -14,8 +16,6 @@ struct GravityApp: App {
 
     @AppStorage("analytics") private var analytics: Bool = true
     @AppStorage("userIdentifier") private var userIdentifier: String = ""
-
-    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
         let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
@@ -44,7 +44,9 @@ struct GravityApp: App {
         }
 
         OllamaKit.shared.runBinaryInBackground(withArguments: ["serve"], forceKill: true)
-        WhisperViewModel.shared.setup()
+        Task {
+            await WhisperViewModel.shared.setup()
+        }
     }
 
     var body: some Scene {
@@ -79,7 +81,7 @@ struct GravityApp: App {
                             if let activeChat = chat {
                                 MessageViewModelManager.shared.viewModel(for: activeChat).openFile()
                             } else {
-                                print("TODO: Show error")
+                                AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not open new chat")
                             }
                         }
                     }

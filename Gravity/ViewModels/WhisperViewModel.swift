@@ -68,9 +68,11 @@ func convertAudioFileToPCMArray(fileURL: URL) async throws -> [Float] {
 class WhisperHandler: WhisperDelegate {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
     @ObservedObject var audioStatus: AudioStatus
+    @ObservedObject var messageViewModel: MessageViewModel
 
-    init(audioStatus: AudioStatus) {
+    init(audioStatus: AudioStatus, messageViewModel: MessageViewModel) {
         self.audioStatus = audioStatus
+        self.messageViewModel = messageViewModel
     }
 
     func whisper(_: Whisper, didCompleteWithSegments segments: [Segment]) {
@@ -78,6 +80,10 @@ class WhisperHandler: WhisperDelegate {
         audioStatus.segments = segments
         audioStatus.completed = true
         audioStatus.progress = 1.0
+        audioStatus.message?.done = true
+        DispatchQueue.main.async { [weak self] in
+            self?.messageViewModel.sendViewState = nil
+        }
     }
 
     func whisper(_: Whisper, didErrorWith error: Error) {
@@ -113,6 +119,7 @@ final class WhisperViewModel {
     private var whisperModel: Whisper?
     private let downloadManager: DownloadManager = DownloadManager()
 
+    /// The Whisper model gets loaded asynchronously, so we need to wait for it to be ready
     public var whisper: Whisper? {
         get async {
             while whisperModel == nil {
@@ -124,28 +131,26 @@ final class WhisperViewModel {
 
     private init() {}
 
-    func setup() {
-        Task {
-            if downloadManager.verifyFile(
-                at: ModelRepository.WHISPER_SMALL.localURL,
-                expectedHash: ModelRepository.WHISPER_SMALL.hash
-            ) {
-                logger.debug("Verified Whisper at \(ModelRepository.WHISPER_SMALL.localURL)")
-            } else {
-                logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
-                do {
-                    try await downloadManager.download(
-                        from: ModelRepository.WHISPER_SMALL.url,
-                        to: ModelRepository.WHISPER_SMALL.localURL,
-                        expectedHash: ModelRepository.WHISPER_SMALL.hash
-                    )
-                } catch {
-                    logger.error("Could not download Whisper: \(error)")
-                }
+    func setup() async {
+        if downloadManager.verifyFile(
+            at: ModelRepository.WHISPER_SMALL.localURL,
+            expectedHash: ModelRepository.WHISPER_SMALL.hash
+        ) {
+            logger.debug("Verified Whisper at \(ModelRepository.WHISPER_SMALL.localURL)")
+        } else {
+            logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+            do {
+                try await downloadManager.download(
+                    from: ModelRepository.WHISPER_SMALL.url,
+                    to: ModelRepository.WHISPER_SMALL.localURL,
+                    expectedHash: ModelRepository.WHISPER_SMALL.hash
+                )
+            } catch {
+                logger.error("Could not download Whisper: \(error)")
             }
-
-            logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
-            whisperModel = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)
         }
+
+        logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+        whisperModel = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)
     }
 }

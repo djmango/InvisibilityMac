@@ -19,27 +19,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Set up the observer for when the app resigns active
         NotificationCenter.default.addObserver(self, selector: #selector(appDidResignActive), name: NSApplication.didResignActiveNotification, object: nil)
-
-        // Task {
-        //     await ModelWarmer.shared.warm()
-        // }
     }
 
     @objc func appDidBecomeActive(notification _: NSNotification) {
         isAppActive = true
-        // print("App became active")
-        // Task {
-        //     await ModelWarmer.shared.warm()
-        // }
     }
 
     @objc func appDidResignActive(notification _: NSNotification) {
         isAppActive = false
-        // print("App became inactive")
     }
 
     func applicationWillTerminate(_: Notification) {
-        print("App will terminate")
         OllamaKit.shared.terminateBinaryProcess()
     }
 }

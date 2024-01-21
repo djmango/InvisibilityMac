@@ -15,4 +15,11 @@ class AlertViewModel: ObservableObject {
     @Published var alertTitle: String = ""
     @Published var alertMessage: String = ""
     @Published var alertDismissText: String = "OK"
+
+    func doShowAlert(title: String, message: String, dismissText: String = "OK") {
+        alertTitle = title
+        alertMessage = message
+        alertDismissText = dismissText
+        showAlert = true
+    }
 }

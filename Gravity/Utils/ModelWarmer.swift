@@ -8,17 +8,21 @@
 import Combine
 import Foundation
 import OllamaKit
+import os
 import SwiftUI
 
 /// Singleton to keep the model warm
 class ModelWarmer: ObservableObject {
+    let logger = Logger(subsystem: "ai.grav.app", category: "ModelWarmer")
+
     /// Singleton instance
     static let shared = ModelWarmer()
+
     /// Var to hold the selected model
     @AppStorage("selectedModel") private var selectedModel = "mistral:latest"
 
     func warm() async {
-        print("Warming model")
+        logger.debug("Warming model")
 
         if await OllamaKit.shared.reachable() {
             var generation: AnyCancellable? = nil

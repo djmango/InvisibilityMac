@@ -71,7 +71,14 @@ struct MessageView: View {
                 }
                 // TODO: Should add some kind of scroll lock, if at bottom, follow, otherwise allow free scroll.
 
-                HStack(alignment: .bottom) {
+                HStack(alignment: .center) {
+                    Button(action: openFileAction) {
+                        Image(systemName: "paperclip")
+                            .padding(8)
+                            .frame(width: 20, height: 20)
+                    }
+                    .buttonStyle(.plain)
+
                     ChatField("Message", text: $content, action: sendAction)
                         .textFieldStyle(CapsuleChatFieldStyle())
                         .focused($promptFocused)
@@ -149,6 +156,10 @@ struct MessageView: View {
             try ChatViewModel.shared.modify(chat)
             await messageViewModel.regenerate(message)
         }
+    }
+
+    private func openFileAction() {
+        messageViewModel.openFile()
     }
 
     private func scrollToBottom(_ proxy: ScrollViewProxy) {

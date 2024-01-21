@@ -243,18 +243,16 @@ extension MessageViewModel {
 
         // Define allowed content types using UTType
         openPanel.allowedContentTypes = [
-            // Images
-            UTType.png,
-            UTType.jpeg,
-            UTType.gif,
-            UTType.bmp,
-            UTType.tiff,
-            UTType.heif,
-            // Audio
-            UTType.mp3,
-            UTType.wav,
-            UTType.mpeg4Audio,
+            UTType.image,
+            UTType.audio,
+            UTType.movie,
         ]
+
+        // Technically doesn't work for the following types:
+        // SVGs: Our image standardization function doesn't support SVGs
+        // PDFs: Just need to add support for them
+        // Video without audio: We don't support video without audio
+        // TODO: fix the above issues
 
         openPanel.begin { result in
             if result == .OK, let url = openPanel.url {
@@ -265,9 +263,9 @@ extension MessageViewModel {
                         self.logger.debug("Selected file is an image.")
                         self.handleImage(url: url)
                     }
-                    // Check if it's an audio type
-                    else if fileType.conforms(to: .audio) {
-                        self.logger.debug("Selected file is an audio.")
+                    // Check if it's an audio or video type
+                    else if fileType.conforms(to: .audio) || fileType.conforms(to: .movie) {
+                        self.logger.debug("Selected file is an audio or video.")
                         Task {
                             await self.handleAudio(url: url)
                         }
@@ -308,6 +306,7 @@ extension MessageViewModel {
     }
 
     /// Async callback handler, takes the OCR results and spawns messages from them
+    @MainActor
     private func recognizeTextHandler(request: VNRequest, error: Error?) {
         guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
         guard let image = lastOpenedImage else { return }
@@ -352,6 +351,7 @@ extension MessageViewModel {
         sendViewState = nil
     }
 
+    @MainActor
     private func handleAudio(url: URL) async {
         do {
             sendViewState = .loading
@@ -372,37 +372,17 @@ extension MessageViewModel {
             let audioFrames = try await convertAudioFileToPCMArray(fileURL: url)
             let audioStatus = AudioStatus()
             audioStatus.message = assistantMessage
-            let delegate = await WhisperHandler(audioStatus: audioStatus)
+            let delegate = WhisperHandler(audioStatus: audioStatus, messageViewModel: self)
             await WhisperViewModel.shared.whisper?.delegate = delegate
             Task {
                 _ = try await WhisperViewModel.shared.whisper?.transcribe(audioFrames: audioFrames)
             }
-
-            // Every few seconds, update the message content with the transcribed text in audioStatus
-            // This is a bit of a hack, but it works for now
-            // DispatchQueue.main.async {
-            //     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] timer in
-            //         let content = "Hi this i am not a robot here is the thing i heard from ur audio file: \(audioStatus.text)"
-
-            //         guard let lastMessage = self?.messages.last else { return }
-
-            //         if lastMessage.content == nil { lastMessage.content = "" }
-            //         lastMessage.content = content
-
-            //         self?.sendViewState = .loading
-            //         if audioStatus.completed {
-            //             timer.invalidate()
-            //         }
-            //     }
-            // }
 
             do {
                 try modelContext.saveChanges()
             } catch {
                 logger.error("Error saving changes: \(error)")
             }
-
-            // sendViewState = nil
 
         } catch {
             logger.error("Error transcribing audio: \(error)")

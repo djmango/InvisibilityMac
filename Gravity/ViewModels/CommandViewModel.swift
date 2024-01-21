@@ -44,7 +44,7 @@ final class CommandViewModel: ObservableObject {
         if await OllamaKit.shared.reachable() {
             await function()
         } else {
-            print("Not reachable") // TODO: Show error
+            AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not connect to Ollama")
         }
     }
 
@@ -54,10 +54,7 @@ final class CommandViewModel: ObservableObject {
         let chat = Chat()
 
         let selectedModel = UserDefaults.standard.string(forKey: "selectedModel") ?? "mistral:latest"
-        print("Selected model: \(selectedModel)")
         chat.model = OllamaViewModel.shared.fromName(selectedModel)
-
-        print("Creating chat")
 
         Task {
             await runIfReachable {
@@ -66,7 +63,7 @@ final class CommandViewModel: ObservableObject {
                     self.selectedChat = chat
                     completion(chat)
                 } catch {
-                    print("Error creating chat: \(error)") // TODO: Show error
+                    AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not create chat")
                     completion(nil)
                 }
             }
