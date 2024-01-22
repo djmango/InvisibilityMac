@@ -256,23 +256,32 @@ extension MessageViewModel {
 
         openPanel.begin { result in
             if result == .OK, let url = openPanel.url {
-                // First determine if we are dealing with an image or audio file
-                if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
-                    // Check if it's an image type
-                    if fileType.conforms(to: .image) {
-                        self.logger.debug("Selected file is an image.")
-                        self.handleImage(url: url)
-                    }
-                    // Check if it's an audio or video type
-                    else if fileType.conforms(to: .audio) || fileType.conforms(to: .movie) {
-                        self.logger.debug("Selected file is an audio or video.")
-                        Task {
-                            await self.handleAudio(url: url)
-                        }
-                    } else {
-                        self.logger.error("Selected file is of an unknown type.")
-                    }
+                self.handleFile(url: url)
+            }
+        }
+    }
+
+    /// Public function that handles the file after it has been selected
+    func handleFile(url: URL) {
+        // First determine if we are dealing with an image or audio file
+        if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
+            // Check if it's an image type
+            if fileType.conforms(to: .image) {
+                logger.debug("Selected file is an image.")
+                handleImage(url: url)
+            }
+            // Check if it's an audio or video type
+            else if fileType.conforms(to: .audio) || fileType.conforms(to: .movie) {
+                logger.debug("Selected file is an audio or video.")
+                Task {
+                    await self.handleAudio(url: url)
                 }
+            } else {
+                logger.error("Selected file is of an unknown type.")
+                AlertViewModel.shared.doShowAlert(
+                    title: "Unknown file type",
+                    message: "The selected file is of an unknown type."
+                )
             }
         }
     }

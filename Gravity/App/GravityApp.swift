@@ -14,7 +14,16 @@ struct GravityApp: App {
     @StateObject private var updaterViewModel: UpdaterViewModel
     @StateObject private var imageViewModel: ImageViewModel
 
-    @AppStorage("analytics") private var analytics: Bool = true
+    @AppStorage("analytics") var analytics: Bool = true {
+        didSet {
+            if analytics != true {
+                TelemetryManager.send("TelemetryDisabled")
+            } else {
+                TelemetryManager.send("TelemetryEnabled")
+            }
+        }
+    }
+
     @AppStorage("userIdentifier") private var userIdentifier: String = ""
 
     init() {
