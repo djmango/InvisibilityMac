@@ -1,4 +1,3 @@
-import ChatField
 import os
 import SwiftData
 import SwiftUI
@@ -12,7 +11,7 @@ struct MessageView: View {
     private var chat: Chat
 
     @Environment(\.modelContext) private var modelContext: ModelContext
-    @EnvironmentObject private var imageViewModel: ImageViewModel
+    // @EnvironmentObject private var imageViewModel: ImageViewModel
 
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool
@@ -54,7 +53,7 @@ struct MessageView: View {
                     .finalMessage(index == messageViewModel.messages.endIndex - 1)
                     .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
                     .id(message)
-                    .environmentObject(imageViewModel)
+                    // .environmentObject(imageViewModel)
                 }
                 .onAppear {
                     scrollToBottom(scrollViewProxy)

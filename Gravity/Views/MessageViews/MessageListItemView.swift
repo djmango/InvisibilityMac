@@ -10,7 +10,6 @@ struct MessageListItemView: View {
     let regenerateAction: () -> Void
 
     // Message state
-    // private var isAssistant: Bool = false
     private var isAssistant: Bool { message.role == .assistant }
     private var isGenerating: Bool = false
     private var isFinalMessage: Bool = false
@@ -98,10 +97,10 @@ struct MessageListItemView: View {
                                 .scaledToFit()
                                 // https://developer.apple.com/documentation/swiftui/view/frame(minwidth:idealwidth:maxwidth:minheight:idealheight:maxheight:alignment:)
                                 .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
-                                .onTapGesture {
-                                    imageViewModel.setImage(image: nsImage)
-                                    isImagePresented = true
-                                }
+                                // .onTapGesture {
+                                //     imageViewModel.setImage(image: nsImage)
+                                //     isImagePresented = true
+                                // }
                                 .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
                                 .shadow(radius: 2)
                         }

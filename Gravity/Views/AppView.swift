@@ -5,7 +5,7 @@ import ViewState
 struct AppView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "AppView")
 
-    @EnvironmentObject private var imageViewModel: ImageViewModel
+    // @EnvironmentObject private var imageViewModel: ImageViewModel
     @ObservedObject private var alertViewModel = AlertViewModel.shared
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
@@ -81,11 +81,11 @@ struct AppView: View {
                     }
                 }
 
-                if let image = imageViewModel.getImage() {
-                    ExpandedImageView(nsImage: image, onDismiss: {
-                        imageViewModel.clearImage()
-                    })
-                }
+                // if let image = imageViewModel.getImage() {
+                //     ExpandedImageView(nsImage: image, onDismiss: {
+                //         imageViewModel.clearImage()
+                //     })
+                // }
             } else {
                 OnboardingView()
             }

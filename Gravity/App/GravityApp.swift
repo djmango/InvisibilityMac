@@ -12,7 +12,7 @@ struct GravityApp: App {
     private var updater: SPUUpdater
 
     @StateObject private var updaterViewModel: UpdaterViewModel
-    @StateObject private var imageViewModel: ImageViewModel
+    // @StateObject private var imageViewModel: ImageViewModel
 
     @AppStorage("analytics") var analytics: Bool = true {
         didSet {
@@ -35,8 +35,8 @@ struct GravityApp: App {
 
         SharedModelContainer.shared = SharedModelContainer()
 
-        let imageViewModel = ImageViewModel()
-        _imageViewModel = StateObject(wrappedValue: imageViewModel)
+        // let imageViewModel = ImageViewModel()
+        // _imageViewModel = StateObject(wrappedValue: imageViewModel)
 
         if analytics {
             if userIdentifier.isEmpty {
@@ -62,7 +62,7 @@ struct GravityApp: App {
         Window("Gravity", id: "master") {
             AppView()
                 .environmentObject(updaterViewModel)
-                .environmentObject(imageViewModel)
+            // .environmentObject(imageViewModel)
         }
         .windowStyle(HiddenTitleBarWindowStyle())
         .modelContainer(SharedModelContainer.shared.modelContainer)

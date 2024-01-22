@@ -113,8 +113,7 @@ final class MessageViewModel: ObservableObject {
         } catch {
             // Handle the failure case
             logger.error("Failed to restart the API.")
-            sendViewState = .error(
-                message: "Failed to restart the API. Please try again later.")
+            sendViewState = .error(message: "Failed to restart the API. Please try again later.")
             // Update the UI to show an error message
         }
 
