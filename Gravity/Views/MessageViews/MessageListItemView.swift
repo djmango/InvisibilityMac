@@ -78,6 +78,16 @@ struct MessageListItemView: View {
                                 .stroke(Color(nsColor: .separatorColor))
                         }
                         .padding(.bottom)
+                    // Copy icon in bottom right corner
+                    // .overlay {
+                    //     Button(action: copyAction) {
+                    //         Image(systemName: isCopied ? "list.clipboard.fill" : "clipboard")
+                    //     }
+                    //     .buttonStyle(.accessoryBar)
+                    //     .clipShape(.circle)
+                    //     .help("Copy")
+                    //     .visible(if: isCopyButtonVisible)
+                    // }
                 }
                 .hide(if: isGenerating, removeCompletely: true)
                 .hide(if: isError, removeCompletely: true)
@@ -98,18 +108,6 @@ struct MessageListItemView: View {
                                 }
                                 .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
                                 .shadow(radius: 2)
-                            // .sheet(isPresented: $isImagePresented) {
-                            //     SwiftUIImageViewer(image: Image(nsImage: nsImage))
-                            //         .overlay(alignment: .topTrailing) {
-                            //             Button(action: {
-                            //                 isImagePresented = false
-                            //             }) {
-                            //                 Image(systemName: "xmark.circle.fill")
-                            //                     .font(.title)
-                            //                     .padding()
-                            //             }
-                            //         }
-                            // }
                         }
                     }
                 }
@@ -146,9 +144,6 @@ struct MessageListItemView: View {
     // MARK: - Actions
 
     private func copyAction() {
-        // let content = MarkdownContent(message.content ?? "")
-        // let plainText = content.renderPlainText()
-
         let pasteBoard = NSPasteboard.general
         pasteBoard.clearContents()
         pasteBoard.setString(message.content ?? "", forType: .string)

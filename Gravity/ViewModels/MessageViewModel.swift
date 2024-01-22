@@ -285,8 +285,6 @@ extension MessageViewModel {
             return
         }
 
-        sendViewState = .loading
-
         // Standardize and convert the image to a base64 string and store it in the view model
         if let standardizedImage = standardizeImage(cgImage) {
             lastOpenedImage = standardizedImage
@@ -306,8 +304,7 @@ extension MessageViewModel {
     }
 
     /// Async callback handler, takes the OCR results and spawns messages from them
-    @MainActor
-    private func recognizeTextHandler(request: VNRequest, error: Error?) {
+    private func recognizeTextHandler(request: VNRequest, error _: Error?) {
         guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
         guard let image = lastOpenedImage else { return }
 
@@ -318,6 +315,14 @@ extension MessageViewModel {
 
         // Append the recognized strings to chat. Should design this better, just appending is dumb.
         let joined = recognizedStrings.joined(separator: " ")
+        Task {
+            await handleImageCompletion(image: image, joined: joined)
+        }
+    }
+
+    @MainActor
+    private func handleImageCompletion(image: Data, joined: String) {
+        sendViewState = .loading
 
         // Create a new message with the recognized text
         let userMessage = Message(

@@ -12,11 +12,12 @@ struct MessageView: View {
     @EnvironmentObject private var imageViewModel: ImageViewModel
 
     @FocusState private var isEditorFocused: Bool
-    @State private var viewState: ViewState? = nil
-
-    // Prompt
     @FocusState private var promptFocused: Bool
+
+    @State private var viewState: ViewState? = nil
     @State private var content: String = ""
+    @State private var addFileHovering: Bool = false
+    @State private var autoScroll = true
 
     init(for chat: Chat) {
         self.chat = chat
@@ -58,8 +59,8 @@ struct MessageView: View {
                     .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
                     .id(message)
                     .environmentObject(imageViewModel)
+                    // .padding(.horizontal)
                 }
-
                 .onAppear {
                     scrollToBottom(scrollViewProxy)
                 }
@@ -69,15 +70,33 @@ struct MessageView: View {
                 .onChange(of: messageViewModel.messages.last?.content) {
                     scrollToBottom(scrollViewProxy)
                 }
-                // TODO: Should add some kind of scroll lock, if at bottom, follow, otherwise allow free scroll.
 
                 HStack(alignment: .center) {
-                    Button(action: openFileAction) {
-                        Image(systemName: "paperclip")
-                            .padding(8)
-                            .frame(width: 20, height: 20)
+                    ZStack {
+                        Rectangle()
+                            .foregroundColor(addFileHovering ? Color.gray.opacity(0.2) : Color.clear) // Change color when hovered
+                            .cornerRadius(8)
+
+                        Button(action: openFileAction) {
+                            Image(systemName: "paperclip")
+                                .imageScale(.large)
+                        }
+                        .buttonStyle(.plain)
+                        .conditionalEffect(
+                            .repeat(
+                                .jump(height: 5),
+                                every: 1.5
+                            ), condition: addFileHovering
+                        )
+                        // .conditionalEffect(
+                        //     .pushDown,
+                        //     condition: addFileHovering
+                        // )
                     }
-                    .buttonStyle(.plain)
+                    .frame(width: 40, height: 40)
+                    .onHover { isHovering in
+                        addFileHovering = isHovering
+                    }
 
                     ChatField("Message", text: $content, action: sendAction)
                         .textFieldStyle(CapsuleChatFieldStyle())
@@ -168,15 +187,5 @@ struct MessageView: View {
         let lastMessage = messageViewModel.messages[lastIndex]
 
         proxy.scrollTo(lastMessage, anchor: .bottom)
-    }
-}
-
-var mockModelContainer: ModelContainer {
-    do {
-        let schema = Schema([Chat.self, Message.self, OllamaModel.self])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-        return try ModelContainer(for: schema, configurations: [modelConfiguration])
-    } catch {
-        fatalError("ModelContainer initialization failed: \(error)")
     }
 }

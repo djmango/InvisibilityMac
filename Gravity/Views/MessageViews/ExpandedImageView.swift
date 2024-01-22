@@ -37,22 +37,6 @@ struct ExpandedImageView: View {
                         scale = 1.0 // Animate to full size
                     }
                 }
-
-            // Close button
-            // VStack {
-            //     HStack {
-            //         Spacer()
-            //         Button(action: { withAnimation {
-            //             onDismiss()
-            //         }
-            //         }) {
-            //             Image(systemName: "xmark.circle.fill")
-            //                 .font(.title)
-            //                 .padding()
-            //         }
-            //     }
-            //     Spacer()
-            // }
         }
         .edgesIgnoringSafeArea(.all)
     }

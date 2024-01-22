@@ -120,10 +120,18 @@ final class WhisperViewModel {
     private let downloadManager: DownloadManager = DownloadManager()
 
     /// The Whisper model gets loaded asynchronously, so we need to wait for it to be ready
+    private var downloadRetries = 0
     public var whisper: Whisper? {
         get async {
             while whisperModel == nil {
-                try? await Task.sleep(nanoseconds: 100_000_000) // Sleep for 0.1 second
+                try? await Task.sleep(nanoseconds: 500_000_000) // Sleep for 0.5 second
+
+                if downloadManager.state == .failed, downloadRetries < 100 {
+                    downloadRetries += 1
+                    let ourself = self
+                    logger.debug("Waiting for Whisper to be ready (\(ourself.downloadRetries))")
+                    await setup()
+                }
             }
             return whisperModel
         }
@@ -137,20 +145,27 @@ final class WhisperViewModel {
             expectedHash: ModelRepository.WHISPER_SMALL.hash
         ) {
             logger.debug("Verified Whisper at \(ModelRepository.WHISPER_SMALL.localURL)")
+
+            logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+            whisperModel = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)
         } else {
-            logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+            logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.url)")
             do {
                 try await downloadManager.download(
                     from: ModelRepository.WHISPER_SMALL.url,
                     to: ModelRepository.WHISPER_SMALL.localURL,
                     expectedHash: ModelRepository.WHISPER_SMALL.hash
                 )
+
+                logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
+                whisperModel = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)
             } catch {
                 logger.error("Could not download Whisper: \(error)")
             }
         }
+    }
 
-        logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
-        whisperModel = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)
+    func wipeWhisper() {
+        try? FileManager.default.removeItem(at: ModelRepository.WHISPER_SMALL.localURL)
     }
 }

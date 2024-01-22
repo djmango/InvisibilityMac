@@ -19,7 +19,7 @@ class DownloadManager {
         case downloading
         case verifying
         case completed
-        case failed(Error)
+        case failed
 
         var description: String {
             switch self {
@@ -31,8 +31,8 @@ class DownloadManager {
                 "Verifying"
             case .completed:
                 "Completed"
-            case let .failed(error):
-                "Failed: \(error.localizedDescription)"
+            case .failed:
+                "Failed"
             }
         }
     }
@@ -50,18 +50,25 @@ class DownloadManager {
         }
     }
 
+    var lastError: Error?
+
     /// Downloads a file from a given URL to a given destination URL, verifying the SHA256 hash of the file
     func download(from url: URL, to destinationURL: URL, expectedHash: String) async throws {
         state = .downloading
+        lastError = nil
 
         let localURL: URL = try await withCheckedThrowingContinuation { continuation in
             let task = URLSession.shared.downloadTask(with: url) { localURL, _, error in
                 if let error {
                     continuation.resume(throwing: DownloadError.downloadFailed(error))
+                    self.state = .failed
+                    self.lastError = error
                     return
                 }
                 guard let localURL else {
                     continuation.resume(throwing: DownloadError.invalidLocalURL)
+                    self.state = .failed
+                    self.lastError = error
                     return
                 }
                 continuation.resume(returning: localURL)
@@ -75,7 +82,8 @@ class DownloadManager {
                 try moveFile(from: localURL, to: destinationURL)
                 state = .completed
             } catch {
-                state = .failed(error)
+                state = .failed
+                lastError = error
             }
         } else {
             throw DownloadError.hashMismatch

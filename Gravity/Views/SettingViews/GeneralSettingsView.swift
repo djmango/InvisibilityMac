@@ -114,6 +114,7 @@ struct GeneralSettingsView: View {
 
                         // Wipe models
                         OllamaViewModel.shared.wipeOllama()
+                        WhisperViewModel.shared.wipeWhisper()
 
                         // Restart ollama
                         OllamaKit.shared.restart(minInterval: 0)
