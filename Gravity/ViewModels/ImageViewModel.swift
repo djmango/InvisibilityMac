@@ -11,23 +11,20 @@ import SwiftUI
 /// ImageViewModel is an ObservableObject that stores the state of the expanded image view.
 final class ImageViewModel: ObservableObject {
     @Published var image: NSImage? = nil
-    @Published var originalFrame: CGRect? = nil
     // @Binding var isExpanded: Bool
 
-    func setImage(image: NSImage, originalFrame: CGRect) {
+    func setImage(image: NSImage) {
         self.image = image
-        self.originalFrame = originalFrame
     }
 
-    func getImage() -> (NSImage, CGRect)? {
-        guard let image, let originalFrame else {
+    func getImage() -> NSImage? {
+        guard let image else {
             return nil
         }
-        return (image, originalFrame)
+        return image
     }
 
     func clearImage() {
         image = nil
-        originalFrame = nil
     }
 }

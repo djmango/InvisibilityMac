@@ -21,6 +21,7 @@ struct MessageView: View {
     @State private var content: String = ""
     @State private var addFileHovering: Bool = false
     @State private var isDragActive: Bool = false
+    @State private var selection: [Message] = []
 
     init(for chat: Chat) {
         self.chat = chat
@@ -35,118 +36,108 @@ struct MessageView: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            ScrollViewReader { scrollViewProxy in
-                VStack {
-                    List(messageViewModel.messages.indices, id: \.self) { index in
-                        let message: Message = messageViewModel.messages[index]
-                        // Generate the action for the message, if it is an assistant message.
-                        let action: () -> Void = {
-                            if message.role == .assistant {
-                                {
-                                    regenerateAction(for: message)
-                                }
-                            } else {
-                                {}
-                            }
-                        }()
-
-                        // Generate the view for the individual message.
-                        MessageListItemView(
-                            message: message,
-                            geometry: geometry,
-                            regenerateAction: action
-                        )
-                        .assistant(message.role == .assistant)
-                        .generating(message.content == nil && isGenerating)
-                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                        .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
-                        .id(message)
-                        .environmentObject(imageViewModel)
-                        // .padding(.horizontal)
-                    }
-                    .onAppear {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                    .onChange(of: messageViewModel.messages) {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                    .onChange(of: messageViewModel.messages.last?.content) {
-                        scrollToBottom(scrollViewProxy)
+        ScrollViewReader { scrollViewProxy in
+            VStack {
+                List(messageViewModel.messages.indices, id: \.self) { index in
+                    let message: Message = messageViewModel.messages[index]
+                    // Generate the action for the message, if it is an assistant message.
+                    let action: () -> Void = {
+                        regenerateAction(for: message)
                     }
 
-                    HStack(alignment: .center) {
-                        ZStack {
-                            Rectangle()
-                                .foregroundColor(addFileHovering ? Color.gray.opacity(0.2) : Color.clear) // Change color when hovered
-                                .cornerRadius(8)
+                    // Generate the view for the individual message.
+                    MessageListItemView(
+                        message: message,
+                        regenerateAction: action
+                    )
+                    .generating(message.content == nil && isGenerating)
+                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                    .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
+                    .id(message)
+                    .environmentObject(imageViewModel)
+                }
+                .onAppear {
+                    scrollToBottom(scrollViewProxy)
+                }
+                .onChange(of: messageViewModel.messages) {
+                    scrollToBottom(scrollViewProxy)
+                }
+                .onChange(of: messageViewModel.messages.last?.content) {
+                    scrollToBottom(scrollViewProxy)
+                }
 
-                            Button(action: openFileAction) {
-                                Image(systemName: "paperclip")
-                                    .imageScale(.large)
-                            }
-                            .buttonStyle(.plain)
-                            .conditionalEffect(
-                                .repeat(
-                                    .jump(height: 5),
-                                    every: 1.5
-                                ), condition: addFileHovering
-                            )
-                            // .conditionalEffect(
-                            //     .pushDown,
-                            //     condition: addFileHovering
-                            // )
-                        }
-                        .frame(width: 40, height: 40)
-                        .onHover { isHovering in
-                            addFileHovering = isHovering
-                        }
+                HStack(alignment: .center) {
+                    ZStack {
+                        Rectangle()
+                            .foregroundColor(addFileHovering ? Color.gray.opacity(0.2) : Color.clear) // Change color when hovered
+                            .cornerRadius(8)
 
-                        ChatField("Message", text: $content, action: sendAction)
-                            .textFieldStyle(CapsuleChatFieldStyle())
-                            .focused($promptFocused)
-
-                        Button(action: sendAction) {
-                            Image(systemName: "paperplane.fill")
-                                .padding(8)
-                                .frame(width: 28, height: 28)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .help("Send message")
-                        .hide(if: isGenerating, removeCompletely: true)
-
-                        Button(action: messageViewModel.stopGenerate) {
-                            Image(systemName: "stop.circle.fill")
-                                .resizable()
-                                .frame(width: 28, height: 28)
+                        Button(action: openFileAction) {
+                            Image(systemName: "paperclip")
+                                .imageScale(.large)
                         }
                         .buttonStyle(.plain)
-                        .help("Stop generation")
-                        .visible(if: isGenerating, removeCompletely: true)
+                        .conditionalEffect(
+                            .repeat(
+                                .jump(height: 5),
+                                every: 1.5
+                            ), condition: addFileHovering
+                        )
                     }
-                    .padding(.top, 8)
-                    .padding(.bottom, 16)
-                    .padding(.horizontal)
+                    .frame(width: 40, height: 40)
+                    .onHover { isHovering in
+                        addFileHovering = isHovering
+                    }
+
+                    ChatField("Message", text: $content, action: sendAction)
+                        .textFieldStyle(CapsuleChatFieldStyle())
+                        .focused($promptFocused)
+
+                    Button(action: sendAction) {
+                        Image(systemName: "paperplane.fill")
+                            .padding(8)
+                            .frame(width: 28, height: 28)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .help("Send message")
+                    .hide(if: isGenerating, removeCompletely: true)
+
+                    Button(action: messageViewModel.stopGenerate) {
+                        Image(systemName: "stop.circle.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Stop generation")
+                    .visible(if: isGenerating, removeCompletely: true)
                 }
-                .overlay(
-                    // Grey overlay when the user is dragging a file.
-                    Rectangle()
-                        .foregroundColor(Color.gray.opacity(0.2))
-                        .opacity(isDragActive ? 1 : 0)
-                        .ignoresSafeArea()
-                )
-                .border(isDragActive ? Color.blue : Color.clear, width: 5)
-                .ignoresSafeArea()
-                .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
-                    handleDrop(providers: providers)
-                }
-                .navigationTitle(chat.name)
-                .task {
-                    initAction()
-                }
-                .onChange(of: chat) {
-                    initAction()
-                }
+                .padding(.top, 8)
+                .padding(.bottom, 16)
+                .padding(.horizontal)
+            }
+            .overlay(
+                // Grey overlay when the user is dragging a file.
+                Rectangle()
+                    .foregroundColor(Color.gray.opacity(0.2))
+                    .opacity(isDragActive ? 1 : 0)
+                    .ignoresSafeArea()
+            )
+            .border(isDragActive ? Color.blue : Color.clear, width: 5)
+            .ignoresSafeArea()
+            .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
+                handleDrop(providers: providers)
+            }
+            .copyable(selection.compactMap(\.content))
+            .pasteDestination(for: URL.self) { urls in
+                guard let url = urls.first else { return }
+                messageViewModel.handleFile(url: url)
+            }
+            .navigationTitle(chat.name)
+            .task {
+                initAction()
+            }
+            .onChange(of: chat) {
+                initAction()
             }
         }
     }

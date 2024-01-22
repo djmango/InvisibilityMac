@@ -10,22 +10,19 @@ struct MessageListItemView: View {
     let regenerateAction: () -> Void
 
     // Message state
-    private var isAssistant: Bool = false
+    // private var isAssistant: Bool = false
+    private var isAssistant: Bool { message.role == .assistant }
     private var isGenerating: Bool = false
     private var isFinalMessage: Bool = false
     private var isError: Bool = false
     private var errorMessage: String? = nil
 
-    private var geometry: GeometryProxy
-
     @State private var isImagePresented = false
 
     init(message: Message,
-         geometry: GeometryProxy,
          regenerateAction: @escaping () -> Void)
     {
         self.message = message
-        self.geometry = geometry
         self.regenerateAction = regenerateAction
     }
 
@@ -102,8 +99,7 @@ struct MessageListItemView: View {
                                 // https://developer.apple.com/documentation/swiftui/view/frame(minwidth:idealwidth:maxwidth:minheight:idealheight:maxheight:alignment:)
                                 .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
                                 .onTapGesture {
-                                    let frame = geometry.frame(in: .global)
-                                    imageViewModel.setImage(image: nsImage, originalFrame: frame)
+                                    imageViewModel.setImage(image: nsImage)
                                     isImagePresented = true
                                 }
                                 .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
@@ -153,12 +149,12 @@ struct MessageListItemView: View {
 
     // MARK: - Modifiers
 
-    public func assistant(_ isAssistant: Bool) -> MessageListItemView {
-        var view = self
-        view.isAssistant = isAssistant
+    // public func assistant(_ isAssistant: Bool) -> MessageListItemView {
+    //     var view = self
+    //     view.isAssistant = isAssistant
 
-        return view
-    }
+    //     return view
+    // }
 
     public func generating(_ isGenerating: Bool) -> MessageListItemView {
         var view = self

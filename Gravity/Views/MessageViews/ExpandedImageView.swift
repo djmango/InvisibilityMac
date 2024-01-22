@@ -10,8 +10,6 @@ import SwiftUI
 
 struct ExpandedImageView: View {
     let nsImage: NSImage
-    let originalFrame: CGRect
-    let geometry: GeometryProxy
     let onDismiss: () -> Void
     @State private var scale: CGFloat = 0.0
 
@@ -29,9 +27,9 @@ struct ExpandedImageView: View {
                 .resizable()
                 .scaledToFit()
                 .padding()
-                .frame(width: originalFrame.size.width, height: originalFrame.size.height)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .scaleEffect(scale)
-                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                .position(x: 0, y: 0)
                 .onAppear {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         scale = 1.0 // Animate to full size
@@ -41,7 +39,3 @@ struct ExpandedImageView: View {
         .edgesIgnoringSafeArea(.all)
     }
 }
-
-// #Preview {
-//     ExpandedImageView()
-// }

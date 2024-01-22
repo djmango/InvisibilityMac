@@ -17,9 +17,11 @@ class AlertViewModel: ObservableObject {
     @Published var alertDismissText: String = "OK"
 
     func doShowAlert(title: String, message: String, dismissText: String = "OK") {
-        alertTitle = title
-        alertMessage = message
-        alertDismissText = dismissText
-        showAlert = true
+        DispatchQueue.main.async {
+            self.alertTitle = title
+            self.alertMessage = message
+            self.alertDismissText = dismissText
+            self.showAlert = true
+        }
     }
 }
