@@ -17,6 +17,7 @@
 		4D596AA32B5F2B3E00B9E765 /* String+AppendNewLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */; };
 		4D596AA42B5F2B3E00B9E765 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9F2B5F2B3E00B9E765 /* Documentation.docc */; };
 		4D596AA52B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AA12B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift */; };
+		4D596AA82B5F2D2F00B9E765 /* llama in Frameworks */ = {isa = PBXBuildFile; productRef = 4D596AA72B5F2D2F00B9E765 /* llama */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D785D7D2B53633200FBCE1A /* ModelWarmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */; };
@@ -128,6 +129,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D596AA82B5F2D2F00B9E765 /* llama in Frameworks */,
 				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */,
@@ -387,6 +389,7 @@
 				4DDCE8522B50BA0900A22B1E /* Sparkle */,
 				4D3D05122B59DB32009340ED /* AudioKit */,
 				4D3D05152B59E1A3009340ED /* SwiftWhisper */,
+				4D596AA72B5F2D2F00B9E765 /* llama */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Gravity.app */;
@@ -425,6 +428,7 @@
 				4DD282E92B4E3D810041690B /* XCRemoteSwiftPackageReference "SwiftClient" */,
 				4D3D05112B59DB32009340ED /* XCRemoteSwiftPackageReference "AudioKit" */,
 				4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */,
+				4D596AA62B5F2D2F00B9E765 /* XCRemoteSwiftPackageReference "llama.cpp" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -772,6 +776,14 @@
 				kind = branch;
 			};
 		};
+		4D596AA62B5F2D2F00B9E765 /* XCRemoteSwiftPackageReference "llama.cpp" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ggerganov/llama.cpp.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/Pow.git";
@@ -872,6 +884,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */;
 			productName = SwiftWhisper;
+		};
+		4D596AA72B5F2D2F00B9E765 /* llama */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D596AA62B5F2D2F00B9E765 /* XCRemoteSwiftPackageReference "llama.cpp" */;
+			productName = llama;
 		};
 		4D7AB4232B4CB469007F025B /* Pow */ = {
 			isa = XCSwiftPackageProductDependency;

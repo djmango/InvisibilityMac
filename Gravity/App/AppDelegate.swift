@@ -8,9 +8,12 @@
 import Cocoa
 import Foundation
 import OllamaKit
+import os
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    private let logger = Logger(subsystem: "ai.grav.app", category: "AppDelegate")
+
     private var isAppActive = false
 
     func applicationDidFinishLaunching(_: Notification) {

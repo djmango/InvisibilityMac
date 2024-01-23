@@ -62,6 +62,22 @@ struct GravityApp: App {
         Window("Gravity", id: "master") {
             AppView()
                 .environmentObject(updaterViewModel)
+                .pasteDestination(for: URL.self) { urls in
+                    guard let url = urls.first else { return }
+
+                    if let activeChat = CommandViewModel.shared.selectedChat {
+                        MessageViewModelManager.shared.viewModel(for: activeChat).handleFile(url: url)
+                    } else {
+                        CommandViewModel.shared.addChat { chat in
+                            if let activeChat = chat {
+                                MessageViewModelManager.shared.viewModel(for: activeChat).handleFile(url: url)
+                            } else {
+                                AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not open new chat")
+                            }
+                        }
+                    }
+                }
+
             // .environmentObject(imageViewModel)
         }
         .windowStyle(HiddenTitleBarWindowStyle())

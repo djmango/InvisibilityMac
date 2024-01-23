@@ -127,10 +127,10 @@ struct MessageView: View {
                 handleDrop(providers: providers)
             }
             .copyable(selection.compactMap(\.content))
-            .pasteDestination(for: URL.self) { urls in
-                guard let url = urls.first else { return }
-                messageViewModel.handleFile(url: url)
-            }
+            // .pasteDestination(for: URL.self) { urls in
+            //     guard let url = urls.first else { return }
+            //     messageViewModel.handleFile(url: url)
+            // }
             .navigationTitle(chat.name)
             .task {
                 initAction()

@@ -15,7 +15,7 @@ public struct ChatField: View {
     private var titleKey: LocalizedStringKey
     @Binding private var text: String
     private var action: () -> Void
-    
+
     /// Creates a text field with a text label generated from a localized title string.
     ///
     /// - Parameters:
@@ -28,41 +28,23 @@ public struct ChatField: View {
         action: @escaping () -> Void
     ) {
         self.titleKey = titleKey
-        self._text = text
+        _text = text
         self.action = action
     }
-    
+
     public var body: some View {
-        #if os(iOS)
-        TextField(titleKey, text: $text, axis: .vertical)
-            .lineLimit(5)
-            .onSubmit { action() }
-        #elseif os(macOS)
         TextField(titleKey, text: $text, axis: .vertical)
             .introspect(.textField(axis: .vertical), on: .macOS(.v14)) { textField in
                 textField.lineBreakMode = .byWordWrapping
             }
             .onSubmit { macOS_action() }
-        #endif
     }
-    
-    #if os(macOS)
+
     private func macOS_action() {
         if NSApp.currentEvent?.modifierFlags.contains(.shift) == true {
             text.appendNewLine()
         } else {
             action()
         }
-    }
-    #endif
-}
-
-#Preview {
-    @State var text = ""
-    
-    return NavigationStack {
-        ChatField("Message", text: $text, action: {})
-            .textFieldStyle(CapsuleChatFieldStyle())
-            .padding()
     }
 }

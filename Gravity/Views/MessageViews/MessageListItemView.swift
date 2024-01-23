@@ -134,6 +134,11 @@ struct MessageListItemView: View {
             isHovered = $0
             isCopied = false
         }
+        .pasteDestination(for: URL.self) { urls in
+            guard let url = urls.first else { return }
+            print("pasteDestination LIST: \(url)")
+            // messageViewModel.handleFile(url: url)
+        }
     }
 
     // MARK: - Actions
@@ -147,13 +152,6 @@ struct MessageListItemView: View {
     }
 
     // MARK: - Modifiers
-
-    // public func assistant(_ isAssistant: Bool) -> MessageListItemView {
-    //     var view = self
-    //     view.isAssistant = isAssistant
-
-    //     return view
-    // }
 
     public func generating(_ isGenerating: Bool) -> MessageListItemView {
         var view = self
