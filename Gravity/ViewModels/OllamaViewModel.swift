@@ -78,7 +78,6 @@ final class OllamaViewModel: ObservableObject {
             }
         }
 
-        try modelContext.saveChanges()
         models = try fetchFromLocal()
     }
 

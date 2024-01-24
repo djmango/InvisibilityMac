@@ -18,23 +18,17 @@ final class ChatViewModel: ObservableObject {
     func create(_ chat: Chat) throws {
         modelContext.insert(chat)
         chats.insert(chat, at: 0)
-
-        try modelContext.saveChanges()
     }
 
     func rename(_ chat: Chat) throws {
         if let index = chats.firstIndex(where: { $0.id == chat.id }) {
             chats[index] = chat
         }
-
-        try modelContext.saveChanges()
     }
 
     func delete(_ chat: Chat) throws {
         modelContext.delete(chat)
         chats.removeAll(where: { $0.id == chat.id })
-
-        try modelContext.saveChanges()
     }
 
     func modify(_ chat: Chat) throws {
@@ -44,7 +38,5 @@ final class ChatViewModel: ObservableObject {
             chats.remove(at: index)
             chats.insert(chat, at: 0)
         }
-
-        try modelContext.saveChanges()
     }
 }

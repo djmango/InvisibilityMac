@@ -56,8 +56,6 @@ final class MessageViewModel: ObservableObject {
         messages.append(assistantMessage)
         modelContext.insert(assistantMessage)
 
-        try? modelContext.saveChanges()
-
         if await OllamaKit.shared.reachable() {
             // Use compactMap to drop nil values and dropLast
             // to drop the assistant message from the context we are sending to the LLM
@@ -146,8 +144,6 @@ final class MessageViewModel: ObservableObject {
                 logger.error("Error canceling whisper: \(error)")
             }
         }
-
-        try? modelContext.saveChanges()
     }
 
     private func handleReceive(_ response: OKChatResponse) {
@@ -168,7 +164,6 @@ final class MessageViewModel: ObservableObject {
         messages.last?.error = true
         messages.last?.completed = false
 
-        try? modelContext.saveChanges()
         sendViewState = .error(message: errorMessage)
     }
 
@@ -178,12 +173,6 @@ final class MessageViewModel: ObservableObject {
 
         messages.last?.error = false
         messages.last?.completed = true
-
-        do {
-            try modelContext.saveChanges()
-        } catch {
-            logger.error("Error saving changes: \(error)")
-        }
 
         sendViewState = nil
     }
@@ -357,7 +346,7 @@ extension MessageViewModel {
             content: assistantContent, role: Role.assistant, chat: chat
         )
 
-        // Add the messages to the view model and save them to the database
+        // Add the messages to the view model
         messages.append(userMessage)
         messages.append(assistantMessage)
         modelContext.insert(userMessage)
@@ -366,12 +355,6 @@ extension MessageViewModel {
 
         Task {
             await self.autorename()
-        }
-
-        do {
-            try modelContext.saveChanges()
-        } catch {
-            logger.error("Error saving changes: \(error)")
         }
 
         sendViewState = nil
