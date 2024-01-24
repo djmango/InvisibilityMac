@@ -50,7 +50,7 @@ struct MessageView: View {
                     .generating(message.content == nil && isGenerating)
                     .finalMessage(index == messageViewModel.messages.endIndex - 1)
                     .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
-                    .audioStatus(messageViewModel.audioStatus)
+                    .audio(message.audio)
                     .id(message)
                 }
                 .onAppear {

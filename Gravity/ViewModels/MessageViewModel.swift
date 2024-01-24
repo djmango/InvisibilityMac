@@ -23,7 +23,6 @@ final class MessageViewModel: ObservableObject {
 
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
-    var audioStatus: AudioStatus?
 
     init(chat: Chat) {
         self.chat = chat
@@ -399,10 +398,7 @@ extension MessageViewModel {
             modelContext.insert(audio)
             message.audio = audio
 
-            audioStatus = AudioStatus()
-            guard let audioStatus else { return }
-
-            let delegate = WhisperHandler(audio: audio, audioStatus: audioStatus, messageViewModel: self)
+            let delegate = WhisperHandler(audio: audio, messageViewModel: self)
             await WhisperViewModel.shared.whisper?.delegate = delegate
             Task {
                 _ = try await WhisperViewModel.shared.whisper?.transcribe(audioFrames: audioFrames)

@@ -16,7 +16,7 @@ struct MessageListItemView: View {
     private var isFinalMessage: Bool = false
     private var isError: Bool = false
     private var errorMessage: String? = nil
-    private var audioStatus: AudioStatus? = nil
+    private var audio: Audio? = nil
 
     @State private var isImagePresented = false
 
@@ -90,12 +90,19 @@ struct MessageListItemView: View {
                 .hide(if: isGenerating, removeCompletely: true)
                 .hide(if: isError, removeCompletely: true)
 
-            if let audioStatus {
-                Text("\(audioStatus.progress * 100, specifier: "%.2f")%")
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(.accent)
-                // .hide(if: isGenerating, removeCompletely: true)
-                // .hide(if: isError, removeCompletely: true)
+            if let audio {
+                if audio.message?.id == message.id {
+                    AudioWidgetView()
+                        .padding(.top, 8)
+                        .hide(if: isGenerating, removeCompletely: true)
+                        .hide(if: isError, removeCompletely: true)
+
+                    Text("\(audio.progress * 100, specifier: "%.2f")%")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(.accent)
+                    // .hide(if: isGenerating, removeCompletely: true)
+                    // .hide(if: isError, removeCompletely: true)
+                }
             }
 
             if let images = message.images {
@@ -161,12 +168,12 @@ struct MessageListItemView: View {
         return view
     }
 
-    public func audioStatus(_ audioStatus: AudioStatus?) -> MessageListItemView {
-        guard let audioStatus else {
+    public func audio(_ audio: Audio?) -> MessageListItemView {
+        guard let audio else {
             return self
         }
         var view = self
-        view.audioStatus = audioStatus
+        view.audio = audio
 
         return view
     }

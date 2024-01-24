@@ -29,12 +29,6 @@ enum ModelRepository {
     )
 }
 
-class AudioStatus: ObservableObject {
-    @Published var completed: Bool = false
-    @Published var progress: Double = 0.0
-    @Published var audio: Audio?
-}
-
 class WhisperHandler: WhisperDelegate {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 
@@ -42,12 +36,10 @@ class WhisperHandler: WhisperDelegate {
 
     private let audio: Audio
 
-    @ObservedObject var audioStatus: AudioStatus
     @ObservedObject var messageViewModel: MessageViewModel
 
-    init(audio: Audio, audioStatus: AudioStatus, messageViewModel: MessageViewModel) {
+    init(audio: Audio, messageViewModel: MessageViewModel) {
         self.audio = audio
-        self.audioStatus = audioStatus
         self.messageViewModel = messageViewModel
     }
 
@@ -57,8 +49,6 @@ class WhisperHandler: WhisperDelegate {
         messageViewModel.sendViewState = nil
         audio.completed = true
         audio.progress = 1.0
-        audioStatus.completed = true
-        audioStatus.progress = 1.0
         Task {
             await self.messageViewModel.autorename()
         }
@@ -84,7 +74,6 @@ class WhisperHandler: WhisperDelegate {
     func whisper(_: Whisper, didUpdateProgress progress: Double) {
         logger.debug("Whisper didUpdateProgress: \(progress)")
         audio.progress = progress
-        audioStatus.progress = progress
     }
 }
 
