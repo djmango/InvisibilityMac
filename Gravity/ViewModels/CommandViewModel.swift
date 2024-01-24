@@ -48,25 +48,35 @@ final class CommandViewModel: ObservableObject {
         }
     }
 
-    @MainActor
-    func addChat(completion: @escaping (Chat?) -> Void = { _ in }) {
-        selectedChat = nil
+    func addChat() -> Chat? {
+        DispatchQueue.main.async {
+            self.selectedChat = nil
+        }
         let chat = Chat()
 
         let selectedModel = UserDefaults.standard.string(forKey: "selectedModel") ?? "mistral:latest"
         chat.model = OllamaViewModel.shared.fromName(selectedModel)
 
-        Task {
-            await runIfReachable {
-                do {
-                    try ChatViewModel.shared.create(chat)
-                    self.selectedChat = chat
-                    completion(chat)
-                } catch {
-                    AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not create chat")
-                    completion(nil)
-                }
+        do {
+            try ChatViewModel.shared.create(chat)
+            DispatchQueue.main.async {
+                self.selectedChat = chat
             }
+            return chat
+        } catch {
+            AlertViewModel.shared.doShowAlert(
+                title: AppMessages.couldNotCreateChatTitle,
+                message: AppMessages.couldNotCreateChatMessage
+            )
+            return nil
+        }
+    }
+
+    func getOrCreateChat() -> Chat? {
+        if let activeChat = selectedChat {
+            activeChat
+        } else {
+            addChat()
         }
     }
 

@@ -11,7 +11,6 @@ struct MessageView: View {
     private var chat: Chat
 
     @Environment(\.modelContext) private var modelContext: ModelContext
-    // @EnvironmentObject private var imageViewModel: ImageViewModel
 
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool
@@ -53,7 +52,6 @@ struct MessageView: View {
                     .finalMessage(index == messageViewModel.messages.endIndex - 1)
                     .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
                     .id(message)
-                    // .environmentObject(imageViewModel)
                 }
                 .onAppear {
                     scrollToBottom(scrollViewProxy)
@@ -71,7 +69,9 @@ struct MessageView: View {
                             .foregroundColor(addFileHovering ? Color.gray.opacity(0.2) : Color.clear) // Change color when hovered
                             .cornerRadius(8)
 
-                        Button(action: openFileAction) {
+                        Button(action: {
+                            messageViewModel.openFile()
+                        }) {
                             Image(systemName: "paperclip")
                                 .imageScale(.large)
                         }
@@ -127,11 +127,6 @@ struct MessageView: View {
                 handleDrop(providers: providers)
             }
             .copyable(selection.compactMap(\.content))
-            // .pasteDestination(for: URL.self) { urls in
-            //     guard let url = urls.first else { return }
-            //     messageViewModel.handleFile(url: url)
-            // }
-            .navigationTitle(chat.name)
             .task {
                 initAction()
             }
@@ -139,6 +134,8 @@ struct MessageView: View {
                 initAction()
             }
         }
+
+        .navigationTitle(chat.name)
     }
 
     // MARK: - Actions

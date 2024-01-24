@@ -266,20 +266,28 @@ extension MessageViewModel {
         if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
             // Check if it's an image type
             if fileType.conforms(to: .image) {
-                logger.debug("Selected file is an image.")
+                logger.debug("Selected file \(url) is an image.")
                 handleImage(url: url)
             }
             // Check if it's an audio or video type
             else if fileType.conforms(to: .audio) || fileType.conforms(to: .movie) {
-                logger.debug("Selected file is an audio or video.")
+                if !isValidAudioFile(url: url) {
+                    logger.error("Selected file \(url) is not a valid audio file.")
+                    AlertViewModel.shared.doShowAlert(
+                        title: AppMessages.invalidAudioFileTitle,
+                        message: AppMessages.invalidAudioFileMessage
+                    )
+                    return
+                }
+                logger.debug("Selected file \(url) is an audio or video.")
                 Task {
                     await self.handleAudio(url: url)
                 }
             } else {
-                logger.error("Selected file is of an unknown type.")
+                logger.error("Selected file \(url) is of an unknown type.")
                 AlertViewModel.shared.doShowAlert(
                     title: "Unknown file type",
-                    message: "The selected file is of an unknown type."
+                    message: "The selected file \(url) is of an unknown type."
                 )
             }
         }

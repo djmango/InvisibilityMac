@@ -19,4 +19,9 @@ enum AppMessages {
     static let modelNotDownloadedTitle = "Model not downloaded"
     static let modelNotDownloadedMessage =
         "Please wait for the model to finish downloading.\n\nIf this is taking too long, wipe the models in settings and try again."
+    static let couldNotCreateChatTitle = "Could not create chat"
+    static let couldNotCreateChatMessage = "Please try again later."
+
+    static let invalidAudioFileTitle = "No audio found"
+    static let invalidAudioFileMessage = "File does not appear to have any audio."
 }

@@ -1,4 +1,5 @@
 import OllamaKit
+import os
 import SettingsKit
 import Sparkle
 import SwiftData
@@ -7,6 +8,8 @@ import TelemetryClient
 
 @main
 struct GravityApp: App {
+    private let logger = Logger(subsystem: "ai.grav.app", category: "GravityApp")
+
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     private var updater: SPUUpdater
@@ -65,22 +68,16 @@ struct GravityApp: App {
                 .pasteDestination(for: URL.self) { urls in
                     guard let url = urls.first else { return }
 
-                    if let activeChat = CommandViewModel.shared.selectedChat {
+                    if let activeChat = CommandViewModel.shared.getOrCreateChat() {
                         MessageViewModelManager.shared.viewModel(for: activeChat).handleFile(url: url)
                     } else {
-                        CommandViewModel.shared.addChat { chat in
-                            if let activeChat = chat {
-                                MessageViewModelManager.shared.viewModel(for: activeChat).handleFile(url: url)
-                            } else {
-                                AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not open new chat")
-                            }
-                        }
+                        logger.error("Could not create chat")
                     }
                 }
 
             // .environmentObject(imageViewModel)
         }
-        .windowStyle(HiddenTitleBarWindowStyle())
+        .windowToolbarStyle(.unified(showsTitle: false))
         .modelContainer(SharedModelContainer.shared.modelContainer)
         .commands {
             CommandGroup(after: .appInfo) {
@@ -92,23 +89,17 @@ struct GravityApp: App {
 
             CommandGroup(replacing: .newItem) {
                 Button("New Chat") {
-                    CommandViewModel.shared.addChat()
+                    _ = CommandViewModel.shared.addChat()
                 }
                 .keyboardShortcut("n", modifiers: .command)
             }
 
             CommandGroup(after: .newItem) {
                 Button("Open File") {
-                    if let activeChat = CommandViewModel.shared.selectedChat {
+                    if let activeChat = CommandViewModel.shared.getOrCreateChat() {
                         MessageViewModelManager.shared.viewModel(for: activeChat).openFile()
                     } else {
-                        CommandViewModel.shared.addChat { chat in
-                            if let activeChat = chat {
-                                MessageViewModelManager.shared.viewModel(for: activeChat).openFile()
-                            } else {
-                                AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not open new chat")
-                            }
-                        }
+                        logger.error("Could not create chat")
                     }
                 }
                 .keyboardShortcut("o", modifiers: .command)

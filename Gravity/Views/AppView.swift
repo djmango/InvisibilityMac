@@ -5,7 +5,6 @@ import ViewState
 struct AppView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "AppView")
 
-    // @EnvironmentObject private var imageViewModel: ImageViewModel
     @ObservedObject private var alertViewModel = AlertViewModel.shared
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
@@ -24,7 +23,7 @@ struct AppView: View {
                             Spacer()
 
                             Button(action: {
-                                CommandViewModel.shared.addChat()
+                                _ = CommandViewModel.shared.addChat()
                             }) {
                                 Text("New Chat")
                                     .font(.system(size: 18))
@@ -39,7 +38,7 @@ struct AppView: View {
                             .padding()
                             .focusable(false)
                             .onTapGesture(perform: {
-                                CommandViewModel.shared.addChat()
+                                _ = CommandViewModel.shared.addChat()
                             })
                             .onHover { hovering in
                                 if hovering {
@@ -48,11 +47,6 @@ struct AppView: View {
                                     NSCursor.pop()
                                 }
                             }
-
-                            // .conditionalEffect(
-                            //     .glow(color: .white, radius: 10),
-                            //     condition: true
-                            // )
 
                             Spacer()
 
@@ -81,11 +75,50 @@ struct AppView: View {
                     }
                 }
 
-                // if let image = imageViewModel.getImage() {
-                //     ExpandedImageView(nsImage: image, onDismiss: {
-                //         imageViewModel.clearImage()
-                //     })
-                // }
+                .toolbar {
+                    // ToolbarItem(placement: .primaryAction) {
+                    //     Button(action: {
+                    //         _ = CommandViewModel.shared.addChat()
+                    //     }) {
+                    //         Label("New Chat", systemImage: "square.and.pencil")
+                    //     }
+                    //     .buttonStyle(.accessoryBar)
+                    //     .help("New Chat (⌘ + N)")
+                    // }
+
+                    // ToolbarItemGroup(placement: .automatic) {
+                    //     Button(action: {
+                    //         isRestarting = true
+                    //         Task {
+                    //             do {
+                    //                 try await OllamaKit.shared.waitForAPI(restart: true)
+                    //                 isRestarting = false
+                    //             } catch {
+                    //                 AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not restart models. Please try again.")
+                    //             }
+                    //         }
+                    //     }) {
+                    //         Label("Restart Models", systemImage: "arrow.clockwise")
+                    //             .rotationEffect(.degrees(isRestarting ? 360 : 0))
+                    //             .animation(isRestarting ? .linear(duration: 1).repeatForever(autoreverses: false) : .default, value: isRestarting)
+                    //     }
+                    //     .buttonStyle(.accessoryBar)
+                    //     .help("Restart Models")
+
+                    //     Button(action: {
+                    //         if let chat = CommandViewModel.shared.getOrCreateChat() {
+                    //             MessageViewModelManager.shared.viewModel(for: chat).openFile()
+                    //         } else {
+                    //             logger.error("Could not create chat")
+                    //         }
+                    //     }) {
+                    //         Label("Open File", systemImage: "square.and.arrow.down")
+                    //     }
+                    //     .buttonStyle(.accessoryBar)
+                    //     .help("Open File (⌘ + O)")
+                    // }
+                    ToolbarView()
+                }
             } else {
                 OnboardingView()
             }

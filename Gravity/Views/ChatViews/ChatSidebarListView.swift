@@ -1,11 +1,8 @@
-import OllamaKit
 import Pow
 import SwiftUI
 import ViewCondition
 
 struct ChatSidebarListView: View {
-    @State private var isRestarting = false
-
     private var todayChats: [Chat] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -47,14 +44,6 @@ struct ChatSidebarListView: View {
                             ChatContextMenu(for: chat)
                         }
                         .tag(chat)
-                    // .transition(
-                    //     .asymmetric(
-                    //         insertion: .identity
-                    //             .animation(.linear(duration: 1).delay(2))
-                    //             .combined(with: .movingParts.anvil),
-                    //         removal: .identity
-                    //     )
-                    // )
                 }
             }
             .hide(if: todayChats.isEmpty, removeCompletely: true)
@@ -81,37 +70,10 @@ struct ChatSidebarListView: View {
             }
             .hide(if: previousDays.isEmpty, removeCompletely: true)
         }
+        .frame(width: 260)
         .listStyle(.sidebar)
         .task {
             try? ChatViewModel.shared.fetch()
-        }
-        .toolbar {
-            ToolbarItemGroup {
-                Spacer()
-
-                Button(action: {
-                    isRestarting = true
-                    Task {
-                        do {
-                            try await OllamaKit.shared.waitForAPI(restart: true)
-                            isRestarting = false
-                        } catch {
-                            AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not restart models. Please try again.")
-                        }
-                    }
-                }) {
-                    Label("Restart Models", systemImage: "arrow.clockwise")
-                        .rotationEffect(.degrees(isRestarting ? 360 : 0))
-                        .animation(isRestarting ? .linear(duration: 1).repeatForever(autoreverses: false) : .default, value: isRestarting)
-                }
-                .help("Restart Models")
-
-                Button("New Chat", systemImage: "square.and.pencil") {
-                    CommandViewModel.shared.addChat()
-                }
-                .buttonStyle(.accessoryBar)
-                .help("New Chat (⌘ + N)")
-            }
         }
         .sheet(
             isPresented: $commandViewModelBindable.isRenameChatViewPresented
