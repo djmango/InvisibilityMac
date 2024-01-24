@@ -26,6 +26,8 @@ struct GeneralSettingsView: View {
     @Query var chats: [Chat]
     @Query var messages: [Message]
     @Query var ollamaModels: [OllamaModel]
+    @Query var audios: [Audio]
+    @Query var audioSegments: [AudioSegment]
 
     var body: some View {
         VStack(alignment: .center) {
@@ -96,6 +98,14 @@ struct GeneralSettingsView: View {
                             logger.debug("Deleting ollamaModel: \(ollamaModel.name)")
                             context.delete(ollamaModel)
                         }
+                        for audio in audios {
+                            logger.debug("Deleting audio: \(audio.name ?? "")")
+                            context.delete(audio)
+                        }
+                        for audioSegment in audioSegments {
+                            logger.debug("Deleting audioSegment: \(audioSegment.text)")
+                            context.delete(audioSegment)
+                        }
 
                         // Reset settings
                         autoLaunch = false
@@ -105,12 +115,6 @@ struct GeneralSettingsView: View {
 
                         // Reset onboarding
                         onboardingViewed = false
-
-                        do {
-                            try context.save()
-                        } catch {
-                            logger.error("Error saving context: \(error.localizedDescription)")
-                        }
 
                         // Wipe models
                         OllamaViewModel.shared.wipeOllama()

@@ -1,5 +1,6 @@
 import CoreGraphics
 import MarkdownUI
+import SwiftData
 import SwiftUI
 import ViewCondition
 
@@ -15,6 +16,7 @@ struct MessageListItemView: View {
     private var isFinalMessage: Bool = false
     private var isError: Bool = false
     private var errorMessage: String? = nil
+    private var audioStatus: AudioStatus? = nil
 
     @State private var isImagePresented = false
 
@@ -88,6 +90,14 @@ struct MessageListItemView: View {
                 .hide(if: isGenerating, removeCompletely: true)
                 .hide(if: isError, removeCompletely: true)
 
+            if let audioStatus {
+                Text("\(audioStatus.progress * 100, specifier: "%.2f")%")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(.accent)
+                // .hide(if: isGenerating, removeCompletely: true)
+                // .hide(if: isError, removeCompletely: true)
+            }
+
             if let images = message.images {
                 HStack(alignment: .center, spacing: 8) {
                     ForEach(images, id: \.self) { imageData in
@@ -97,10 +107,6 @@ struct MessageListItemView: View {
                                 .scaledToFit()
                                 // https://developer.apple.com/documentation/swiftui/view/frame(minwidth:idealwidth:maxwidth:minheight:idealheight:maxheight:alignment:)
                                 .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
-                                // .onTapGesture {
-                                //     imageViewModel.setImage(image: nsImage)
-                                //     isImagePresented = true
-                                // }
                                 .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
                                 .shadow(radius: 2)
                         }
@@ -151,6 +157,16 @@ struct MessageListItemView: View {
     public func generating(_ isGenerating: Bool) -> MessageListItemView {
         var view = self
         view.isGenerating = isGenerating
+
+        return view
+    }
+
+    public func audioStatus(_ audioStatus: AudioStatus?) -> MessageListItemView {
+        guard let audioStatus else {
+            return self
+        }
+        var view = self
+        view.audioStatus = audioStatus
 
         return view
     }

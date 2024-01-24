@@ -20,6 +20,8 @@
 		4D596AA82B5F2D2F00B9E765 /* llama in Frameworks */ = {isa = PBXBuildFile; productRef = 4D596AA72B5F2D2F00B9E765 /* llama */; };
 		4D596AAA2B60833E00B9E765 /* ToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AA92B60833E00B9E765 /* ToolbarView.swift */; };
 		4D596AAC2B6085FD00B9E765 /* AudioUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AAB2B6085FD00B9E765 /* AudioUtils.swift */; };
+		4D596AAF2B6197F700B9E765 /* AudioWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AAE2B6197F700B9E765 /* AudioWidgetView.swift */; };
+		4D596AB12B61997100B9E765 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AB02B61997100B9E765 /* Audio.swift */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D785D7D2B53633200FBCE1A /* ModelWarmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */; };
@@ -69,6 +71,7 @@
 		4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */; };
 		4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673522B17F46B00A5F9AE /* OllamaKit */; };
 		4DEF3F342B491CE200256ADE /* ollama-darwin in Resources */ = {isa = PBXBuildFile; fileRef = 4DEF3F332B491CE200256ADE /* ollama-darwin */; };
+		4DF981BE2B61B1910047E292 /* MessageListItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF981BD2B61B1910047E292 /* MessageListItemViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +85,8 @@
 		4D596AA12B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleTextFieldStyle.swift; sourceTree = "<group>"; };
 		4D596AA92B60833E00B9E765 /* ToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarView.swift; sourceTree = "<group>"; };
 		4D596AAB2B6085FD00B9E765 /* AudioUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUtils.swift; sourceTree = "<group>"; };
+		4D596AAE2B6197F700B9E765 /* AudioWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWidgetView.swift; sourceTree = "<group>"; };
+		4D596AB02B61997100B9E765 /* Audio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWarmer.swift; sourceTree = "<group>"; };
@@ -122,6 +127,7 @@
 		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
+		4DF981BD2B61B1910047E292 /* MessageListItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListItemViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,6 +200,14 @@
 			path = Styles;
 			sourceTree = "<group>";
 		};
+		4D596AAD2B6197E200B9E765 /* AudioViews */ = {
+			isa = PBXGroup;
+			children = (
+				4D596AAE2B6197F700B9E765 /* AudioWidgetView.swift */,
+			);
+			path = AudioViews;
+			sourceTree = "<group>";
+		};
 		4D8E05272B2516DE00B60D0D /* Gravity */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +235,7 @@
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 				4D0B52E32B590213008D975D /* AlertViewModel.swift */,
 				4D3D050F2B59D536009340ED /* WhisperViewModel.swift */,
+				4DF981BD2B61B1910047E292 /* MessageListItemViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -262,6 +277,7 @@
 		4D8E05362B2516DE00B60D0D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4D596AB02B61997100B9E765 /* Audio.swift */,
 				4D8E05372B2516DE00B60D0D /* Chat.swift */,
 				4D8E05382B2516DE00B60D0D /* Message.swift */,
 				4D8E05392B2516DE00B60D0D /* OllamaModel.swift */,
@@ -289,6 +305,7 @@
 		4D8E053E2B2516DE00B60D0D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4D596AAD2B6197E200B9E765 /* AudioViews */,
 				4DA893AE2B54C44200560DAD /* OnboardingViews */,
 				4DD282DA2B4DEF6E0041690B /* SettingViews */,
 				4D8E053F2B2516DE00B60D0D /* ChatViews */,
@@ -470,6 +487,7 @@
 				4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D9348CA2B5B24C800D57BC2 /* DownloadManager.swift in Sources */,
+				4DF981BE2B61B1910047E292 /* MessageListItemViewModel.swift in Sources */,
 				4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */,
 				4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */,
 				4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */,
@@ -477,6 +495,7 @@
 				4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */,
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D596AAA2B60833E00B9E765 /* ToolbarView.swift in Sources */,
+				4D596AB12B61997100B9E765 /* Audio.swift in Sources */,
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,
 				4DD282E32B4E05B80041690B /* AdvancedSettingsView.swift in Sources */,
 				4D3D05102B59D536009340ED /* WhisperViewModel.swift in Sources */,
@@ -495,6 +514,7 @@
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
 				4DA893B82B54F04C00560DAD /* OnboardingDownloadView.swift in Sources */,
+				4D596AAF2B6197F700B9E765 /* AudioWidgetView.swift in Sources */,
 				4D596AAC2B6085FD00B9E765 /* AudioUtils.swift in Sources */,
 				4D8E055B2B2516DE00B60D0D /* ChatContextMenu.swift in Sources */,
 				4D8E055A2B2516DE00B60D0D /* RenameChatView.swift in Sources */,

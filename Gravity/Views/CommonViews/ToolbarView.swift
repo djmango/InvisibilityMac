@@ -15,7 +15,7 @@ struct ToolbarView: ToolbarContent {
     @State private var isRestarting = false
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .primaryAction) {
+        ToolbarItem(placement: .navigation) {
             Button(action: {
                 _ = CommandViewModel.shared.addChat()
             }) {
@@ -25,7 +25,8 @@ struct ToolbarView: ToolbarContent {
             .help("New Chat (⌘ + N)")
         }
 
-        ToolbarItemGroup(placement: .automatic) {
+        ToolbarItemGroup(placement: .primaryAction) {
+            Spacer()
             Button(action: {
                 isRestarting = true
                 Task {

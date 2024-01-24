@@ -5,21 +5,12 @@
 //  Created by Sulaiman Ghori on 1/18/24.
 //
 
-import AudioKit
 import Combine
 import Foundation
 import os
 import SwiftData
 import SwiftUI
 import SwiftWhisper
-
-class AudioStatus: ObservableObject {
-    @Published var completed: Bool = false
-    @Published var progress: Double = 0.0
-    @Published var segments: [Segment] = []
-    @Published var text: String = ""
-    @Published var message: Message? = nil
-}
 
 struct ModelInfo {
     let url: URL
@@ -38,75 +29,61 @@ enum ModelRepository {
     )
 }
 
-func convertAudioFileToPCMArray(fileURL: URL) async throws -> [Float] {
-    var options = FormatConverter.Options()
-    options.format = .wav
-    options.sampleRate = 16000
-    options.bitDepth = 16
-    options.channels = 1
-    options.isInterleaved = false
-
-    let tempURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
-    let converter = FormatConverter(inputURL: fileURL, outputURL: tempURL, options: options)
-
-    converter.start()
-
-    let data = try Data(contentsOf: tempURL)
-
-    let floats = stride(from: 44, to: data.count, by: 2).map {
-        data[$0 ..< $0 + 2].withUnsafeBytes {
-            let short = Int16(littleEndian: $0.load(as: Int16.self))
-            return max(-1.0, min(Float(short) / 32767.0, 1.0))
-        }
-    }
-
-    try? FileManager.default.removeItem(at: tempURL)
-
-    return floats
+class AudioStatus: ObservableObject {
+    @Published var completed: Bool = false
+    @Published var progress: Double = 0.0
+    @Published var audio: Audio?
 }
 
 class WhisperHandler: WhisperDelegate {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
+
+    private let modelContext = SharedModelContainer.shared.mainContext
+
+    private let audio: Audio
+
     @ObservedObject var audioStatus: AudioStatus
     @ObservedObject var messageViewModel: MessageViewModel
 
-    init(audioStatus: AudioStatus, messageViewModel: MessageViewModel) {
+    init(audio: Audio, audioStatus: AudioStatus, messageViewModel: MessageViewModel) {
+        self.audio = audio
         self.audioStatus = audioStatus
         self.messageViewModel = messageViewModel
     }
 
+    @MainActor
     func whisper(_: Whisper, didCompleteWithSegments segments: [Segment]) {
         logger.debug("Whisper didCompleteWithSegments: \(segments)")
-        audioStatus.segments = segments
+        messageViewModel.sendViewState = nil
+        audio.completed = true
+        audio.progress = 1.0
         audioStatus.completed = true
         audioStatus.progress = 1.0
-        audioStatus.message?.done = true
-        DispatchQueue.main.async { [weak self] in
-            self?.messageViewModel.sendViewState = nil
+        Task {
+            await self.messageViewModel.autorename()
         }
     }
 
     func whisper(_: Whisper, didErrorWith error: Error) {
         logger.error("Whisper didErrorWith: \(error)")
+        audio.error = true
+        DispatchQueue.main.async {
+            self.messageViewModel.sendViewState = .error(message: error.localizedDescription)
+        }
     }
 
     func whisper(_: Whisper, didProcessNewSegments segments: [Segment], atIndex index: Int) {
         logger.debug("Whisper didProcessNewSegments: \(segments) at index \(index)")
-        audioStatus.segments.append(contentsOf: segments)
-        for segment in segments {
-            audioStatus.text += segment.text
-            if audioStatus.message != nil {
-                if audioStatus.message?.content == nil { audioStatus.message?.content = "" }
-
-                DispatchQueue.main.async { [weak self] in
-                    self?.audioStatus.message?.content? += segment.text
-                }
-            }
+        let audioSegments = AudioSegment.fromSegments(segments: segments, audio: audio)
+        for audioSegment in audioSegments {
+            modelContext.insert(audioSegment)
         }
     }
 
+    @MainActor
     func whisper(_: Whisper, didUpdateProgress progress: Double) {
         logger.debug("Whisper didUpdateProgress: \(progress)")
+        audio.progress = progress
         audioStatus.progress = progress
     }
 }

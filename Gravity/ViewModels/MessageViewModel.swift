@@ -23,6 +23,7 @@ final class MessageViewModel: ObservableObject {
 
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
+    var audioStatus: AudioStatus?
 
     init(chat: Chat) {
         self.chat = chat
@@ -166,7 +167,7 @@ final class MessageViewModel: ObservableObject {
         if messages.isEmpty { return }
 
         messages.last?.error = true
-        messages.last?.done = false
+        messages.last?.completed = false
 
         try? modelContext.saveChanges()
         sendViewState = .error(message: errorMessage)
@@ -177,7 +178,7 @@ final class MessageViewModel: ObservableObject {
         if messages.isEmpty { return }
 
         messages.last?.error = false
-        messages.last?.done = true
+        messages.last?.completed = true
 
         do {
             try modelContext.saveChanges()
@@ -263,6 +264,7 @@ extension MessageViewModel {
     /// Public function that handles the file after it has been selected
     func handleFile(url: URL) {
         // First determine if we are dealing with an image or audio file
+        logger.debug("Selected file \(url)")
         if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
             // Check if it's an image type
             if fileType.conforms(to: .image) {
@@ -363,6 +365,10 @@ extension MessageViewModel {
         modelContext.insert(assistantMessage)
         lastOpenedImage = nil
 
+        Task {
+            await self.autorename()
+        }
+
         do {
             try modelContext.saveChanges()
         } catch {
@@ -377,32 +383,29 @@ extension MessageViewModel {
         do {
             sendViewState = .loading
 
-            // Add the messages to the view model
-            let userMessage = Message(
+            // Add the message to the view model
+            let message = Message(
                 content: "Hi this is where audio player will go but not today it will go here later probably",
                 role: Role.user,
                 chat: chat
             )
-            let assistantMessage = Message(content: nil, role: Role.assistant, chat: chat)
 
-            messages.append(userMessage)
-            messages.append(assistantMessage)
-            modelContext.insert(userMessage)
-            modelContext.insert(assistantMessage)
+            messages.append(message)
+            modelContext.insert(message)
 
-            let audioFrames = try await convertAudioFileToPCMArray(fileURL: url)
-            let audioStatus = AudioStatus()
-            audioStatus.message = assistantMessage
-            let delegate = WhisperHandler(audioStatus: audioStatus, messageViewModel: self)
+            // Convert the audio file to a wav file and an array of PCM audio frames
+            let (data, audioFrames) = try await convertAudioFileToWavAndPCMArray(fileURL: url)
+            let audio = Audio(audioFile: data)
+            modelContext.insert(audio)
+            message.audio = audio
+
+            audioStatus = AudioStatus()
+            guard let audioStatus else { return }
+
+            let delegate = WhisperHandler(audio: audio, audioStatus: audioStatus, messageViewModel: self)
             await WhisperViewModel.shared.whisper?.delegate = delegate
             Task {
                 _ = try await WhisperViewModel.shared.whisper?.transcribe(audioFrames: audioFrames)
-            }
-
-            do {
-                try modelContext.saveChanges()
-            } catch {
-                logger.error("Error saving changes: \(error)")
             }
 
         } catch {
