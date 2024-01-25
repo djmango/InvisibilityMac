@@ -72,10 +72,6 @@ struct ChatSidebarListView: View {
             }
             .hide(if: previousDays.isEmpty, removeCompletely: true)
         }
-        .onChange(of: commandViewModelBindable.selectedChat) {
-            tabViewModel.selectedTab = 0
-            tabViewModel.tabs = ["Messages"]
-        }
         .frame(width: 260)
         .listStyle(.sidebar)
         .task {

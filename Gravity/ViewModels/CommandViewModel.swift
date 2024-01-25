@@ -44,7 +44,7 @@ final class CommandViewModel: ObservableObject {
         if await OllamaKit.shared.reachable() {
             await function()
         } else {
-            AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not connect to Ollama")
+            AlertManager.shared.doShowAlert(title: "Error", message: "Could not connect to Ollama")
         }
     }
 
@@ -64,7 +64,7 @@ final class CommandViewModel: ObservableObject {
             }
             return chat
         } catch {
-            AlertViewModel.shared.doShowAlert(
+            AlertManager.shared.doShowAlert(
                 title: AppMessages.couldNotCreateChatTitle,
                 message: AppMessages.couldNotCreateChatMessage
             )

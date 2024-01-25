@@ -13,6 +13,7 @@ struct ToolbarView: ToolbarContent {
     private let logger = Logger(subsystem: "ai.grav.app", category: "ToolbarView")
 
     @StateObject private var tabViewModel = TabViewModel.shared
+    @StateObject private var audioPlayerViewModel = AudioPlayerViewModel.shared
     @State private var isRestarting = false
 
     var messageViewModel: MessageViewModel? {
@@ -23,7 +24,7 @@ struct ToolbarView: ToolbarContent {
     }
 
     var body: some ToolbarContent {
-        ToolbarItem(placement: .navigation) {
+        ToolbarItemGroup(placement: .navigation) {
             Button(action: {
                 _ = CommandViewModel.shared.addChat()
             }) {
@@ -31,6 +32,34 @@ struct ToolbarView: ToolbarContent {
             }
             .buttonStyle(.accessoryBar)
             .help("New Chat (⌘ + N)")
+
+            if audioPlayerViewModel.audio != nil {
+                Button(action: {
+                    if audioPlayerViewModel.isPlaying {
+                        audioPlayerViewModel.pause()
+                    } else {
+                        audioPlayerViewModel.playOrResume()
+                    }
+                }) {
+                    Label(
+                        audioPlayerViewModel.isPlaying ? "Pause" : "Play",
+                        systemImage: audioPlayerViewModel.isPlaying ? "pause.fill" : "play.fill"
+                    )
+                    .animation(.bouncy, value: audioPlayerViewModel.isPlaying)
+                }
+                .buttonStyle(.accessoryBar)
+                .help(audioPlayerViewModel.isPlaying ? "Pause" : "Play")
+
+                if audioPlayerViewModel.player != nil {
+                    Button(action: {
+                        audioPlayerViewModel.stop()
+                    }) {
+                        Label("Stop", systemImage: "stop.fill")
+                    }
+                    .buttonStyle(.accessoryBar)
+                    .help("Stop")
+                }
+            }
         }
 
         ToolbarItem(placement: .principal) {
@@ -62,7 +91,7 @@ struct ToolbarView: ToolbarContent {
                         try await OllamaKit.shared.waitForAPI(restart: true)
                         isRestarting = false
                     } catch {
-                        AlertViewModel.shared.doShowAlert(title: "Error", message: "Could not restart models. Please try again.")
+                        AlertManager.shared.doShowAlert(title: "Error", message: "Could not restart models. Please try again.")
                     }
                 }
             }) {

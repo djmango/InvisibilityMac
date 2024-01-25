@@ -8,13 +8,16 @@
 import AudioKit
 import AVFoundation
 import Foundation
+import os
+
+private let logger = Logger(subsystem: "ai.grav.app", category: "AudioUtils")
 
 func isValidAudioFile(url: URL) -> Bool {
     do {
         let _ = try AVAudioFile(forReading: url)
         return true
     } catch {
-        print("Error: \(error.localizedDescription)")
+        logger.error("Error: \(error.localizedDescription)")
         return false
     }
 }

@@ -9,8 +9,8 @@ import Combine
 import Foundation
 import SwiftUI
 
-class AlertViewModel: ObservableObject {
-    static let shared = AlertViewModel()
+class AlertManager: ObservableObject {
+    static let shared = AlertManager()
 
     @Published var showAlert: Bool = false
     @Published var alertTitle: String = ""

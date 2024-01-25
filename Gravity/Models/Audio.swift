@@ -31,8 +31,6 @@ final class Audio: Identifiable {
     var progress: Double = 0.0
     /// Whether the audio processing has errored
     var error: Bool = false
-    /// The last segment text of the audio
-    var lastSegmentText: String?
     /// The text of the last segment of the audio
     @Attribute(.externalStorage) var segmentsData: Data?
 

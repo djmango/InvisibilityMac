@@ -57,7 +57,7 @@ struct GravityApp: App {
 
         OllamaKit.shared.runBinaryInBackground(withArguments: ["serve"], forceKill: true)
         Task {
-            await WhisperViewModel.shared.setup()
+            await WhisperManager.shared.setup()
         }
     }
 

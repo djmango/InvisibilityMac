@@ -122,8 +122,8 @@ class WhisperHandler: WhisperDelegate {
     }
 }
 
-final class WhisperViewModel {
-    static let shared = WhisperViewModel()
+final class WhisperManager {
+    static let shared = WhisperManager()
 
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 

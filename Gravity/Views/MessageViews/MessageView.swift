@@ -21,7 +21,6 @@ struct MessageView: View {
     @State private var content: String = ""
     @State private var isDragActive: Bool = false
     @State private var selection: [Message] = []
-    @State private var shownAudio: Audio? = nil
 
     init(for chat: Chat) {
         self.chat = chat
@@ -72,7 +71,7 @@ struct MessageView: View {
                         scrollToBottom(scrollViewProxy)
                     }
                 } else {
-                    AudioTranscriptView(audio: shownAudio)
+                    AudioTranscriptView(audio: AudioPlayerViewModel.shared.audio)
                 }
 
                 HStack(alignment: .center) {
@@ -130,6 +129,18 @@ struct MessageView: View {
         CommandViewModel.shared.selectedChat = chat
 
         isEditorFocused = true
+        promptFocused = true
+
+        tabViewModel.selectedTab = 0
+        AudioPlayerViewModel.shared.stop()
+        let messageViewModel = MessageViewModelManager.shared.viewModel(for: chat)
+        if messageViewModel.messages.contains(where: { $0.audio != nil }) {
+            // Set audioplayer audio to the first audio file in the chat.
+            AudioPlayerViewModel.shared.audio = messageViewModel.messages.first(where: { $0.audio != nil })?.audio
+            print("Audio files in chat")
+        } else {
+            print("No audio files in chat")
+        }
     }
 
     private func sendAction() {
@@ -140,9 +151,9 @@ struct MessageView: View {
         guard OllamaViewModel.shared.mistralDownloadStatus == .complete ||
             OllamaViewModel.shared.mistralDownloadStatus == .offline
         else {
-            AlertViewModel.shared.alertTitle = AppMessages.modelNotDownloadedTitle
-            AlertViewModel.shared.alertMessage = AppMessages.modelNotDownloadedMessage
-            AlertViewModel.shared.showAlert = true
+            AlertManager.shared.alertTitle = AppMessages.modelNotDownloadedTitle
+            AlertManager.shared.alertMessage = AppMessages.modelNotDownloadedMessage
+            AlertManager.shared.showAlert = true
             return
         }
 
@@ -167,8 +178,7 @@ struct MessageView: View {
 
     @MainActor
     private func audioAction(for audio: Audio) {
-        shownAudio = audio
-        tabViewModel.tabs = ["Messages", "Audio Transcript"]
+        AudioPlayerViewModel.shared.audio = audio
         tabViewModel.selectedTab = 1
     }
 

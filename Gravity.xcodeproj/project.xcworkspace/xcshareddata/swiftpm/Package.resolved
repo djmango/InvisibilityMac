@@ -60,7 +60,7 @@
       "location" : "https://github.com/ggerganov/llama.cpp.git",
       "state" : {
         "branch" : "master",
-        "revision" : "011e8ec577fd135cbc02993d3ea9840c516d6a1c"
+        "revision" : "cd4fddb29f81d6a1f6d51a0c016bc6b486d68def"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/djmango/OllamaKit",
       "state" : {
         "branch" : "master",
-        "revision" : "3a4131d5efddf5da053bc9a329d9db1f6b9699ed"
+        "revision" : "2b23544b8c72f5ac0dbf517c94f7e62c3bca86a6"
       }
     },
     {
@@ -186,7 +186,7 @@
       "location" : "https://github.com/ggerganov/whisper.cpp",
       "state" : {
         "branch" : "master",
-        "revision" : "d6b9be21d76b91a96bb987063b25e5b532140253"
+        "revision" : "1cf679dec4eca99aeaed4fe09a8092803bdecfc1"
       }
     }
   ],

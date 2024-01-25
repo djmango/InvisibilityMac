@@ -5,7 +5,7 @@ import ViewState
 struct AppView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "AppView")
 
-    @ObservedObject private var alertViewModel = AlertViewModel.shared
+    @ObservedObject private var alertViewModel = AlertManager.shared
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 

@@ -138,7 +138,7 @@ final class MessageViewModel: ObservableObject {
         generation?.cancel()
         Task {
             do {
-                try await WhisperViewModel.shared.whisper?.cancel()
+                try await WhisperManager.shared.whisper?.cancel()
             } catch {
                 logger.error("Error canceling whisper: \(error)")
             }
@@ -262,7 +262,7 @@ extension MessageViewModel {
             else if fileType.conforms(to: .audio) || fileType.conforms(to: .movie) {
                 if !isValidAudioFile(url: url) {
                     logger.error("Selected file \(url) is not a valid audio file.")
-                    AlertViewModel.shared.doShowAlert(
+                    AlertManager.shared.doShowAlert(
                         title: AppMessages.invalidAudioFileTitle,
                         message: AppMessages.invalidAudioFileMessage
                     )
@@ -274,7 +274,7 @@ extension MessageViewModel {
                 }
             } else {
                 logger.error("Selected file \(url) is of an unknown type.")
-                AlertViewModel.shared.doShowAlert(
+                AlertManager.shared.doShowAlert(
                     title: "Unknown file type",
                     message: "The selected file \(url) is of an unknown type."
                 )
@@ -378,11 +378,12 @@ extension MessageViewModel {
             let audio = Audio(audioFile: data)
             modelContext.insert(audio)
             message.audio = audio
+            AudioPlayerViewModel.shared.audio = audio
 
             let delegate = WhisperHandler(audio: audio, messageViewModel: self)
-            await WhisperViewModel.shared.whisper?.delegate = delegate
+            await WhisperManager.shared.whisper?.delegate = delegate
             Task {
-                _ = try await WhisperViewModel.shared.whisper?.transcribe(audioFrames: audioFrames)
+                _ = try await WhisperManager.shared.whisper?.transcribe(audioFrames: audioFrames)
             }
 
         } catch {
