@@ -2,33 +2,17 @@ import Foundation
 import SwiftData
 import SwiftWhisper
 
-@Model
-final class AudioSegment: Identifiable {
-    /// Unique identifier for the audio segment
-    @Attribute(.unique) var id: UUID = UUID()
-    /// Index of the segment in the audio
-    @Attribute var index: Int
+struct AudioSegment: Codable {
     /// The end time of the segment in milliseconds
     @Attribute let endTime: Int
     /// The start time of the segment in milliseconds
     @Attribute let startTime: Int
     /// The text of the segment
     @Attribute let text: String
-    /// The audio the segment belongs to
-    @Relationship var audio: Audio
 
-    init(index: Int, endTime: Int, startTime: Int, text: String, audio: Audio) {
-        self.index = index
-        self.endTime = endTime
-        self.startTime = startTime
-        self.text = text
-        self.audio = audio
-    }
-
-    /// Create an array of `AudioSegment` from an array of `Segment`
-    static func fromSegments(segments: [Segment], audio: Audio) -> [AudioSegment] {
-        segments.enumerated().map { index, segment in
-            AudioSegment(index: index, endTime: segment.endTime, startTime: segment.startTime, text: segment.text, audio: audio)
+    static func fromSegments(segments: [Segment]) -> [AudioSegment] {
+        segments.map { segment in
+            AudioSegment(endTime: segment.endTime, startTime: segment.startTime, text: segment.text)
         }
     }
 }
@@ -47,8 +31,22 @@ final class Audio: Identifiable {
     var progress: Double = 0.0
     /// Whether the audio processing has errored
     var error: Bool = false
-    /// The segments of the audio
-    @Relationship(deleteRule: .cascade, inverse: \AudioSegment.audio) var segments: [AudioSegment] = []
+    /// The last segment text of the audio
+    var lastSegmentText: String?
+    /// The text of the last segment of the audio
+    @Attribute(.externalStorage) var segmentsData: Data?
+
+    var segments: [AudioSegment] {
+        get {
+            // Decode the segments from the stored Data
+            (try? JSONDecoder().decode([AudioSegment].self, from: segmentsData ?? Data())) ?? []
+        }
+        set {
+            // Encode the segments to Data
+            segmentsData = try? JSONEncoder().encode(newValue)
+        }
+    }
+
     /// The WAV audio file, stored externally
     @Attribute(.externalStorage) var audioFile: Data
     /// The parent message of the audio
@@ -62,12 +60,4 @@ final class Audio: Identifiable {
     @Transient var text: String {
         segments.map(\.text).joined(separator: " ")
     }
-
-    /// The text of the last segment of the audio
-    // @Transient var lastSegmentText: String {
-    //     print("segments: \(segments.count)")
-    //     return segments.last?.text ?? ""
-    // }
-
-    var lastSegmentText: String?
 }

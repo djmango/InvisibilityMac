@@ -60,7 +60,7 @@ class WhisperHandler: WhisperDelegate {
                 var messages: [Message] = []
 
                 let transcriptMessage = Message(
-                    content: segments.map(\.text).joined(separator: " "),
+                    content: audio.text,
                     role: .user
                 )
 
@@ -111,11 +111,8 @@ class WhisperHandler: WhisperDelegate {
     @MainActor
     func whisper(_: Whisper, didProcessNewSegments segments: [Segment], atIndex index: Int) {
         logger.debug("Whisper didProcessNewSegments: \(segments) at index \(index)")
-        let audioSegments = AudioSegment.fromSegments(segments: segments, audio: audio)
-        for audioSegment in audioSegments {
-            modelContext.insert(audioSegment)
-        }
-        audio.lastSegmentText = segments.last?.text
+        let audioSegments = AudioSegment.fromSegments(segments: segments)
+        audio.segments.append(contentsOf: audioSegments)
     }
 
     @MainActor

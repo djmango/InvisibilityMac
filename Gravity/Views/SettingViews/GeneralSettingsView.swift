@@ -27,7 +27,6 @@ struct GeneralSettingsView: View {
     @Query var messages: [Message]
     @Query var ollamaModels: [OllamaModel]
     @Query var audios: [Audio]
-    @Query var audioSegments: [AudioSegment]
 
     var body: some View {
         VStack(alignment: .center) {
@@ -101,10 +100,6 @@ struct GeneralSettingsView: View {
                         for audio in audios {
                             logger.debug("Deleting audio: \(audio.name)")
                             context.delete(audio)
-                        }
-                        for audioSegment in audioSegments {
-                            logger.debug("Deleting audioSegment: \(audioSegment.text)")
-                            context.delete(audioSegment)
                         }
 
                         // Reset settings

@@ -46,7 +46,7 @@ struct AudioWidgetView: View {
                     }
                     // Otherwise, show the last segment text with an animation on change
                     else {
-                        Text(audio.lastSegmentText ?? "")
+                        Text(audio.segments.last?.text ?? "")
                             .font(.title3)
                             .padding()
                             .bold()
