@@ -99,7 +99,7 @@ struct GeneralSettingsView: View {
                             context.delete(ollamaModel)
                         }
                         for audio in audios {
-                            logger.debug("Deleting audio: \(audio.name ?? "")")
+                            logger.debug("Deleting audio: \(audio.name)")
                             context.delete(audio)
                         }
                         for audioSegment in audioSegments {

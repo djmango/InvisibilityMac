@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import OllamaKit
 import os
 import SwiftData
 import SwiftUI
@@ -35,6 +36,7 @@ class WhisperHandler: WhisperDelegate {
     private let modelContext = SharedModelContainer.shared.mainContext
 
     private let audio: Audio
+    private var generation: AnyCancellable?
 
     @ObservedObject var messageViewModel: MessageViewModel
 
@@ -51,6 +53,50 @@ class WhisperHandler: WhisperDelegate {
         audio.progress = 1.0
         Task {
             await self.messageViewModel.autorename()
+
+            do {
+                try await OllamaKit.shared.waitForAPI()
+
+                var messages: [Message] = []
+
+                let transcriptMessage = Message(
+                    content: segments.map(\.text).joined(separator: " "),
+                    role: .user
+                )
+
+                let instructionMessage = Message(
+                    content: "Generate a 3 word desctriptor of the above transcript. Do not write any additional text, return only the short descriptor. Please be concise. For example, \"Industrial Robots\".",
+                    role: .user
+                )
+
+                messages.append(transcriptMessage)
+                messages.append(instructionMessage)
+
+                var data = OKChatRequestData(
+                    model: "mistral:latest",
+                    messages: messages.compactMap { $0.toChatMessage() }
+                )
+                data.stream = false
+
+                generation = OllamaKit.shared.chat(data: data)
+                    .sink(
+                        receiveCompletion: { [weak self] completion in
+                            switch completion {
+                            case .finished:
+                                self?.logger.debug("Success completion")
+                            case let .failure(error):
+                                self?.logger.error("Failure completion \(error)")
+                            }
+                        },
+                        receiveValue: { [weak self] response in
+                            guard let message = response.message else { return }
+                            self?.logger.debug("Received audio name: \(message.content)")
+                            self?.audio.name = message.content
+                        }
+                    )
+            } catch {
+                logger.error("Error waiting for API: \(error)")
+            }
         }
     }
 
@@ -62,12 +108,14 @@ class WhisperHandler: WhisperDelegate {
         }
     }
 
+    @MainActor
     func whisper(_: Whisper, didProcessNewSegments segments: [Segment], atIndex index: Int) {
         logger.debug("Whisper didProcessNewSegments: \(segments) at index \(index)")
         let audioSegments = AudioSegment.fromSegments(segments: segments, audio: audio)
         for audioSegment in audioSegments {
             modelContext.insert(audioSegment)
         }
+        audio.lastSegmentText = segments.last?.text
     }
 
     @MainActor

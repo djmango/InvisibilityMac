@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */; };
 		4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E32B590213008D975D /* AlertViewModel.swift */; };
+		4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */; };
 		4D3D05102B59D536009340ED /* WhisperViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3D050F2B59D536009340ED /* WhisperViewModel.swift */; };
 		4D3D05132B59DB32009340ED /* AudioKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3D05122B59DB32009340ED /* AudioKit */; };
 		4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3D05152B59E1A3009340ED /* SwiftWhisper */; };
@@ -71,12 +72,12 @@
 		4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */; };
 		4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673522B17F46B00A5F9AE /* OllamaKit */; };
 		4DEF3F342B491CE200256ADE /* ollama-darwin in Resources */ = {isa = PBXBuildFile; fileRef = 4DEF3F332B491CE200256ADE /* ollama-darwin */; };
-		4DF981BE2B61B1910047E292 /* MessageListItemViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF981BD2B61B1910047E292 /* MessageListItemViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckConnectivity.swift; sourceTree = "<group>"; };
 		4D0B52E32B590213008D975D /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
+		4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+HexColors.swift"; sourceTree = "<group>"; };
 		4D3D050F2B59D536009340ED /* WhisperViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperViewModel.swift; sourceTree = "<group>"; };
 		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
 		4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatField.swift; sourceTree = "<group>"; };
@@ -127,7 +128,6 @@
 		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEF3F332B491CE200256ADE /* ollama-darwin */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "ollama-darwin"; sourceTree = "<group>"; };
-		4DF981BD2B61B1910047E292 /* MessageListItemViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListItemViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -235,7 +235,6 @@
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 				4D0B52E32B590213008D975D /* AlertViewModel.swift */,
 				4D3D050F2B59D536009340ED /* WhisperViewModel.swift */,
-				4DF981BD2B61B1910047E292 /* MessageListItemViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -298,6 +297,7 @@
 			isa = PBXGroup;
 			children = (
 				4D8E053D2B2516DE00B60D0D /* ModelContext+SaveChanges.swift */,
+				4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -487,7 +487,6 @@
 				4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D9348CA2B5B24C800D57BC2 /* DownloadManager.swift in Sources */,
-				4DF981BE2B61B1910047E292 /* MessageListItemViewModel.swift in Sources */,
 				4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */,
 				4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */,
 				4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */,
@@ -508,6 +507,7 @@
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4D596AA42B5F2B3E00B9E765 /* Documentation.docc in Sources */,
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
+				4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
 				4D785D7D2B53633200FBCE1A /* ModelWarmer.swift in Sources */,
 				4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */,

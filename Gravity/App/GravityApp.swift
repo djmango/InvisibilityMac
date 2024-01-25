@@ -74,8 +74,6 @@ struct GravityApp: App {
                         logger.error("Could not create chat")
                     }
                 }
-
-            // .environmentObject(imageViewModel)
         }
         .windowToolbarStyle(.unified(showsTitle: false))
         .modelContainer(SharedModelContainer.shared.modelContainer)

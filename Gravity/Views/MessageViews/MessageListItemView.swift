@@ -46,7 +46,7 @@ struct MessageListItemView: View {
 
             ProgressView()
                 .controlSize(.small)
-                .visible(if: isGenerating && isFinalMessage, removeCompletely: true)
+                .visible(if: isGenerating && isFinalMessage && message.audio == nil, removeCompletely: true)
 
             if let errorMessage {
                 TextError(errorMessage)
@@ -76,33 +76,13 @@ struct MessageListItemView: View {
                                 .stroke(Color(nsColor: .separatorColor))
                         }
                         .padding(.bottom)
-                    // Copy icon in bottom right corner
-                    // .overlay {
-                    //     Button(action: copyAction) {
-                    //         Image(systemName: isCopied ? "list.clipboard.fill" : "clipboard")
-                    //     }
-                    //     .buttonStyle(.accessoryBar)
-                    //     .clipShape(.circle)
-                    //     .help("Copy")
-                    //     .visible(if: isCopyButtonVisible)
-                    // }
                 }
                 .hide(if: isGenerating, removeCompletely: true)
                 .hide(if: isError, removeCompletely: true)
 
             if let audio {
-                if audio.message?.id == message.id {
-                    AudioWidgetView()
-                        .padding(.top, 8)
-                        .hide(if: isGenerating, removeCompletely: true)
-                        .hide(if: isError, removeCompletely: true)
-
-                    Text("\(audio.progress * 100, specifier: "%.2f")%")
-                        .font(.title3.weight(.semibold))
-                        .foregroundStyle(.accent)
-                    // .hide(if: isGenerating, removeCompletely: true)
-                    // .hide(if: isError, removeCompletely: true)
-                }
+                AudioWidgetView(audio: audio)
+                    .hide(if: isError, removeCompletely: true)
             }
 
             if let images = message.images {
