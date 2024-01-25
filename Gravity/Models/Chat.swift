@@ -14,8 +14,7 @@ final class Chat: Identifiable {
     var temperature: Double = 0.7
     var maxContextLength: Double = 6000
 
-    @Relationship
-    var model: OllamaModel?
+    var model: String = "mistral:latest"
 
     @Relationship(deleteRule: .cascade, inverse: \Message.chat)
     var messages: [Message] = []

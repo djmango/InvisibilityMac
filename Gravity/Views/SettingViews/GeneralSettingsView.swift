@@ -25,7 +25,6 @@ struct GeneralSettingsView: View {
 
     @Query var chats: [Chat]
     @Query var messages: [Message]
-    @Query var ollamaModels: [OllamaModel]
     @Query var audios: [Audio]
 
     var body: some View {
@@ -92,10 +91,6 @@ struct GeneralSettingsView: View {
                         for message in messages {
                             logger.debug("Deleting message: \(message.content ?? "")")
                             context.delete(message)
-                        }
-                        for ollamaModel in ollamaModels {
-                            logger.debug("Deleting ollamaModel: \(ollamaModel.name)")
-                            context.delete(ollamaModel)
                         }
                         for audio in audios {
                             logger.debug("Deleting audio: \(audio.name)")

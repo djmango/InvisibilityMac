@@ -3,6 +3,8 @@ import SwiftUI
 import ViewCondition
 
 struct ChatSidebarListView: View {
+    @StateObject private var tabViewModel = TabViewModel.shared
+
     private var todayChats: [Chat] {
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -69,6 +71,10 @@ struct ChatSidebarListView: View {
                 }
             }
             .hide(if: previousDays.isEmpty, removeCompletely: true)
+        }
+        .onChange(of: commandViewModelBindable.selectedChat) {
+            tabViewModel.selectedTab = 0
+            tabViewModel.tabs = ["Messages"]
         }
         .frame(width: 260)
         .listStyle(.sidebar)

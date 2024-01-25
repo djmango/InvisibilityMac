@@ -24,7 +24,7 @@ final class OllamaViewModel: ObservableObject {
     public var mistralDownloadStatus: ModelDownloadStatus = .checking
     private var mistral_res: AnyCancellable?
 
-    var models: [OllamaModel] = []
+    var models: [String] = []
 
     init() {
         Task {
@@ -52,48 +52,8 @@ final class OllamaViewModel: ObservableObject {
 
     @MainActor
     func fetch() async throws {
-        let prevModels = try fetchFromLocal()
-        let newModels = try await fetchFromRemote()
-        logger.debug("Fetched \(newModels.count) models")
-
-        for model in prevModels {
-            if newModels.contains(where: { $0.name == model.name }) {
-                model.isAvailable = true
-            } else {
-                model.isAvailable = false
-            }
-        }
-
-        for newModel in newModels {
-            let model = OllamaModel(name: newModel.name)
-            model.isAvailable = true
-
-            modelContext.insert(model)
-        }
-
-        // Remove models that are no longer available
-        for model in prevModels {
-            if !model.isAvailable {
-                modelContext.delete(model)
-            }
-        }
-
-        models = try fetchFromLocal()
-    }
-
-    private func fetchFromRemote() async throws -> [OKModelResponse.Model] {
         let response = try await OllamaKit.shared.models()
-        let models = response.models
-
-        return models
-    }
-
-    private func fetchFromLocal() throws -> [OllamaModel] {
-        let sortDescriptor = SortDescriptor(\OllamaModel.name)
-        let fetchDescriptor = FetchDescriptor<OllamaModel>(sortBy: [sortDescriptor])
-        let models = try modelContext.fetch(fetchDescriptor)
-
-        return models
+        models = response.models.map(\.name)
     }
 
     @MainActor
@@ -144,9 +104,5 @@ final class OllamaViewModel: ObservableObject {
         } catch {
             logger.error("Failed to delete the Ollama folder: \(error.localizedDescription)")
         }
-    }
-
-    func fromName(_ name: String) -> OllamaModel? {
-        models.first(where: { $0.name == name })
     }
 }

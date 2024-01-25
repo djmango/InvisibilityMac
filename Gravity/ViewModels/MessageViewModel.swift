@@ -13,13 +13,12 @@ import Vision
 
 @Observable
 final class MessageViewModel: ObservableObject {
-    private var generation: AnyCancellable?
-
-    private var chat: Chat
-    private let modelContext = SharedModelContainer.shared.mainContext
-    private var lastOpenedImage: Data?
-
     private let logger = Logger(subsystem: "ai.grav.app", category: "MessageViewModel")
+
+    private let modelContext = SharedModelContainer.shared.mainContext
+    private var chat: Chat
+    private var generation: AnyCancellable?
+    private var lastOpenedImage: Data?
 
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
@@ -60,7 +59,7 @@ final class MessageViewModel: ObservableObject {
             // Use compactMap to drop nil values and dropLast
             // to drop the assistant message from the context we are sending to the LLM
             let data = OKChatRequestData(
-                model: chat.model?.name ?? "mistral:latest",
+                model: chat.model,
                 messages: messages.dropLast().compactMap { $0.toChatMessage() }
             )
 
@@ -192,7 +191,7 @@ extension MessageViewModel {
             message_history.append(instructionMessage)
 
             var data = OKChatRequestData(
-                model: chat.model?.name ?? "mistral:latest",
+                model: chat.model,
                 messages: message_history.compactMap { $0.toChatMessage() }
             )
             data.stream = false

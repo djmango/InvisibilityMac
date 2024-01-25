@@ -55,7 +55,7 @@ final class CommandViewModel: ObservableObject {
         let chat = Chat()
 
         let selectedModel = UserDefaults.standard.string(forKey: "selectedModel") ?? "mistral:latest"
-        chat.model = OllamaViewModel.shared.fromName(selectedModel)
+        chat.model = selectedModel
 
         do {
             try ChatViewModel.shared.create(chat)

@@ -39,16 +39,29 @@ final class Message: Identifiable {
 
     /// The name of the model used to generate the message
     @Transient var model: String {
-        chat?.model?.name ?? ""
+        chat?.model ?? ""
     }
 }
 
 extension Message {
     /// Convert a Message to a ChatMessage for transmission to OlammaKit
     func toChatMessage() -> ChatMessage? {
-        guard let content else { return nil }
         guard let role else { return nil }
+
+        // Set content to empty string if nil
+        var content = content ?? ""
+
         let base64Images = images?.compactMap { $0.base64EncodedString() }
+
+        // If theres audio, we need to send the transcribed text
+        if let audio {
+            // If not empty add a new line
+            if !content.isEmpty {
+                content += "\n"
+            }
+            content += audio.text
+        }
+
         return ChatMessage(role: role.rawValue, content: content, images: base64Images)
     }
 }

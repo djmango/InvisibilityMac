@@ -16,7 +16,7 @@ class SharedModelContainer {
 
     @MainActor
     init() {
-        let schema = Schema([Chat.self, Message.self, OllamaModel.self, Audio.self])
+        let schema = Schema([Chat.self, Message.self, Audio.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {

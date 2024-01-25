@@ -12,8 +12,15 @@ import SwiftUI
 struct ToolbarView: ToolbarContent {
     private let logger = Logger(subsystem: "ai.grav.app", category: "ToolbarView")
 
+    @StateObject private var tabViewModel = TabViewModel.shared
     @State private var isRestarting = false
-    @State private var selectedTab: Int = 0
+
+    var messageViewModel: MessageViewModel? {
+        guard let selectedChat = CommandViewModel.shared.selectedChat else {
+            return nil
+        }
+        return MessageViewModelManager.shared.viewModel(for: selectedChat)
+    }
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .navigation) {
@@ -27,12 +34,12 @@ struct ToolbarView: ToolbarContent {
         }
 
         ToolbarItem(placement: .principal) {
-            Picker("Select a tab", selection: $selectedTab) {
-                Text("First").tag(0)
-                Text("Second").tag(1)
-                Text("Third").tag(2)
+            Picker("Select a tab", selection: $tabViewModel.selectedTab) {
+                ForEach(0 ..< tabViewModel.tabs.count, id: \.self) { index in
+                    Text(tabViewModel.tabs[index]).tag(index)
+                }
             }
-            .pickerStyle(SegmentedPickerStyle())
+            .pickerStyle(.segmented)
         }
 
         ToolbarItemGroup(placement: .primaryAction) {
