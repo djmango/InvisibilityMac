@@ -1,5 +1,5 @@
 //
-//  WhisperViewModel.swift
+//  WhisperManager.swift
 //  Gravity
 //
 //  Created by Sulaiman Ghori on 1/18/24.
@@ -65,7 +65,7 @@ class WhisperHandler: WhisperDelegate {
                 )
 
                 let instructionMessage = Message(
-                    content: "Generate a 3 word desctriptor of the above transcript. Do not write any additional text, return only the short descriptor. Please be concise. For example, \"Industrial Robots\".",
+                    content: AppPrompts.createShortTitle,
                     role: .user
                 )
 

@@ -187,7 +187,7 @@ extension MessageViewModel {
             // Copy the messages array and append the instruction message to it
             var message_history = messages.map { $0 }
 
-            let instructionMessage = Message(content: "Generate a 4 word desctriptor of the above chat. Do not write any additional text, return only the short descriptor. Please be concise. For example, \"AI for Industrial Robots\".", role: .user)
+            let instructionMessage = Message(content: AppPrompts.createShortTitle, role: .user)
             message_history.append(instructionMessage)
 
             var data = OKChatRequestData(
