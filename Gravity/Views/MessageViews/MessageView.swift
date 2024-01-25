@@ -19,6 +19,8 @@ struct MessageView: View {
     @State private var content: String = ""
     @State private var isDragActive: Bool = false
     @State private var selection: [Message] = []
+    @State private var isShowingAudioTranscript: Bool = false
+    @State private var shownAudio: Audio? = nil
 
     init(for chat: Chat) {
         self.chat = chat
@@ -33,83 +35,90 @@ struct MessageView: View {
     }
 
     var body: some View {
-        ScrollViewReader { scrollViewProxy in
-            VStack {
-                List(messageViewModel.messages.indices, id: \.self) { index in
-                    let message: Message = messageViewModel.messages[index]
-                    // Generate the action for the message, if it is an assistant message.
-                    let action: () -> Void = {
-                        regenerateAction(for: message)
+        if !isShowingAudioTranscript {
+            ScrollViewReader { scrollViewProxy in
+                VStack {
+                    List(messageViewModel.messages.indices, id: \.self) { index in
+                        let message: Message = messageViewModel.messages[index]
+                        let action: () -> Void = {
+                            regenerateAction(for: message)
+                        }
+                        let audioActionPassed: () -> Void = {
+                            guard let audio = message.audio else { return }
+                            audioAction(for: audio)
+                        }
+
+                        // Generate the view for the individual message.
+                        MessageListItemView(
+                            message: message,
+                            messageViewModel: messageViewModel,
+                            regenerateAction: action,
+                            audioAction: audioActionPassed
+                        )
+                        .generating(message.content == nil && isGenerating)
+                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                        .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
+                        .audio(message.audio)
+                        .id(message)
+                    }
+                    .onAppear {
+                        scrollToBottom(scrollViewProxy)
+                    }
+                    .onChange(of: messageViewModel.messages) {
+                        scrollToBottom(scrollViewProxy)
+                    }
+                    .onChange(of: messageViewModel.messages.last?.content) {
+                        scrollToBottom(scrollViewProxy)
                     }
 
-                    // Generate the view for the individual message.
-                    MessageListItemView(
-                        message: message,
-                        regenerateAction: action
-                    )
-                    .generating(message.content == nil && isGenerating)
-                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                    .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
-                    .audio(message.audio)
-                    .id(message)
-                }
-                .onAppear {
-                    scrollToBottom(scrollViewProxy)
-                }
-                .onChange(of: messageViewModel.messages) {
-                    scrollToBottom(scrollViewProxy)
-                }
-                .onChange(of: messageViewModel.messages.last?.content) {
-                    scrollToBottom(scrollViewProxy)
-                }
+                    HStack(alignment: .center) {
+                        ChatField("Message", text: $content, action: sendAction)
+                            .textFieldStyle(CapsuleChatFieldStyle())
+                            .focused($promptFocused)
 
-                HStack(alignment: .center) {
-                    ChatField("Message", text: $content, action: sendAction)
-                        .textFieldStyle(CapsuleChatFieldStyle())
-                        .focused($promptFocused)
+                        Button(action: sendAction) {
+                            Image(systemName: "paperplane.fill")
+                                .padding(8)
+                                .frame(width: 28, height: 28)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .help("Send message")
+                        .hide(if: isGenerating, removeCompletely: true)
 
-                    Button(action: sendAction) {
-                        Image(systemName: "paperplane.fill")
-                            .padding(8)
-                            .frame(width: 28, height: 28)
+                        Button(action: messageViewModel.stopGenerate) {
+                            Image(systemName: "stop.circle.fill")
+                                .resizable()
+                                .frame(width: 28, height: 28)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Stop generation")
+                        .visible(if: isGenerating, removeCompletely: true)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .help("Send message")
-                    .hide(if: isGenerating, removeCompletely: true)
-
-                    Button(action: messageViewModel.stopGenerate) {
-                        Image(systemName: "stop.circle.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Stop generation")
-                    .visible(if: isGenerating, removeCompletely: true)
+                    .padding(.top, 8)
+                    .padding(.bottom, 16)
+                    .padding(.horizontal)
                 }
-                .padding(.top, 8)
-                .padding(.bottom, 16)
-                .padding(.horizontal)
+                .overlay(
+                    // Grey overlay when the user is dragging a file.
+                    Rectangle()
+                        .foregroundColor(Color.gray.opacity(0.2))
+                        .opacity(isDragActive ? 1 : 0)
+                )
+                .border(isDragActive ? Color.blue : Color.clear, width: 5)
+                .onDrop(of: [.fileURL, .image], isTargeted: $isDragActive) { providers in
+                    handleDrop(providers: providers)
+                }
+                .copyable(selection.compactMap(\.content))
+                .task {
+                    initAction()
+                }
+                .onChange(of: chat) {
+                    initAction()
+                }
             }
-            .overlay(
-                // Grey overlay when the user is dragging a file.
-                Rectangle()
-                    .foregroundColor(Color.gray.opacity(0.2))
-                    .opacity(isDragActive ? 1 : 0)
-            )
-            .border(isDragActive ? Color.blue : Color.clear, width: 5)
-            .onDrop(of: [.fileURL, .image], isTargeted: $isDragActive) { providers in
-                handleDrop(providers: providers)
-            }
-            .copyable(selection.compactMap(\.content))
-            .task {
-                initAction()
-            }
-            .onChange(of: chat) {
-                initAction()
-            }
+        } else {
+            AudioTranscriptView(audio: shownAudio!, isShowingAudioTranscript: $isShowingAudioTranscript)
         }
-
-        .navigationTitle(chat.name)
     }
 
     // MARK: - Actions
@@ -152,6 +161,11 @@ struct MessageView: View {
             try ChatViewModel.shared.modify(chat)
             await messageViewModel.regenerate(message)
         }
+    }
+
+    private func audioAction(for audio: Audio) {
+        isShowingAudioTranscript = true
+        shownAudio = audio
     }
 
     private func openFileAction() {

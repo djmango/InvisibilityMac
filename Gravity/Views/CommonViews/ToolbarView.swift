@@ -13,6 +13,7 @@ struct ToolbarView: ToolbarContent {
     private let logger = Logger(subsystem: "ai.grav.app", category: "ToolbarView")
 
     @State private var isRestarting = false
+    @State private var selectedTab: Int = 0
 
     var body: some ToolbarContent {
         ToolbarItem(placement: .navigation) {
@@ -25,8 +26,28 @@ struct ToolbarView: ToolbarContent {
             .help("New Chat (⌘ + N)")
         }
 
+        ToolbarItem(placement: .principal) {
+            Picker("Select a tab", selection: $selectedTab) {
+                Text("First").tag(0)
+                Text("Second").tag(1)
+                Text("Third").tag(2)
+            }
+            .pickerStyle(SegmentedPickerStyle())
+        }
+
         ToolbarItemGroup(placement: .primaryAction) {
             Spacer()
+
+            Button(action: {
+                if let url = URL(string: "mailto:sulaiman@grav.ai") {
+                    NSWorkspace.shared.open(url)
+                }
+            }) {
+                Label("Help", systemImage: "questionmark.circle")
+            }
+            .buttonStyle(.accessoryBar)
+            .help("Help")
+
             Button(action: {
                 isRestarting = true
                 Task {

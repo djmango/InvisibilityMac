@@ -5,10 +5,10 @@ import SwiftUI
 import ViewCondition
 
 struct MessageListItemView: View {
-    @EnvironmentObject private var imageViewModel: ImageViewModel
-
     private var message: Message
+    private var messageViewModel: MessageViewModel
     let regenerateAction: () -> Void
+    let audioAction: () -> Void
 
     // Message state
     private var isAssistant: Bool { message.role == .assistant }
@@ -18,13 +18,15 @@ struct MessageListItemView: View {
     private var errorMessage: String? = nil
     private var audio: Audio? = nil
 
-    @State private var isImagePresented = false
-
     init(message: Message,
-         regenerateAction: @escaping () -> Void)
+         messageViewModel: MessageViewModel,
+         regenerateAction: @escaping () -> Void,
+         audioAction: @escaping () -> Void)
     {
         self.message = message
+        self.messageViewModel = messageViewModel
         self.regenerateAction = regenerateAction
+        self.audioAction = audioAction
     }
 
     @State private var isHovered: Bool = false
@@ -83,6 +85,16 @@ struct MessageListItemView: View {
             if let audio {
                 AudioWidgetView(audio: audio)
                     .hide(if: isError, removeCompletely: true)
+                    .onHover { hovering in
+                        if hovering {
+                            NSCursor.pointingHand.push()
+                        } else {
+                            NSCursor.pop()
+                        }
+                    }
+                    .onTapGesture {
+                        audioAction()
+                    }
             }
 
             if let images = message.images {

@@ -29,7 +29,6 @@
 		4D785D7D2B53633200FBCE1A /* ModelWarmer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */; };
 		4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
-		4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4252B4CB639007F025B /* ImageViewModel.swift */; };
 		4D8B537C2B2E499A0020FA6A /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8B537B2B2E499A0020FA6A /* OllamaKit */; };
 		4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */; };
 		4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */; };
@@ -94,7 +93,6 @@
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D785D7C2B53633200FBCE1A /* ModelWarmer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelWarmer.swift; sourceTree = "<group>"; };
 		4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedImageView.swift; sourceTree = "<group>"; };
-		4D7AB4252B4CB639007F025B /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandViewModel.swift; sourceTree = "<group>"; };
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
@@ -234,7 +232,6 @@
 				4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */,
 				4D8E052D2B2516DE00B60D0D /* OllamaViewModel.swift */,
 				4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */,
-				4D7AB4252B4CB639007F025B /* ImageViewModel.swift */,
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 				4D0B52E32B590213008D975D /* AlertViewModel.swift */,
 				4D3D050F2B59D536009340ED /* WhisperViewModel.swift */,
@@ -494,7 +491,6 @@
 				4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */,
 				4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */,
 				4D8E05502B2516DE00B60D0D /* OllamaViewModel.swift in Sources */,
-				4D7AB4262B4CB639007F025B /* ImageViewModel.swift in Sources */,
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D596AAA2B60833E00B9E765 /* ToolbarView.swift in Sources */,
 				4D596AB12B61997100B9E765 /* Audio.swift in Sources */,

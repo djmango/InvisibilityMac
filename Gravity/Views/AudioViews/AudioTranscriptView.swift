@@ -8,32 +8,26 @@
 import SwiftUI
 
 struct AudioTranscriptView: View {
-    var messages: [String]
+    private var audio: Audio
+    @Binding var isShowingAudioTranscript: Bool
+
+    init(audio: Audio, isShowingAudioTranscript: Binding<Bool>) {
+        self.audio = audio
+        _isShowingAudioTranscript = isShowingAudioTranscript
+    }
 
     var body: some View {
         ScrollView {
             LazyVStack {
-                ForEach(Array(messages.enumerated()), id: \.offset) { index, message in
+                ForEach(Array(audio.segments.enumerated()), id: \.offset) { index, segment in
                     HStack {
-                        Text(message)
+                        Text(segment.text)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding()
                             .background(index % 2 == 0 ? Color.gray.opacity(0.2) : Color.clear)
                             .onHover { _ in
                                 // Handle hover state changes if needed
                             }
-                        // if NSApp.currentEvent?.type == NSEvent.EventType.leftMouseEntered {
-                        //     Button(action: {
-                        //         // Handle play action
-                        //     }) {
-                        //         Image(systemName: "play.circle")
-                        //             .resizable()
-                        //             .frame(width: 20, height: 20)
-                        //     }
-                        //     .buttonStyle(PlainButtonStyle())
-                        //     .frame(width: 20, height: 20, alignment: .trailing)
-                        //     .padding(.trailing)
-                        // }
                     }
                 }
             }
