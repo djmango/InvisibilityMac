@@ -110,8 +110,8 @@ struct GeneralSettingsView: View {
                         OllamaViewModel.shared.wipeOllama()
                         WhisperManager.shared.wipeWhisper()
 
-                        // Restart ollama
-                        OllamaKit.shared.restart(minInterval: 0)
+                        // Restart models
+                        OllamaKit.shared.restart()
 
                         // Restart app
                         NSApplication.shared.terminate(self)

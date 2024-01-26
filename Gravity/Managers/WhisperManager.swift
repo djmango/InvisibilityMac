@@ -36,7 +36,6 @@ class WhisperHandler: WhisperDelegate {
     private let modelContext = SharedModelContainer.shared.mainContext
 
     private let audio: Audio
-    private var generation: AnyCancellable?
 
     @ObservedObject var messageViewModel: MessageViewModel
 
@@ -78,23 +77,15 @@ class WhisperHandler: WhisperDelegate {
                 )
                 data.stream = false
 
-                generation = OllamaKit.shared.chat(data: data)
-                    .sink(
-                        receiveCompletion: { [weak self] completion in
-                            switch completion {
-                            case .finished:
-                                self?.logger.debug("Success completion")
-                            case let .failure(error):
-                                self?.logger.error("Failure completion \(error)")
-                            }
-                        },
-                        receiveValue: { [weak self] response in
-                            guard let message = response.message else { return }
-                            self?.logger.debug("Received audio name: \(message.content)")
-                            self?.audio.name = message.content
-                        }
-                    )
+                let result: OKChatResponse = try await OllamaKit.shared.achat(data: data)
+                if let content = result.message?.content {
+                    // Split by newline or period
+                    let split = content.split(whereSeparator: { $0.isNewline || $0.isPunctuation })
+                    let title = split.first ?? ""
+                    audio.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                }
             } catch {
+                audio.name = audio.segments.first?.text ?? "Audio"
                 logger.error("Error waiting for API: \(error)")
             }
         }

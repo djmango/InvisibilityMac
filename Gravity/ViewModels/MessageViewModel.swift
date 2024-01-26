@@ -56,6 +56,8 @@ final class MessageViewModel: ObservableObject {
         messages.append(assistantMessage)
         modelContext.insert(assistantMessage)
 
+        try? await OllamaKit.shared.waitForAPI()
+
         if await OllamaKit.shared.reachable() {
             // Use compactMap to drop nil values and dropLast
             // to drop the assistant message from the context we are sending to the LLM
@@ -104,7 +106,8 @@ final class MessageViewModel: ObservableObject {
         TelemetryManager.send("MessageViewModel.regenerate")
         sendViewState = .loading
         do {
-            try await OllamaKit.shared.waitForAPI(restart: true, timeoutSeconds: 10)
+            OllamaKit.shared.restart()
+            try await OllamaKit.shared.waitForAPI()
             // Handle the case when the API restarts successfully
             logger.debug("API restarted successfully.")
             // Update the UI or proceed with the next steps
@@ -189,6 +192,8 @@ extension MessageViewModel {
     func autorename() async {
         TelemetryManager.send("MessageViewModel.autorename")
 
+        try? await OllamaKit.shared.waitForAPI()
+
         if await OllamaKit.shared.reachable() {
             // Copy the messages array and append the instruction message to it
             var message_history = messages.map { $0 }
@@ -202,22 +207,18 @@ extension MessageViewModel {
             )
             data.stream = false
 
-            generation = OllamaKit.shared.chat(data: data)
-                .sink(
-                    receiveCompletion: { [weak self] completion in
-                        switch completion {
-                        case .finished:
-                            self?.logger.debug("Success completion")
-                        case let .failure(error):
-                            self?.logger.error("Failure completion \(error)")
-                        }
-                    },
-                    receiveValue: { [weak self] response in
-                        guard let message = response.message else { return }
-                        self?.logger.debug("Received chat name: \(message.content)")
-                        self?.chat.name = message.content
-                    }
-                )
+            do {
+                let result = try await OllamaKit.shared.achat(data: data)
+
+                if let content = result.message?.content {
+                    // Split by newline or period
+                    let split = content.split(whereSeparator: { $0.isNewline || $0.isPunctuation })
+                    let title = split.first ?? ""
+                    chat.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
+                }
+            } catch {
+                logger.error("Error waiting for API: \(error)")
+            }
         } else {
             handleError(AppMessages.ollamaServerUnreachable)
         }

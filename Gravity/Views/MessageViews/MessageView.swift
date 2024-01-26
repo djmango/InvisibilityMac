@@ -1,3 +1,4 @@
+import OllamaKit
 import os
 import SwiftData
 import SwiftUI
@@ -129,6 +130,18 @@ struct MessageView: View {
 
         isEditorFocused = true
         promptFocused = true
+
+        Task {
+            do {
+                try await OllamaKit.shared.waitForAPI()
+                await ModelWarmer.shared.warm()
+            } catch {
+                AlertManager.shared.alertTitle = "Error"
+                AlertManager.shared.alertMessage = "Could not load models. Please try again or restart the app."
+                AlertManager.shared.showAlert = true
+                OllamaKit.shared.restart()
+            }
+        }
 
         tabViewModel.selectedTab = 0
         AudioPlayerViewModel.shared.stop()

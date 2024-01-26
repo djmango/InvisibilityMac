@@ -24,30 +24,19 @@ class ModelWarmer: ObservableObject {
     func warm() async {
         logger.debug("Warming model")
 
-        if await OllamaKit.shared.reachable() {
-            var generation: AnyCancellable? = nil
-
-            guard let message = Message(content: "Say nothing", role: .user).toChatMessage() else { return }
-            let data = OKChatRequestData(
-                model: selectedModel,
-                messages: [message]
-            )
-
-            generation = OllamaKit.shared.chat(data: data)
-                .sink(
-                    receiveCompletion: { completion in
-                        switch completion {
-                        case .finished:
-                            break
-                        case .failure:
-                            break
-                        }
-                        generation?.cancel()
-                    },
-                    receiveValue: { _ in
-                        generation?.cancel()
-                    }
+        do {
+            try await OllamaKit.shared.waitForAPI()
+            if await OllamaKit.shared.reachable() {
+                guard let message = Message(content: "Say nothing", role: .user).toChatMessage() else { return }
+                let data = OKChatRequestData(
+                    model: selectedModel,
+                    messages: [message]
                 )
+
+                _ = try await OllamaKit.shared.achat(data: data)
+            }
+        } catch {
+            logger.error("Error warming model: \(error)")
         }
     }
 }

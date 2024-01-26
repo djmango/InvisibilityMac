@@ -76,9 +76,10 @@ struct ToolbarView: ToolbarContent {
 
             Button(action: {
                 isRestarting = true
+                OllamaKit.shared.restart()
                 Task {
                     do {
-                        try await OllamaKit.shared.waitForAPI(restart: true)
+                        try await OllamaKit.shared.waitForAPI()
                         isRestarting = false
                     } catch {
                         AlertManager.shared.doShowAlert(title: "Error", message: "Could not restart models. Please try again.")
