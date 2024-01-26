@@ -73,7 +73,6 @@
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
 		4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */; };
-		4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673522B17F46B00A5F9AE /* OllamaKit */; };
 		4DEF3F342B491CE200256ADE /* ollama-darwin in Resources */ = {isa = PBXBuildFile; fileRef = 4DEF3F332B491CE200256ADE /* ollama-darwin */; };
 /* End PBXBuildFile section */
 
@@ -123,7 +122,6 @@
 		4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingExplainerView.swift; sourceTree = "<group>"; };
 		4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingEmailView.swift; sourceTree = "<group>"; };
 		4DA893B72B54F04C00560DAD /* OnboardingDownloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingDownloadView.swift; sourceTree = "<group>"; };
-		4DC4770D2B63577D00A7A409 /* OllamaKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OllamaKit; path = ../OllamaKit; sourceTree = "<group>"; };
 		4DC610ED2B57369B00255358 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
 		4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		4DD282E02B4DF7530041690B /* Shortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shortcuts.swift; sourceTree = "<group>"; };
@@ -156,7 +154,6 @@
 				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
 				4D3D05132B59DB32009340ED /* AudioKit in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
-				4DE673712B17F46B00A5F9AE /* OllamaKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -166,7 +163,6 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
-				4DC4770D2B63577D00A7A409 /* OllamaKit */,
 				4D8E05272B2516DE00B60D0D /* Gravity */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
@@ -415,7 +411,6 @@
 				4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */,
 				4DE6734C2B17F46B00A5F9AE /* ViewCondition */,
 				4DE6734E2B17F46B00A5F9AE /* MarkdownUI */,
-				4DE673522B17F46B00A5F9AE /* OllamaKit */,
 				4D8B537B2B2E499A0020FA6A /* OllamaKit */,
 				4D7AB4232B4CB469007F025B /* Pow */,
 				4DD282D82B4DEB6E0041690B /* SettingsKit */,
@@ -683,7 +678,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -697,7 +692,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.5.3;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -715,7 +710,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 21;
+				CURRENT_PROJECT_VERSION = 23;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -730,7 +725,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.5.3;
+				MARKETING_VERSION = 1.5.4;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -906,14 +901,6 @@
 				minimumVersion = 2.2.0;
 			};
 		};
-		4DE673532B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OllamaKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kevinhermawan/OllamaKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -986,11 +973,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DE6734F2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
-		};
-		4DE673522B17F46B00A5F9AE /* OllamaKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DE673532B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "OllamaKit" */;
-			productName = OllamaKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
