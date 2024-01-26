@@ -5,7 +5,6 @@
 //  Created by Sulaiman Ghori on 1/23/24.
 //
 
-import OllamaKit
 import os
 import SwiftUI
 
@@ -73,25 +72,6 @@ struct ToolbarView: ToolbarContent {
             }
             .buttonStyle(.accessoryBar)
             .help("Help")
-
-            Button(action: {
-                isRestarting = true
-                OllamaKit.shared.restart()
-                Task {
-                    do {
-                        try await OllamaKit.shared.waitForAPI()
-                        isRestarting = false
-                    } catch {
-                        AlertManager.shared.doShowAlert(title: "Error", message: "Could not restart models. Please try again.")
-                    }
-                }
-            }) {
-                Label("Restart Models", systemImage: "arrow.clockwise")
-                    .rotationEffect(.degrees(isRestarting ? 360 : 0))
-                    .animation(isRestarting ? .linear(duration: 1).repeatForever(autoreverses: false) : .default, value: isRestarting)
-            }
-            .buttonStyle(.accessoryBar)
-            .help("Restart Models")
 
             Button(action: {
                 if let chat = CommandViewModel.shared.getOrCreateChat() {

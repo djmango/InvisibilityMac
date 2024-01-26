@@ -1,4 +1,3 @@
-import OllamaKit
 import os
 import SettingsKit
 import Sparkle
@@ -38,9 +37,6 @@ struct GravityApp: App {
 
         SharedModelContainer.shared = SharedModelContainer()
 
-        // let imageViewModel = ImageViewModel()
-        // _imageViewModel = StateObject(wrappedValue: imageViewModel)
-
         if analytics {
             if userIdentifier.isEmpty {
                 userIdentifier = UUID().uuidString
@@ -55,9 +51,11 @@ struct GravityApp: App {
             TelemetryManager.send("ApplicationLaunched")
         }
 
-        OllamaKit.shared.runBinaryInBackground(withArguments: ["serve"], forceKill: true)
         Task {
             await WhisperManager.shared.setup()
+        }
+        Task {
+            await LLMManager.shared.setup()
         }
     }
 

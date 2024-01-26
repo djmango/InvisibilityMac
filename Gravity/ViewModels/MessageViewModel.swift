@@ -2,7 +2,6 @@ import Cocoa
 import Combine
 import CoreGraphics
 import Foundation
-import OllamaKit
 import os
 import SwiftData
 import SwiftUI
@@ -56,67 +55,17 @@ final class MessageViewModel: ObservableObject {
         messages.append(assistantMessage)
         modelContext.insert(assistantMessage)
 
-        try? await OllamaKit.shared.waitForAPI()
+        // Use compactMap to drop nil values and dropLast
+        // to drop the assistant message from the context we are sending to the LLM
+        let response = await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
-        if await OllamaKit.shared.reachable() {
-            // Use compactMap to drop nil values and dropLast
-            // to drop the assistant message from the context we are sending to the LLM
-            let data = OKChatRequestData(
-                model: chat.model,
-                messages: messages.dropLast().compactMap { $0.toChatMessage() }
-            )
-
-            generation = OllamaKit.shared.chat(data: data)
-                .handleEvents(
-                    receiveSubscription: { _ in self.logger.debug("Received Subscription") },
-                    receiveOutput: { _ in self.logger.debug("Received Output") },
-                    receiveCompletion: { _ in self.logger.debug("Received Completion") },
-                    receiveCancel: { self.logger.debug("Received Cancel") }
-                )
-                .sink(
-                    receiveCompletion: { [weak self] completion in
-                        switch completion {
-                        case .finished:
-                            self?.logger.debug("Success completion")
-                            self?.handleComplete()
-
-                            // When complete, we can autorename the chat if it is a new chat.
-                            if self?.messages.count == 2 {
-                                Task {
-                                    await self?.autorename()
-                                }
-                            }
-
-                        case let .failure(error):
-                            self?.logger.error("Failure completion \(error)")
-                            self?.handleError(error.localizedDescription)
-                        }
-                    },
-                    receiveValue: { [weak self] response in
-                        self?.handleReceive(response)
-                    }
-                )
-        } else {
-            handleError(AppMessages.ollamaServerUnreachable)
-        }
+        await self.autorename()
     }
 
     @MainActor
     func regenerate(_: Message) async {
         TelemetryManager.send("MessageViewModel.regenerate")
         sendViewState = .loading
-        do {
-            OllamaKit.shared.restart()
-            try await OllamaKit.shared.waitForAPI()
-            // Handle the case when the API restarts successfully
-            logger.debug("API restarted successfully.")
-            // Update the UI or proceed with the next steps
-        } catch {
-            // Handle the failure case
-            logger.error("Failed to restart the API.")
-            sendViewState = .error(message: "Failed to restart the API. Please try again later.")
-            // Update the UI to show an error message
-        }
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
         // So for that, we'll recreate the original send scenario, when the new user message was sent
@@ -154,15 +103,20 @@ final class MessageViewModel: ObservableObject {
         }
     }
 
-    private func handleReceive(_ response: OKChatResponse) {
-        if messages.isEmpty { return }
-        guard let message = response.message else { return }
-        guard let lastMessage = messages.last else { return }
+    private func processOutput(stream: AsyncStream<String>) async -> String {
+        var result = ""
+        for await line in stream {
+            result += line
+        }
+
+        if messages.isEmpty { return result }
+        guard let lastMessage = messages.last else { return result }
 
         if lastMessage.content == nil { lastMessage.content = "" }
-        lastMessage.content?.append(message.content)
+        lastMessage.content?.append(result)
 
-        sendViewState = .loading
+        self.sendViewState = .loading
+        return result
     }
 
     private func handleError(_ errorMessage: String) {
@@ -192,35 +146,12 @@ extension MessageViewModel {
     func autorename() async {
         TelemetryManager.send("MessageViewModel.autorename")
 
-        try? await OllamaKit.shared.waitForAPI()
-
-        if await OllamaKit.shared.reachable() {
-            // Copy the messages array and append the instruction message to it
-            var message_history = messages.map { $0 }
-
-            let instructionMessage = Message(content: AppPrompts.createShortTitle, role: .user)
-            message_history.append(instructionMessage)
-
-            var data = OKChatRequestData(
-                model: chat.model,
-                messages: message_history.compactMap { $0.toChatMessage() }
-            )
-            data.stream = false
-
-            do {
-                let result = try await OllamaKit.shared.achat(data: data)
-
-                if let content = result.message?.content {
-                    // Split by newline or period
-                    let split = content.split(whereSeparator: { $0.isNewline || $0.isPunctuation })
-                    let title = split.first ?? ""
-                    chat.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
-                }
-            } catch {
-                logger.error("Error waiting for API: \(error)")
-            }
-        } else {
-            handleError(AppMessages.ollamaServerUnreachable)
+        let result: Message = await LLMManager.shared.chat(messages: messages)
+        if let content = result.content {
+            // Split by newline or period
+            let split = content.split(whereSeparator: { $0.isNewline || $0.isPunctuation })
+            let title = split.first ?? ""
+            chat.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 }
@@ -338,7 +269,7 @@ extension MessageViewModel {
 
         // Create a new message with the recognized text
         let userMessage = Message(
-            content: "Take a a look at this image for me", role: Role.user, chat: chat,
+            content: "Take a a look at this image for me", role: .user, chat: chat,
             images: [image]
         )
 
@@ -349,7 +280,7 @@ extension MessageViewModel {
             "I couldn't read anything from this image.\n"
         }
         let assistantMessage = Message(
-            content: assistantContent, role: Role.assistant, chat: chat
+            content: assistantContent, role: .assistant, chat: chat
         )
 
         // Add the messages to the view model
@@ -373,7 +304,7 @@ extension MessageViewModel {
 
             // Add the message to the view model
             let message = Message(
-                role: Role.user,
+                role: .user,
                 chat: chat
             )
 

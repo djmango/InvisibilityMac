@@ -18,7 +18,7 @@ struct AdvancedSettingsView: View {
     @State private var showingModelPicker = false
 
     // Models for picker, assuming these are your models
-    let models = OllamaViewModel.shared.models
+    let models: [String] = ["mistral:latest"]
 
     var body: some View {
         VStack {

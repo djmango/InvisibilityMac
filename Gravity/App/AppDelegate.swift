@@ -7,7 +7,6 @@
 
 import Cocoa
 import Foundation
-import OllamaKit
 import os
 import SwiftUI
 
@@ -30,9 +29,5 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func appDidResignActive(notification _: NSNotification) {
         isAppActive = false
-    }
-
-    func applicationWillTerminate(_: Notification) {
-        OllamaKit.shared.terminateBinaryProcess()
     }
 }

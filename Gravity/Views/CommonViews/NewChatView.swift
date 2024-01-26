@@ -45,27 +45,27 @@ struct NewChatView: View {
 
             Spacer()
 
-            if OllamaViewModel.shared.mistralDownloadProgress < 1.0,
-               OllamaViewModel.shared.mistralDownloadProgress > 0.0
-            {
-                Text("\(Int(OllamaViewModel.shared.mistralDownloadProgress * 100))%")
-                    .font(.title)
-                    .bold()
-                    .foregroundColor(.white)
+            // if OllamaViewModel.shared.mistralDownloadProgress < 1.0,
+            //    OllamaViewModel.shared.mistralDownloadProgress > 0.0
+            // {
+            //     Text("\(Int(OllamaViewModel.shared.mistralDownloadProgress * 100))%")
+            //         .font(.title)
+            //         .bold()
+            //         .foregroundColor(.white)
 
-                ProgressView(value: OllamaViewModel.shared.mistralDownloadProgress, total: 1.0)
-                    .accentColor(.accentColor)
-                    .scaleEffect(x: 1, y: 2, anchor: .center)
-                    .frame(width: 400)
-                    .conditionalEffect(
-                        .repeat(
-                            .glow(color: .white, radius: 10),
-                            every: 3
-                        ), condition: true
-                    )
+            //     ProgressView(value: OllamaViewModel.shared.mistralDownloadProgress, total: 1.0)
+            //         .accentColor(.accentColor)
+            //         .scaleEffect(x: 1, y: 2, anchor: .center)
+            //         .frame(width: 400)
+            //         .conditionalEffect(
+            //             .repeat(
+            //                 .glow(color: .white, radius: 10),
+            //                 every: 3
+            //             ), condition: true
+            //         )
 
-                Spacer()
-            }
+            //     Spacer()
+            // }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(

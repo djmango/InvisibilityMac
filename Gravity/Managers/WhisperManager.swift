@@ -7,28 +7,10 @@
 
 import Combine
 import Foundation
-import OllamaKit
 import os
 import SwiftData
 import SwiftUI
 import SwiftWhisper
-
-struct ModelInfo {
-    let url: URL
-    let hash: String
-    let localURL: URL
-}
-
-enum ModelRepository {
-    static let WHISPER_SMALL = ModelInfo(
-        url: URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin?download=true")!,
-        hash: "ae85e4a935d7a567bd102fe55afc16bb595bdb618e11b2fc7591bc08120411bb",
-        localURL: DownloadManager.gravityHomeDir
-            .appendingPathComponent("models")
-            .appendingPathComponent("whisper")
-            .appendingPathComponent("small.bin")
-    )
-}
 
 class WhisperHandler: WhisperDelegate {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
@@ -54,8 +36,6 @@ class WhisperHandler: WhisperDelegate {
             await self.messageViewModel.autorename()
 
             do {
-                try await OllamaKit.shared.waitForAPI()
-
                 var messages: [Message] = []
 
                 let transcriptMessage = Message(
@@ -71,14 +51,8 @@ class WhisperHandler: WhisperDelegate {
                 messages.append(transcriptMessage)
                 messages.append(instructionMessage)
 
-                var data = OKChatRequestData(
-                    model: "mistral:latest",
-                    messages: messages.compactMap { $0.toChatMessage() }
-                )
-                data.stream = false
-
-                let result: OKChatResponse = try await OllamaKit.shared.achat(data: data)
-                if let content = result.message?.content {
+                let result: Message = try await LLMManager.shared.chat(messages: messages)
+                if let content = result.content {
                     // Split by newline or period
                     let split = content.split(whereSeparator: { $0.isNewline || $0.isPunctuation })
                     let title = split.first ?? ""
@@ -130,8 +104,7 @@ final class WhisperManager {
 
                 if downloadManager.state == .failed, downloadRetries < 100 {
                     downloadRetries += 1
-                    let ourself = self
-                    logger.debug("Waiting for Whisper to be ready (\(ourself.downloadRetries))")
+                    logger.debug("Waiting for Whisper to be ready (\(self.downloadRetries))")
                     await setup()
                 }
             }
@@ -167,7 +140,7 @@ final class WhisperManager {
         }
     }
 
-    func wipeWhisper() {
+    func wipe() {
         try? FileManager.default.removeItem(at: ModelRepository.WHISPER_SMALL.localURL)
     }
 }

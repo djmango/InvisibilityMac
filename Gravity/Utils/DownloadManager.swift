@@ -45,8 +45,7 @@ class DownloadManager {
 
     private(set) var state: DownloadState = .notStarted {
         didSet {
-            let ourself = self
-            logger.debug("Download state changed to \(ourself.state.description)")
+            logger.debug("Download state changed to \(self.state.description)")
         }
     }
 

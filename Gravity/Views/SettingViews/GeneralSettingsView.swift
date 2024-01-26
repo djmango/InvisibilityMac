@@ -7,7 +7,6 @@
 
 import KeyboardShortcuts
 import LaunchAtLogin
-import OllamaKit
 import os
 import SwiftData
 import SwiftUI
@@ -107,11 +106,8 @@ struct GeneralSettingsView: View {
                         onboardingViewed = false
 
                         // Wipe models
-                        OllamaViewModel.shared.wipeOllama()
-                        WhisperManager.shared.wipeWhisper()
-
-                        // Restart models
-                        OllamaKit.shared.restart()
+                        LLMManager.shared.wipe()
+                        WhisperManager.shared.wipe()
 
                         // Restart app
                         NSApplication.shared.terminate(self)

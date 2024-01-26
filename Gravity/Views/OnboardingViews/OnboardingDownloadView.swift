@@ -34,9 +34,7 @@ struct OnboardingDownloadView: View {
                         ), condition: true
                     )
 
-                if OllamaViewModel.shared.mistralDownloadStatus != .complete,
-                   OllamaViewModel.shared.mistralDownloadStatus != .offline
-                {
+                if LLMManager.shared.downloadManager.state != .completed {
                     Text("Downloading models...")
                         .font(.title)
                         .bold()
@@ -49,12 +47,12 @@ struct OnboardingDownloadView: View {
 
                     Spacer()
 
-                    Text("\(Int(OllamaViewModel.shared.mistralDownloadProgress * 100))%")
+                    Text("\(Int(0.314 * 100))%")
                         .font(.title)
                         .bold()
                         .foregroundColor(.white)
 
-                    ProgressView(value: OllamaViewModel.shared.mistralDownloadProgress, total: 1.0)
+                    ProgressView(value: 0.5, total: 1.0)
                         .accentColor(.accentColor)
                         .scaleEffect(x: 1, y: 2, anchor: .center)
                         .frame(width: 400)
@@ -84,24 +82,19 @@ struct OnboardingDownloadView: View {
                 .frame(width: 200, height: 50)
                 .buttonStyle(.plain)
                 .background(.accent)
-                .opacity((OllamaViewModel.shared.mistralDownloadStatus == .complete || OllamaViewModel.shared.mistralDownloadStatus == .offline)
+                .opacity((LLMManager.shared.downloadManager.state == .completed)
                     ? 1.0 : 0.5)
                 .cornerRadius(25)
                 .padding()
                 .focusable(false)
-                .disabled(OllamaViewModel.shared.mistralDownloadStatus != .complete &&
-                    OllamaViewModel.shared.mistralDownloadStatus != .offline)
+                .disabled(LLMManager.shared.downloadManager.state != .completed)
                 .onTapGesture {
-                    if OllamaViewModel.shared.mistralDownloadStatus == .complete ||
-                        OllamaViewModel.shared.mistralDownloadStatus == .offline
-                    {
+                    if LLMManager.shared.downloadManager.state == .completed {
                         callback()
                     }
                 }
                 .onHover { hovering in
-                    if hovering, OllamaViewModel.shared.mistralDownloadStatus == .complete ||
-                        OllamaViewModel.shared.mistralDownloadStatus == .offline
-                    {
+                    if hovering, LLMManager.shared.downloadManager.state == .completed {
                         NSCursor.pointingHand.push()
                     } else {
                         NSCursor.pop()
@@ -135,7 +128,8 @@ struct OnboardingDownloadView: View {
                         Button("Cancel", role: .cancel) {}
                         Button("Delete", role: .destructive) {
                             // Wipe models
-                            OllamaViewModel.shared.wipeOllama()
+                            LLMManager.shared.wipe()
+                            WhisperManager.shared.wipe()
 
                             // Restart app
                             NSApplication.shared.terminate(self)
@@ -150,7 +144,7 @@ struct OnboardingDownloadView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
             Task {
-                await OllamaViewModel.shared.pullModels()
+                await LLMManager.shared.setup()
             }
         }
     }

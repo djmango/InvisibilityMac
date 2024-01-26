@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "alamofire",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Alamofire/Alamofire",
-      "state" : {
-        "revision" : "3dc6a42c7727c49bf26508e29b0a0b35f9c7e1ad",
-        "version" : "5.8.1"
-      }
-    },
-    {
       "identity" : "audiokit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/AudioKit/AudioKit.git",
@@ -64,21 +55,21 @@
       }
     },
     {
+      "identity" : "llm.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/eastriverlee/LLM.swift.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "996cf37e12ce5f5a76c05b0492c5e177f11e2410"
+      }
+    },
+    {
       "identity" : "networkimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/gonzalezreal/NetworkImage",
       "state" : {
         "revision" : "7aff8d1b31148d32c5933d75557d42f6323ee3d1",
         "version" : "6.0.0"
-      }
-    },
-    {
-      "identity" : "ollamakit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/djmango/OllamaKit",
-      "state" : {
-        "branch" : "master",
-        "revision" : "e0054c65bba83d1151f10707666ba3eace0e1973"
       }
     },
     {

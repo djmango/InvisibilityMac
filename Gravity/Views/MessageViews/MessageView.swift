@@ -1,4 +1,3 @@
-import OllamaKit
 import os
 import SwiftData
 import SwiftUI
@@ -131,18 +130,6 @@ struct MessageView: View {
         isEditorFocused = true
         promptFocused = true
 
-        Task {
-            do {
-                try await OllamaKit.shared.waitForAPI()
-                await ModelWarmer.shared.warm()
-            } catch {
-                AlertManager.shared.alertTitle = "Error"
-                AlertManager.shared.alertMessage = "Could not load models. Please try again or restart the app."
-                AlertManager.shared.showAlert = true
-                OllamaKit.shared.restart()
-            }
-        }
-
         tabViewModel.selectedTab = 0
         AudioPlayerViewModel.shared.stop()
         let messageViewModel = MessageViewModelManager.shared.viewModel(for: chat)
@@ -157,14 +144,7 @@ struct MessageView: View {
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
         // If model download is not complete, alert the user.
-        guard OllamaViewModel.shared.mistralDownloadStatus == .complete ||
-            OllamaViewModel.shared.mistralDownloadStatus == .offline
-        else {
-            AlertManager.shared.alertTitle = AppMessages.modelNotDownloadedTitle
-            AlertManager.shared.alertMessage = AppMessages.modelNotDownloadedMessage
-            AlertManager.shared.showAlert = true
-            return
-        }
+        // TODO:
 
         tabViewModel.selectedTab = 0
         let message = Message(content: content, role: .user, chat: chat)

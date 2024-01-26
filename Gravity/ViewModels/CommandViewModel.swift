@@ -1,7 +1,6 @@
 import AppKit
 import Foundation
 import KeyboardShortcuts
-import OllamaKit
 import SwiftData
 import SwiftUI
 import ViewCondition
@@ -37,14 +36,6 @@ final class CommandViewModel: ObservableObject {
                 frame.origin = CGPoint(x: mouseLocation.x - frame.size.width / 2, y: mouseLocation.y - frame.size.height / 2)
                 window.setFrame(frame, display: true)
             }
-        }
-    }
-
-    private func runIfReachable(_ function: @escaping () async -> Void) async {
-        if await OllamaKit.shared.reachable() {
-            await function()
-        } else {
-            AlertManager.shared.doShowAlert(title: "Error", message: "Could not connect to Ollama")
         }
     }
 

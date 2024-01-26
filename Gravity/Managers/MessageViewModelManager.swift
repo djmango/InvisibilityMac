@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import OllamaKit
 import SwiftData
 
 /// MessageViewModelManager is a singleton class responsible for managing instances of MessageViewModel.

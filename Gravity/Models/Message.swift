@@ -1,9 +1,8 @@
 import Foundation
-import OllamaKit
 import SwiftData
 
 /// Role for message sender, system, user, or assistant
-enum Role: String, Codable {
+enum MessageRole: String, Codable {
     case system
     case user
     case assistant
@@ -18,7 +17,7 @@ final class Message: Identifiable {
     /// Message textual content
     var content: String?
     /// Role for message sender, system, user, or assistant
-    var role: Role?
+    var role: MessageRole?
     /// Optional list of images stored externally to avoid bloating the database
     @Attribute(.externalStorage) var images: [Data]? // TODO: refactor this into its own model
     /// Whether the message generation has completed
@@ -30,7 +29,7 @@ final class Message: Identifiable {
     /// The child audio attached to the message
     @Relationship(deleteRule: .cascade, inverse: \Audio.message) var audio: Audio?
 
-    init(content: String? = nil, role: Role? = nil, chat: Chat? = nil, images: [Data]? = nil) {
+    init(content: String? = nil, role: MessageRole? = nil, chat: Chat? = nil, images: [Data]? = nil) {
         self.content = content
         self.role = role
         self.chat = chat
@@ -40,29 +39,6 @@ final class Message: Identifiable {
     /// The name of the model used to generate the message
     @Transient var model: String {
         chat?.model ?? ""
-    }
-}
-
-extension Message {
-    /// Convert a Message to a ChatMessage for transmission to OlammaKit
-    func toChatMessage() -> ChatMessage? {
-        guard let role else { return nil }
-
-        // Set content to empty string if nil
-        var content = content ?? ""
-
-        let base64Images = images?.compactMap { $0.base64EncodedString() }
-
-        // If theres audio, we need to send the transcribed text
-        if let audio {
-            // If not empty add a new line
-            if !content.isEmpty {
-                content += "\n"
-            }
-            content += audio.text
-        }
-
-        return ChatMessage(role: role.rawValue, content: content, images: base64Images)
     }
 }
 
