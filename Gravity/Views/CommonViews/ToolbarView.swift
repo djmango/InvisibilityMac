@@ -49,16 +49,6 @@ struct ToolbarView: ToolbarContent {
                 }
                 .buttonStyle(.accessoryBar)
                 .help(audioPlayerViewModel.isPlaying ? "Pause" : "Play")
-
-                if audioPlayerViewModel.player != nil {
-                    Button(action: {
-                        audioPlayerViewModel.stop()
-                    }) {
-                        Label("Stop", systemImage: "stop.fill")
-                    }
-                    .buttonStyle(.accessoryBar)
-                    .help("Stop")
-                }
             }
         }
 

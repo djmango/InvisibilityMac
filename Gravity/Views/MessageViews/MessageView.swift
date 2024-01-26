@@ -57,7 +57,7 @@ struct MessageView: View {
                         )
                         .generating(message.content == nil && isGenerating)
                         .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                        .error(message.error, message: messageViewModel.sendViewState?.errorMessage)
+                        .error(message.error == true, message: messageViewModel.sendViewState?.errorMessage)
                         .audio(message.audio)
                         .id(message)
                     }
@@ -102,13 +102,12 @@ struct MessageView: View {
                 .padding(.horizontal)
             }
             .overlay(
-                // Grey overlay when the user is dragging a file.
                 Rectangle()
                     .foregroundColor(Color.gray.opacity(0.2))
                     .opacity(isDragActive ? 1 : 0)
             )
             .border(isDragActive ? Color.blue : Color.clear, width: 5)
-            .onDrop(of: [.fileURL, .image], isTargeted: $isDragActive) { providers in
+            .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
                 handleDrop(providers: providers)
             }
             .copyable(selection.compactMap(\.content))
@@ -137,9 +136,6 @@ struct MessageView: View {
         if messageViewModel.messages.contains(where: { $0.audio != nil }) {
             // Set audioplayer audio to the first audio file in the chat.
             AudioPlayerViewModel.shared.audio = messageViewModel.messages.first(where: { $0.audio != nil })?.audio
-            print("Audio files in chat")
-        } else {
-            print("No audio files in chat")
         }
     }
 
@@ -202,28 +198,6 @@ struct MessageView: View {
                         // Process the file URL
                         logger.debug("File URL: \(url)")
                         messageViewModel.handleFile(url: url)
-                    }
-                }
-            }
-            // Handle images (e.g., from screenshot thumbnail)
-            else if provider.hasItemConformingToTypeIdentifier("public.png") {
-                _ = provider.loadDataRepresentation(for: .image) { data, error in
-                    if error == nil, let data {
-                        let image = NSImage(data: data)
-                        logger.debug("ITWORKED: \(image)")
-
-                        // // Write the image data to a temporary file
-                        // do {
-                        //     let tmpURL = FileManager.default.temporaryDirectory
-                        //         .appendingPathComponent(UUID().uuidString).appendingPathExtension("png")
-                        //     try image.write(to: tmpURL)
-                        //     logger.debug("Image saved to temporary file: \(tmpURL)")
-                        //     messageViewModel.handleFile(url: tmpURL)
-                        // } catch {
-                        //     logger.error("Error writing image to temporary file: \(error)")
-                        // }
-                    } else {
-                        logger.error("Error loading image: \(error!)")
                     }
                 }
             } else {

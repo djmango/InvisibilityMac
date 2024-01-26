@@ -28,6 +28,7 @@ final class MessageViewModel: ObservableObject {
     }
 
     deinit {
+        logger.debug("MessageViewModel deinit")
         self.stopGenerate()
     }
 
@@ -103,7 +104,7 @@ final class MessageViewModel: ObservableObject {
         TelemetryManager.send("MessageViewModel.regenerate")
         sendViewState = .loading
         do {
-            try await OllamaKit.shared.waitForAPI(restart: true)
+            try await OllamaKit.shared.waitForAPI(restart: true, timeoutSeconds: 10)
             // Handle the case when the API restarts successfully
             logger.debug("API restarted successfully.")
             // Update the UI or proceed with the next steps
@@ -123,10 +124,15 @@ final class MessageViewModel: ObservableObject {
         // Remove the assistant message we are regenerating from class and ModelContext
         if let assistantMessage = messages.popLast() {
             modelContext.delete(assistantMessage)
+            do {
+                try modelContext.save()
+            } catch {
+                // Handle the error, such as logging or showing an alert to the user
+                print("Error saving context after deletion: \(error)")
+            }
         }
         // Removes the user message and presents a fresh send scenario
         if let userMessage = messages.popLast() {
-            modelContext.delete(userMessage)
             await send(userMessage)
         }
     }

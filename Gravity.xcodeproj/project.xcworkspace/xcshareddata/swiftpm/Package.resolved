@@ -60,7 +60,7 @@
       "location" : "https://github.com/ggerganov/llama.cpp.git",
       "state" : {
         "branch" : "master",
-        "revision" : "cd4fddb29f81d6a1f6d51a0c016bc6b486d68def"
+        "revision" : "fe54033b69b83164cabb5f3ed92dc0ff7ea47605"
       }
     },
     {
@@ -78,7 +78,7 @@
       "location" : "https://github.com/djmango/OllamaKit",
       "state" : {
         "branch" : "master",
-        "revision" : "2b23544b8c72f5ac0dbf517c94f7e62c3bca86a6"
+        "revision" : "b311a4a8411f57ea6a5b091f46195ec974937ee1"
       }
     },
     {

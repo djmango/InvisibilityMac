@@ -26,11 +26,10 @@ class TabViewModel: ObservableObject {
             .sink { [weak self] audio in
                 guard let self else { return }
                 if audio != nil {
-                    // tabs = ["Messages", audio.name]
                     tabs = ["Messages", "Audio"]
                 } else {
                     if CommandViewModel.shared.selectedChat != nil {
-                        tabs = ["Messages"]
+                        tabs = []
                     } else {
                         tabs = []
                     }

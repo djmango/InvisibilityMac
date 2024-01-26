@@ -21,7 +21,7 @@ class MessageViewModelManager {
     // Function to retrieve a MessageViewModel for a given chatID.
     // It reuses existing view models or creates a new one if not already present.
     func viewModel(for chat: Chat) -> MessageViewModel {
-        if let viewModel = viewModels[chat] {
+        if viewModels.keys.contains(chat), let viewModel = viewModels[chat] {
             return viewModel
         } else {
             let viewModel = MessageViewModel(chat: chat)
