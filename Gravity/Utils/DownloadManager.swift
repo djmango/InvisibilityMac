@@ -5,11 +5,12 @@
 //  Created by Sulaiman Ghori on 1/19/24.
 //
 
+import Combine
 import CryptoKit
 import Foundation
 import os
 
-class DownloadManager {
+class DownloadManager: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "DownloadManager")
 
     static let gravityHomeDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".gravity")
@@ -43,49 +44,65 @@ class DownloadManager {
         case downloadFailed(Error)
     }
 
-    private(set) var state: DownloadState = .notStarted {
+    @Published private(set) var state: DownloadState = .notStarted {
         didSet {
             logger.debug("Download state changed to \(self.state.description)")
         }
     }
 
+    @Published var progress: Double = 0.0
+
+    private var cancellables: Set<AnyCancellable> = []
+
     var lastError: Error?
 
     /// Downloads a file from a given URL to a given destination URL, verifying the SHA256 hash of the file
     func download(from url: URL, to destinationURL: URL, expectedHash: String) async throws {
-        state = .downloading
+        DispatchQueue.main.async {
+            self.state = .downloading
+        }
         lastError = nil
 
-        let localURL: URL = try await withCheckedThrowingContinuation { continuation in
-            let task = URLSession.shared.downloadTask(with: url) { localURL, _, error in
+        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: nil)
+        try await withCheckedThrowingContinuation { [unowned self] (continuation: CheckedContinuation<Void, Error>) in
+            let task = session.downloadTask(with: url) { localURL, _, error in
                 if let error {
-                    continuation.resume(throwing: DownloadError.downloadFailed(error))
-                    self.state = .failed
-                    self.lastError = error
+                    continuation.resume(throwing: error)
                     return
                 }
                 guard let localURL else {
                     continuation.resume(throwing: DownloadError.invalidLocalURL)
-                    self.state = .failed
-                    self.lastError = error
                     return
                 }
-                continuation.resume(returning: localURL)
-            }
-            task.resume()
-        }
 
-        state = .verifying
-        if verifyFile(at: localURL, expectedHash: expectedHash) {
-            do {
-                try moveFile(from: localURL, to: destinationURL)
-                state = .completed
-            } catch {
-                state = .failed
-                lastError = error
+                // Post-download verification and processing can be done here
+                if self.verifyFile(at: localURL, expectedHash: expectedHash) {
+                    do {
+                        try self.moveFile(from: localURL, to: destinationURL)
+                        DispatchQueue.main.async {
+                            self.state = .completed
+                        }
+                    } catch {
+                        DispatchQueue.main.async {
+                            self.state = .failed
+                        }
+                        self.lastError = error
+                    }
+                } else {
+                    self.logger.error("Hash mismatch")
+                }
+                continuation.resume(returning: ())
             }
-        } else {
-            throw DownloadError.hashMismatch
+
+            task.progress.publisher(for: \.fractionCompleted)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] progress in
+                    self?.progress = progress
+                    self?.logger.debug("Download progress: \(progress)")
+                })
+                .store(in: &self.cancellables)
+
+            task.resume()
         }
     }
 
@@ -97,6 +114,10 @@ class DownloadManager {
 
     /// Verifies the SHA256 hash of a file at a given URL
     func verifyFile(at fileURL: URL, expectedHash: String) -> Bool {
+        DispatchQueue.main.async {
+            self.state = .verifying
+        }
+
         do {
             let data = try Data(contentsOf: fileURL)
             let hash = SHA256.hash(data: data)

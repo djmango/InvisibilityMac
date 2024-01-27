@@ -96,7 +96,7 @@ final class LLMManager {
     }
 
     func setup() async {
-        let template = Template.mistral()
+        let template = Template.mistral
 
         if downloadManager.verifyFile(
             at: modelInfo.localURL,

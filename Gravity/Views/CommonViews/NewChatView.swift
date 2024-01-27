@@ -13,59 +13,70 @@ struct NewChatView: View {
 
     @State private var isDragActive: Bool = false
 
+    @StateObject private var whisperDownloader = WhisperManager.shared.downloadManager
+    @StateObject private var llmDownloader = LLMManager.shared.downloadManager
+
     var body: some View {
         VStack {
             Spacer()
 
-            Button(action: {
-                _ = CommandViewModel.shared.addChat()
-            }) {
-                Text("New Chat")
-                    .font(.system(size: 18))
+            if llmDownloader.state == .downloading {
+                Text("Downloading models...")
+                    .font(.title)
                     .bold()
                     .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-            }
-            .frame(width: 200, height: 50)
-            .buttonStyle(.plain)
-            .background(Color(red: 255 / 255, green: 105 / 255, blue: 46 / 255, opacity: 1))
-            .cornerRadius(10)
-            .padding()
-            .focusable(false)
-            .onTapGesture(perform: {
-                _ = CommandViewModel.shared.addChat()
-            })
-            .onHover { hovering in
-                if hovering {
-                    NSCursor.pointingHand.push()
-                } else {
-                    NSCursor.pop()
+                    .padding(.bottom, 5)
+
+                Text("This may take a minute (it's the size of a movie) (it's worth it)")
+                    .font(.subheadline)
+                    .bold()
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 10)
+
+                ProgressView(value: llmDownloader.progress, total: 1.0)
+                    .accentColor(.accentColor)
+                    .scaleEffect(x: 1, y: 2, anchor: .center)
+                    .frame(width: 400)
+                    .conditionalEffect(
+                        .repeat(
+                            .glow(color: .white, radius: 10),
+                            every: 3
+                        ), condition: true
+                    )
+
+                Text("\(Int(llmDownloader.progress * 100))%")
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(.white)
+            } else {
+                Button(action: {
+                    _ = CommandViewModel.shared.addChat()
+                }) {
+                    Text("New Chat")
+                        .font(.system(size: 18))
+                        .bold()
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                }
+                .frame(width: 200, height: 50)
+                .buttonStyle(.plain)
+                .background(Color(red: 255 / 255, green: 105 / 255, blue: 46 / 255, opacity: 1))
+                .cornerRadius(10)
+                .padding()
+                .focusable(false)
+                .onTapGesture(perform: {
+                    _ = CommandViewModel.shared.addChat()
+                })
+                .onHover { hovering in
+                    if hovering {
+                        NSCursor.pointingHand.push()
+                    } else {
+                        NSCursor.pop()
+                    }
                 }
             }
 
             Spacer()
-
-            // if OllamaViewModel.shared.mistralDownloadProgress < 1.0,
-            //    OllamaViewModel.shared.mistralDownloadProgress > 0.0
-            // {
-            //     Text("\(Int(OllamaViewModel.shared.mistralDownloadProgress * 100))%")
-            //         .font(.title)
-            //         .bold()
-            //         .foregroundColor(.white)
-
-            //     ProgressView(value: OllamaViewModel.shared.mistralDownloadProgress, total: 1.0)
-            //         .accentColor(.accentColor)
-            //         .scaleEffect(x: 1, y: 2, anchor: .center)
-            //         .frame(width: 400)
-            //         .conditionalEffect(
-            //             .repeat(
-            //                 .glow(color: .white, radius: 10),
-            //                 every: 3
-            //             ), condition: true
-            //         )
-
-            //     Spacer()
-            // }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .overlay(

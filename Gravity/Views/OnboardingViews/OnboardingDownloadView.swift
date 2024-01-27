@@ -47,12 +47,12 @@ struct OnboardingDownloadView: View {
 
                     Spacer()
 
-                    Text("\(Int(0.314 * 100))%")
+                    Text("\(Int(LLMManager.shared.downloadManager.progress * 100))%")
                         .font(.title)
                         .bold()
                         .foregroundColor(.white)
 
-                    ProgressView(value: 0.5, total: 1.0)
+                    ProgressView(value: LLMManager.shared.downloadManager.progress, total: 1.0)
                         .accentColor(.accentColor)
                         .scaleEffect(x: 1, y: 2, anchor: .center)
                         .frame(width: 400)
