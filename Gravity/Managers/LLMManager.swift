@@ -40,6 +40,7 @@ final class LLMManager {
 
     private init() {}
 
+    @MainActor
     func chat(
         messages: [Message],
         // Default processOutput function, just appends the output to a variable and returns it
@@ -60,12 +61,39 @@ final class LLMManager {
             return result
         }
 
+        var truncatedMessages = messages
+
+        // Add the audio text to the content of messages that have audio
+        for (index, message) in truncatedMessages.enumerated() {
+            if let audio = message.audio {
+                truncatedMessages[index].content = (message.content ?? "") + audio.text
+            }
+        }
+
+        var totalCharCount = truncatedMessages.reduce(0) { $0 + ($1.content?.count ?? 0) }
+
+        while totalCharCount >= 10000 {
+            if let firstMessage = truncatedMessages.first {
+                totalCharCount -= firstMessage.content?.count ?? 0
+                truncatedMessages.removeFirst()
+            } else {
+                break
+            }
+        }
+
+        print("Total char count: \(totalCharCount)")
+
         await llm?.history = []
-        for message in messages {
+        for message in truncatedMessages {
             if message.role == .assistant {
                 await llm?.history.append((.bot, message.content ?? ""))
             } else {
-                await llm?.history.append((.user, message.content ?? ""))
+                var content = message.content ?? ""
+                // If we have audio, we need to append the audio text to the message
+                if let audio = message.audio {
+                    content += audio.text
+                }
+                await llm?.history.append((.user, content))
             }
         }
 
@@ -75,13 +103,41 @@ final class LLMManager {
         }
     }
 
+    @MainActor
     func achat(messages: [Message]) async -> Message {
+        var truncatedMessages = messages
+
+        // Add the audio text to the content of messages that have audio
+        for (index, message) in truncatedMessages.enumerated() {
+            if let audio = message.audio {
+                truncatedMessages[index].content = (message.content ?? "") + audio.text
+            }
+        }
+
+        var totalCharCount = truncatedMessages.reduce(0) { $0 + ($1.content?.count ?? 0) }
+
+        while totalCharCount >= 5000 {
+            if let firstMessage = truncatedMessages.first {
+                totalCharCount -= firstMessage.content?.count ?? 0
+                truncatedMessages.removeFirst()
+            } else {
+                break
+            }
+        }
+
+        print("Total char count: \(totalCharCount)")
+
         await llm?.history = []
-        for message in messages {
+        for message in truncatedMessages {
             if message.role == .assistant {
                 await llm?.history.append((.bot, message.content ?? ""))
             } else {
-                await llm?.history.append((.user, message.content ?? ""))
+                var content = message.content ?? ""
+                // If we have audio, we need to append the audio text to the message
+                if let audio = message.audio {
+                    content += audio.text
+                }
+                await llm?.history.append((.user, content))
             }
         }
 

@@ -72,7 +72,7 @@ struct ChatSidebarListView: View {
             }
             .hide(if: previousDays.isEmpty, removeCompletely: true)
         }
-        .frame(width: 260)
+        // .frame(width: 260)
         .listStyle(.sidebar)
         .task {
             try? ChatViewModel.shared.fetch()
