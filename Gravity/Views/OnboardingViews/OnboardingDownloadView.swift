@@ -12,6 +12,8 @@ struct OnboardingDownloadView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "OnboardingDownloadView")
     @State private var showDeleteAllDataAlert: Bool = false
 
+    @StateObject private var llmDownloader = LLMManager.shared.downloadManager
+
     private var callback: () -> Void
 
     init(callback: @escaping () -> Void = {}) {
@@ -34,7 +36,7 @@ struct OnboardingDownloadView: View {
                         ), condition: true
                     )
 
-                if LLMManager.shared.downloadManager.state != .completed {
+                if llmDownloader.state == .downloading {
                     Text("Downloading models...")
                         .font(.title)
                         .bold()
@@ -47,12 +49,12 @@ struct OnboardingDownloadView: View {
 
                     Spacer()
 
-                    Text("\(Int(LLMManager.shared.downloadManager.progress * 100))%")
+                    Text("\(Int(llmDownloader.progress * 100))%")
                         .font(.title)
                         .bold()
                         .foregroundColor(.white)
 
-                    ProgressView(value: LLMManager.shared.downloadManager.progress, total: 1.0)
+                    ProgressView(value: llmDownloader.progress, total: 1.0)
                         .accentColor(.accentColor)
                         .scaleEffect(x: 1, y: 2, anchor: .center)
                         .frame(width: 400)
@@ -82,19 +84,19 @@ struct OnboardingDownloadView: View {
                 .frame(width: 200, height: 50)
                 .buttonStyle(.plain)
                 .background(.accent)
-                .opacity((LLMManager.shared.downloadManager.state == .completed)
+                .opacity((llmDownloader.state == .completed)
                     ? 1.0 : 0.5)
                 .cornerRadius(25)
                 .padding()
                 .focusable(false)
-                .disabled(LLMManager.shared.downloadManager.state != .completed)
+                .disabled(llmDownloader.state != .completed)
                 .onTapGesture {
-                    if LLMManager.shared.downloadManager.state == .completed {
+                    if llmDownloader.state == .completed {
                         callback()
                     }
                 }
                 .onHover { hovering in
-                    if hovering, LLMManager.shared.downloadManager.state == .completed {
+                    if hovering, llmDownloader.state == .completed {
                         NSCursor.pointingHand.push()
                     } else {
                         NSCursor.pop()

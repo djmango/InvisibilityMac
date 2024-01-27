@@ -13,7 +13,6 @@ struct NewChatView: View {
 
     @State private var isDragActive: Bool = false
 
-    @StateObject private var whisperDownloader = WhisperManager.shared.downloadManager
     @StateObject private var llmDownloader = LLMManager.shared.downloadManager
 
     var body: some View {

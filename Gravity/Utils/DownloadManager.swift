@@ -97,8 +97,11 @@ class DownloadManager: ObservableObject {
             task.progress.publisher(for: \.fractionCompleted)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] progress in
-                    self?.progress = progress
-                    self?.logger.debug("Download progress: \(progress)")
+                    // Only update progress if it's gone up
+                    if progress > self?.progress ?? 0.0 {
+                        self?.progress = progress
+                        self?.logger.debug("Download progress: \(progress)")
+                    }
                 })
                 .store(in: &self.cancellables)
 
