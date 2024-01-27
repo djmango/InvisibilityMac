@@ -25,12 +25,12 @@ enum ModelRepository {
             .appendingPathComponent("small.bin")
     )
     static let MISTRAL_7B_V2_Q4 = ModelInfo(
-        name: "Mistral 7B v2 Q4",
-        url: URL(string: "https://huggingface.co/djmango/mistral-7b-v0.2-q4_0.gguf/resolve/main/mistral-7b-v0.2-q4_0.gguf?download=true")!,
-        hash: "a1710fb85f2bd8e2c191bfc498211cdd469fe94a45920d19eaf28115844b6959",
+        name: "Mistral-7B",
+        url: URL(string: "https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/resolve/main/mistral-7b-instruct-v0.2.Q4_K_M.gguf?download=true")!,
+        hash: "3e0039fd0273fcbebb49228943b17831aadd55cbcbf56f0af00499be2040ccf9",
         localURL: DownloadManager.gravityHomeDir
             .appendingPathComponent("models")
             .appendingPathComponent("mistral")
-            .appendingPathComponent("7b-v0.2-q4_0.gguf")
+            .appendingPathComponent("mistral-7b-instruct-v0.2.Q4_K_M.gguf")
     )
 }

@@ -16,7 +16,7 @@ final class MessageViewModel: ObservableObject {
 
     private let modelContext = SharedModelContainer.shared.mainContext
     private var chat: Chat
-    private var generation: AnyCancellable?
+    private var chatTask: Task<Void, Error>?
     private var lastOpenedImage: Data?
 
     var messages: [Message] = []
@@ -55,11 +55,19 @@ final class MessageViewModel: ObservableObject {
         messages.append(assistantMessage)
         modelContext.insert(assistantMessage)
 
-        // Use compactMap to drop nil values and dropLast
-        // to drop the assistant message from the context we are sending to the LLM
-        let response = await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
+        chatTask = Task {
+            await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
-        await self.autorename()
+            assistantMessage.error = false
+            assistantMessage.completed = true
+
+            sendViewState = nil
+
+            // If there are two messages, or the chat name is New Chat, we'll autorename
+            if messages.count == 2 || chat.name == "New Chat" {
+                await self.autorename()
+            }
+        }
     }
 
     @MainActor
@@ -93,7 +101,7 @@ final class MessageViewModel: ObservableObject {
         TelemetryManager.send("MessageViewModel.stopGenerate")
         logger.debug("Canceling generation")
         sendViewState = nil
-        generation?.cancel()
+        chatTask?.cancel()
         Task {
             do {
                 try await WhisperManager.shared.whisper?.cancel()
@@ -107,36 +115,18 @@ final class MessageViewModel: ObservableObject {
         var result = ""
         for await line in stream {
             result += line
+
+            DispatchQueue.main.async {
+                if !self.messages.isEmpty, let lastMessage = self.messages.last {
+                    if lastMessage.content == nil { lastMessage.content = "" }
+                    lastMessage.content?.append(line)
+                }
+
+                self.sendViewState = .loading
+            }
         }
 
-        if messages.isEmpty { return result }
-        guard let lastMessage = messages.last else { return result }
-
-        if lastMessage.content == nil { lastMessage.content = "" }
-        lastMessage.content?.append(result)
-
-        self.sendViewState = .loading
         return result
-    }
-
-    private func handleError(_ errorMessage: String) {
-        TelemetryManager.send("MessageViewModel.handleError")
-        if messages.isEmpty { return }
-
-        messages.last?.error = true
-        messages.last?.completed = false
-
-        sendViewState = .error(message: errorMessage)
-    }
-
-    private func handleComplete() {
-        TelemetryManager.send("MessageViewModel.handleComplete")
-        if messages.isEmpty { return }
-
-        messages.last?.error = false
-        messages.last?.completed = true
-
-        sendViewState = nil
     }
 }
 
@@ -146,10 +136,17 @@ extension MessageViewModel {
     func autorename() async {
         TelemetryManager.send("MessageViewModel.autorename")
 
-        let result: Message = await LLMManager.shared.chat(messages: messages)
+        // Copy the messages array and append the instruction message to it
+        var message_history = messages.map { $0 }
+
+        let instructionMessage = Message(content: AppPrompts.createShortTitle, role: .user)
+        message_history.append(instructionMessage)
+
+        let result: Message = await LLMManager.shared.achat(messages: message_history)
         if let content = result.content {
+            logger.debug("Autorename result: \(content)")
             // Split by newline or period
-            let split = content.split(whereSeparator: { $0.isNewline || $0.isPunctuation })
+            let split = content.split(whereSeparator: { $0.isNewline })
             let title = split.first ?? ""
             chat.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
         }

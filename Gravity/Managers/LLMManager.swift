@@ -51,7 +51,7 @@ final class LLMManager {
             }
             return result
         }
-    ) async -> Message {
+    ) async {
         // Wrap the processOutput function to capture the output in a variable that we can return
         var output = ""
         let processOutputWrapped = { (stream: AsyncStream<String>) async -> String in
@@ -73,23 +73,31 @@ final class LLMManager {
         if let input = await llm?.history.popLast() {
             await llm?.respond(to: input.content, with: processOutputWrapped)
         }
+    }
+
+    func achat(messages: [Message]) async -> Message {
+        await llm?.history = []
+        for message in messages {
+            if message.role == .assistant {
+                await llm?.history.append((.bot, message.content ?? ""))
+            } else {
+                await llm?.history.append((.user, message.content ?? ""))
+            }
+        }
+
+        // Remove the last message as respond will generate a new one
+        if let input = await llm?.history.popLast() {
+            await llm?.respond(to: input.content)
+        }
+
+        let output = await llm?.output ?? ""
 
         return Message(content: output, role: .assistant)
     }
 
-    func update(stream: AsyncStream<String>) async -> String {
-        var result = ""
-        for await line in stream {
-            print(line) // Print each line
-            result += line + "\n" // Append to the result
-        }
-        output += result
-        print("GOINGJOEMODE")
-        print(output)
-        return result
-    }
-
     func setup() async {
+        let template = Template.mistral()
+
         if downloadManager.verifyFile(
             at: modelInfo.localURL,
             expectedHash: modelInfo.hash
@@ -97,7 +105,8 @@ final class LLMManager {
             logger.debug("Verified \(self.modelInfo.name) at \(self.modelInfo.localURL)")
 
             logger.debug("Loading \(self.modelInfo.name) from \(self.modelInfo.localURL)")
-            _llm = LLM(from: modelInfo.localURL, template: .chatML("You are a sentient AI with emotions."))
+            _llm = LLM(from: modelInfo.localURL)
+            _llm?.template = template
         } else {
             logger.debug("Downloading \(self.modelInfo.name) from \(self.modelInfo.url)")
             do {
@@ -109,7 +118,8 @@ final class LLMManager {
 
                 logger.debug("Loading \(self.modelInfo.name) from \(self.modelInfo.localURL)")
 
-                _llm = LLM(from: modelInfo.localURL, template: .chatML("You are a sentient AI with emotions."))
+                _llm = LLM(from: modelInfo.localURL)
+                _llm?.template = template
             } catch {
                 logger.error("Could not download \(self.modelInfo.name): \(error)")
             }

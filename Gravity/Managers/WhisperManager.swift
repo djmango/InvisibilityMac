@@ -33,34 +33,29 @@ class WhisperHandler: WhisperDelegate {
         audio.completed = true
         audio.progress = 1.0
         Task {
-            await self.messageViewModel.autorename()
+            var messages: [Message] = []
 
-            do {
-                var messages: [Message] = []
+            let transcriptMessage = Message(
+                content: audio.text,
+                role: .user
+            )
 
-                let transcriptMessage = Message(
-                    content: audio.text,
-                    role: .user
-                )
+            let instructionMessage = Message(
+                content: AppPrompts.createShortTitle,
+                role: .user
+            )
 
-                let instructionMessage = Message(
-                    content: AppPrompts.createShortTitle,
-                    role: .user
-                )
+            messages.append(transcriptMessage)
+            messages.append(instructionMessage)
 
-                messages.append(transcriptMessage)
-                messages.append(instructionMessage)
+            let result: Message = await LLMManager.shared.achat(messages: messages)
 
-                let result: Message = try await LLMManager.shared.chat(messages: messages)
-                if let content = result.content {
-                    // Split by newline or period
-                    let split = content.split(whereSeparator: { $0.isNewline || $0.isPunctuation })
-                    let title = split.first ?? ""
-                    audio.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
-                }
-            } catch {
-                audio.name = audio.segments.first?.text ?? "Audio"
-                logger.error("Error waiting for API: \(error)")
+            if let content = result.content {
+                logger.debug("Audio name result: \(content)")
+                // Split by newline or period
+                let split = content.split(whereSeparator: { $0.isNewline })
+                let title = split.first ?? ""
+                audio.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
             }
         }
     }
