@@ -1,3 +1,4 @@
+import DockProgress
 import os
 import SettingsKit
 import Sparkle
@@ -57,6 +58,8 @@ struct GravityApp: App {
         Task {
             await LLMManager.shared.setup()
         }
+
+        DockProgress.style = .pie(color: .accent)
     }
 
     var body: some Scene {

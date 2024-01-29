@@ -7,6 +7,7 @@
 
 import Combine
 import CryptoKit
+import DockProgress
 import Foundation
 import os
 
@@ -19,6 +20,7 @@ class DownloadManager: ObservableObject {
         case notStarted
         case downloading
         case verifying
+        case verified
         case completed
         case failed
 
@@ -30,6 +32,8 @@ class DownloadManager: ObservableObject {
                 "Downloading"
             case .verifying:
                 "Verifying"
+            case .verified:
+                "Verified"
             case .completed:
                 "Completed"
             case .failed:
@@ -53,15 +57,17 @@ class DownloadManager: ObservableObject {
     @Published var progress: Double = 0.0
 
     private var cancellables: Set<AnyCancellable> = []
+    private let reportDockProgress: Bool
 
-    var lastError: Error?
+    init(reportDockProgress: Bool = false) {
+        self.reportDockProgress = reportDockProgress
+    }
 
     /// Downloads a file from a given URL to a given destination URL, verifying the SHA256 hash of the file
     func download(from url: URL, to destinationURL: URL, expectedHash: String) async throws {
         DispatchQueue.main.async {
             self.state = .downloading
         }
-        lastError = nil
 
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: nil)
         try await withCheckedThrowingContinuation { [unowned self] (continuation: CheckedContinuation<Void, Error>) in
@@ -86,7 +92,7 @@ class DownloadManager: ObservableObject {
                         DispatchQueue.main.async {
                             self.state = .failed
                         }
-                        self.lastError = error
+                        self.logger.error("Error moving file: \(error)")
                     }
                 } else {
                     self.logger.error("Hash mismatch")
@@ -101,6 +107,13 @@ class DownloadManager: ObservableObject {
                     if progress > self?.progress ?? 0.0 {
                         self?.progress = progress
                         self?.logger.debug("Download progress: \(progress)")
+
+                        // And only report progress to Dock if we're supposed to, to avoid flickering
+                        if self?.reportDockProgress ?? false {
+                            DispatchQueue.main.async {
+                                DockProgress.progress = progress
+                            }
+                        }
                     }
                 })
                 .store(in: &self.cancellables)
@@ -126,6 +139,9 @@ class DownloadManager: ObservableObject {
             let hash = SHA256.hash(data: data)
 
             let hashString = hash.compactMap { String(format: "%02x", $0) }.joined()
+            DispatchQueue.main.async {
+                self.state = .verified
+            }
             return hashString == expectedHash
         } catch {
             logger.error("Error reading file for hash verification: \(error)")

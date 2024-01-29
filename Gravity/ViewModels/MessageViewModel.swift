@@ -109,6 +109,10 @@ final class MessageViewModel: ObservableObject {
                 logger.error("Error canceling whisper: \(error)")
             }
         }
+
+        Task {
+            await LLMManager.shared.llm?.stop()
+        }
     }
 
     private func processOutput(stream: AsyncStream<String>) async -> String {

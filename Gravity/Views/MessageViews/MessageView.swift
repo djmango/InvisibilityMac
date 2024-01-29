@@ -86,16 +86,16 @@ struct MessageView: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .help("Send message")
-                    // .hide(if: isGenerating, removeCompletely: true)
+                    .hide(if: isGenerating, removeCompletely: true)
 
-                    // Button(action: messageViewModel.stopGenerate) {
-                    //     Image(systemName: "stop.circle.fill")
-                    //         .resizable()
-                    //         .frame(width: 28, height: 28)
-                    // }
-                    // .buttonStyle(.plain)
-                    // .help("Stop generation")
-                    // .visible(if: isGenerating, removeCompletely: true)
+                    Button(action: messageViewModel.stopGenerate) {
+                        Image(systemName: "stop.circle.fill")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Stop generation")
+                    .visible(if: isGenerating, removeCompletely: true)
                 }
                 .padding(.top, 8)
                 .padding(.bottom, 16)

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */; };
 		4D0B52E42B590213008D975D /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E32B590213008D975D /* AlertManager.swift */; };
+		4D1557B42B684CCA00B8B781 /* DockProgress in Frameworks */ = {isa = PBXBuildFile; productRef = 4D1557B32B684CCA00B8B781 /* DockProgress */; };
 		4D1FC34F2B62304E009DA851 /* AudioPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1FC34E2B62304E009DA851 /* AudioPlayerViewModel.swift */; };
 		4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */; };
 		4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3B635C2B642A1A004AA7DF /* LLMManager.swift */; };
@@ -79,6 +80,7 @@
 		4D0B52E32B590213008D975D /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		4D1FC34E2B62304E009DA851 /* AudioPlayerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerViewModel.swift; sourceTree = "<group>"; };
 		4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+HexColors.swift"; sourceTree = "<group>"; };
+		4D305C132B65914700FC1938 /* LLM.swift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = LLM.swift; path = ../LLM.swift; sourceTree = "<group>"; };
 		4D3B635C2B642A1A004AA7DF /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
 		4D3D050F2B59D536009340ED /* WhisperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperManager.swift; sourceTree = "<group>"; };
 		4D3EBF672B6444D700AE230E /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D1557B42B684CCA00B8B781 /* DockProgress in Frameworks */,
 				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */,
@@ -159,6 +162,7 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
+				4D305C132B65914700FC1938 /* LLM.swift */,
 				4D8E05272B2516DE00B60D0D /* Gravity */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
@@ -415,6 +419,7 @@
 				4D3D05122B59DB32009340ED /* AudioKit */,
 				4D3D05152B59E1A3009340ED /* SwiftWhisper */,
 				4D8F24822B64744D00C505DA /* LLM */,
+				4D1557B32B684CCA00B8B781 /* DockProgress */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Gravity.app */;
@@ -453,6 +458,7 @@
 				4D3D05112B59DB32009340ED /* XCRemoteSwiftPackageReference "AudioKit" */,
 				4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */,
 				4D8F24812B64744D00C505DA /* XCRemoteSwiftPackageReference "LLM.swift" */,
+				4D1557B22B684CCA00B8B781 /* XCRemoteSwiftPackageReference "DockProgress" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -670,7 +676,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 29;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -684,7 +690,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -702,7 +708,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 29;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -717,7 +723,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.6.1;
+				MARKETING_VERSION = 1.6.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -787,6 +793,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 2.5.1;
+			};
+		};
+		4D1557B22B684CCA00B8B781 /* XCRemoteSwiftPackageReference "DockProgress" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/DockProgress";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.2.2;
 			};
 		};
 		4D3D05112B59DB32009340ED /* XCRemoteSwiftPackageReference "AudioKit" */ = {
@@ -888,6 +902,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		4D1557B32B684CCA00B8B781 /* DockProgress */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D1557B22B684CCA00B8B781 /* XCRemoteSwiftPackageReference "DockProgress" */;
+			productName = DockProgress;
+		};
 		4D3D05122B59DB32009340ED /* AudioKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4D3D05112B59DB32009340ED /* XCRemoteSwiftPackageReference "AudioKit" */;

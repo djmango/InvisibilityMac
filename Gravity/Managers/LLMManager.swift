@@ -5,6 +5,7 @@
 //  Created by Sulaiman Ghori on 1/26/24.
 //
 
+import DockProgress
 import Foundation
 import LLM
 import os
@@ -14,8 +15,10 @@ final class LLMManager {
 
     static let shared = LLMManager()
 
-    public let downloadManager: DownloadManager = DownloadManager()
+    public let downloadManager: DownloadManager = DownloadManager(reportDockProgress: true)
     private let modelInfo = ModelRepository.MISTRAL_7B_V2_Q4
+    private var downloadRetries = 0
+    public var output: String = ""
 
     private var _llm: LLM?
     public var llm: LLM? {
@@ -23,6 +26,7 @@ final class LLMManager {
             while _llm == nil {
                 try? await Task.sleep(nanoseconds: 500_000_000) // Sleep for 0.5 second
 
+                // Only increment retries if we have already tried to download the model
                 if downloadManager.state == .failed, downloadRetries < 100 {
                     downloadRetries += 1
                     logger.debug("Waiting for \(self.modelInfo.name) to be ready (\(self.downloadRetries))")
@@ -32,11 +36,6 @@ final class LLMManager {
             return _llm
         }
     }
-
-    /// The model gets loaded asynchronously, so we need to wait for it to be ready
-    private var downloadRetries = 0
-
-    var output: String = ""
 
     private init() {}
 
@@ -61,30 +60,8 @@ final class LLMManager {
             return result
         }
 
-        var truncatedMessages = messages
-
-        // Add the audio text to the content of messages that have audio
-        for (index, message) in truncatedMessages.enumerated() {
-            if let audio = message.audio {
-                truncatedMessages[index].content = (message.content ?? "") + audio.text
-            }
-        }
-
-        var totalCharCount = truncatedMessages.reduce(0) { $0 + ($1.content?.count ?? 0) }
-
-        while totalCharCount >= 10000 {
-            if let firstMessage = truncatedMessages.first {
-                totalCharCount -= firstMessage.content?.count ?? 0
-                truncatedMessages.removeFirst()
-            } else {
-                break
-            }
-        }
-
-        print("Total char count: \(totalCharCount)")
-
         await llm?.history = []
-        for message in truncatedMessages {
+        for message in messages {
             if message.role == .assistant {
                 await llm?.history.append((.bot, message.content ?? ""))
             } else {
@@ -105,30 +82,8 @@ final class LLMManager {
 
     @MainActor
     func achat(messages: [Message]) async -> Message {
-        var truncatedMessages = messages
-
-        // Add the audio text to the content of messages that have audio
-        for (index, message) in truncatedMessages.enumerated() {
-            if let audio = message.audio {
-                truncatedMessages[index].content = (message.content ?? "") + audio.text
-            }
-        }
-
-        var totalCharCount = truncatedMessages.reduce(0) { $0 + ($1.content?.count ?? 0) }
-
-        while totalCharCount >= 5000 {
-            if let firstMessage = truncatedMessages.first {
-                totalCharCount -= firstMessage.content?.count ?? 0
-                truncatedMessages.removeFirst()
-            } else {
-                break
-            }
-        }
-
-        print("Total char count: \(totalCharCount)")
-
         await llm?.history = []
-        for message in truncatedMessages {
+        for message in messages {
             if message.role == .assistant {
                 await llm?.history.append((.bot, message.content ?? ""))
             } else {
@@ -161,8 +116,7 @@ final class LLMManager {
             logger.debug("Verified \(self.modelInfo.name) at \(self.modelInfo.localURL)")
 
             logger.debug("Loading \(self.modelInfo.name) from \(self.modelInfo.localURL)")
-            _llm = LLM(from: modelInfo.localURL)
-            _llm?.template = template
+            _llm = LLM(from: modelInfo.localURL, template: template)
         } else {
             logger.debug("Downloading \(self.modelInfo.name) from \(self.modelInfo.url)")
             do {
@@ -174,8 +128,7 @@ final class LLMManager {
 
                 logger.debug("Loading \(self.modelInfo.name) from \(self.modelInfo.localURL)")
 
-                _llm = LLM(from: modelInfo.localURL)
-                _llm?.template = template
+                _llm = LLM(from: modelInfo.localURL, template: template)
             } catch {
                 logger.error("Could not download \(self.modelInfo.name): \(error)")
             }
