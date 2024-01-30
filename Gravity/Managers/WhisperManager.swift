@@ -32,34 +32,33 @@ class WhisperHandler: WhisperDelegate {
         messageViewModel.sendViewState = nil
         audio.completed = true
         audio.progress = 1.0
-        // Just rename the chat the first segment
-        audio.name = segments.first?.text ?? "Audio"
-        // Task {
-        //     var messages: [Message] = []
 
-        //     let transcriptMessage = Message(
-        //         content: audio.text,
-        //         role: .user
-        //     )
+        Task {
+            var messages: [Message] = []
 
-        //     let instructionMessage = Message(
-        //         content: AppPrompts.createShortTitle,
-        //         role: .user
-        //     )
+            let transcriptMessage = Message(
+                content: audio.text,
+                role: .user
+            )
 
-        //     messages.append(transcriptMessage)
-        //     messages.append(instructionMessage)
+            let instructionMessage = Message(
+                content: AppPrompts.createShortTitle,
+                role: .user
+            )
 
-        //     let result: Message = await LLMManager.shared.achat(messages: messages)
+            messages.append(transcriptMessage)
+            messages.append(instructionMessage)
 
-        //     if let content = result.content {
-        //         logger.debug("Audio name result: \(content)")
-        //         // Split by newline or period
-        //         let split = content.split(whereSeparator: { $0.isNewline })
-        //         let title = split.first ?? ""
-        //         audio.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        //     }
-        // }
+            let result: Message = await LLMManager.shared.achat(messages: messages)
+
+            if let content = result.content {
+                logger.debug("Audio name result: \(content)")
+                // Split by newline or period
+                let split = content.split(whereSeparator: { $0.isNewline })
+                let title = split.first ?? ""
+                audio.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+        }
     }
 
     func whisper(_: Whisper, didErrorWith error: Error) {

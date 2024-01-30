@@ -40,10 +40,19 @@ final class Message: Identifiable {
     @Transient var model: String {
         chat?.model ?? ""
     }
+
+    /// The full text of the message, including the audio text if it exists
+    @Transient var text: String {
+        var text = content ?? ""
+        if let audio {
+            text += audio.text
+        }
+        return text
+    }
 }
 
 extension Message: CustomStringConvertible {
     var description: String {
-        "\(role?.rawValue ?? ""): \(content ?? "")"
+        "\(role?.rawValue ?? ""): \(text)"
     }
 }

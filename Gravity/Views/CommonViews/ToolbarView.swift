@@ -13,7 +13,11 @@ struct ToolbarView: ToolbarContent {
 
     @StateObject private var tabViewModel = TabViewModel.shared
     @StateObject private var audioPlayerViewModel = AudioPlayerViewModel.shared
+
     @State private var isRestarting = false
+    @State private var isCopied: Bool = false
+
+    private var isCopyButtonVisible: Bool { CommandViewModel.shared.selectedChat != nil }
 
     var messageViewModel: MessageViewModel? {
         guard let selectedChat = CommandViewModel.shared.selectedChat else {
@@ -73,6 +77,13 @@ struct ToolbarView: ToolbarContent {
             .buttonStyle(.accessoryBar)
             .help("Help")
 
+            Button(action: copyAction) {
+                Label("Copy Chat", systemImage: isCopied ? "list.clipboard.fill" : "clipboard")
+            }
+            .buttonStyle(.accessoryBar)
+            .visible(if: isCopyButtonVisible, removeCompletely: true)
+            .help("Copy Chat")
+
             Button(action: {
                 if let chat = CommandViewModel.shared.getOrCreateChat() {
                     MessageViewModelManager.shared.viewModel(for: chat).openFile()
@@ -84,6 +95,27 @@ struct ToolbarView: ToolbarContent {
             }
             .buttonStyle(.accessoryBar)
             .help("Open File (⌘ + O)")
+        }
+    }
+
+    private func copyAction() {
+        let pasteBoard = NSPasteboard.general
+
+        if let chat = CommandViewModel.shared.getOrCreateChat() {
+            var chatText = ""
+
+            for message in MessageViewModelManager.shared.viewModel(for: chat).messages {
+                chatText += message.role == .user ? "You: " : "Assistant: " + message.text + "\n"
+            }
+
+            pasteBoard.clearContents()
+            pasteBoard.setString(chatText, forType: .string)
+
+            isCopied = true
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                isCopied = false
+            }
         }
     }
 }

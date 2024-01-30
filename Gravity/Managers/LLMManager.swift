@@ -18,7 +18,6 @@ final class LLMManager {
     public let downloadManager: DownloadManager = DownloadManager(reportDockProgress: true)
     private let modelInfo = ModelRepository.MISTRAL_7B_V2_Q4
     private var downloadRetries = 0
-    public var output: String = ""
 
     private var _llm: LLM?
     public var llm: LLM? {
@@ -52,6 +51,12 @@ final class LLMManager {
             return result
         }
     ) async {
+        do {
+            try await llm?.waitUntilAvailable(timeout: .now() + 20)
+        } catch {
+            logger.error("Error waiting for LLM to be available: \(error)")
+        }
+
         // Wrap the processOutput function to capture the output in a variable that we can return
         var output = ""
         let processOutputWrapped = { (stream: AsyncStream<String>) async -> String in
@@ -63,36 +68,37 @@ final class LLMManager {
         await llm?.history = []
         for message in messages {
             if message.role == .assistant {
-                await llm?.history.append((.bot, message.content ?? ""))
+                await llm?.history.append((.bot, message.text))
             } else {
-                var content = message.content ?? ""
-                // If we have audio, we need to append the audio text to the message
-                if let audio = message.audio {
-                    content += audio.text
-                }
-                await llm?.history.append((.user, content))
+                await llm?.history.append((.user, message.text))
             }
         }
 
         // Remove the last message as respond will generate a new one
         if let input = await llm?.history.popLast() {
+            do {
+                try await llm?.waitUntilAvailable(timeout: .now() + 20)
+            } catch {
+                logger.error("Error waiting for LLM to be available: \(error)")
+            }
             await llm?.respond(to: input.content, with: processOutputWrapped)
         }
     }
 
     @MainActor
     func achat(messages: [Message]) async -> Message {
+        do {
+            try await llm?.waitUntilAvailable(timeout: .now() + 20)
+        } catch {
+            logger.error("Error waiting for LLM to be available: \(error)")
+        }
+
         await llm?.history = []
         for message in messages {
             if message.role == .assistant {
-                await llm?.history.append((.bot, message.content ?? ""))
+                await llm?.history.append((.bot, message.text))
             } else {
-                var content = message.content ?? ""
-                // If we have audio, we need to append the audio text to the message
-                if let audio = message.audio {
-                    content += audio.text
-                }
-                await llm?.history.append((.user, content))
+                await llm?.history.append((.user, message.text))
             }
         }
 
@@ -107,16 +113,12 @@ final class LLMManager {
     }
 
     func setup() async {
-        let template = Template.mistral
-
         if downloadManager.verifyFile(
             at: modelInfo.localURL,
             expectedHash: modelInfo.hash
         ) {
-            logger.debug("Verified \(self.modelInfo.name) at \(self.modelInfo.localURL)")
-
-            logger.debug("Loading \(self.modelInfo.name) from \(self.modelInfo.localURL)")
-            _llm = LLM(from: modelInfo.localURL, template: template)
+            logger.debug("Verified and Loading \(self.modelInfo.name) at \(self.modelInfo.localURL)")
+            loadLLM()
         } else {
             logger.debug("Downloading \(self.modelInfo.name) from \(self.modelInfo.url)")
             do {
@@ -127,12 +129,18 @@ final class LLMManager {
                 )
 
                 logger.debug("Loading \(self.modelInfo.name) from \(self.modelInfo.localURL)")
-
-                _llm = LLM(from: modelInfo.localURL, template: template)
+                loadLLM()
             } catch {
                 logger.error("Could not download \(self.modelInfo.name): \(error)")
             }
         }
+    }
+
+    private func loadLLM() {
+        let template = Template.mistral
+
+        _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.9, temp: 0.7)
+        // _llm = LLM(from: modelInfo.localURL, template: template, seed: 5, topP: 0.95, temp: 0.8)
     }
 
     func wipe() {
