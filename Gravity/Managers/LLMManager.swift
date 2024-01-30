@@ -22,6 +22,10 @@ final class LLMManager {
     private var _llm: LLM?
     public var llm: LLM? {
         get async {
+            // If the model is already completed but deinited, reload it
+            // if downloadManager.state == .completed {
+            //     loadLLM()
+            // }
             while _llm == nil {
                 try? await Task.sleep(nanoseconds: 500_000_000) // Sleep for 0.5 second
 
@@ -65,24 +69,16 @@ final class LLMManager {
             return result
         }
 
-        await llm?.history = []
-        for message in messages {
+        let history = messages.map { message in
             if message.role == .assistant {
-                await llm?.history.append((.bot, message.text))
+                (Role.bot, message.text)
             } else {
-                await llm?.history.append((.user, message.text))
+                (Role.user, message.text)
             }
         }
 
         // Remove the last message as respond will generate a new one
-        if let input = await llm?.history.popLast() {
-            do {
-                try await llm?.waitUntilAvailable(timeout: .now() + 20)
-            } catch {
-                logger.error("Error waiting for LLM to be available: \(error)")
-            }
-            await llm?.respond(to: input.content, with: processOutputWrapped)
-        }
+        await llm?.respond(to: history, with: processOutputWrapped)
     }
 
     @MainActor
@@ -93,21 +89,16 @@ final class LLMManager {
             logger.error("Error waiting for LLM to be available: \(error)")
         }
 
-        await llm?.history = []
-        for message in messages {
+        let history = messages.map { message in
             if message.role == .assistant {
-                await llm?.history.append((.bot, message.text))
+                (Role.bot, message.text)
             } else {
-                await llm?.history.append((.user, message.text))
+                (Role.user, message.text)
             }
         }
 
         // Remove the last message as respond will generate a new one
-        if let input = await llm?.history.popLast() {
-            await llm?.respond(to: input.content)
-        }
-
-        let output = await llm?.output ?? ""
+        let output = await llm?.respond(to: history)
 
         return Message(content: output, role: .assistant)
     }
@@ -139,7 +130,7 @@ final class LLMManager {
     private func loadLLM() {
         let template = Template.mistral
 
-        _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.9, temp: 0.7)
+        _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.95, temp: 0.7)
         // _llm = LLM(from: modelInfo.localURL, template: template, seed: 5, topP: 0.95, temp: 0.8)
     }
 
