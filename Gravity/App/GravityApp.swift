@@ -68,12 +68,7 @@ struct GravityApp: App {
                 .environmentObject(updaterViewModel)
                 .pasteDestination(for: URL.self) { urls in
                     guard let url = urls.first else { return }
-
-                    if let activeChat = CommandViewModel.shared.getOrCreateChat() {
-                        MessageViewModelManager.shared.viewModel(for: activeChat).handleFile(url: url)
-                    } else {
-                        logger.error("Could not create chat")
-                    }
+                    MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).handleFile(url: url)
                 }
         }
         .windowToolbarStyle(.unified(showsTitle: false))
@@ -95,19 +90,13 @@ struct GravityApp: App {
 
             CommandGroup(after: .newItem) {
                 Button("Open File") {
-                    if let activeChat = CommandViewModel.shared.getOrCreateChat() {
-                        MessageViewModelManager.shared.viewModel(for: activeChat).openFile()
-                    } else {
-                        logger.error("Could not create chat")
-                    }
+                    MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).openFile()
                 }
                 .keyboardShortcut("o", modifiers: .command)
             }
 
             CommandGroup(replacing: .textEditing) {
-                if let selectedChat = CommandViewModel.shared.selectedChat {
-                    ChatContextMenu(for: selectedChat)
-                }
+                ChatContextMenu(for: CommandViewModel.shared.selectedChat)
             }
         }
         .settings {
@@ -117,9 +106,9 @@ struct GravityApp: App {
                 }
             }
             .frame(width: 550, height: 200)
-            // SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {
-            //     SettingsSubtab(.noSelection, id: "advanced") { AdvancedSettingsView() }
-            // }
+            SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {
+                SettingsSubtab(.noSelection, id: "advanced") { AdvancedSettingsView() }
+            }
             .frame(width: 550, height: 200)
             SettingsTab(.new(title: "About", icon: .info), id: "about") {
                 SettingsSubtab(.noSelection, id: "about") {

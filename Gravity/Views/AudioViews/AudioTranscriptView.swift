@@ -26,27 +26,26 @@ struct SegmentView: View {
             // Background zebra stripes.
             // If playing at current time, highlight the current segment.
 
-            let currentTimeInMillis = Int(audioPlayerViewModel.currentTime) * 1000
-            let gracePeriod = 0 // 0 milliseconds
+            // let currentTimeInMillis = Int(audioPlayerViewModel.player?.currentTime ?? 0) * 1000
 
-            if currentTimeInMillis >= (segment.startTime - gracePeriod),
-               currentTimeInMillis <= (segment.endTime + gracePeriod)
-            {
-                // Highlight the current segment
-                Color.blue.opacity(0.2)
-                    .onAppear {
-                        isCurrentSegment = true
-                    }
-                    .onDisappear {
-                        isCurrentSegment = false
-                    }
+            // if currentTimeInMillis > (segment.startTime),
+            //    currentTimeInMillis < (segment.endTime)
+            // {
+            //     // Highlight the current segment
+            //     Color.blue.opacity(0.2)
+            //         .onAppear {
+            //             isCurrentSegment = true
+            //         }
+            //         .onDisappear {
+            //             isCurrentSegment = false
+            //         }
+            // } else {
+            if index % 2 == 0 {
+                Color.gray.opacity(0.2)
             } else {
-                if index % 2 == 0 {
-                    Color.gray.opacity(0.2)
-                } else {
-                    Color.clear
-                }
+                Color.clear
             }
+            // }
 
             HStack {
                 Text(segment.text)

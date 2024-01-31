@@ -28,11 +28,7 @@ class TabViewModel: ObservableObject {
                 if audio != nil {
                     tabs = ["Messages", "Audio"]
                 } else {
-                    if CommandViewModel.shared.selectedChat != nil {
-                        tabs = []
-                    } else {
-                        tabs = []
-                    }
+                    tabs = []
                 }
             }
             .store(in: &cancellables)

@@ -12,9 +12,15 @@ final class CommandViewModel: ObservableObject {
 
     var isRenameChatViewPresented: Bool = false
     var isDeleteChatConfirmationPresented: Bool = false
-    var selectedChat: Chat? = nil
+    var selectedChat: Chat
 
     init() {
+        if let chat = ChatViewModel.shared.chats.first {
+            selectedChat = chat
+        } else {
+            selectedChat = CommandViewModel._addChat()
+        }
+
         KeyboardShortcuts.onKeyUp(for: .summon) {
             // First close all non-main windows
             for item in NSApp.windows {
@@ -39,10 +45,15 @@ final class CommandViewModel: ObservableObject {
         }
     }
 
-    func addChat() -> Chat? {
-        DispatchQueue.main.async {
-            self.selectedChat = nil
-        }
+    /// Creates a new chat and sets it as the selected chat
+    @MainActor
+    func addChat() -> Chat {
+        let chat = CommandViewModel._addChat()
+        selectedChat = chat
+        return chat
+    }
+
+    private static func _addChat() -> Chat {
         let chat = Chat()
 
         let selectedModel = UserDefaults.standard.string(forKey: "selectedModel") ?? "mistral:latest"
@@ -50,25 +61,14 @@ final class CommandViewModel: ObservableObject {
 
         do {
             try ChatViewModel.shared.create(chat)
-            DispatchQueue.main.async {
-                self.selectedChat = chat
-            }
-            return chat
         } catch {
             AlertManager.shared.doShowAlert(
                 title: AppMessages.couldNotCreateChatTitle,
                 message: AppMessages.couldNotCreateChatMessage
             )
-            return nil
         }
-    }
 
-    func getOrCreateChat() -> Chat? {
-        if let activeChat = selectedChat {
-            activeChat
-        } else {
-            addChat()
-        }
+        return chat
     }
 
     var chatToRename: Chat? {

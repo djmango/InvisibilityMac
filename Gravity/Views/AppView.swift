@@ -16,11 +16,7 @@ struct AppView: View {
                     ChatSidebarListView()
                         .navigationSplitViewColumnWidth(min: 240, ideal: 240)
                 } detail: {
-                    if let selectedChat = CommandViewModel.shared.selectedChat {
-                        MessageView(for: selectedChat)
-                    } else {
-                        NewChatView()
-                    }
+                    MessageView(for: CommandViewModel.shared.selectedChat)
                 }
                 .toolbar {
                     ToolbarView()

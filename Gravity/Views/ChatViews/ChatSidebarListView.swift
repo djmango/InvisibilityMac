@@ -103,6 +103,6 @@ struct ChatSidebarListView: View {
         try? ChatViewModel.shared.delete(chatToDelete)
 
         CommandViewModel.shared.chatToDelete = nil
-        CommandViewModel.shared.selectedChat = nil
+        CommandViewModel.shared.selectedChat = CommandViewModel.shared.selectedChat
     }
 }

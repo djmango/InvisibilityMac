@@ -122,6 +122,7 @@ struct MessageView: View {
 
     // MARK: - Actions
 
+    @MainActor
     private func initAction() {
         try? messageViewModel.fetch(for: chat)
 

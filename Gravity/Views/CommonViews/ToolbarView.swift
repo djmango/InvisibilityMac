@@ -17,13 +17,8 @@ struct ToolbarView: ToolbarContent {
     @State private var isRestarting = false
     @State private var isCopied: Bool = false
 
-    private var isCopyButtonVisible: Bool { CommandViewModel.shared.selectedChat != nil }
-
-    var messageViewModel: MessageViewModel? {
-        guard let selectedChat = CommandViewModel.shared.selectedChat else {
-            return nil
-        }
-        return MessageViewModelManager.shared.viewModel(for: selectedChat)
+    var messageViewModel: MessageViewModel {
+        MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat)
     }
 
     var body: some ToolbarContent {
@@ -81,15 +76,10 @@ struct ToolbarView: ToolbarContent {
                 Label("Copy Chat", systemImage: isCopied ? "list.clipboard.fill" : "clipboard")
             }
             .buttonStyle(.accessoryBar)
-            .visible(if: isCopyButtonVisible, removeCompletely: true)
             .help("Copy Chat")
 
             Button(action: {
-                if let chat = CommandViewModel.shared.getOrCreateChat() {
-                    MessageViewModelManager.shared.viewModel(for: chat).openFile()
-                } else {
-                    logger.error("Could not create chat")
-                }
+                MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).openFile()
             }) {
                 Label("Open File", systemImage: "square.and.arrow.down")
             }
@@ -101,21 +91,19 @@ struct ToolbarView: ToolbarContent {
     private func copyAction() {
         let pasteBoard = NSPasteboard.general
 
-        if let chat = CommandViewModel.shared.getOrCreateChat() {
-            var chatText = ""
+        var chatText = ""
 
-            for message in MessageViewModelManager.shared.viewModel(for: chat).messages {
-                chatText += message.role == .user ? "You: " : "Assistant: " + message.text + "\n"
-            }
+        for message in MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).messages {
+            chatText += message.role == .user ? "You: " : "Assistant: " + message.text + "\n"
+        }
 
-            pasteBoard.clearContents()
-            pasteBoard.setString(chatText, forType: .string)
+        pasteBoard.clearContents()
+        pasteBoard.setString(chatText, forType: .string)
 
-            isCopied = true
+        isCopied = true
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                isCopied = false
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            isCopied = false
         }
     }
 }

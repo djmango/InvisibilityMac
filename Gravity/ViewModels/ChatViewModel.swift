@@ -1,12 +1,24 @@
+import os
 import SwiftData
 import SwiftUI
 
 @Observable
 final class ChatViewModel: ObservableObject {
+    let logger = Logger(subsystem: "ai.grav.app", category: "ChatViewModel")
+
     static var shared = ChatViewModel()
+
     let modelContext = SharedModelContainer.shared.mainContext
 
     var chats: [Chat] = []
+
+    private init() {
+        do {
+            try fetch()
+        } catch {
+            logger.error("Failed to fetch chats: \(error.localizedDescription)")
+        }
+    }
 
     func fetch() throws {
         let sortDescriptor = SortDescriptor(\Chat.modifiedAt, order: .reverse)
@@ -27,6 +39,16 @@ final class ChatViewModel: ObservableObject {
     }
 
     func delete(_ chat: Chat) throws {
+        // First we have to set the selected chat to the next non-deleted chat
+        if CommandViewModel.shared.selectedChat.id == chat.id {
+            if let nextChat = chats.first(where: { $0.id != chat.id }) {
+                CommandViewModel.shared.selectedChat = nextChat
+            } else {
+                DispatchQueue.main.async {
+                    CommandViewModel.shared.selectedChat = CommandViewModel.shared.addChat()
+                }
+            }
+        }
         modelContext.delete(chat)
         chats.removeAll(where: { $0.id == chat.id })
     }

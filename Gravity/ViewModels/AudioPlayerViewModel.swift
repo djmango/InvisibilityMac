@@ -15,10 +15,7 @@ class AudioPlayerViewModel: ObservableObject {
 
     @Published var audio: Audio?
     @Published var player: AVAudioPlayer?
-    @Published var currentTime: TimeInterval = 0
     @Published private(set) var isPlaying: Bool = false
-
-    private var timer: Timer?
 
     private init() {}
 
@@ -27,7 +24,6 @@ class AudioPlayerViewModel: ObservableObject {
         do {
             player = try AVAudioPlayer(data: audio.audioFile)
             player?.prepareToPlay()
-            startTimer()
             updatePlayingStatus()
         } catch {
             AlertManager.shared.doShowAlert(
@@ -42,7 +38,6 @@ class AudioPlayerViewModel: ObservableObject {
         do {
             player = try AVAudioPlayer(data: audio.audioFile)
             player?.play()
-            startTimer()
             updatePlayingStatus()
         } catch {
             AlertManager.shared.doShowAlert(
@@ -57,7 +52,6 @@ class AudioPlayerViewModel: ObservableObject {
         player = nil
         audio = nil
         updatePlayingStatus()
-        stopTimer()
     }
 
     func pause() {
@@ -87,17 +81,6 @@ class AudioPlayerViewModel: ObservableObject {
         player?.play()
 
         updatePlayingStatus()
-    }
-
-    private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
-            self?.currentTime = self?.player?.currentTime ?? 0
-        }
-    }
-
-    private func stopTimer() {
-        timer?.invalidate()
-        timer = nil
     }
 
     private func updatePlayingStatus() {
