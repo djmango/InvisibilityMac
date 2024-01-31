@@ -130,7 +130,8 @@ final class LLMManager {
     private func loadLLM() {
         let template = Template.mistral
 
-        _llm = LLM(from: modelInfo.localURL, template: template, seed: 3_819_086_369, topP: 0.3, temp: 0.9, maxTokenCount: 4096)
+        _llm = LLM(from: modelInfo.localURL, template: template, seed: 3_819_086_369, topP: 0.3, temp: 0.9)
+        // _llm = LLM(from: modelInfo.localURL, template: template, seed: 3_819_086_369, topP: 0.3, temp: 0.9, maxTokenCount: 4096)
         // _llm = LLM(from: modelInfo.localURL, template: template, seed: 3_819_086_369, topP: 0.95, temp: 0.7, maxTokenCount: 4096)
     }
 

@@ -29,6 +29,7 @@ func convertAudioFileToWavAndPCMArray(fileURL: URL) async throws -> (Data, [Floa
     options.bitDepth = 16
     options.channels = 1
     options.isInterleaved = false
+    // options.bitRate = 256 * 1000
 
     let tempURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)
     let converter = FormatConverter(inputURL: fileURL, outputURL: tempURL, options: options)

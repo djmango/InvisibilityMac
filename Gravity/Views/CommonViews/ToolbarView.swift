@@ -79,7 +79,7 @@ struct ToolbarView: ToolbarContent {
             .help("Copy Chat")
 
             Button(action: {
-                MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).openFile()
+                messageViewModel.openFile()
             }) {
                 Label("Open File", systemImage: "square.and.arrow.down")
             }
@@ -93,8 +93,14 @@ struct ToolbarView: ToolbarContent {
 
         var chatText = ""
 
-        for message in MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).messages {
-            chatText += message.role == .user ? "You: " : "Assistant: " + message.text + "\n"
+        try? messageViewModel.fetch(for: CommandViewModel.shared.selectedChat)
+
+        for message in messageViewModel.messages {
+            if message.text.isEmpty {
+                continue
+            }
+            chatText += message.role == .user ? "You: " : "Assistant: "
+            chatText += message.text + "\n"
         }
 
         pasteBoard.clearContents()

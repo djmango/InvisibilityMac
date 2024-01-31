@@ -24,6 +24,7 @@ class MessageViewModelManager {
             return viewModel
         } else {
             let viewModel = MessageViewModel(chat: chat)
+            try? viewModel.fetch(for: chat)
             viewModels[chat] = viewModel
             return viewModel
         }
