@@ -18,6 +18,7 @@
 		4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3D05152B59E1A3009340ED /* SwiftWhisper */; };
 		4D3EBF682B6444D700AE230E /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3EBF672B6444D700AE230E /* AppModels.swift */; };
 		4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */; };
+		4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */; };
 		4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */; };
 		4D596AA32B5F2B3E00B9E765 /* String+AppendNewLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */; };
 		4D596AA42B5F2B3E00B9E765 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9F2B5F2B3E00B9E765 /* Documentation.docc */; };
@@ -29,7 +30,6 @@
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D5EA4D32B61F01700CD7966 /* AudioTranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5EA4D22B61F01700CD7966 /* AudioTranscriptView.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
-		4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
 		4D8E054C2B2516DE00B60D0D /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */; };
 		4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */; };
@@ -72,6 +72,11 @@
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
 		4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */; };
+		4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */; };
+		4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */; };
+		4DEEEF132B6B1F0900ECDAC5 /* PowerMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF082B6B1F0800ECDAC5 /* PowerMeter.swift */; };
+		4DEEEF172B6B1F0900ECDAC5 /* MaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF0D2B6B1F0800ECDAC5 /* MaterialView.swift */; };
+		4DEEEF182B6B1F0900ECDAC5 /* AudioLevelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF0E2B6B1F0800ECDAC5 /* AudioLevelsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,6 +89,7 @@
 		4D3D050F2B59D536009340ED /* WhisperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperManager.swift; sourceTree = "<group>"; };
 		4D3EBF672B6444D700AE230E /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
 		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
+		4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileWriter.swift; sourceTree = "<group>"; };
 		4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatField.swift; sourceTree = "<group>"; };
 		4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+AppendNewLine.swift"; sourceTree = "<group>"; };
 		4D596A9F2B5F2B3E00B9E765 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
@@ -95,7 +101,6 @@
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D5EA4D22B61F01700CD7966 /* AudioTranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTranscriptView.swift; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpandedImageView.swift; sourceTree = "<group>"; };
 		4D8E05292B2516DE00B60D0D /* ChatViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D8E052A2B2516DE00B60D0D /* CommandViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandViewModel.swift; sourceTree = "<group>"; };
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
@@ -130,6 +135,11 @@
 		4DD5E3692B6243D300C35B1C /* AppPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPrompts.swift; sourceTree = "<group>"; };
 		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Gravity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gravity.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
+		4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
+		4DEEEF082B6B1F0800ECDAC5 /* PowerMeter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PowerMeter.swift; sourceTree = "<group>"; };
+		4DEEEF0D2B6B1F0800ECDAC5 /* MaterialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialView.swift; sourceTree = "<group>"; };
+		4DEEEF0E2B6B1F0800ECDAC5 /* AudioLevelsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioLevelsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +188,7 @@
 		4D1FC3502B623147009DA851 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				4DEEEF042B6B1EF900ECDAC5 /* CaptureManager */,
 				4D0B52E32B590213008D975D /* AlertManager.swift */,
 				4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */,
 				4D3D050F2B59D536009340ED /* WhisperManager.swift */,
@@ -316,6 +327,7 @@
 		4D8E053E2B2516DE00B60D0D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4DEEEF0A2B6B1F0800ECDAC5 /* CaptureViews */,
 				4D596AAD2B6197E200B9E765 /* AudioViews */,
 				4DA893AE2B54C44200560DAD /* OnboardingViews */,
 				4DD282DA2B4DEF6E0041690B /* SettingViews */,
@@ -352,7 +364,6 @@
 			children = (
 				4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */,
 				4D8E054B2B2516DE00B60D0D /* MessageView.swift */,
-				4D7AB4202B4CAA1A007F025B /* ExpandedImageView.swift */,
 			);
 			path = MessageViews;
 			sourceTree = "<group>";
@@ -384,6 +395,26 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4DEEEF042B6B1EF900ECDAC5 /* CaptureManager */ = {
+			isa = PBXGroup;
+			children = (
+				4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */,
+				4DEEEF082B6B1F0800ECDAC5 /* PowerMeter.swift */,
+				4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */,
+				4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */,
+			);
+			path = CaptureManager;
+			sourceTree = "<group>";
+		};
+		4DEEEF0A2B6B1F0800ECDAC5 /* CaptureViews */ = {
+			isa = PBXGroup;
+			children = (
+				4DEEEF0D2B6B1F0800ECDAC5 /* MaterialView.swift */,
+				4DEEEF0E2B6B1F0800ECDAC5 /* AudioLevelsView.swift */,
+			);
+			path = CaptureViews;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -484,6 +515,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */,
+				4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */,
 				4D596AA52B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift in Sources */,
 				4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */,
 				4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */,
@@ -501,14 +533,16 @@
 				4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */,
 				4DD2F7E02B6206340052776E /* TabViewModel.swift in Sources */,
 				4D1FC34F2B62304E009DA851 /* AudioPlayerViewModel.swift in Sources */,
+				4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */,
+				4DEEEF182B6B1F0900ECDAC5 /* AudioLevelsView.swift in Sources */,
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D596AAA2B60833E00B9E765 /* ToolbarView.swift in Sources */,
 				4D596AB12B61997100B9E765 /* Audio.swift in Sources */,
 				4D8E05612B2516DE00B60D0D /* TextError.swift in Sources */,
+				4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */,
 				4DD282E32B4E05B80041690B /* AdvancedSettingsView.swift in Sources */,
 				4D3D05102B59D536009340ED /* WhisperManager.swift in Sources */,
 				4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */,
-				4D7AB4212B4CAA1A007F025B /* ExpandedImageView.swift in Sources */,
 				4D596AA32B5F2B3E00B9E765 /* String+AppendNewLine.swift in Sources */,
 				4D5EA4D32B61F01700CD7966 /* AudioTranscriptView.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */,
@@ -517,9 +551,11 @@
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4D596AA42B5F2B3E00B9E765 /* Documentation.docc in Sources */,
+				4DEEEF172B6B1F0900ECDAC5 /* MaterialView.swift in Sources */,
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
 				4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
+				4DEEEF132B6B1F0900ECDAC5 /* PowerMeter.swift in Sources */,
 				4D0B52E42B590213008D975D /* AlertManager.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
@@ -672,7 +708,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -686,7 +722,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.6.4;
+				MARKETING_VERSION = 1.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -704,7 +740,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 31;
+				CURRENT_PROJECT_VERSION = 32;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -719,7 +755,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.6.4;
+				MARKETING_VERSION = 1.7.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

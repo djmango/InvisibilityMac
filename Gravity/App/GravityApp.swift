@@ -15,7 +15,6 @@ struct GravityApp: App {
     private var updater: SPUUpdater
 
     @StateObject private var updaterViewModel: UpdaterViewModel
-    // @StateObject private var imageViewModel: ImageViewModel
 
     @AppStorage("analytics") var analytics: Bool = true {
         didSet {
@@ -28,6 +27,7 @@ struct GravityApp: App {
     }
 
     @AppStorage("userIdentifier") private var userIdentifier: String = ""
+    @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
 
     init() {
         let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
@@ -69,6 +69,15 @@ struct GravityApp: App {
                 .pasteDestination(for: URL.self) { urls in
                     guard let url = urls.first else { return }
                     MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).handleFile(url: url)
+                }
+                .onAppear {
+                    Task {
+                        if await !ScreenRecorder.shared.canRecord {
+                            logger.error("Screen recording is not available")
+                        } else {
+                            logger.info("Screen recording is available")
+                        }
+                    }
                 }
         }
         .windowToolbarStyle(.unified(showsTitle: false))
@@ -117,6 +126,71 @@ struct GravityApp: App {
                 }
             }
             .frame(width: 550, height: 200)
+        }
+        MenuBarExtra("Gravity", image: "MenuBarIcon", isInserted: $showMenuBarExtra) {
+            // Button("New Chat") {
+            //     _ = CommandViewModel.shared.addChat()
+            // }
+            // .keyboardShortcut("n", modifiers: .command)
+
+            // Button(action: {
+            //     MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).openFile()
+            // }) {
+            //     Label("Open File", systemImage: "folder")
+            // }
+            // .keyboardShortcut("o", modifiers: .command)
+
+            Button("Record Audio") {
+                // MessageViewModelManager.shared.currentViewModel().recordAudio()
+                print("Record Audio")
+                Task {
+                    if await ScreenRecorder.shared.canRecord {
+                        await ScreenRecorder.shared.start()
+                    } else {
+                        AlertManager.shared.doShowAlert(title: "Screen Recording Permission Grant", message: "Gravity has not been granted permission to record the screen. Please enable this permission in System Preferences > Security & Privacy > Screen & System Audio Recording.")
+                        // Open the System Preferences app to the Screen Recording settings.
+                        NSWorkspace.shared.open(URL(fileURLWithPath: "/System/Library/PreferencePanes/Security.prefPane"))
+                    }
+                }
+            }
+            .hide(if: ScreenRecorder.shared.isRunning)
+            .keyboardShortcut("r", modifiers: .command)
+
+            Button("Stop Recording") {
+                Task {
+                    await ScreenRecorder.shared.stop()
+                }
+            }
+            .hide(if: !ScreenRecorder.shared.isRunning)
+
+            // AudioLevelsView(audioLevelsProvider: screenRecorder.audioLevelsProvider)
+            // ProgressView(value: ScreenRecorder.shared.audioLevelsProvider.audioLevels.level)
+
+            Divider()
+
+            Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.bottom, 5)
+
+            Button("Check for Updates") {
+                updater.checkForUpdates()
+            }
+            .disabled(!updaterViewModel.canCheckForUpdates)
+
+            SettingsLink {
+                Label("Settings", systemImage: "gearshape")
+            }
+            .keyboardShortcut(",", modifiers: .command)
+
+            Divider()
+
+            Button("Quit Gravity") {
+                NSApplication.shared.terminate(self)
+            }
+            .keyboardShortcut("q", modifiers: .command)
+
+            Divider()
         }
     }
 }

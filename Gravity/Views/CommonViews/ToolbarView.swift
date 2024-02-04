@@ -13,6 +13,7 @@ struct ToolbarView: ToolbarContent {
 
     @StateObject private var tabViewModel = TabViewModel.shared
     @StateObject private var audioPlayerViewModel = AudioPlayerViewModel.shared
+    @StateObject private var screenRecorder = ScreenRecorder.shared
 
     @State private var isRestarting = false
     @State private var isCopied: Bool = false
@@ -31,23 +32,41 @@ struct ToolbarView: ToolbarContent {
             .buttonStyle(.accessoryBar)
             .help("New Chat (⌘ + N)")
 
-            if audioPlayerViewModel.audio != nil {
-                Button(action: {
-                    if audioPlayerViewModel.isPlaying {
-                        audioPlayerViewModel.pause()
-                    } else {
-                        audioPlayerViewModel.playOrResume()
+            Button(action: {
+                if screenRecorder.isRunning {
+                    Task {
+                        await screenRecorder.stop()
                     }
-                }) {
-                    Label(
-                        audioPlayerViewModel.isPlaying ? "Pause" : "Play",
-                        systemImage: audioPlayerViewModel.isPlaying ? "pause.fill" : "play.fill"
-                    )
-                    .animation(.bouncy, value: audioPlayerViewModel.isPlaying)
+                } else {
+                    Task {
+                        await screenRecorder.start()
+                    }
                 }
-                .buttonStyle(.accessoryBar)
-                .help(audioPlayerViewModel.isPlaying ? "Pause" : "Play")
+            }) {
+                Label(
+                    screenRecorder.isRunning ? "Stop Recording" : "Start Recording",
+                    systemImage: screenRecorder.isRunning ? "stop.fill" : "record.circle"
+                )
+                .animation(.bouncy, value: screenRecorder.isRunning)
             }
+            .buttonStyle(.accessoryBar)
+
+            Button(action: {
+                if audioPlayerViewModel.isPlaying {
+                    audioPlayerViewModel.pause()
+                } else {
+                    audioPlayerViewModel.playOrResume()
+                }
+            }) {
+                Label(
+                    audioPlayerViewModel.isPlaying ? "Pause" : "Play",
+                    systemImage: audioPlayerViewModel.isPlaying ? "pause.fill" : "play.fill"
+                )
+                .animation(.bouncy, value: audioPlayerViewModel.isPlaying)
+            }
+            .buttonStyle(.accessoryBar)
+            .help(audioPlayerViewModel.isPlaying ? "Pause" : "Play")
+            .hide(if: audioPlayerViewModel.audio == nil, removeCompletely: true)
         }
 
         ToolbarItem(placement: .principal) {
@@ -63,7 +82,7 @@ struct ToolbarView: ToolbarContent {
             Spacer()
 
             Button(action: {
-                if let url = URL(string: "mailto:sulaiman@grav.ai") {
+                if let url = URL(string: "mailto:support@grav.ai") {
                     NSWorkspace.shared.open(url)
                 }
             }) {

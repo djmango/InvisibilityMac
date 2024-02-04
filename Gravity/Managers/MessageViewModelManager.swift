@@ -17,8 +17,8 @@ class MessageViewModelManager {
     /// A dictionary to store and reuse MessageViewModel instances, keyed by chatID.
     private var viewModels: [Chat: MessageViewModel] = [:]
 
-    // Function to retrieve a MessageViewModel for a given chatID.
-    // It reuses existing view models or creates a new one if not already present.
+    /// Function to retrieve a MessageViewModel for a given chatID.
+    /// It reuses existing view models or creates a new one if not already present.
     func viewModel(for chat: Chat) -> MessageViewModel {
         if viewModels.keys.contains(chat), let viewModel = viewModels[chat] {
             return viewModel
@@ -28,5 +28,10 @@ class MessageViewModelManager {
             viewModels[chat] = viewModel
             return viewModel
         }
+    }
+
+    /// Extension to CommandViewModel to provide a shortcut to the current MessageViewModel.
+    func currentViewModel() -> MessageViewModel {
+        self.viewModel(for: CommandViewModel.shared.selectedChat)
     }
 }
