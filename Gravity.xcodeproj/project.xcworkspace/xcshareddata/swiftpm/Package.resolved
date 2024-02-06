@@ -33,7 +33,7 @@
       "location" : "https://github.com/ggerganov/ggml.git",
       "state" : {
         "branch" : "release",
-        "revision" : "11c42888456137b27b582c93984b3da5eb81921e"
+        "revision" : "6b14d738d9100c50c199a3b1aaa960f633904476"
       }
     },
     {
@@ -60,7 +60,16 @@
       "location" : "https://github.com/ggerganov/llama.cpp/",
       "state" : {
         "branch" : "master",
-        "revision" : "fbf1ddec69f7001cc707de17fa74d7200813bbac"
+        "revision" : "213d1439fadefe182f69c5f7e8dd3b4b6572ebcb"
+      }
+    },
+    {
+      "identity" : "llm.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/djmango/LLM.swift.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "d7d43f2b85495769f01610d52f9644d56c39e03d"
       }
     },
     {
@@ -115,24 +124,6 @@
       "state" : {
         "revision" : "ae799d015a5374708f7b4c85f3294c05f2a564e2",
         "version" : "2.3.0"
-      }
-    },
-    {
-      "identity" : "swift-power-assert",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kishikawakatsumi/swift-power-assert",
-      "state" : {
-        "revision" : "2fa10dcbbff807fad73b4e2469b43300a50e9bbc",
-        "version" : "0.12.0"
-      }
-    },
-    {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
-      "state" : {
-        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
-        "version" : "509.1.1"
       }
     },
     {
@@ -195,7 +186,7 @@
       "location" : "https://github.com/ggerganov/whisper.cpp",
       "state" : {
         "branch" : "master",
-        "revision" : "e72e4158debb04126a0fabedf0452a5551780ea0"
+        "revision" : "434b8f3b96532d219cecc1ecfd93629e8cf086fa"
       }
     }
   ],

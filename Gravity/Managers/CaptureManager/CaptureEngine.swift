@@ -6,6 +6,7 @@
 //
 
 import AVFAudio
+import AVFoundation
 import Combine
 import CoreGraphics
 import Foundation
@@ -30,6 +31,50 @@ class CaptureEngine: NSObject, @unchecked Sendable {
     // Store the the startCapture continuation, so that you can cancel it when you call stopCapture().
     private var continuation: AsyncThrowingStream<String, Error>.Continuation?
 
+    /// An error type for the capture engine.
+    enum CaptureError: Error {
+        case invalidURL
+        case createTrackFailed
+        case exportFailed
+    }
+
+    /// The settings for audio recording.
+    private let audioSettings: [String: Any] = [
+        AVFormatIDKey: kAudioFormatMPEG4AAC,
+        AVNumberOfChannelsKey: 2,
+        AVSampleRateKey: 48000,
+        AVEncoderBitRateKey: 256_000,
+    ]
+
+    /// A date formatter for creating unique file names.
+    private let dateFormatter = DateFormatter()
+
+    /// The base folder for the file(s) to write audio to.
+    private var fileFolder: URL?
+
+    /// The URL for the system audio file.
+    private var systemFileURL: URL? {
+        guard let fileFolder else { return nil }
+        return fileFolder.appendingPathComponent("system").appendingPathExtension("m4a")
+    }
+
+    /// The URL for the mic audio file.
+    private var micFileURL: URL? {
+        guard let fileFolder else { return nil }
+        return fileFolder.appendingPathComponent("mic").appendingPathExtension("m4a")
+    }
+
+    /// The URL for the merged audio file.
+    private var mergedFileURL: URL? {
+        guard let fileFolder else { return nil }
+        return fileFolder.appendingPathComponent("merged").appendingPathExtension("m4a")
+    }
+
+    override init() {
+        super.init()
+        dateFormatter.dateFormat = "MMM_dd_yyyy_HH_mm_ss"
+    }
+
     /// - Tag: StartCapture
     func startCapture(configuration: SCStreamConfiguration, filter: SCContentFilter) -> AsyncThrowingStream<String, Error> {
         AsyncThrowingStream<String, Error> { continuation in
@@ -39,19 +84,17 @@ class CaptureEngine: NSObject, @unchecked Sendable {
             streamOutput.pcmBufferHandler = { self.powerMeter.process(buffer: $0) }
 
             // Create directory for audio files
-            try? FileManager.default.createDirectory(at: AudioFileWriter.audioDir, withIntermediateDirectories: true, attributes: nil)
+            fileFolder = AudioFileWriter.audioDir.appendingPathComponent(dateFormatter.string(from: Date()))
+            guard let fileFolder else {
+                continuation.finish(throwing: CaptureError.invalidURL)
+                return
+            }
+            try? FileManager.default.createDirectory(at: fileFolder, withIntermediateDirectories: true, attributes: nil)
 
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "MMM_dd_yyyy_HH_mm_ss"
-            let fileName = "\(dateFormatter.string(from: Date.now))"
-            let systemFileURL = AudioFileWriter.audioDir.appendingPathComponent("\(fileName)_system").appendingPathExtension("m4a")
-            let micFileURL = AudioFileWriter.audioDir.appendingPathComponent("\(fileName)_mic").appendingPathExtension("m4a")
-            let audioSettings: [String: Any] = [
-                AVFormatIDKey: kAudioFormatMPEG4AAC,
-                AVNumberOfChannelsKey: 2,
-                AVSampleRateKey: 44100,
-                AVEncoderBitRateKey: 64000,
-            ]
+            guard let systemFileURL, let micFileURL else {
+                continuation.finish(throwing: CaptureError.invalidURL)
+                return
+            }
 
             streamOutput.audioFileWriter = AudioFileWriter(outputURL: systemFileURL, audioSettings: audioSettings)
             streamOutput.audioFileWriter?.startWriting()
@@ -75,9 +118,29 @@ class CaptureEngine: NSObject, @unchecked Sendable {
     func stopCapture() async {
         do {
             try await stream?.stopCapture()
-            streamOutput?.audioFileWriter?.finishWriting()
-            streamOutput?.audioFileWriter = nil
             audioRecorder?.stop()
+            audioRecorder = nil
+
+            await streamOutput?.audioFileWriter?.finishWriting()
+
+            // Merge audio files after writing is finished
+            self.streamOutput?.audioFileWriter = nil
+
+            do {
+                guard let systemFileURL = self.systemFileURL, let micFileURL = self.micFileURL, let mergedFileURL = self.mergedFileURL else {
+                    self.logger.error("Invalid audio file URLs")
+                    AlertManager.shared.doShowAlert(title: "Error", message: "Invalid audio file URLs. If this error persists, please contact support.")
+                    return
+                }
+                try await self.overlayAudioFiles(audioFileURLs: [systemFileURL, micFileURL], outputURL: mergedFileURL)
+
+                // Now send it to the chat
+                MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).handleFile(url: mergedFileURL)
+            } catch {
+                self.logger.error("Error merging audio files: \(error)")
+                AlertManager.shared.doShowAlert(title: "Error", message: "Error merging audio files: \(error). If this error persists, please contact support.")
+            }
+
             continuation?.finish()
         } catch {
             continuation?.finish(throwing: error)
@@ -93,6 +156,88 @@ class CaptureEngine: NSObject, @unchecked Sendable {
         } catch {
             logger.error("Failed to update the stream session: \(String(describing: error))")
         }
+    }
+
+    // func mergeAudioFiles(fileURLs: [URL], outputURL: URL) async throws {
+    //     let composition = AVMutableComposition()
+    //     guard let track = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid) else {
+    //         throw CaptureError.createTrackFailed
+    //     }
+
+    //     for fileURL in fileURLs {
+    //         let asset = AVURLAsset(url: fileURL)
+
+    //         // Load tracks asynchronously
+    //         try await asset.loadTracks(withMediaType: .audio)
+    //         guard let assetTrack = try await asset.loadTracks(withMediaType: .audio).first else { continue }
+
+    //         // Load duration
+    //         let duration = try await asset.load(.duration)
+
+    //         do {
+    //             try track.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration),
+    //                                       of: assetTrack,
+    //                                       at: composition.duration)
+    //         } catch {
+    //             // Handle error
+    //             print("Error inserting time range: \(error)")
+    //         }
+    //     }
+
+    //     // Configure and start the export session
+    //     guard let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetAppleM4A) else {
+    //         throw CaptureError.exportFailed
+    //     }
+    //     exporter.outputURL = outputURL
+    //     exporter.outputFileType = .m4a
+
+    //     // Perform the export asynchronously
+    //     await exporter.export()
+    // }
+
+    /// Merges two audio files into one by overlaying them.
+    func overlayAudioFiles(audioFileURLs: [URL], outputURL: URL) async throws {
+        let composition = AVMutableComposition()
+
+        // Ensure there are two audio files to overlay
+        guard audioFileURLs.count == 2 else { return }
+
+        // Attempt to create two tracks in the composition for each audio file
+        guard let trackA = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid),
+              let trackB = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+        else {
+            throw CaptureError.createTrackFailed
+        }
+
+        for (index, fileURL) in audioFileURLs.enumerated() {
+            let asset = AVURLAsset(url: fileURL)
+
+            // Choose the correct track for the current file
+            let track = (index == 0) ? trackA : trackB
+
+            // Load tracks asynchronously
+            try await asset.loadTracks(withMediaType: .audio)
+            guard let assetTrack = try await asset.loadTracks(withMediaType: .audio).first else { continue }
+
+            // Load duration
+            let duration = try await asset.load(.duration)
+
+            try track.insertTimeRange(CMTimeRangeMake(start: .zero, duration: duration),
+                                      of: assetTrack,
+                                      at: .zero) // Start both tracks at the same time
+        }
+
+        // Export the mixed audio
+        guard let exporter = AVAssetExportSession(asset: composition, presetName: AVAssetExportPresetAppleM4A) else {
+            throw CaptureError.exportFailed
+        }
+
+        exporter.outputURL = outputURL
+        exporter.outputFileType = .m4a
+        // exporter.audioMix = audioMix // If you have an AVMutableAudioMix for volume adjustments
+
+        // Perform the export
+        await exporter.export()
     }
 }
 

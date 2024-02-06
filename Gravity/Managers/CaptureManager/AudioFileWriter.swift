@@ -49,8 +49,12 @@ class AudioFileWriter {
         }
     }
 
-    func finishWriting(completion: @escaping () -> Void = {}) {
+    func finishWriting() async {
         assetWriterInput?.markAsFinished()
-        assetWriter?.finishWriting(completionHandler: completion)
+        await withCheckedContinuation { continuation in
+            assetWriter?.finishWriting {
+                continuation.resume(returning: ())
+            }
+        }
     }
 }
