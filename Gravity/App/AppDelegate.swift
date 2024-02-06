@@ -7,7 +7,7 @@
 
 import Cocoa
 import Foundation
-import os
+import OSLog
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {

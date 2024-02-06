@@ -2,7 +2,7 @@ import Cocoa
 import Combine
 import CoreGraphics
 import Foundation
-import os
+import OSLog
 import SwiftData
 import SwiftUI
 import TelemetryClient
@@ -88,7 +88,7 @@ final class MessageViewModel: ObservableObject {
                 try modelContext.save()
             } catch {
                 // Handle the error, such as logging or showing an alert to the user
-                print("Error saving context after deletion: \(error)")
+                logger.error("Error saving context after deletion: \(error)")
             }
         }
         // Removes the user message and presents a fresh send scenario

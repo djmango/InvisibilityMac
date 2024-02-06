@@ -5,22 +5,28 @@
 //  Created by Sulaiman Ghori on 2/4/24.
 //
 
-import Foundation
-
 import AVFoundation
+import Foundation
+import OSLog
 
 class AudioFileWriter {
+    private let logger = Logger(subsystem: "ai.grav.app", category: "AudioFileWriter")
+
+    static let gravityHomeDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".gravity")
+    static let audioDir = gravityHomeDir.appendingPathComponent("audio")
+
     private var assetWriter: AVAssetWriter?
     private var assetWriterInput: AVAssetWriterInput?
 
     init(outputURL: URL, audioSettings: [String: Any]) {
         do {
             assetWriter = try AVAssetWriter(outputURL: outputURL, fileType: .m4a)
+            logger.debug("Audio file writer initialized at \(outputURL)")
             assetWriterInput = AVAssetWriterInput(mediaType: .audio, outputSettings: audioSettings)
             assetWriterInput?.expectsMediaDataInRealTime = true
             assetWriter?.add(assetWriterInput!)
         } catch {
-            print("Error initializing AVAssetWriter: \(error)")
+            logger.error("Error initializing AVAssetWriter: \(error)")
         }
     }
 

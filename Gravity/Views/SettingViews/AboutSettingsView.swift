@@ -10,7 +10,7 @@ import SwiftUI
 struct AboutSettingsView: View {
     let bundleVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
 
-    @EnvironmentObject private var updaterViewModel: UpdaterViewModel
+    @StateObject private var updaterViewModel = UpdaterViewModel.shared
 
     var body: some View {
         VStack {

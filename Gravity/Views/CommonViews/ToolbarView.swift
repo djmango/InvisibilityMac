@@ -5,7 +5,7 @@
 //  Created by Sulaiman Ghori on 1/23/24.
 //
 
-import os
+import OSLog
 import SwiftUI
 
 struct ToolbarView: ToolbarContent {
@@ -32,6 +32,7 @@ struct ToolbarView: ToolbarContent {
             .buttonStyle(.accessoryBar)
             .help("New Chat (⌘ + N)")
 
+            // AudioLevelsView(audioLevelsProvider: ScreenRecorder.shared.audioLevelsProvider)
             Button(action: {
                 if screenRecorder.isRunning {
                     Task {

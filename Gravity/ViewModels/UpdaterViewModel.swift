@@ -11,13 +11,16 @@ import SwiftUI
 
 // This view model class publishes when new updates can be checked by the user
 final class UpdaterViewModel: ObservableObject {
+    static let shared = UpdaterViewModel()
+
     private var cancellable: AnyCancellable?
     public let updater: SPUUpdater
 
     @Published var canCheckForUpdates = false
 
-    init(updater: SPUUpdater) {
-        self.updater = updater
+    private init() {
+        let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+        self.updater = updaterController.updater
 
         cancellable = updater.publisher(for: \.canCheckForUpdates)
             .assign(to: \.canCheckForUpdates, on: self)

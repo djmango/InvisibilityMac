@@ -1,9 +1,11 @@
-/*
- See the LICENSE.txt file for this sample’s licensing information.
+//
+//  ScreenRecorder.swift
+//  Gravity
+//
+//  Created by Sulaiman Ghori on 2/4/24.
+//
 
- Abstract:
- A model object that provides the interface to capture screen content and system audio.
- */
+import AVFoundation
 import Combine
 import Foundation
 import OSLog
@@ -15,6 +17,7 @@ class AudioLevelsProvider: ObservableObject {
     @Published var audioLevels = AudioLevels.zero
 }
 
+/// A class that manages screen recording. Primarily audio at the moment.
 @MainActor
 class ScreenRecorder: NSObject,
     ObservableObject
@@ -63,8 +66,6 @@ class ScreenRecorder: NSObject,
     // The object that manages the SCStream.
     private let captureEngine = CaptureEngine()
 
-    private var isSetup = false
-
     // Combine subscribers.
     private var subscriptions = Set<AnyCancellable>()
 
@@ -73,8 +74,6 @@ class ScreenRecorder: NSObject,
             do {
                 // If the app doesn't have screen recording permission, this call generates an exception.
                 try await SCShareableContent.excludingDesktopWindows(true, onScreenWindowsOnly: true)
-                // Only audio
-                // try await SCShareableContent.
                 return true
             } catch {
                 return false
@@ -82,50 +81,49 @@ class ScreenRecorder: NSObject,
         }
     }
 
-    func monitorAvailableContent() async {
-        guard !isSetup else { return }
-        // Refresh the lists of capturable content.
-        await self.refreshAvailableContent()
-        Timer.publish(every: 3, on: .main, in: .common).autoconnect().sink { [weak self] _ in
-            guard let self else { return }
-            Task {
-                await self.refreshAvailableContent()
+    var canRecordMic: Bool {
+        get async {
+            await withCheckedContinuation { continuation in
+                AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
+                    self?.logger.debug("Audio permission granted: \(granted)")
+                    continuation.resume(returning: granted)
+                }
             }
         }
-        .store(in: &subscriptions)
     }
 
     /// Starts capturing screen content.
     func start() async {
         // Exit early if already running.
         guard !isRunning else { return }
-
-        if !isSetup {
-            // Starting polling for available screen content.
-            await monitorAvailableContent()
-            isSetup = true
+        guard await canRecord else {
+            AlertManager.shared.doShowAlert(title: "Screen Recording Permission Grant", message: "Gravity has not been granted permission to record the screen. Please enable this permission in System Preferences > Security & Privacy > Screen & System Audio Recording.")
+            // Open the System Preferences app to the Screen Recording settings.
+            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
+                NSWorkspace.shared.open(url)
+            }
+            return
         }
+        guard await canRecordMic else {
+            AlertManager.shared.doShowAlert(title: "Microphone Permission Grant", message: "Gravity has not been granted permission to record the microphone. Please enable this permission in System Preferences > Security & Privacy > Microphone.")
+            // Open the System Preferences app to the Microphone settings.
+            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone") {
+                NSWorkspace.shared.open(url)
+            }
+            return
+        }
+
+        // Refresh the available content to capture.
+        await refreshAvailableContent()
 
         // If the user enables audio capture, start monitoring the audio stream.
         if isAudioCaptureEnabled {
             startAudioMetering()
         }
 
-        do {
-            let config = streamConfiguration
-            let filter = contentFilter
-            // Update the running state.
-            isRunning = true
-            // Start the stream and await new video frames.
-            for try await frame in captureEngine.startCapture(configuration: config, filter: filter) {
-                // capturePreview.updateFrame(frame)
-                print(frame)
-            }
-        } catch {
-            logger.error("\(error.localizedDescription)")
-            // Unable to start the stream. Set the running state to false.
-            isRunning = false
-        }
+        // Start the stream and await new video frames.
+        isRunning = true
+        let _ = captureEngine.startCapture(configuration: streamConfiguration, filter: contentFilter)
     }
 
     /// Stops capturing screen content.
@@ -161,10 +159,8 @@ class ScreenRecorder: NSObject,
     private func refreshAvailableContent() async {
         do {
             // Retrieve the available screen content to capture.
-            let availableContent = try await SCShareableContent.excludingDesktopWindows(false,
-                                                                                        onScreenWindowsOnly: true)
+            let availableContent = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
             availableDisplays = availableContent.displays
-
             availableApps = availableContent.applications
 
             if selectedDisplay == nil {
@@ -189,9 +185,7 @@ class ScreenRecorder: NSObject,
             }
         }
         // Create a content filter with excluded apps.
-        filter = SCContentFilter(display: display,
-                                 excludingApplications: excludedApps,
-                                 exceptingWindows: [])
+        filter = SCContentFilter(display: display, excludingApplications: excludedApps, exceptingWindows: [])
 
         return filter
     }
@@ -211,10 +205,6 @@ class ScreenRecorder: NSObject,
 
         // Set the capture interval at 1 fps.
         streamConfig.minimumFrameInterval = CMTime(value: 1, timescale: 1)
-
-        // Increase the depth of the frame queue to ensure high fps at the expense of increasing
-        // the memory footprint of WindowServer.
-        streamConfig.queueDepth = 5
 
         return streamConfig
     }

@@ -7,7 +7,7 @@
 
 import KeyboardShortcuts
 import LaunchAtLogin
-import os
+import OSLog
 import SwiftData
 import SwiftUI
 

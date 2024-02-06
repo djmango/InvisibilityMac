@@ -5,7 +5,7 @@
 //  Created by Sulaiman Ghori on 1/14/24.
 //
 
-import os
+import OSLog
 import SwiftUI
 
 struct OnboardingDownloadView: View {

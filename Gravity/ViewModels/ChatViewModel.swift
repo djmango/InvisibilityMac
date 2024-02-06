@@ -1,4 +1,4 @@
-import os
+import OSLog
 import SwiftData
 import SwiftUI
 

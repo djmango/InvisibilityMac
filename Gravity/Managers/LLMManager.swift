@@ -8,14 +8,14 @@
 import DockProgress
 import Foundation
 import LLM
-import os
+import OSLog
 
 final class LLMManager {
     private let logger = Logger(subsystem: "ai.grav.app", category: "LLMManager")
 
     static let shared = LLMManager()
 
-    public let downloadManager: DownloadManager = DownloadManager(reportDockProgress: true)
+    public let downloadManager: FileDownloader = FileDownloader(reportDockProgress: true)
     private let modelInfo = ModelRepository.MISTRAL_7B_V2_Q4
     private var downloadRetries = 0
 

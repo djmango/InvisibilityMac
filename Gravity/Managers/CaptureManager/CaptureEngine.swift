@@ -1,9 +1,10 @@
-/*
- See the LICENSE.txt file for this sample’s licensing information.
+//
+//  CaptureEngine.swift
+//  Gravity
+//
+//  Created by Sulaiman Ghori on 2/4/24.
+//
 
- Abstract:
- An object that captures a stream of captured sample buffers containing screen and audio content.
- */
 import AVFAudio
 import Combine
 import CoreGraphics
@@ -23,6 +24,9 @@ class CaptureEngine: NSObject, @unchecked Sendable {
     private let powerMeter = PowerMeter()
     var audioLevels: AudioLevels { powerMeter.levels }
 
+    /// The audio recorder used to capture audio from the mic.
+    private var audioRecorder: AVAudioRecorder?
+
     // Store the the startCapture continuation, so that you can cancel it when you call stopCapture().
     private var continuation: AsyncThrowingStream<String, Error>.Continuation?
 
@@ -33,15 +37,29 @@ class CaptureEngine: NSObject, @unchecked Sendable {
             let streamOutput = CaptureEngineStreamOutput(continuation: continuation)
             self.streamOutput = streamOutput
             streamOutput.pcmBufferHandler = { self.powerMeter.process(buffer: $0) }
-            streamOutput.audioFileWriter = AudioFileWriter(outputURL: URL(fileURLWithPath: "/tmp/audio.m4a"), audioSettings: [
+
+            // Create directory for audio files
+            try? FileManager.default.createDirectory(at: AudioFileWriter.audioDir, withIntermediateDirectories: true, attributes: nil)
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM_dd_yyyy_HH_mm_ss"
+            let fileName = "\(dateFormatter.string(from: Date.now))"
+            let systemFileURL = AudioFileWriter.audioDir.appendingPathComponent("\(fileName)_system").appendingPathExtension("m4a")
+            let micFileURL = AudioFileWriter.audioDir.appendingPathComponent("\(fileName)_mic").appendingPathExtension("m4a")
+            let audioSettings: [String: Any] = [
                 AVFormatIDKey: kAudioFormatMPEG4AAC,
                 AVNumberOfChannelsKey: 2,
                 AVSampleRateKey: 44100,
                 AVEncoderBitRateKey: 64000,
-            ])
+            ]
+
+            streamOutput.audioFileWriter = AudioFileWriter(outputURL: systemFileURL, audioSettings: audioSettings)
             streamOutput.audioFileWriter?.startWriting()
 
             do {
+                audioRecorder = try AVAudioRecorder(url: micFileURL, settings: audioSettings)
+                audioRecorder?.record()
+
                 stream = SCStream(filter: filter, configuration: configuration, delegate: streamOutput)
 
                 // Add a stream output to capture screen content.
@@ -59,6 +77,7 @@ class CaptureEngine: NSObject, @unchecked Sendable {
             try await stream?.stopCapture()
             streamOutput?.audioFileWriter?.finishWriting()
             streamOutput?.audioFileWriter = nil
+            audioRecorder?.stop()
             continuation?.finish()
         } catch {
             continuation?.finish(throwing: error)
@@ -115,7 +134,6 @@ private class CaptureEngineStreamOutput: NSObject, SCStreamOutput, SCStreamDeleg
             else { return }
             pcmBufferHandler?(samples)
             self.audioFileWriter?.handleAudio(for: buffer)
-            print("Audio buffer: \(buffer)")
         }
     }
 

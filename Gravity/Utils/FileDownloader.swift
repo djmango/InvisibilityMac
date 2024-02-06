@@ -1,5 +1,5 @@
 //
-//  DownloadManager.swift
+//  FileDownloader.swift
 //  Gravity
 //
 //  Created by Sulaiman Ghori on 1/19/24.
@@ -9,9 +9,9 @@ import Combine
 import CryptoKit
 import DockProgress
 import Foundation
-import os
+import OSLog
 
-class DownloadManager: ObservableObject {
+class FileDownloader: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "DownloadManager")
 
     static let gravityHomeDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".gravity")

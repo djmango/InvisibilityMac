@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-import os
+import OSLog
 import SwiftData
 import SwiftUI
 import SwiftWhisper
@@ -89,7 +89,7 @@ final class WhisperManager {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 
     private var whisperModel: Whisper?
-    public let downloadManager: DownloadManager = DownloadManager()
+    public let downloadManager: FileDownloader = FileDownloader()
 
     /// The Whisper model gets loaded asynchronously, so we need to wait for it to be ready
     private var downloadRetries = 0

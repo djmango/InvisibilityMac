@@ -8,7 +8,7 @@
 import AudioKit
 import AVFoundation
 import Foundation
-import os
+import OSLog
 
 private let logger = Logger(subsystem: "ai.grav.app", category: "AudioUtils")
 
