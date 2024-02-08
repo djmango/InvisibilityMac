@@ -11,10 +11,8 @@ import DockProgress
 import Foundation
 import OSLog
 
-class FileDownloader: ObservableObject {
+class ModelFileManager: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "DownloadManager")
-
-    static let gravityHomeDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".gravity")
 
     enum DownloadState: CustomStringConvertible {
         case notStarted
@@ -47,7 +45,7 @@ class FileDownloader: ObservableObject {
 
     @Published private(set) var state: DownloadState = .notStarted {
         didSet {
-            logger.debug("Download state changed to \(self.state.description)")
+            logger.debug("Download state changed to \(self.state.description) for \(self.modelInfo.name)")
         }
     }
 
@@ -56,19 +54,22 @@ class FileDownloader: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     private let reportDockProgress: Bool
 
-    init(reportDockProgress: Bool = false) {
+    private let modelInfo: ModelInfo
+
+    init(modelInfo: ModelInfo, reportDockProgress: Bool = false) {
+        self.modelInfo = modelInfo
         self.reportDockProgress = reportDockProgress
     }
 
     /// Downloads a file from a given URL to a given destination URL, verifying the SHA256 hash of the file
-    func download(from url: URL, to destinationURL: URL, expectedHash: String) async throws {
+    func download() async throws {
         DispatchQueue.main.async {
             self.state = .downloading
         }
 
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: nil)
         try await withCheckedThrowingContinuation { [unowned self] (continuation: CheckedContinuation<Void, Error>) in
-            let task = session.downloadTask(with: url) { localURL, _, error in
+            let task = session.downloadTask(with: self.modelInfo.url) { localURL, _, error in
                 if let error {
                     continuation.resume(throwing: error)
                     return
@@ -79,9 +80,9 @@ class FileDownloader: ObservableObject {
                 }
 
                 // Post-download verification and processing can be done here
-                if self.verifyFile(at: localURL, expectedHash: expectedHash) {
+                if self.verifyFile(at: localURL, expectedHash: self.modelInfo.hash) {
                     do {
-                        try self.moveFile(from: localURL, to: destinationURL)
+                        try self.moveFile(from: localURL, to: self.modelInfo.localURL)
                         DispatchQueue.main.async {
                             self.state = .completed
                         }
@@ -89,10 +90,10 @@ class FileDownloader: ObservableObject {
                         DispatchQueue.main.async {
                             self.state = .failed
                         }
-                        self.logger.error("Error moving file: \(error)")
+                        self.logger.error("Error moving file for \(self.modelInfo.name): \(error)")
                     }
                 } else {
-                    self.logger.error("Hash mismatch")
+                    self.logger.error("Hash mismatch for \(self.modelInfo.name)")
                 }
                 continuation.resume(returning: ())
             }
@@ -103,7 +104,7 @@ class FileDownloader: ObservableObject {
                     // Only update progress if it's gone up
                     if progress > self?.progress ?? 0.0 {
                         self?.progress = progress
-                        self?.logger.debug("Download progress: \(progress)")
+                        self?.logger.debug("Download progress for \(self?.modelInfo.name ?? ""): \(progress)")
 
                         // And only report progress to Dock if we're supposed to, to avoid flickering
                         if self?.reportDockProgress ?? false {
@@ -138,18 +139,18 @@ class FileDownloader: ObservableObject {
             let hashString = hash.compactMap { String(format: "%02x", $0) }.joined()
 
             if hashString == expectedHash {
-                logger.debug("Hash verification successful")
+                logger.debug("Hash verification successful for \(self.modelInfo.name)")
 
                 DispatchQueue.main.async {
                     self.state = .completed
                 }
                 return true
             } else {
-                logger.error("Hash verification failed")
+                logger.error("Hash verification failed for \(self.modelInfo.name)")
                 return false
             }
         } catch {
-            logger.error("Error reading file for hash verification: \(error)")
+            logger.error("Error reading file for hash \(self.modelInfo.name) verification: \(error)")
             return false
         }
     }

@@ -11,27 +11,27 @@ import LLM
 import OSLog
 import SwiftUI
 
-final class LLMManager {
+final class LLMManager: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "LLMManager")
 
     static let shared = LLMManager()
 
-    public let downloadManager: FileDownloader = FileDownloader(reportDockProgress: true)
     private let modelInfo = ModelRepository.MISTRAL_7B_V2_Q4
     private var downloadRetries = 0
+    @Published public var downloader: ModelFileManager = ModelFileManager(modelInfo: ModelRepository.MISTRAL_7B_V2_Q4, reportDockProgress: true)
 
     private var _llm: LLM?
     public var llm: LLM? {
         get async {
             // If the model is already completed but deinited, reload it
-            if downloadManager.state == .completed {
+            if downloader.state == .completed {
                 loadLLM()
             }
             while _llm == nil {
                 try? await Task.sleep(nanoseconds: 500_000_000) // Sleep for 0.5 second
 
                 // Only increment retries if we have already tried to download the model
-                if downloadManager.state == .failed, downloadRetries < 100 {
+                if downloader.state == .failed, downloadRetries < 100 {
                     downloadRetries += 1
                     logger.debug("Waiting for \(self.modelInfo.name) to be ready (\(self.downloadRetries))")
                     await setup()
@@ -120,7 +120,7 @@ final class LLMManager {
     }
 
     func setup() async {
-        if downloadManager.verifyFile(
+        if downloader.verifyFile(
             at: modelInfo.localURL,
             expectedHash: modelInfo.hash
         ) {
@@ -129,11 +129,7 @@ final class LLMManager {
         } else {
             logger.debug("Downloading \(self.modelInfo.name) from \(self.modelInfo.url)")
             do {
-                try await downloadManager.download(
-                    from: modelInfo.url,
-                    to: modelInfo.localURL,
-                    expectedHash: modelInfo.hash
-                )
+                try await downloader.download()
 
                 logger.debug("Loading \(self.modelInfo.name) from \(self.modelInfo.localURL)")
                 loadLLM()

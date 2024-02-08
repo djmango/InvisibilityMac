@@ -89,7 +89,7 @@ final class WhisperManager {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 
     private var whisperModel: Whisper?
-    public let downloadManager: FileDownloader = FileDownloader()
+    public let downloadManager: ModelFileManager = ModelFileManager(modelInfo: ModelRepository.WHISPER_SMALL)
 
     /// The Whisper model gets loaded asynchronously, so we need to wait for it to be ready
     private var downloadRetries = 0
@@ -122,11 +122,7 @@ final class WhisperManager {
         } else {
             logger.debug("Downloading Whisper from \(ModelRepository.WHISPER_SMALL.url)")
             do {
-                try await downloadManager.download(
-                    from: ModelRepository.WHISPER_SMALL.url,
-                    to: ModelRepository.WHISPER_SMALL.localURL,
-                    expectedHash: ModelRepository.WHISPER_SMALL.hash
-                )
+                try await downloadManager.download()
 
                 logger.debug("Loading Whisper from \(ModelRepository.WHISPER_SMALL.localURL)")
                 whisperModel = Whisper(fromFileURL: ModelRepository.WHISPER_SMALL.localURL)

@@ -12,7 +12,7 @@ struct OnboardingDownloadView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "OnboardingDownloadView")
     @State private var showDeleteAllDataAlert: Bool = false
 
-    @StateObject private var llmDownloader = LLMManager.shared.downloadManager
+    @ObservedObject private var llmDownloader = LLMManager.shared.downloader
 
     private var callback: () -> Void
 
@@ -42,7 +42,7 @@ struct OnboardingDownloadView: View {
                         .bold()
                         .foregroundColor(.white)
 
-                    Text("This may take a few minutes (it's the size of a movie) (it's worth it)")
+                    Text("This may take a few minutes (it's the size of a movie)")
                         .font(.subheadline)
                         .bold()
                         .foregroundColor(.gray)
@@ -74,7 +74,7 @@ struct OnboardingDownloadView: View {
 
                 Spacer()
 
-                Button(action: callback) {
+                Button(action: continueToApp) {
                     Text("Start Gravity")
                         .font(.system(size: 18))
                         .bold()
@@ -84,19 +84,11 @@ struct OnboardingDownloadView: View {
                 .frame(width: 200, height: 50)
                 .buttonStyle(.plain)
                 .background(.accent)
-                .opacity((llmDownloader.state == .completed)
-                    ? 1.0 : 0.5)
                 .cornerRadius(25)
                 .padding()
                 .focusable(false)
-                .disabled(llmDownloader.state != .completed)
-                .onTapGesture {
-                    if llmDownloader.state == .completed {
-                        callback()
-                    }
-                }
                 .onHover { hovering in
-                    if hovering, llmDownloader.state == .completed {
+                    if hovering {
                         NSCursor.pointingHand.push()
                     } else {
                         NSCursor.pop()
@@ -148,6 +140,17 @@ struct OnboardingDownloadView: View {
             Task {
                 await LLMManager.shared.setup()
             }
+        }
+    }
+
+    func continueToApp() {
+        if llmDownloader.state == .completed {
+            callback()
+        } else {
+            AlertManager.shared.doShowAlert(
+                title: "Download not complete",
+                message: "Please wait for the download to complete before starting Gravity. If the download is stuck, please restart the app."
+            )
         }
     }
 }
