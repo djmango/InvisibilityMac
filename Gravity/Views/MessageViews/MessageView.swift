@@ -113,9 +113,11 @@ struct MessageView: View {
             .copyable(selection.compactMap(\.content))
             .task {
                 initAction()
+                scrollToBottom(scrollViewProxy)
             }
             .onChange(of: chat) {
                 initAction()
+                scrollToBottom(scrollViewProxy)
             }
         }
     }

@@ -10,6 +10,7 @@ import LaunchAtLogin
 import OSLog
 import SwiftData
 import SwiftUI
+import TelemetryClient
 
 struct GeneralSettingsView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "GeneralSettingsView")
@@ -63,6 +64,8 @@ struct GeneralSettingsView: View {
                 Button(action: {
                     showDeleteAllDataAlert = true
                 }) {
+                    Text("Wipe all data")
+                        .foregroundColor(.red)
                     Image(systemName: "trash")
                         .foregroundColor(.red)
                 }
@@ -74,51 +77,58 @@ struct GeneralSettingsView: View {
                         NSCursor.pop()
                     }
                 }
-                .padding()
                 .confirmationDialog(
                     AppMessages.wipeAllDataTitle,
                     isPresented: $showDeleteAllDataAlert
                 ) {
                     Button("Cancel", role: .cancel) {}
-                    Button("Delete", role: .destructive) {
-                        logger.debug("Deleting all data...")
-                        let context = SharedModelContainer.shared.mainContext
-                        for chat in chats {
-                            logger.debug("Deleting chat: \(chat.name)")
-                            context.delete(chat)
-                        }
-                        for message in messages {
-                            logger.debug("Deleting message: \(message.content ?? "")")
-                            context.delete(message)
-                        }
-                        for audio in audios {
-                            logger.debug("Deleting audio: \(audio.name)")
-                            context.delete(audio)
-                        }
-
-                        // Reset settings
-                        autoLaunch = false
-                        analytics = true
-                        betaFeatures = false
-                        emailAddress = ""
-
-                        // Reset onboarding
-                        onboardingViewed = false
-
-                        // Wipe models
-                        LLMManager.shared.wipe()
-                        WhisperManager.shared.wipe()
-
-                        // Restart app
-                        NSApplication.shared.terminate(self)
-                    }
+                    Button("Delete", role: .destructive) { wipeAllData() }
                 } message: {
                     Text(AppMessages.wipeAllDataMessage)
                 }
                 .dialogSeverity(.critical)
             }
+            .padding(.trailing, 10)
+            .padding(.bottom, 10)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .focusable(false)
+    }
+
+    private func wipeAllData() {
+        logger.debug("Deleting all data...")
+
+        // Analytics
+        TelemetryManager.send("ApplicationWiped")
+
+        let context = SharedModelContainer.shared.mainContext
+        for chat in chats {
+            logger.debug("Deleting chat: \(chat.name)")
+            context.delete(chat)
+        }
+        for message in messages {
+            logger.debug("Deleting message: \(message.content ?? "")")
+            context.delete(message)
+        }
+        for audio in audios {
+            logger.debug("Deleting audio: \(audio.name)")
+            context.delete(audio)
+        }
+
+        // Reset settings
+        autoLaunch = false
+        analytics = true
+        betaFeatures = false
+        emailAddress = ""
+
+        // Reset onboarding
+        onboardingViewed = false
+
+        // Wipe models
+        LLMManager.shared.wipe()
+        WhisperManager.shared.wipe()
+
+        // Restart app
+        NSApplication.shared.terminate(self)
     }
 }

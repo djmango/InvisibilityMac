@@ -9,6 +9,7 @@ import DockProgress
 import Foundation
 import LLM
 import OSLog
+import SwiftUI
 
 final class LLMManager {
     private let logger = Logger(subsystem: "ai.grav.app", category: "LLMManager")
@@ -23,9 +24,9 @@ final class LLMManager {
     public var llm: LLM? {
         get async {
             // If the model is already completed but deinited, reload it
-            // if downloadManager.state == .completed {
-            //     loadLLM()
-            // }
+            if downloadManager.state == .completed {
+                loadLLM()
+            }
             while _llm == nil {
                 try? await Task.sleep(nanoseconds: 500_000_000) // Sleep for 0.5 second
 
@@ -39,6 +40,9 @@ final class LLMManager {
             return _llm
         }
     }
+
+    @AppStorage("temperature") private var temperature: Double = 0.7
+    @AppStorage("maxContextLength") private var maxContextLength: Double = 4000
 
     private init() {}
 
@@ -59,13 +63,20 @@ final class LLMManager {
             try await llm?.waitUntilAvailable(timeout: .now() + 20)
         } catch {
             logger.error("Error waiting for LLM to be available: \(error)")
+            AlertManager.shared.doShowAlert(
+                title: "Error",
+                message: "Error waiting for LLM to be available: \(error)"
+            )
+            return
         }
 
         // Wrap the processOutput function to capture the output in a variable that we can return
-        var output = ""
         let processOutputWrapped = { (stream: AsyncStream<String>) async -> String in
             let result = await processOutput(stream)
-            output += result
+
+            // Deinit the LLM to free up memory TODO: actually determine if this is a good idea
+            self.logger.debug("Deiniting LLM")
+            self._llm = nil
             return result
         }
 
@@ -77,7 +88,6 @@ final class LLMManager {
             }
         }
 
-        // Remove the last message as respond will generate a new one
         await llm?.respond(to: history, with: processOutputWrapped)
     }
 
@@ -87,6 +97,10 @@ final class LLMManager {
             try await llm?.waitUntilAvailable(timeout: .now() + 20)
         } catch {
             logger.error("Error waiting for LLM to be available: \(error)")
+            AlertManager.shared.doShowAlert(
+                title: "Error",
+                message: "Error waiting for LLM to be available: \(error)"
+            )
         }
 
         let history = messages.map { message in
@@ -97,9 +111,11 @@ final class LLMManager {
             }
         }
 
-        // Remove the last message as respond will generate a new one
         let output = await llm?.respond(to: history)
 
+        // Deinit the LLM to free up memory
+        self.logger.debug("Deiniting LLM")
+        _llm = nil
         return Message(content: output, role: .assistant)
     }
 
@@ -127,12 +143,12 @@ final class LLMManager {
         }
     }
 
-    private func loadLLM() {
+    func loadLLM() {
         let template = Template.mistral
 
-        _llm = LLM(from: modelInfo.localURL, template: template, seed: 3_819_086_369, topP: 0.3, temp: 0.9)
-        // _llm = LLM(from: modelInfo.localURL, template: template, seed: 3_819_086_369, topP: 0.3, temp: 0.9, maxTokenCount: 4096)
-        // _llm = LLM(from: modelInfo.localURL, template: template, seed: 3_819_086_369, topP: 0.95, temp: 0.7, maxTokenCount: 4096)
+        // _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.3, temp: 0.9)
+        // _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.95, temp: 0.7, maxTokenCount: 4096)
+        _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.95, temp: Float(temperature), maxTokenCount: Int32(maxContextLength))
     }
 
     func wipe() {

@@ -20,7 +20,6 @@ class FileDownloader: ObservableObject {
         case notStarted
         case downloading
         case verifying
-        case verified
         case completed
         case failed
 
@@ -32,8 +31,6 @@ class FileDownloader: ObservableObject {
                 "Downloading"
             case .verifying:
                 "Verifying"
-            case .verified:
-                "Verified"
             case .completed:
                 "Completed"
             case .failed:
@@ -139,10 +136,18 @@ class FileDownloader: ObservableObject {
             let hash = SHA256.hash(data: data)
 
             let hashString = hash.compactMap { String(format: "%02x", $0) }.joined()
-            DispatchQueue.main.async {
-                self.state = .verified
+
+            if hashString == expectedHash {
+                logger.debug("Hash verification successful")
+
+                DispatchQueue.main.async {
+                    self.state = .completed
+                }
+                return true
+            } else {
+                logger.error("Hash verification failed")
+                return false
             }
-            return hashString == expectedHash
         } catch {
             logger.error("Error reading file for hash verification: \(error)")
             return false

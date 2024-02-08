@@ -11,7 +11,7 @@ struct AdvancedSettingsView: View {
     @AppStorage("selectedModel") private var selectedModel = "mistral:latest"
     @AppStorage("systemInstruction") private var systemInstruction = ""
     @AppStorage("temperature") private var temperature: Double = 0.7
-    @AppStorage("maxContextLength") private var maxContextLength: Double = 6000
+    @AppStorage("maxContextLength") private var maxContextLength: Double = 4000
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
     @State private var isEditingInstruction = false
@@ -50,39 +50,65 @@ struct AdvancedSettingsView: View {
 
             // Divider()
 
-            HStack {
-                Text("Default System Instruction:").bold()
-                Button("Edit System Instruction") {
-                    isEditingInstruction.toggle()
-                }
-                .sheet(isPresented: $isEditingInstruction, content: {
-                    // Custom view to edit the instruction
-                    TextEditor(text: $systemInstruction)
-                        .frame(minWidth: 300, minHeight: 200)
-                })
-            }
+            // HStack {
+            //     Text("Default System Instruction:").bold()
+            //     Button("Edit System Instruction") {
+            //         isEditingInstruction.toggle()
+            //     }
+            //     .sheet(isPresented: $isEditingInstruction, content: {
+            //         // Custom view to edit the instruction
+            //         TextEditor(text: $systemInstruction)
+            //             .frame(minWidth: 300, minHeight: 200)
+            //     })
+            // }
 
             HStack {
-                Text("Default Temperature:").bold()
+                Text("Model Temperature:").bold()
                 Slider(value: $temperature, in: 0.0 ... 1.0, step: 0.1)
                     .frame(width: 200)
                 Text("\(temperature, specifier: "%.1f")")
             }
 
+            Spacer()
+
             HStack {
-                Text("Default Context Length:").bold()
+                Text("Model Context Length:").bold()
                 Slider(value: $maxContextLength, in: 1000 ... 8000, step: 500)
                     .frame(width: 200)
                 Text("\(maxContextLength, specifier: "%.0f") Tokens")
             }
             .padding(.bottom, 10)
 
+            Spacer()
+
             Section {
                 Button("Reset Onboarding") {
                     onboardingViewed = false
                 }
                 .bold()
-            }.padding(.bottom, 10)
+            }
+
+            Spacer()
+
+            Section {
+                Button("Reset All Settings") {
+                    selectedModel = "mistral:latest"
+                    systemInstruction = ""
+                    temperature = 0.7
+                    maxContextLength = 4000
+                }
+                .bold()
+            }
+
+            Spacer()
+
+            Section {
+                Button("Apply Settings") {
+                    LLMManager.shared.loadLLM()
+                }
+                .bold()
+            }
+
             Spacer()
         }
     }

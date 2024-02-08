@@ -64,15 +64,6 @@
       }
     },
     {
-      "identity" : "llm.swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/djmango/LLM.swift.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "d7d43f2b85495769f01610d52f9644d56c39e03d"
-      }
-    },
-    {
       "identity" : "networkimage",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/gonzalezreal/NetworkImage",
@@ -124,6 +115,24 @@
       "state" : {
         "revision" : "ae799d015a5374708f7b4c85f3294c05f2a564e2",
         "version" : "2.3.0"
+      }
+    },
+    {
+      "identity" : "swift-power-assert",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/swift-power-assert",
+      "state" : {
+        "revision" : "2fa10dcbbff807fad73b4e2469b43300a50e9bbc",
+        "version" : "0.12.0"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
       }
     },
     {
