@@ -113,7 +113,7 @@ final class WhisperManager {
     func setup() async {
         if downloadManager.verifyFile(
             at: ModelRepository.WHISPER_SMALL.localURL,
-            expectedHash: ModelRepository.WHISPER_SMALL.hash
+            expectedHash: ModelRepository.WHISPER_SMALL.sha256
         ) {
             logger.debug("Verified Whisper at \(ModelRepository.WHISPER_SMALL.localURL)")
 

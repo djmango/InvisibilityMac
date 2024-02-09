@@ -14,6 +14,7 @@ struct ToolbarView: ToolbarContent {
     @StateObject private var tabViewModel = TabViewModel.shared
     @StateObject private var audioPlayerViewModel = AudioPlayerViewModel.shared
     @StateObject private var screenRecorder = ScreenRecorder.shared
+    @ObservedObject private var modelFileManager = LLMManager.shared.modelFileManager
 
     @State private var isRestarting = false
     @State private var isCopied: Bool = false
@@ -32,7 +33,6 @@ struct ToolbarView: ToolbarContent {
             .buttonStyle(.accessoryBar)
             .help("New Chat (⌘ + N)")
 
-            // AudioLevelsView(audioLevelsProvider: ScreenRecorder.shared.audioLevelsProvider)
             Button(action: {
                 if screenRecorder.isRunning {
                     Task {
@@ -77,6 +77,23 @@ struct ToolbarView: ToolbarContent {
                 }
             }
             .pickerStyle(.segmented)
+        }
+
+        ToolbarItemGroup(placement: .status) {
+            VStack {
+                HStack {
+                    Text("Downloading \(modelFileManager.modelInfo.humanReadableName): ")
+                        .font(.caption)
+                    Text("\(modelFileManager.progress * 100, specifier: "%.2f")%")
+                        .font(.system(.caption, design: .monospaced)) // Use monospaced digits
+                }
+                .hide(if: modelFileManager.state != .downloading, removeCompletely: true)
+
+                ProgressView(value: modelFileManager.progress)
+                    .progressViewStyle(.linear)
+                    .frame(width: 250, height: 20)
+                    .hide(if: modelFileManager.state != .downloading, removeCompletely: true)
+            }
         }
 
         ToolbarItemGroup(placement: .primaryAction) {

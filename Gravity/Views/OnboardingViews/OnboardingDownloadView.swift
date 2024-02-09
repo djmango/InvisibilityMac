@@ -12,7 +12,7 @@ struct OnboardingDownloadView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "OnboardingDownloadView")
     @State private var showDeleteAllDataAlert: Bool = false
 
-    @ObservedObject private var llmDownloader = LLMManager.shared.downloader
+    @ObservedObject private var llmDownloader = LLMManager.shared.modelFileManager
 
     private var callback: () -> Void
 

@@ -1,5 +1,5 @@
 //
-//  FileDownloader.swift
+//  ModelFileManager.swift
 //  Gravity
 //
 //  Created by Sulaiman Ghori on 1/19/24.
@@ -12,7 +12,7 @@ import Foundation
 import OSLog
 
 class ModelFileManager: ObservableObject {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "DownloadManager")
+    private let logger = Logger(subsystem: "ai.grav.app", category: "ModelFileManager")
 
     enum DownloadState: CustomStringConvertible {
         case notStarted
@@ -54,7 +54,7 @@ class ModelFileManager: ObservableObject {
     private var cancellables: Set<AnyCancellable> = []
     private let reportDockProgress: Bool
 
-    private let modelInfo: ModelInfo
+    public let modelInfo: ModelInfo
 
     init(modelInfo: ModelInfo, reportDockProgress: Bool = false) {
         self.modelInfo = modelInfo
@@ -80,7 +80,7 @@ class ModelFileManager: ObservableObject {
                 }
 
                 // Post-download verification and processing can be done here
-                if self.verifyFile(at: localURL, expectedHash: self.modelInfo.hash) {
+                if self.verifyFile(at: localURL, expectedHash: self.modelInfo.sha256) {
                     do {
                         try self.moveFile(from: localURL, to: self.modelInfo.localURL)
                         DispatchQueue.main.async {

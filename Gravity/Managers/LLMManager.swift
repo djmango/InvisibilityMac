@@ -16,24 +16,23 @@ final class LLMManager: ObservableObject {
 
     static let shared = LLMManager()
 
-    private let modelInfo = ModelRepository.MISTRAL_7B_V2_Q4
     private var downloadRetries = 0
-    @Published public var downloader: ModelFileManager = ModelFileManager(modelInfo: ModelRepository.MISTRAL_7B_V2_Q4, reportDockProgress: true)
+    @Published public var modelFileManager: ModelFileManager = ModelFileManager(modelInfo: ModelRepository.OpenHermes_2_5_Mistral_7B, reportDockProgress: true)
 
     private var _llm: LLM?
     public var llm: LLM? {
         get async {
             // If the model is already completed but deinited, reload it
-            if downloader.state == .completed {
+            if modelFileManager.state == .completed {
                 loadLLM()
             }
             while _llm == nil {
                 try? await Task.sleep(nanoseconds: 500_000_000) // Sleep for 0.5 second
 
                 // Only increment retries if we have already tried to download the model
-                if downloader.state == .failed, downloadRetries < 100 {
+                if modelFileManager.state == .failed, downloadRetries < 100 {
                     downloadRetries += 1
-                    logger.debug("Waiting for \(self.modelInfo.name) to be ready (\(self.downloadRetries))")
+                    logger.debug("Waiting for \(self.modelFileManager.modelInfo.name) to be ready (\(self.downloadRetries))")
                     await setup()
                 }
             }
@@ -41,8 +40,8 @@ final class LLMManager: ObservableObject {
         }
     }
 
-    @AppStorage("temperature") private var temperature: Double = 0.7
-    @AppStorage("maxContextLength") private var maxContextLength: Double = 4000
+    // @AppStorage("temperature") private var temperature: Double = 0.7
+    // @AppStorage("maxContextLength") private var maxContextLength: Double = 4000
 
     private init() {}
 
@@ -120,34 +119,31 @@ final class LLMManager: ObservableObject {
     }
 
     func setup() async {
-        if downloader.verifyFile(
-            at: modelInfo.localURL,
-            expectedHash: modelInfo.hash
+        if modelFileManager.verifyFile(
+            at: modelFileManager.modelInfo.localURL,
+            expectedHash: modelFileManager.modelInfo.sha256
         ) {
-            logger.debug("Verified and Loading \(self.modelInfo.name) at \(self.modelInfo.localURL)")
+            logger.debug("Verified and Loading \(self.modelFileManager.modelInfo.name) at \(self.modelFileManager.modelInfo.localURL)")
             loadLLM()
         } else {
-            logger.debug("Downloading \(self.modelInfo.name) from \(self.modelInfo.url)")
+            logger.debug("Downloading \(self.modelFileManager.modelInfo.name) from \(self.modelFileManager.modelInfo.url)")
             do {
-                try await downloader.download()
+                try await modelFileManager.download()
 
-                logger.debug("Loading \(self.modelInfo.name) from \(self.modelInfo.localURL)")
+                logger.debug("Loading \(self.modelFileManager.modelInfo.name) from \(self.modelFileManager.modelInfo.localURL)")
                 loadLLM()
             } catch {
-                logger.error("Could not download \(self.modelInfo.name): \(error)")
+                logger.error("Could not download \(self.modelFileManager.modelInfo.name): \(error)")
             }
         }
     }
 
     func loadLLM() {
-        let template = Template.mistral
-
-        // _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.3, temp: 0.9)
-        // _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.95, temp: 0.7, maxTokenCount: 4096)
-        _llm = LLM(from: modelInfo.localURL, template: template, topP: 0.95, temp: Float(temperature), maxTokenCount: Int32(maxContextLength))
+        let template = Template.chatML("Perform the task to the best of your ability.")
+        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, topK: 40, topP: 0.95, temp: 0.8, maxTokenCount: 2048)
     }
 
     func wipe() {
-        try? FileManager.default.removeItem(at: modelInfo.localURL)
+        try? FileManager.default.removeItem(at: modelFileManager.modelInfo.localURL)
     }
 }
