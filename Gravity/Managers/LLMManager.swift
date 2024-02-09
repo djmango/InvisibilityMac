@@ -23,9 +23,9 @@ final class LLMManager: ObservableObject {
     public var llm: LLM? {
         get async {
             // If the model is already completed but deinited, reload it
-            if modelFileManager.state == .completed {
-                loadLLM()
-            }
+            // if modelFileManager.state == .completed {
+            //     loadLLM()
+            // }
             while _llm == nil {
                 try? await Task.sleep(nanoseconds: 500_000_000) // Sleep for 0.5 second
 
@@ -74,8 +74,8 @@ final class LLMManager: ObservableObject {
             let result = await processOutput(stream)
 
             // Deinit the LLM to free up memory TODO: actually determine if this is a good idea
-            self.logger.debug("Deiniting LLM")
-            self._llm = nil
+            // self.logger.debug("Deiniting LLM")
+            // self._llm = nil
             return result
         }
 
@@ -112,9 +112,9 @@ final class LLMManager: ObservableObject {
 
         let output = await llm?.respond(to: history)
 
-        // Deinit the LLM to free up memory
-        self.logger.debug("Deiniting LLM")
-        _llm = nil
+        // // Deinit the LLM to free up memory
+        // self.logger.debug("Deiniting LLM")
+        // _llm = nil
         return Message(content: output, role: .assistant)
     }
 

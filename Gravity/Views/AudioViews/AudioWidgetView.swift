@@ -9,6 +9,8 @@ import SwiftData
 import SwiftUI
 
 struct AudioWidgetView: View {
+    @Environment(\.colorScheme) var colorScheme
+
     private var audio: Audio
 
     init(audio: Audio) {
@@ -29,7 +31,7 @@ struct AudioWidgetView: View {
 
                 Image(systemName: "waveform.badge.mic")
                     .resizable()
-                    .foregroundColor(.white.opacity(0.6))
+                    .foregroundColor(colorScheme == .dark ? .white.opacity(0.6) : .accentColor)
                     .aspectRatio(contentMode: .fit)
                     .padding(12)
 
@@ -43,6 +45,12 @@ struct AudioWidgetView: View {
                             .font(.title2)
                             .padding()
                             .bold()
+
+                        // And show the first segment text
+                        Text(audio.segments.first?.text ?? "")
+                            .font(.caption)
+                            .bold()
+                            .italic()
                     }
                     // Otherwise, show the last segment text with an animation on change
                     else {
@@ -72,6 +80,6 @@ struct AudioWidgetView: View {
                 Spacer()
             }
         }
-        .frame(width: 450, height: 80)
+        .frame(minWidth: 200, maxWidth: 450, minHeight: 80, maxHeight: 80)
     }
 }

@@ -58,6 +58,6 @@ enum ModelRepository {
         localURL: gravityHomeDir
             .appendingPathComponent("models")
             .appendingPathComponent("openhermes")
-            .appendingPathComponent("OpenHermes_2.5_Mistral-7B-Q5_K_M.gguf")
+            .appendingPathComponent("openhermes-2.5-mistral-7b.Q5_K_M.gguf")
     )
 }
