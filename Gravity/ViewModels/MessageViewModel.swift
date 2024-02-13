@@ -62,11 +62,6 @@ final class MessageViewModel: ObservableObject {
             assistantMessage.completed = true
 
             sendViewState = nil
-
-            // If there are two messages, or the chat name is New Chat, we'll autorename
-            if messages.count == 2 || chat.name == "New Chat" {
-                await self.autorename()
-            }
         }
     }
 
@@ -91,6 +86,9 @@ final class MessageViewModel: ObservableObject {
                 logger.error("Error saving context after deletion: \(error)")
             }
         }
+
+        // await LLMManager.shared.llm?.setNewSeed()
+
         // Removes the user message and presents a fresh send scenario
         if let userMessage = messages.popLast() {
             await send(userMessage)
@@ -131,29 +129,6 @@ final class MessageViewModel: ObservableObject {
         }
 
         return result
-    }
-}
-
-// @MARK AutoRename
-extension MessageViewModel {
-    @MainActor
-    func autorename() async {
-        TelemetryManager.send("MessageViewModel.autorename")
-
-        // Copy the messages array and append the instruction message to it
-        var message_history = messages.map { $0 }
-
-        let instructionMessage = Message(content: AppPrompts.createShortTitle, role: .user)
-        message_history.append(instructionMessage)
-
-        let result: Message = await LLMManager.shared.achat(messages: message_history)
-        if let content = result.content {
-            logger.debug("Autorename result: \(content)")
-            // Split by newline or period
-            let split = content.split(whereSeparator: { $0.isNewline })
-            let title = split.first ?? ""
-            chat.name = title.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
     }
 }
 
@@ -290,11 +265,6 @@ extension MessageViewModel {
         modelContext.insert(userMessage)
         modelContext.insert(assistantMessage)
         lastOpenedImage = nil
-
-        Task {
-            await self.autorename()
-        }
-
         sendViewState = nil
     }
 

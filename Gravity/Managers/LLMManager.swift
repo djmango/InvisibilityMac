@@ -140,7 +140,7 @@ final class LLMManager: ObservableObject {
 
     func loadLLM() {
         let template = Template.chatML("Perform the task to the best of your ability.")
-        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, topK: 40, topP: 0.95, temp: 0.8, maxTokenCount: 2048)
+        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, seed: 981_883_056, topK: 40, topP: 0.9, temp: 0.8, maxTokenCount: 2048)
     }
 
     func wipe() {

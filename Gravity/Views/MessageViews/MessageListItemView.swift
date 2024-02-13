@@ -36,6 +36,10 @@ struct MessageListItemView: View {
         isHovered && isAssistant && !isGenerating
     }
 
+    private var isDeleteButtonVisible: Bool {
+        isHovered && isFinalMessage
+    }
+
     private var isRegenerateButtonVisible: Bool {
         isCopyButtonVisible && isAssistant && isFinalMessage
     }
@@ -120,7 +124,7 @@ struct MessageListItemView: View {
                 .buttonStyle(.accessoryBar)
                 .clipShape(.circle)
                 .help("Copy")
-                .visible(if: isCopyButtonVisible)
+                .visible(if: isCopyButtonVisible, removeCompletely: true)
 
                 Button(action: regenerateAction) {
                     Image(systemName: "arrow.triangle.2.circlepath")
@@ -128,10 +132,20 @@ struct MessageListItemView: View {
                 .buttonStyle(.accessoryBar)
                 .clipShape(.circle)
                 .help("Regenerate")
-                .visible(if: isRegenerateButtonVisible)
+                .visible(if: isRegenerateButtonVisible, removeCompletely: true)
+
+                Spacer()
+
+                Button(action: deleteAction) {
+                    Image(systemName: "trash")
+                }
+                .buttonStyle(.accessoryBar)
+                .clipShape(.circle)
+                .help("Delete")
+                .visible(if: isDeleteButtonVisible)
             }
             .padding(.top, 8)
-            .visible(if: isAssistant, removeCompletely: true)
+            .visible(if: isAssistant || isFinalMessage, removeCompletely: true)
         }
         .padding(.vertical)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -149,6 +163,12 @@ struct MessageListItemView: View {
         pasteBoard.setString(message.content ?? "", forType: .string)
 
         isCopied = true
+    }
+
+    private func deleteAction() {
+        messageViewModel.messages.removeAll { $0.id == message.id }
+        let context = SharedModelContainer.shared.mainContext
+        context.delete(message)
     }
 
     // MARK: - Modifiers
