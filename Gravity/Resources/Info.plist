@@ -12,5 +12,7 @@
         <string>VIOnOTxkP22wB4X2fWs7AkXLD8W5eClUQ7pH0uqD9Cg=</string>
         <key>NSMicrophoneUsageDescription</key>
         <string>Gravity requires access to your microphone for input during recordings.</string>
+        <key>NSCalendarsFullAccessUsageDescription</key>
+        <string>Gravity uses your calendar for reminders and quick-join.</string>
     </dict>
 </plist>

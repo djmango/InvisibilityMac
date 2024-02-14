@@ -90,33 +90,33 @@ final class LLMManager: ObservableObject {
         await llm?.respond(to: history, with: processOutputWrapped)
     }
 
-    @MainActor
-    func achat(messages: [Message]) async -> Message {
-        do {
-            try await llm?.waitUntilAvailable(timeout: .now() + 20)
-        } catch {
-            logger.error("Error waiting for LLM to be available: \(error)")
-            AlertManager.shared.doShowAlert(
-                title: "Error",
-                message: "Error waiting for LLM to be available: \(error)"
-            )
-        }
+    // @MainActor
+    // func achat(messages: [Message]) async -> Message {
+    //     do {
+    //         try await llm?.waitUntilAvailable(timeout: .now() + 20)
+    //     } catch {
+    //         logger.error("Error waiting for LLM to be available: \(error)")
+    //         AlertManager.shared.doShowAlert(
+    //             title: "Error",
+    //             message: "Error waiting for LLM to be available: \(error)"
+    //         )
+    //     }
 
-        let history = messages.map { message in
-            if message.role == .assistant {
-                (Role.bot, message.text)
-            } else {
-                (Role.user, message.text)
-            }
-        }
+    //     let history = messages.map { message in
+    //         if message.role == .assistant {
+    //             (Role.bot, message.text)
+    //         } else {
+    //             (Role.user, message.text)
+    //         }
+    //     }
 
-        let output = await llm?.respond(to: history)
+    //     let output = await llm?.respond(to: history)
 
-        // // Deinit the LLM to free up memory
-        // self.logger.debug("Deiniting LLM")
-        // _llm = nil
-        return Message(content: output, role: .assistant)
-    }
+    //     // // Deinit the LLM to free up memory
+    //     // self.logger.debug("Deiniting LLM")
+    //     // _llm = nil
+    //     return Message(content: output, role: .assistant)
+    // }
 
     func setup() async {
         if modelFileManager.verifyFile(
@@ -124,23 +124,23 @@ final class LLMManager: ObservableObject {
             expectedHash: modelFileManager.modelInfo.sha256
         ) {
             logger.debug("Verified and Loading \(self.modelFileManager.modelInfo.name) at \(self.modelFileManager.modelInfo.localURL)")
-            loadLLM()
+            load()
         } else {
             logger.debug("Downloading \(self.modelFileManager.modelInfo.name) from \(self.modelFileManager.modelInfo.url)")
             do {
                 try await modelFileManager.download()
 
                 logger.debug("Loading \(self.modelFileManager.modelInfo.name) from \(self.modelFileManager.modelInfo.localURL)")
-                loadLLM()
+                load()
             } catch {
                 logger.error("Could not download \(self.modelFileManager.modelInfo.name): \(error)")
             }
         }
     }
 
-    func loadLLM() {
+    func load() {
         let template = Template.chatML("Perform the task to the best of your ability.")
-        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, seed: 981_883_056, topK: 40, topP: 0.9, temp: 0.8, maxTokenCount: 2048)
+        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, topK: 40, topP: 0.9, temp: 0.8, maxTokenCount: 2048)
     }
 
     func wipe() {

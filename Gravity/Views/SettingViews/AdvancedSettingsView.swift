@@ -104,7 +104,7 @@ struct AdvancedSettingsView: View {
 
             Section {
                 Button("Apply Settings") {
-                    LLMManager.shared.loadLLM()
+                    LLMManager.shared.load()
                 }
                 .bold()
             }

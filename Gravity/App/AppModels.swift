@@ -18,8 +18,8 @@ struct ModelInfo {
 }
 
 enum ModelRepository {
-    static let WHISPER_SMALL = ModelInfo(
-        name: "Whisper Small",
+    static let Whisper_Small = ModelInfo(
+        name: "ggml-small-q5_1",
         humanReadableName: "Whisper Small",
         url: URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small-q5_1.bin?download=true")!,
         sha256: "ae85e4a935d7a567bd102fe55afc16bb595bdb618e11b2fc7591bc08120411bb",
@@ -28,6 +28,18 @@ enum ModelRepository {
             .appendingPathComponent("whisper")
             .appendingPathComponent("small.bin")
     )
+
+    static let Whisper_Medium = ModelInfo(
+        name: "ggml-medium-q5_1",
+        humanReadableName: "Whisper Medium",
+        url: URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium-q5_0.bin?download=true")!,
+        sha256: "19fea4b380c3a618ec4723c3eef2eb785ffba0d0538cf43f8f235e7b3b34220f",
+        localURL: gravityHomeDir
+            .appendingPathComponent("models")
+            .appendingPathComponent("whisper")
+            .appendingPathComponent("medium.bin")
+    )
+
     static let Mistral_7B = ModelInfo(
         name: "mistralai/Mistral-7B-v0.2",
         humanReadableName: "Mistral 7B",

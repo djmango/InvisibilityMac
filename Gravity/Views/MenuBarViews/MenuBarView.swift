@@ -12,6 +12,10 @@ struct MenuBarView: View {
     @StateObject private var updaterViewModel = UpdaterViewModel.shared
 
     var body: some View {
+        EventsView()
+
+        Divider()
+
         Button("Record Audio") {
             Task {
                 await screenRecorder.start()

@@ -19,6 +19,8 @@
 		4D3EBF682B6444D700AE230E /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3EBF672B6444D700AE230E /* AppModels.swift */; };
 		4D4D11B92B37B5330095DA09 /* MessageViewModelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */; };
 		4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */; };
+		4D5896DB2B7C67D100484BFA /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5896DA2B7C67D100484BFA /* EventView.swift */; };
+		4D5896DD2B7C67E700484BFA /* EventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */; };
 		4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */; };
 		4D596AA32B5F2B3E00B9E765 /* String+AppendNewLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */; };
 		4D596AA42B5F2B3E00B9E765 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9F2B5F2B3E00B9E765 /* Documentation.docc */; };
@@ -90,6 +92,8 @@
 		4D3EBF672B6444D700AE230E /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
 		4D4D11B82B37B5330095DA09 /* MessageViewModelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewModelManager.swift; sourceTree = "<group>"; };
 		4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileWriter.swift; sourceTree = "<group>"; };
+		4D5896DA2B7C67D100484BFA /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
+		4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewModel.swift; sourceTree = "<group>"; };
 		4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatField.swift; sourceTree = "<group>"; };
 		4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+AppendNewLine.swift"; sourceTree = "<group>"; };
 		4D596A9F2B5F2B3E00B9E765 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
@@ -200,6 +204,15 @@
 			path = Managers;
 			sourceTree = "<group>";
 		};
+		4D5896D92B7C67BD00484BFA /* MenuBarViews */ = {
+			isa = PBXGroup;
+			children = (
+				4DEA4ADE2B70689B00393858 /* MenuBarView.swift */,
+				4D5896DA2B7C67D100484BFA /* EventView.swift */,
+			);
+			path = MenuBarViews;
+			sourceTree = "<group>";
+		};
 		4D596A9B2B5F2B3E00B9E765 /* ChatField */ = {
 			isa = PBXGroup;
 			children = (
@@ -261,6 +274,7 @@
 				4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */,
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 				4DD2F7DF2B6206340052776E /* TabViewModel.swift */,
+				4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -329,6 +343,7 @@
 		4D8E053E2B2516DE00B60D0D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4D5896D92B7C67BD00484BFA /* MenuBarViews */,
 				4DEEEF0A2B6B1F0800ECDAC5 /* CaptureViews */,
 				4D596AAD2B6197E200B9E765 /* AudioViews */,
 				4DA893AE2B54C44200560DAD /* OnboardingViews */,
@@ -357,7 +372,6 @@
 			children = (
 				4D8E05482B2516DE00B60D0D /* TextError.swift */,
 				4D596AA92B60833E00B9E765 /* ToolbarView.swift */,
-				4DEA4ADE2B70689B00393858 /* MenuBarView.swift */,
 			);
 			path = CommonViews;
 			sourceTree = "<group>";
@@ -567,6 +581,8 @@
 				4D596AAC2B6085FD00B9E765 /* AudioUtils.swift in Sources */,
 				4DD5E36A2B6243D300C35B1C /* AppPrompts.swift in Sources */,
 				4D8E055B2B2516DE00B60D0D /* ChatContextMenu.swift in Sources */,
+				4D5896DB2B7C67D100484BFA /* EventView.swift in Sources */,
+				4D5896DD2B7C67E700484BFA /* EventsViewModel.swift in Sources */,
 				4D8E055A2B2516DE00B60D0D /* RenameChatView.swift in Sources */,
 				4D8E05592B2516DE00B60D0D /* ModelContext+SaveChanges.swift in Sources */,
 				4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */,
@@ -712,7 +728,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 39;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -726,7 +742,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -744,7 +760,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 39;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -759,7 +775,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.8.0;
+				MARKETING_VERSION = 1.8.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
