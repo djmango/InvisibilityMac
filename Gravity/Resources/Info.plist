@@ -13,6 +13,6 @@
         <key>NSMicrophoneUsageDescription</key>
         <string>Gravity requires access to your microphone for input during recordings.</string>
         <key>NSCalendarsFullAccessUsageDescription</key>
-        <string>Gravity uses your calendar for reminders and quick-join.</string>
+        <string>Enable reading calendar for meeting recording reminders and quick-join.</string>
     </dict>
 </plist>

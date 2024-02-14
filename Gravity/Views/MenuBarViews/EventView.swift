@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct EventsView: View {
-    @ObservedObject var viewModel = EventsViewModel()
+    @StateObject var viewModel = EventsViewModel()
 
     var body: some View {
-        Text("Events")
-        List(viewModel.events, id: \.eventIdentifier) { event in
+        ForEach(viewModel.events, id: \.eventIdentifier) { event in
             Button(event.title ?? "No Title") {
                 if let url = event.url {
                     NSWorkspace.shared.open(url)

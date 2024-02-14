@@ -10,8 +10,6 @@ struct MessageView: View {
 
     private var chat: Chat
 
-    @Environment(\.modelContext) private var modelContext: ModelContext
-
     @StateObject private var tabViewModel = TabViewModel.shared
 
     @FocusState private var isEditorFocused: Bool
