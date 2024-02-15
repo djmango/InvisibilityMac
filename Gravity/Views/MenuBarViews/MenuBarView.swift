@@ -12,50 +12,64 @@ struct MenuBarView: View {
     @StateObject private var updaterViewModel = UpdaterViewModel.shared
 
     var body: some View {
-        EventsView()
+        HStack {
+            VStack(alignment: .leading) {
+                EventsView()
 
-        Divider()
+                Divider()
 
-        Button("Record Audio") {
-            Task {
-                await screenRecorder.start()
+                Button("Record Audio") {
+                    Task {
+                        await screenRecorder.start()
+                    }
+                }
+                .hide(if: screenRecorder.isRunning)
+                .keyboardShortcut("r", modifiers: .command)
+                .buttonStyle(.accessoryBar)
+
+                Button("Stop Recording Audio") {
+                    Task {
+                        await screenRecorder.stop()
+                    }
+                }
+                .hide(if: !screenRecorder.isRunning)
+                .buttonStyle(.borderless)
+
+                Divider()
+
+                Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Button("Check for Updates") {
+                    updaterViewModel.updater.checkForUpdates()
+                }
+                .disabled(!updaterViewModel.canCheckForUpdates)
+                .buttonStyle(.accessoryBar)
+                .selectionDisabled()
+
+                SettingsLink {
+                    // Label("Settings", systemImage: "gearshape")
+                    Text("Settings")
+                }
+                .keyboardShortcut(",", modifiers: .command)
+                .buttonStyle(.accessoryBar)
+                .selectionDisabled()
+
+                Divider()
+
+                Button("Quit Gravity") {
+                    NSApplication.shared.terminate(self)
+                }
+                .keyboardShortcut("q", modifiers: .command)
+                .buttonStyle(.accessoryBar)
+                .selectionDisabled()
+
+                Divider()
             }
         }
-        .hide(if: screenRecorder.isRunning)
-        .keyboardShortcut("r", modifiers: .command)
-
-        Button("Stop Recording") {
-            Task {
-                await screenRecorder.stop()
-            }
-        }
-        .hide(if: !screenRecorder.isRunning)
-
-        Divider()
-
-        Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
-            .font(.caption)
-            .foregroundColor(.secondary)
-            .padding(.bottom, 5)
-
-        Button("Check for Updates") {
-            updaterViewModel.updater.checkForUpdates()
-        }
-        .disabled(!updaterViewModel.canCheckForUpdates)
-
-        SettingsLink {
-            Label("Settings", systemImage: "gearshape")
-        }
-        .keyboardShortcut(",", modifiers: .command)
-
-        Divider()
-
-        Button("Quit Gravity") {
-            NSApplication.shared.terminate(self)
-        }
-        .keyboardShortcut("q", modifiers: .command)
-
-        Divider()
+        .padding(.horizontal, 8)
+        .focusable(false)
     }
 }
 

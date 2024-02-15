@@ -34,30 +34,10 @@ class EventsViewModel: ObservableObject {
     func fetchEvents() {
         let calendar = Calendar.autoupdatingCurrent
 
-        // let startDate = Date()
-        // guard let endDate = Calendar.current.date(byAdding: .month, value: 1, to: startDate) else {
-        //     logger.error("Failed to get end date")
-        //     return
-        // }
-        // let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: nil)
-
-        // DispatchQueue.main.async {
-        //     self.events = self.eventStore.events(matching: predicate)
-        // }
-
-        // Create the start date components
-        // var oneDayAgoComponents = DateComponents()
-        // oneDayAgoComponents.day = -1
-        // let oneDayAgo = calendar.date(byAdding: oneDayAgoComponents, to: Date(), wrappingComponents: false)
-
+        // Create the date components
         var nowComponents = DateComponents()
         nowComponents.day = 0
         let now = calendar.date(byAdding: nowComponents, to: Date(), wrappingComponents: false)
-
-        // Create the end date components.
-        // var oneYearFromNowComponents = DateComponents()
-        // oneYearFromNowComponents.year = 1
-        // var oneYearFromNow = calendar.date(byAdding: oneYearFromNowComponents, to: Date(), wrappingComponents: false)
 
         var oneDayFromNowComponents = DateComponents()
         oneDayFromNowComponents.day = 1
@@ -71,12 +51,24 @@ class EventsViewModel: ObservableObject {
 
         // Fetch all events that match the predicate.
         if let aPredicate = predicate {
-            DispatchQueue.main.async {
-                self.events = self.eventStore.events(matching: aPredicate)
-                self.logger.debug("Fetched \(self.events.count) events")
-                for event in self.events {
-                    self.logger.debug("Event: \(event.title ?? "No Title")")
+            let events = self.eventStore.events(matching: aPredicate)
+
+            var filteredEvents: [EKEvent] = []
+            for event in events {
+                if event.isAllDay {
+                    continue
                 }
+
+                filteredEvents.append(event)
+            }
+
+            self.logger.debug("Fetched \(self.events.count) events")
+            for event in self.events {
+                self.logger.debug("Event: \(event.title ?? "No Title")")
+            }
+
+            DispatchQueue.main.async {
+                self.events = filteredEvents
             }
         }
     }

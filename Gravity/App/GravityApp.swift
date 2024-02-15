@@ -121,5 +121,6 @@ struct GravityApp: App {
         MenuBarExtra("Gravity", image: "MenuBarIcon", isInserted: $showMenuBarExtra) {
             MenuBarView()
         }
+        .menuBarExtraStyle(.window)
     }
 }
