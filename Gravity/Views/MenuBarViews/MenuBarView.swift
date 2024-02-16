@@ -11,42 +11,82 @@ struct MenuBarView: View {
     @ObservedObject private var screenRecorder = ScreenRecorder.shared
     @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
 
+    @State private var isUpdateHovered = false
+    @State private var isSettingsHovered = false
+    @State private var isQuitHovered = false
+
     var body: some View {
         HStack {
-            VStack(alignment: .leading) {
+            VStack(alignment: .leading, spacing: 6) {
                 EventsView()
 
                 Divider()
 
                 Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                    .font(.body)
+                    .foregroundColor(Color.primary.opacity(0.5))
 
-                Button("Check for Updates") {
-                    updaterViewModel.updater.checkForUpdates()
+                HStack {
+                    Button("Check for Updates") {
+                        updaterViewModel.updater.checkForUpdates()
+                    }
+                    .disabled(!updaterViewModel.canCheckForUpdates)
+                    .buttonStyle(.plain)
+                    .font(.system(size: 14))
+                    Spacer()
                 }
-                .disabled(!updaterViewModel.canCheckForUpdates)
-                .buttonStyle(.accessoryBar)
-                .foregroundColor(.primary)
-                .selectionDisabled()
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(isUpdateHovered ? Color("MenuBarButtonColor") : .clear)
+                        .padding(-4)
+                )
+                .onHover { hovering in
+                    isUpdateHovered = hovering
+                }
 
-                SettingsLink {
-                    Text("Settings")
+                HStack {
+                    SettingsLink {
+                        Text("Settings")
+                    }
+                    .keyboardShortcut(",", modifiers: .command)
+                    .buttonStyle(.plain)
+                    .font(.system(size: 14))
+                    Spacer()
+                    Text("⌘ ,")
+                        .font(.system(size: 12))
+                        .opacity(0.5)
                 }
-                .keyboardShortcut(",", modifiers: .command)
-                .buttonStyle(.accessoryBar)
-                .foregroundColor(.primary)
-                .selectionDisabled()
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(isSettingsHovered ? Color("MenuBarButtonColor") : .clear)
+                        .padding(-4)
+                )
+                .onHover { hovering in
+                    isSettingsHovered = hovering
+                }
 
                 Divider()
 
-                Button("Quit Gravity") {
-                    NSApplication.shared.terminate(self)
+                HStack {
+                    Button("Quit Gravity") {
+                        NSApplication.shared.terminate(self)
+                    }
+                    .keyboardShortcut("q", modifiers: .command)
+                    .buttonStyle(.plain)
+                    .font(.system(size: 14))
+                    Spacer()
+                    Text("⌘ Q")
+                        .font(.system(size: 12))
+                        .opacity(0.5)
                 }
-                .keyboardShortcut("q", modifiers: .command)
-                .buttonStyle(.accessoryBar)
-                .foregroundColor(.primary)
-                .selectionDisabled()
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(isQuitHovered ? Color("MenuBarButtonColor") : .clear)
+                        .padding(-4)
+                )
+                .onHover { hovering in
+                    isQuitHovered = hovering
+                }
 
                 Divider()
             }
@@ -55,32 +95,6 @@ struct MenuBarView: View {
         .focusable(false)
     }
 }
-
-// struct HoverButtonStyle: ButtonStyle {
-//     func makeBody(configuration: Configuration) -> some View {
-//         configuration.label
-//             .foregroundColor(.primary)
-//             .background(configuration.isPressed ? Color.accentColor : Color.clear) // Pressed state
-//             .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
-//             .foregroundColor(.primary)
-//             // Use .overlay with RoundedRectangle for macOS to create a borderless look
-//             .overlay(
-//                 RoundedRectangle(cornerRadius: 5) // Adjust cornerRadius to fit your design
-//                     .stroke(Color.clear, lineWidth: 0) // No border
-//             )
-//             .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
-//             .background(HoverBackground(isHovered: configuration.))
-//     }
-// }
-
-// struct HoverBackground: View {
-//     @State var isHovered = false
-
-//     var body: some View {
-//         RoundedRectangle(cornerRadius: 5)
-//             .fill(isHovered ? Color.accentColor : Color.clear)
-//     }
-// }
 
 #Preview {
     MenuBarView()
