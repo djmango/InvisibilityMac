@@ -9,36 +9,91 @@ import SwiftUI
 
 struct EventsView: View {
     @StateObject var viewModel = EventsViewModel()
+    @ObservedObject private var screenRecorder = ScreenRecorder.shared
+
+    @State private var eventIsHovered = false
+    @State private var recordingIsHovered = false
 
     var body: some View {
-        ForEach(viewModel.events, id: \.eventIdentifier) { event in
-            HStack {
-                Button(event.title ?? "No Title") {
-                    if let url = event.url {
+        VStack(alignment: .leading, spacing: 0) {
+            // Next event title and button to join
+            Button(action: {
+                if let url = viewModel.nextEvent?.url {
+                    NSWorkspace.shared.open(url)
+                } else if let url = URL(string: viewModel.nextEvent?.location ?? "") {
+                    if url.absoluteString.isValidURL() {
                         NSWorkspace.shared.open(url)
-                    } else if let url = URL(string: event.location ?? "") {
-                        if url.absoluteString.isValidURL() {
-                            NSWorkspace.shared.open(url)
-                        } else {
-                            AlertManager.shared.doShowAlert(
-                                title: "Location",
-                                message: "Location for \(event.title ?? "No Title") is \(event.location ?? "not included in the event")"
-                            )
-                        }
                     } else {
-                        AlertManager.shared.doShowAlert(title: "No URL", message: "No URL for event \(event.title ?? "No Title")")
+                        AlertManager.shared.doShowAlert(
+                            title: "Location",
+                            message: "Location for \(self.viewModel.nextEvent?.title ?? "No Title") is \(self.viewModel.nextEvent?.location ?? "not included in the event")"
+                        )
                     }
+                } else {
+                    AlertManager.shared.doShowAlert(title: "No URL", message: "No URL for event \(self.viewModel.nextEvent?.title ?? "No Title")")
                 }
-                .buttonStyle(.accessoryBar)
-                .selectionDisabled()
+            }) {
+                Image(systemName: "calendar")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(.primary)
 
-                Text(event.startDate?.formatted() ?? "No Date")
-                Divider()
+                Text(viewModel.nextEvent?.title ?? "No Title")
+                    .font(.title3)
+                    .foregroundColor(.primary)
+                    .bold()
             }
+            .buttonStyle(.plain)
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .foregroundColor(eventIsHovered ? Color.gray.opacity(1) : .clear)
+                    .padding(-5)
+            )
+            .padding(.top, 8)
+            .onHover { hovering in
+                eventIsHovered = hovering
+            }
+
+            // Record status/button and next event time
+            HStack {
+                Button(action: {
+                    toggleRecording()
+
+                }) {
+                    Text(
+                        screenRecorder.isRunning ? "◉ Recording" : "◉ Record"
+                    )
+                    .font(.title3)
+                    .foregroundColor(screenRecorder.isRunning ? .red : .primary)
+                }
+                .keyboardShortcut("r", modifiers: .command)
+                .buttonStyle(.plain)
+                .background(
+                    RoundedRectangle(cornerRadius: 5)
+                        .foregroundColor(screenRecorder.isRunning ? .red.opacity(0.1) : recordingIsHovered ? Color.gray.opacity(1) : .clear)
+                        .padding(-5)
+                )
+                .onHover { hovering in
+                    recordingIsHovered = hovering
+                }
+
+                Text("\(viewModel.nextEvent?.startDate?.formatted(date: .omitted, time: .shortened) ?? "No Date") - \(viewModel.nextEvent?.endDate?.formatted(date: .omitted, time: .shortened) ?? "No Date")")
+                    .font(.title3)
+            }
+            .animation(.easeInOut(duration: 0.1), value: screenRecorder.isRunning)
+            .padding(.top, 5)
         }
-        .onAppear {
-            viewModel.requestAccessIfNeeded()
-            viewModel.fetchEvents()
+    }
+
+    func toggleRecording() {
+        if screenRecorder.isRunning {
+            Task {
+                await screenRecorder.stop()
+            }
+        } else {
+            Task {
+                await screenRecorder.start()
+            }
         }
     }
 }

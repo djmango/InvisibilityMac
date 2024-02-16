@@ -3,7 +3,7 @@ import SwiftUI
 import ViewCondition
 
 struct ChatSidebarListView: View {
-    @StateObject private var tabViewModel = TabViewModel.shared
+    @ObservedObject private var tabViewModel = TabViewModel.shared
 
     private var todayChats: [Chat] {
         let calendar = Calendar.current

@@ -8,32 +8,13 @@
 import SwiftUI
 
 struct MenuBarView: View {
-    @StateObject private var screenRecorder = ScreenRecorder.shared
-    @StateObject private var updaterViewModel = UpdaterViewModel.shared
+    @ObservedObject private var screenRecorder = ScreenRecorder.shared
+    @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
 
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
                 EventsView()
-
-                Divider()
-
-                Button("Record Audio") {
-                    Task {
-                        await screenRecorder.start()
-                    }
-                }
-                .hide(if: screenRecorder.isRunning)
-                .keyboardShortcut("r", modifiers: .command)
-                .buttonStyle(.accessoryBar)
-
-                Button("Stop Recording Audio") {
-                    Task {
-                        await screenRecorder.stop()
-                    }
-                }
-                .hide(if: !screenRecorder.isRunning)
-                .buttonStyle(.borderless)
 
                 Divider()
 
@@ -46,14 +27,15 @@ struct MenuBarView: View {
                 }
                 .disabled(!updaterViewModel.canCheckForUpdates)
                 .buttonStyle(.accessoryBar)
+                .foregroundColor(.primary)
                 .selectionDisabled()
 
                 SettingsLink {
-                    // Label("Settings", systemImage: "gearshape")
                     Text("Settings")
                 }
                 .keyboardShortcut(",", modifiers: .command)
                 .buttonStyle(.accessoryBar)
+                .foregroundColor(.primary)
                 .selectionDisabled()
 
                 Divider()
@@ -63,6 +45,7 @@ struct MenuBarView: View {
                 }
                 .keyboardShortcut("q", modifiers: .command)
                 .buttonStyle(.accessoryBar)
+                .foregroundColor(.primary)
                 .selectionDisabled()
 
                 Divider()
@@ -72,6 +55,32 @@ struct MenuBarView: View {
         .focusable(false)
     }
 }
+
+// struct HoverButtonStyle: ButtonStyle {
+//     func makeBody(configuration: Configuration) -> some View {
+//         configuration.label
+//             .foregroundColor(.primary)
+//             .background(configuration.isPressed ? Color.accentColor : Color.clear) // Pressed state
+//             .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+//             .foregroundColor(.primary)
+//             // Use .overlay with RoundedRectangle for macOS to create a borderless look
+//             .overlay(
+//                 RoundedRectangle(cornerRadius: 5) // Adjust cornerRadius to fit your design
+//                     .stroke(Color.clear, lineWidth: 0) // No border
+//             )
+//             .animation(.easeInOut(duration: 0.1), value: configuration.isPressed)
+//             .background(HoverBackground(isHovered: configuration.))
+//     }
+// }
+
+// struct HoverBackground: View {
+//     @State var isHovered = false
+
+//     var body: some View {
+//         RoundedRectangle(cornerRadius: 5)
+//             .fill(isHovered ? Color.accentColor : Color.clear)
+//     }
+// }
 
 #Preview {
     MenuBarView()

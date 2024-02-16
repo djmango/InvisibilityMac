@@ -50,11 +50,11 @@ class ScreenRecorder: NSObject,
     @Published var isAudioCaptureEnabled = true {
         didSet {
             updateEngine()
-            if isAudioCaptureEnabled {
-                startAudioMetering()
-            } else {
-                stopAudioMetering()
-            }
+            // if isAudioCaptureEnabled {
+            //     startAudioMetering()
+            // } else {
+            //     stopAudioMetering()
+            // }
         }
     }
 

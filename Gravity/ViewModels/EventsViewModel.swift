@@ -5,6 +5,7 @@
 //  Created by Sulaiman Ghori on 2/13/24.
 //
 
+import Combine
 import EventKit
 import Foundation
 import OSLog
@@ -13,10 +14,15 @@ import SwiftUI
 class EventsViewModel: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "EventsViewModel")
     private let eventStore = EKEventStore()
+
     @Published var events: [EKEvent] = []
+    @Published var nextEvent: EKEvent?
+
+    private var timerSubscription: AnyCancellable?
 
     init() {
         requestAccessIfNeeded()
+        startEventsRefreshTimer()
     }
 
     func requestAccessIfNeeded() {
@@ -29,6 +35,17 @@ class EventsViewModel: ObservableObject {
                 // NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Calendars")!)
             }
         }
+    }
+
+    func startEventsRefreshTimer() {
+        // Cancel any existing timer
+        timerSubscription?.cancel()
+
+        // Create a new timer that fires every 10 minutes
+        timerSubscription = Timer.publish(every: 600, on: .main, in: .common).autoconnect()
+            .sink { [weak self] _ in
+                self?.fetchEvents()
+            }
     }
 
     func fetchEvents() {
@@ -51,10 +68,8 @@ class EventsViewModel: ObservableObject {
 
         // Fetch all events that match the predicate.
         if let aPredicate = predicate {
-            let events = self.eventStore.events(matching: aPredicate)
-
             var filteredEvents: [EKEvent] = []
-            for event in events {
+            for event in self.eventStore.events(matching: aPredicate) {
                 if event.isAllDay {
                     continue
                 }
@@ -62,13 +77,12 @@ class EventsViewModel: ObservableObject {
                 filteredEvents.append(event)
             }
 
-            self.logger.debug("Fetched \(self.events.count) events")
-            for event in self.events {
-                self.logger.debug("Event: \(event.title ?? "No Title")")
-            }
+            self.logger.debug("Fetched \(filteredEvents.count) events")
 
             DispatchQueue.main.async {
-                self.events = filteredEvents
+                self.nextEvent = filteredEvents.first(where: { $0.endDate > Date() }) // Update nextEvent to the first upcoming event
+                self.events = filteredEvents.sorted { $0.startDate < $1.startDate } // Sort events by startDate
+                self.logger.debug("Next event: \(self.nextEvent?.title ?? "No upcoming events")")
             }
         }
     }

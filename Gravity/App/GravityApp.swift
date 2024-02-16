@@ -12,8 +12,8 @@ struct GravityApp: App {
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-    @StateObject private var updaterViewModel = UpdaterViewModel.shared
-    @StateObject private var screenRecorder = ScreenRecorder.shared
+    @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
+    @ObservedObject private var screenRecorder = ScreenRecorder.shared
 
     @AppStorage("analytics") var analytics: Bool = true {
         didSet {

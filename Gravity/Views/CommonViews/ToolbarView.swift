@@ -11,9 +11,9 @@ import SwiftUI
 struct ToolbarView: ToolbarContent {
     private let logger = Logger(subsystem: "ai.grav.app", category: "ToolbarView")
 
-    @StateObject private var tabViewModel = TabViewModel.shared
-    @StateObject private var audioPlayerViewModel = AudioPlayerViewModel.shared
-    @StateObject private var screenRecorder = ScreenRecorder.shared
+    @ObservedObject private var tabViewModel = TabViewModel.shared
+    @ObservedObject private var audioPlayerViewModel = AudioPlayerViewModel.shared
+    @ObservedObject private var screenRecorder = ScreenRecorder.shared
     @ObservedObject private var modelFileManager = LLMManager.shared.modelFileManager
 
     @State private var isRestarting = false

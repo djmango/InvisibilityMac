@@ -10,7 +10,7 @@ struct MessageView: View {
 
     private var chat: Chat
 
-    @StateObject private var tabViewModel = TabViewModel.shared
+    @ObservedObject private var tabViewModel = TabViewModel.shared
 
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool
