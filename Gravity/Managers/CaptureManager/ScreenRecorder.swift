@@ -12,11 +12,6 @@ import OSLog
 import ScreenCaptureKit
 import SwiftUI
 
-/// A provider of audio levels from the captured samples.
-class AudioLevelsProvider: ObservableObject {
-    @Published var audioLevels = AudioLevels.zero
-}
-
 /// A class that manages screen recording. Primarily audio at the moment.
 @MainActor
 class ScreenRecorder: NSObject,
@@ -50,15 +45,9 @@ class ScreenRecorder: NSObject,
     @Published var isAudioCaptureEnabled = true {
         didSet {
             updateEngine()
-            // if isAudioCaptureEnabled {
-            //     startAudioMetering()
-            // } else {
-            //     stopAudioMetering()
-            // }
         }
     }
 
-    @Published private(set) var audioLevelsProvider = AudioLevelsProvider()
     // A value that specifies how often to retrieve calculated audio levels.
     private let audioLevelRefreshRate: TimeInterval = 0.1
     private var audioMeterCancellable: AnyCancellable?
@@ -116,11 +105,6 @@ class ScreenRecorder: NSObject,
         // Refresh the available content to capture.
         await refreshAvailableContent()
 
-        // If the user enables audio capture, start monitoring the audio stream.
-        if isAudioCaptureEnabled {
-            startAudioMetering()
-        }
-
         // Start the stream and await new video frames.
         isRunning = true
         let _ = captureEngine.startCapture(configuration: streamConfiguration, filter: contentFilter)
@@ -130,20 +114,7 @@ class ScreenRecorder: NSObject,
     func stop() async {
         guard isRunning else { return }
         await captureEngine.stopCapture()
-        stopAudioMetering()
         isRunning = false
-    }
-
-    private func startAudioMetering() {
-        audioMeterCancellable = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect().sink { [weak self] _ in
-            guard let self else { return }
-            self.audioLevelsProvider.audioLevels = self.captureEngine.audioLevels
-        }
-    }
-
-    private func stopAudioMetering() {
-        audioMeterCancellable?.cancel()
-        audioLevelsProvider.audioLevels = AudioLevels.zero
     }
 
     /// - Tag: UpdateCaptureConfig

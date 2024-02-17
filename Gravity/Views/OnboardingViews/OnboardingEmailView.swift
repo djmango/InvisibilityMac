@@ -38,11 +38,9 @@ struct OnboardingEmailView: View {
                     .frame(width: 300, height: 50)
                     .textFieldStyle(.plain)
                     .font(.system(size: 20))
-                    .foregroundColor(.white)
                     .padding(.horizontal, 10)
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            // #FF692E
                             .stroke(.accent, lineWidth: 1)
                     )
                     .padding(.top, 10)

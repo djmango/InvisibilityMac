@@ -24,17 +24,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set up the observer for when the app resigns active
         NotificationCenter.default.addObserver(self, selector: #selector(appDidResignActive), name: NSApplication.didResignActiveNotification, object: nil)
 
-        // // Create the status bar item
-        // statusBarItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        // if let button = statusBarItem.button {
-        //     // button.image = NSImage(systemSymbolName: "bell", accessibilityDescription: nil)
-        //     button.image = NSImage(named: "MenuBarIcon")
-        //     button.action = #selector(togglePopover(_:))
-        // }
+        // Set up the observer for when the system will sleep
+        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(sleepListener(_:)),
+                                                          name: NSWorkspace.willSleepNotification, object: nil)
 
-        // // Setup popover
-        // popover = NSPopover()
-        // popover.contentViewController = NSHostingController(rootView: PopoverView())
+        // Set up the observer for when the system wakes
+        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(sleepListener(_:)),
+                                                          name: NSWorkspace.didWakeNotification, object: nil)
+    }
+
+    @objc private func sleepListener(_ notification: Notification) {
+        logger.info("Listening to sleep")
+
+        if notification.name == NSWorkspace.willSleepNotification {
+            logger.info("Going to sleep")
+            Task {
+                await ScreenRecorder.shared.stop()
+                logger.info("Stopped recording")
+            }
+        } else if notification.name == NSWorkspace.didWakeNotification {
+            logger.info("Woke up")
+        } else {
+            logger.warning("Some other event other than sleep/wake: \(notification.name.rawValue)")
+        }
     }
 
     @objc func appDidBecomeActive(notification _: NSNotification) {
@@ -44,20 +56,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func appDidResignActive(notification _: NSNotification) {
         isAppActive = false
     }
-
-    // @objc func togglePopover(_ sender: AnyObject?) {
-    //     if popover.isShown {
-    //         popover.performClose(sender)
-    //     } else {
-    //         if let button = statusBarItem.button {
-    //             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
-    //         }
-    //     }
-    // }
-
-    // func updateIcon() {
-    //     if let button = statusBarItem.button {
-    //         button.image = NSImage(systemSymbolName: "bell.fill", accessibilityDescription: nil) // Example icon change
-    //     }
-    // }
 }

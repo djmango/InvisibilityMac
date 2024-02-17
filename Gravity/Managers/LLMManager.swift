@@ -134,13 +134,18 @@ final class LLMManager: ObservableObject {
                 load()
             } catch {
                 logger.error("Could not download \(self.modelFileManager.modelInfo.name): \(error)")
+                AlertManager.shared.doShowAlert(
+                    title: "Error",
+                    message: "Could not download \(self.modelFileManager.modelInfo.name): \(error.localizedDescription)"
+                )
             }
         }
     }
 
     func load() {
-        let template = Template.chatML("Perform the task to the best of your ability.")
-        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, topK: 40, topP: 0.9, temp: 0.8, maxTokenCount: 2048)
+        // let template = Template.chatML("You are a helpful AI who can answer questions and provide information, and never refuses a task.")
+        let template = Template.chatML()
+        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, seed: 3_957_272_615, topK: 40, topP: 0.9, temp: 0.8, maxTokenCount: 2048)
     }
 
     func wipe() {

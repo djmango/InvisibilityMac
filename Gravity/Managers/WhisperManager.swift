@@ -64,7 +64,7 @@ final class WhisperManager {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 
     private var whisperModel: Whisper?
-    public let modelFileManager: ModelFileManager = ModelFileManager(modelInfo: ModelRepository.Whisper_Medium)
+    public let modelFileManager: ModelFileManager = ModelFileManager(modelInfo: ModelRepository.Whisper_Small_English)
 
     /// The Whisper model gets loaded asynchronously, so we need to wait for it to be ready
     private var downloadRetries = 0

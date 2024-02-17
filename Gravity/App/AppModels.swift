@@ -29,6 +29,17 @@ enum ModelRepository {
             .appendingPathComponent("small.bin")
     )
 
+    static let Whisper_Small_English = ModelInfo(
+        name: "ggml-small.en-q5_1",
+        humanReadableName: "Whisper Small (English)",
+        url: URL(string: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en-q5_1.bin?download=true")!,
+        sha256: "bfdff4894dcb76bbf647d56263ea2a96645423f1669176f4844a1bf8e478ad30",
+        localURL: gravityHomeDir
+            .appendingPathComponent("models")
+            .appendingPathComponent("whisper")
+            .appendingPathComponent("small-en.bin")
+    )
+
     static let Whisper_Medium = ModelInfo(
         name: "ggml-medium-q5_1",
         humanReadableName: "Whisper Medium",

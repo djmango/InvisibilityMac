@@ -21,14 +21,10 @@ class CaptureEngine: NSObject, @unchecked Sendable {
     private var streamOutput: CaptureEngineStreamOutput?
     private let audioSampleBufferQueue = DispatchQueue(label: "ai.grav.app.AudioSampleBufferQueue")
 
-    // Performs average and peak power calculations on the audio samples.
-    private let powerMeter = PowerMeter()
-    var audioLevels: AudioLevels { powerMeter.levels }
-
     /// The audio recorder used to capture audio from the mic.
     private var audioRecorder: AVAudioRecorder?
 
-    // Store the the startCapture continuation, so that you can cancel it when you call stopCapture().
+    /// Store the the startCapture continuation, so that you can cancel it when you call stopCapture().
     private var continuation: AsyncThrowingStream<String, Error>.Continuation?
 
     /// An error type for the capture engine.
@@ -81,7 +77,7 @@ class CaptureEngine: NSObject, @unchecked Sendable {
             // The stream output object. Avoid reassigning it to a new object every time startCapture is called.
             let streamOutput = CaptureEngineStreamOutput(continuation: continuation)
             self.streamOutput = streamOutput
-            streamOutput.pcmBufferHandler = { self.powerMeter.process(buffer: $0) }
+            // streamOutput.pcmBufferHandler = { self.powerMeter.process(buffer: $0) }
 
             // Create directory for audio files
             fileFolder = AudioFileWriter.audioDir.appendingPathComponent(dateFormatter.string(from: Date()))
@@ -145,7 +141,6 @@ class CaptureEngine: NSObject, @unchecked Sendable {
         } catch {
             continuation?.finish(throwing: error)
         }
-        powerMeter.processSilence()
     }
 
     /// - Tag: UpdateStreamConfiguration
@@ -157,7 +152,10 @@ class CaptureEngine: NSObject, @unchecked Sendable {
             logger.error("Failed to update the stream session: \(String(describing: error))")
         }
     }
+}
 
+/// - Tag: Audio file manipulation
+extension CaptureEngine {
     // func mergeAudioFiles(fileURLs: [URL], outputURL: URL) async throws {
     //     let composition = AVMutableComposition()
     //     guard let track = composition.addMutableTrack(withMediaType: .audio, preferredTrackID: kCMPersistentTrackID_Invalid) else {

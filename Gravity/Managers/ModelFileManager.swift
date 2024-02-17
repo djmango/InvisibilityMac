@@ -91,6 +91,7 @@ class ModelFileManager: ObservableObject {
                             self.state = .failed
                         }
                         self.logger.error("Error moving file for \(self.modelInfo.name): \(error)")
+                        AlertManager.shared.doShowAlert(title: "Error", message: "Error moving file for \(self.modelInfo.name): \(error.localizedDescription)")
                     }
                 } else {
                     self.logger.error("Hash mismatch for \(self.modelInfo.name)")

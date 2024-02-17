@@ -148,7 +148,7 @@ struct OnboardingDownloadView: View {
             callback()
         } else {
             AlertManager.shared.doShowAlert(
-                title: "Download not complete",
+                title: "Download Status: \(llmDownloader.state.description)",
                 message: "Please wait for the download to complete before starting Gravity. If the download is stuck, please restart the app."
             )
         }

@@ -23,13 +23,13 @@ struct OnboardingView: View {
 
             switch viewIndex {
             case 0:
-                OnboardingIntroView { viewIndex = 2 }
+                OnboardingIntroView { viewIndex = 3 }
 
-            case 1:
-                OnboardingExplainerView { viewIndex = 2 }
+            // case 1:
+            //     OnboardingExplainerView { viewIndex = 3 }
 
-            case 2:
-                OnboardingEmailView { viewIndex = 3 }
+            // case 2:
+            //     OnboardingEmailView { viewIndex = 3 }
 
             case 3:
                 OnboardingDownloadView {

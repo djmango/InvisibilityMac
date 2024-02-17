@@ -79,9 +79,7 @@
 		4DEA4ADF2B70689B00393858 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEA4ADE2B70689B00393858 /* MenuBarView.swift */; };
 		4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */; };
 		4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */; };
-		4DEEEF132B6B1F0900ECDAC5 /* PowerMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF082B6B1F0800ECDAC5 /* PowerMeter.swift */; };
 		4DEEEF172B6B1F0900ECDAC5 /* MaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF0D2B6B1F0800ECDAC5 /* MaterialView.swift */; };
-		4DEEEF182B6B1F0900ECDAC5 /* AudioLevelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF0E2B6B1F0800ECDAC5 /* AudioLevelsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -147,9 +145,7 @@
 		4DEA4ADE2B70689B00393858 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
 		4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
-		4DEEEF082B6B1F0800ECDAC5 /* PowerMeter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PowerMeter.swift; sourceTree = "<group>"; };
 		4DEEEF0D2B6B1F0800ECDAC5 /* MaterialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialView.swift; sourceTree = "<group>"; };
-		4DEEEF0E2B6B1F0800ECDAC5 /* AudioLevelsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioLevelsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -424,7 +420,6 @@
 			isa = PBXGroup;
 			children = (
 				4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */,
-				4DEEEF082B6B1F0800ECDAC5 /* PowerMeter.swift */,
 				4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */,
 				4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */,
 			);
@@ -435,7 +430,6 @@
 			isa = PBXGroup;
 			children = (
 				4DEEEF0D2B6B1F0800ECDAC5 /* MaterialView.swift */,
-				4DEEEF0E2B6B1F0800ECDAC5 /* AudioLevelsView.swift */,
 			);
 			path = CaptureViews;
 			sourceTree = "<group>";
@@ -559,7 +553,6 @@
 				4DD2F7E02B6206340052776E /* TabViewModel.swift in Sources */,
 				4D1FC34F2B62304E009DA851 /* AudioPlayerViewModel.swift in Sources */,
 				4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */,
-				4DEEEF182B6B1F0900ECDAC5 /* AudioLevelsView.swift in Sources */,
 				4D8E05552B2516DE00B60D0D /* Chat.swift in Sources */,
 				4D596AAA2B60833E00B9E765 /* ToolbarView.swift in Sources */,
 				4D596AB12B61997100B9E765 /* Audio.swift in Sources */,
@@ -580,7 +573,6 @@
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
 				4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
-				4DEEEF132B6B1F0900ECDAC5 /* PowerMeter.swift in Sources */,
 				4D0B52E42B590213008D975D /* AlertManager.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
