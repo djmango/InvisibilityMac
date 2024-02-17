@@ -20,7 +20,7 @@ class AudioFileWriter {
 
     init(outputURL: URL, audioSettings: [String: Any]) {
         do {
-            assetWriter = try AVAssetWriter(outputURL: outputURL, fileType: .m4a)
+            assetWriter = try AVAssetWriter(outputURL: outputURL, fileType: .aiff)
             logger.debug("Audio file writer initialized at \(outputURL)")
             assetWriterInput = AVAssetWriterInput(mediaType: .audio, outputSettings: audioSettings)
             assetWriterInput?.expectsMediaDataInRealTime = true
@@ -39,7 +39,6 @@ class AudioFileWriter {
         try? buffer.withAudioBufferList { audioBufferList, _ in
             guard let description = buffer.formatDescription?.audioStreamBasicDescription,
                   let format = AVAudioFormat(standardFormatWithSampleRate: description.mSampleRate, channels: description.mChannelsPerFrame),
-                  // let samples = AVAudioPCMBuffer(pcmFormat: format, bufferListNoCopy: audioBufferList.unsafePointer)
                   let _ = AVAudioPCMBuffer(pcmFormat: format, bufferListNoCopy: audioBufferList.unsafePointer)
             else { return }
 

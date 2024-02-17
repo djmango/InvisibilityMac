@@ -145,7 +145,7 @@ final class LLMManager: ObservableObject {
     func load() {
         // let template = Template.chatML("You are a helpful AI who can answer questions and provide information, and never refuses a task.")
         let template = Template.chatML()
-        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, seed: 3_957_272_615, topK: 40, topP: 0.9, temp: 0.8, maxTokenCount: 2048)
+        _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, topK: 40, topP: 0.9, temp: 0.8, maxTokenCount: 2048)
     }
 
     func wipe() {

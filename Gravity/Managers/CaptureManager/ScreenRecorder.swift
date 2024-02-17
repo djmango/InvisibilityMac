@@ -117,6 +117,19 @@ class ScreenRecorder: NSObject,
         isRunning = false
     }
 
+    func pause() async -> Bool {
+        guard isRunning else { return false }
+        await captureEngine.pauseCapture()
+        isRunning = false
+        return true
+    }
+
+    func resume() async {
+        guard !isRunning else { return }
+        let _ = captureEngine.resumeCapture()
+        isRunning = true
+    }
+
     /// - Tag: UpdateCaptureConfig
     private func updateEngine() {
         guard isRunning else { return }
