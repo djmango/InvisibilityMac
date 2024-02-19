@@ -24,4 +24,7 @@ enum AppMessages {
 
     static let invalidAudioFileTitle = "No audio found"
     static let invalidAudioFileMessage = "File does not appear to have any audio."
+
+    static let audioTranscriptionErrorTitle = "Audio transcription error"
+    static let audioTranscriptionErrorMessage = "An error occurred while transcribing the audio."
 }

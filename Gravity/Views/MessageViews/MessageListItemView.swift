@@ -87,17 +87,15 @@ struct MessageListItemView: View {
                 .hide(if: isError, removeCompletely: true)
 
             if let audio {
-                AudioWidgetView(audio: audio)
+                AudioWidgetView(audio: audio, tapAction: audioAction)
                     .hide(if: isError, removeCompletely: true)
+                    .padding(.top, 8)
                     .onHover { hovering in
                         if hovering {
                             NSCursor.pointingHand.push()
                         } else {
                             NSCursor.pop()
                         }
-                    }
-                    .onTapGesture {
-                        audioAction()
                     }
             }
 

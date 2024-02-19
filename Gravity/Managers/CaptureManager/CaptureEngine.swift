@@ -85,16 +85,6 @@ class CaptureEngine: NSObject, @unchecked Sendable {
 
         // If part is nil, use our tracked latest part number.
         let part = part ?? latestPart
-        // if part == nil {
-        //     // If part is nil, scan the folder for the latest part number for the type and increment it.
-        //     let fileURLs = try? FileManager.default.contentsOfDirectory(at: fileFolder, includingPropertiesForKeys: nil, options: [])
-        //     part = fileURLs?.filter { $0.lastPathComponent.contains(type.rawValue) }
-        //         .map { Int($0.lastPathComponent.split(separator: "_").last?.split(separator: ".").first ?? "") ?? 0 }
-        //         .max() ?? 0
-
-        //     logger.info("Latest part for \(type.rawValue): \(part?.description ?? "nil")")
-        // }
-
         let partString = part >= 0 ? "_\(part)" : ""
         let fileString = "\(type.rawValue)\(partString)"
         let file = fileFolder.appendingPathComponent(fileString)

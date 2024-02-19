@@ -54,6 +54,13 @@ struct GeneralSettingsView: View {
                         .textFieldStyle(.roundedBorder)
                         .frame(width: 350)
                 }
+
+                Section {
+                    Button("Reset Onboarding") {
+                        onboardingViewed = false
+                    }
+                    .bold()
+                }
             }
             .frame(width: 500)
             .fixedSize()

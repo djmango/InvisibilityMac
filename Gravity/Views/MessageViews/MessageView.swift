@@ -55,7 +55,7 @@ struct MessageView: View {
                         )
                         .generating(message.content == nil && isGenerating)
                         .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                        .error(message.error == true, message: messageViewModel.sendViewState?.errorMessage)
+                        .error(message.status == .error, message: messageViewModel.sendViewState?.errorMessage)
                         .audio(message.audio)
                         .id(message)
                     }
@@ -144,9 +144,6 @@ struct MessageView: View {
         guard messageViewModel.sendViewState == nil else { return }
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
-        // If model download is not complete, alert the user.
-        // TODO:
-
         tabViewModel.selectedTab = 0
         let message = Message(content: content, role: .user, chat: chat)
 
@@ -158,8 +155,6 @@ struct MessageView: View {
     }
 
     private func regenerateAction(for message: Message) {
-        message.completed = false
-
         Task {
             try ChatViewModel.shared.modify(chat)
             await messageViewModel.regenerate(message)

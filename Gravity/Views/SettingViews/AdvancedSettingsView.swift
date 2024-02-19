@@ -24,63 +24,6 @@ struct AdvancedSettingsView: View {
         VStack {
             Spacer()
 
-            // Form {
-            //     Picker("Default Model:", selection: $selectedModel) {
-            //         ForEach(models, id: \.self) { model in
-            //             Text(model.name).tag(model.name)
-            //         }
-            //     }
-            //     .bold()
-            //     .pickerStyle(.radioGroup)
-
-            //     Button(action: {
-            //         showingModelPicker.toggle()
-            //     }) {
-            //         Image(systemName: "plus")
-            //             .resizable()
-            //             .aspectRatio(contentMode: .fit)
-            //             .frame(width: 9, height: 9)
-            //     }
-            //     .sheet(isPresented: $showingModelPicker) {
-            //         ModelPickerView(selectedModels: [selectedModel])
-            //     }
-            // }
-            // .frame(width: 550)
-            // .padding(.bottom, 10)
-
-            // Divider()
-
-            // HStack {
-            //     Text("Default System Instruction:").bold()
-            //     Button("Edit System Instruction") {
-            //         isEditingInstruction.toggle()
-            //     }
-            //     .sheet(isPresented: $isEditingInstruction, content: {
-            //         // Custom view to edit the instruction
-            //         TextEditor(text: $systemInstruction)
-            //             .frame(minWidth: 300, minHeight: 200)
-            //     })
-            // }
-
-            HStack {
-                Text("Model Temperature:").bold()
-                Slider(value: $temperature, in: 0.0 ... 1.0, step: 0.1)
-                    .frame(width: 200)
-                Text("\(temperature, specifier: "%.1f")")
-            }
-
-            Spacer()
-
-            HStack {
-                Text("Model Context Length:").bold()
-                Slider(value: $maxContextLength, in: 1000 ... 8000, step: 500)
-                    .frame(width: 200)
-                Text("\(maxContextLength, specifier: "%.0f") Tokens")
-            }
-            .padding(.bottom, 10)
-
-            Spacer()
-
             Section {
                 Button("Reset Onboarding") {
                     onboardingViewed = false

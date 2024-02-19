@@ -1,11 +1,49 @@
 import Foundation
+import LLM
+import OSLog
 import SwiftData
+import SwiftUI
 
 /// Role for message sender, system, user, or assistant
+// enum MessageRole: String, Codable {
+//     case system = "System"
+//     case user = "User"
+//     case assistant = "Assistant"
+// }
 enum MessageRole: String, Codable {
     case system
     case user
     case assistant
+}
+
+/// Status for message generation and processing
+enum MessageStatus: String, Codable {
+    case pending
+    case chat_generation
+    case audio_generation
+    case chunk_summary_generation
+    case email_generation
+    case complete
+    case error
+
+    var description: String {
+        switch self {
+        case .pending:
+            "Pending"
+        case .chat_generation:
+            "Chatting"
+        case .audio_generation:
+            "Transcribing Audio"
+        case .chunk_summary_generation:
+            "Summarizing"
+        case .email_generation:
+            "Drafting Email"
+        case .complete:
+            "Complete"
+        case .error:
+            "Error"
+        }
+    }
 }
 
 @Model
@@ -20,14 +58,17 @@ final class Message: Identifiable {
     var role: MessageRole?
     /// Optional list of images stored externally to avoid bloating the database
     @Attribute(.externalStorage) var images: [Data]? // TODO: refactor this into its own model
-    /// Whether the message generation has completed
-    var completed: Bool = false
-    /// Whether the message generation has errored
-    var error: Bool = false
+    /// The status of the message generation and processing
+    var status: MessageStatus? = MessageStatus.pending
+    /// The progress of the message processing this is generic and can be used for any processing, useful for UI
+    var progress: Double = 0.0
     /// The parent chat of the message
     @Relationship var chat: Chat?
     /// The child audio attached to the message
     @Relationship(deleteRule: .cascade, inverse: \Audio.message) var audio: Audio?
+
+    /// Summarized chunks, just a list of strings for now, keep it simple
+    var summarizedChunks: [String] = []
 
     init(content: String? = nil, role: MessageRole? = nil, chat: Chat? = nil, images: [Data]? = nil) {
         self.content = content
@@ -35,6 +76,9 @@ final class Message: Identifiable {
         self.chat = chat
         self.images = images
     }
+
+    @Transient
+    private let logger = Logger(subsystem: "ai.grav.app", category: "Message")
 
     /// The name of the model used to generate the message
     @Transient var model: String {
@@ -45,9 +89,79 @@ final class Message: Identifiable {
     @Transient var text: String {
         var text = content ?? ""
         if let audio {
-            text += audio.text
+            // If the message has been summarized, use the summarized chunks. Tbh not clean, but it works for now. I guess we treat text like a high-level macro
+            if summarizedChunks.count > 0 {
+                text += summarizedChunks.joined(separator: "\n\n")
+            }
+            // Otherwise, use the full audio text
+            else {
+                text += audio.text
+            }
         }
         return text
+    }
+}
+
+extension Message {
+    public func generateSummarizedChunks() async {
+        guard let llm = await LLMManager.shared.llm else {
+            logger.error("LLM not available")
+            return
+        }
+
+        self.status = .chunk_summary_generation
+        DispatchQueue.main.async { self.progress = 0.0 }
+
+        self.summarizedChunks = []
+        if self.summarizedChunks.count == 0, await LLMManager.shared.llm?.numTokens(self.text) ?? 0 > 1024 {
+            let chunks = await LLMManager.shared.llm?.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
+            DispatchQueue.main.async { self.progress = 0.2 }
+
+            for (i, chunk) in chunks?.enumerated() ?? [].enumerated() {
+                DispatchQueue.main.async { self.progress = 0.2 + (0.8 * (Double(i) / Double(chunks?.count ?? 1))) }
+                let chunkMessage = (role: ChatRole.user, content: "\(chunk)\n\n\(AppPrompts.summarizeChunk)")
+                let output = await llm.arespond(to: [chunkMessage])
+                self.summarizedChunks.append(output)
+            }
+
+            logger.debug("Completed summarization. Chunks: \(self.summarizedChunks)")
+        }
+    }
+
+    public func generateEmail(open: Bool = false) async {
+        guard let audio = self.audio else {
+            logger.error("Audio not available")
+            return
+        }
+
+        if audio.email == nil {
+            DispatchQueue.main.async { self.status = .email_generation }
+            DispatchQueue.main.async { self.progress = 0.0 }
+
+            if self.summarizedChunks.count > 0 {
+                await generateFollowUp(self.summarizedChunks.joined(separator: "\n\n"), message: self)
+            } else {
+                logger.error("Audio not yet summarized. Please wait for the audio to finish processing.")
+                AlertManager.shared.doShowAlert(
+                    title: "Error",
+                    message: "Audio not yet summarized. Please wait for the audio to finish processing."
+                )
+            }
+        }
+        DispatchQueue.main.async { self.status = .complete }
+
+        if let email = audio.email, open {
+            // Extract subject via regex
+            let subject = email.extractAfter(pattern: "Subject: ") ?? "Follow Up"
+
+            // Replace subject in body
+            let body = email.replacingOccurrences(of: "Subject: \(subject)", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
+
+            let mailto = encodeForMailto(subject: subject, body: body)
+            if let url = URL(string: mailto), open {
+                NSWorkspace.shared.open(url)
+            }
+        }
     }
 }
 

@@ -43,6 +43,7 @@ public struct ChatField: View {
     private func macOS_action() {
         if NSApp.currentEvent?.modifierFlags.contains(.shift) == true {
             text.appendNewLine()
+            // Scroll to the bottom of the chat view
         } else {
             action()
         }

@@ -107,10 +107,10 @@ struct GravityApp: App {
                 }
             }
             .frame(width: 550, height: 200)
-            SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {
-                SettingsSubtab(.noSelection, id: "advanced") { AdvancedSettingsView() }
-            }
-            .frame(width: 550, height: 200)
+            // SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {
+            //     SettingsSubtab(.noSelection, id: "advanced") { AdvancedSettingsView() }
+            // }
+            // .frame(width: 550, height: 200)
             SettingsTab(.new(title: "About", icon: .info), id: "about") {
                 SettingsSubtab(.noSelection, id: "about") {
                     AboutSettingsView()

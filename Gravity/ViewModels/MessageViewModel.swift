@@ -58,9 +58,7 @@ final class MessageViewModel: ObservableObject {
         chatTask = Task {
             await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
-            assistantMessage.error = false
-            assistantMessage.completed = true
-
+            assistantMessage.status = .complete
             sendViewState = nil
         }
     }
@@ -69,6 +67,7 @@ final class MessageViewModel: ObservableObject {
     func regenerate(_: Message) async {
         TelemetryManager.send("MessageViewModel.regenerate")
         sendViewState = .loading
+        await LLMManager.shared.llm?.setNewSeed()
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
         // So for that, we'll recreate the original send scenario, when the new user message was sent
@@ -278,6 +277,7 @@ extension MessageViewModel {
                 role: .user,
                 chat: chat
             )
+            message.status = .audio_generation
 
             messages.append(message)
             modelContext.insert(message)
@@ -293,6 +293,14 @@ extension MessageViewModel {
             await WhisperManager.shared.whisper?.delegate = delegate
             Task {
                 _ = try await WhisperManager.shared.whisper?.transcribe(audioFrames: audioFrames)
+
+                // If the audio is longer than x tokens, chunk it and summarize each chunk for easier processing
+                await message.generateSummarizedChunks()
+                await message.generateEmail()
+                DispatchQueue.main.async {
+                    message.status = .complete
+                    self.sendViewState = nil
+                }
             }
 
         } catch {

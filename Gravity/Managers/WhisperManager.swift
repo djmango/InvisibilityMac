@@ -15,8 +15,6 @@ import SwiftWhisper
 class WhisperHandler: WhisperDelegate {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
 
-    private let modelContext = SharedModelContainer.shared.mainContext
-
     private let audio: Audio
 
     @ObservedObject var messageViewModel: MessageViewModel
@@ -29,19 +27,15 @@ class WhisperHandler: WhisperDelegate {
     @MainActor
     func whisper(_: Whisper, didCompleteWithSegments segments: [Segment]) {
         logger.debug("Whisper didCompleteWithSegments: \(segments)")
-        messageViewModel.sendViewState = nil
-        audio.completed = true
-        audio.progress = 1.0
+        audio.status = .complete
+        audio.message?.progress = 1.0
 
         audio.name = audio.segments.first?.text ?? "Audio"
     }
 
     func whisper(_: Whisper, didErrorWith error: Error) {
         logger.error("Whisper didErrorWith: \(error)")
-        audio.error = true
-        DispatchQueue.main.async {
-            self.messageViewModel.sendViewState = .error(message: error.localizedDescription)
-        }
+        audio.status = .error
     }
 
     @MainActor
@@ -54,7 +48,7 @@ class WhisperHandler: WhisperDelegate {
     @MainActor
     func whisper(_: Whisper, didUpdateProgress progress: Double) {
         logger.debug("Whisper didUpdateProgress: \(progress)")
-        audio.progress = progress
+        audio.message?.progress = progress
     }
 }
 

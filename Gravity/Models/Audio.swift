@@ -17,6 +17,14 @@ struct AudioSegment: Codable {
     }
 }
 
+/// Status for message generation and processing
+enum AudioStatus: String, Codable {
+    case pending
+    case processing
+    case complete
+    case error
+}
+
 @Model
 final class Audio: Identifiable {
     /// Unique identifier for the audio
@@ -25,12 +33,10 @@ final class Audio: Identifiable {
     var name: String = ""
     /// Datetime the audio was created
     var createdAt: Date = Date.now
-    /// Whether the audio processing has been completed
-    var completed: Bool = false
-    /// The progress of the audio processing
-    var progress: Double = 0.0
-    /// Whether the audio processing has errored
-    var error: Bool = false
+    /// The status of the audio processing
+    var status: AudioStatus? = AudioStatus.pending
+    /// The drafted email, if any
+    var email: String?
     /// The text of the last segment of the audio
     @Attribute(.externalStorage) var segmentsData: Data?
 

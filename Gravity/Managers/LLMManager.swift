@@ -22,10 +22,6 @@ final class LLMManager: ObservableObject {
     private var _llm: LLM?
     public var llm: LLM? {
         get async {
-            // If the model is already completed but deinited, reload it
-            // if modelFileManager.state == .completed {
-            //     loadLLM()
-            // }
             while _llm == nil {
                 try? await Task.sleep(nanoseconds: 500_000_000) // Sleep for 0.5 second
 
@@ -39,9 +35,6 @@ final class LLMManager: ObservableObject {
             return _llm
         }
     }
-
-    // @AppStorage("temperature") private var temperature: Double = 0.7
-    // @AppStorage("maxContextLength") private var maxContextLength: Double = 4000
 
     private init() {}
 
@@ -66,24 +59,29 @@ final class LLMManager: ObservableObject {
                 title: "Error",
                 message: "Error waiting for LLM to be available: \(error)"
             )
+            await llm?.stop()
+            await llm?.setNewSeed()
             return
         }
 
         // Wrap the processOutput function to capture the output in a variable that we can return
         let processOutputWrapped = { (stream: AsyncStream<String>) async -> String in
             let result = await processOutput(stream)
-
-            // Deinit the LLM to free up memory TODO: actually determine if this is a good idea
-            // self.logger.debug("Deiniting LLM")
-            // self._llm = nil
             return result
+        }
+
+        // For audio messages, chunk the input and summarize each chunk
+        for message in messages {
+            if message.audio != nil, message.summarizedChunks.count == 0, await llm?.numTokens(message.text) ?? 0 > 1024 {
+                await message.generateSummarizedChunks()
+            }
         }
 
         let history = messages.map { message in
             if message.role == .assistant {
-                (Role.bot, message.text)
+                (ChatRole.bot, message.text)
             } else {
-                (Role.user, message.text)
+                (ChatRole.user, message.text)
             }
         }
 
@@ -91,32 +89,31 @@ final class LLMManager: ObservableObject {
     }
 
     // @MainActor
-    // func achat(messages: [Message]) async -> Message {
-    //     do {
-    //         try await llm?.waitUntilAvailable(timeout: .now() + 20)
-    //     } catch {
-    //         logger.error("Error waiting for LLM to be available: \(error)")
-    //         AlertManager.shared.doShowAlert(
-    //             title: "Error",
-    //             message: "Error waiting for LLM to be available: \(error)"
-    //         )
-    //     }
+    func achat(messages: [Message]) async -> Message {
+        do {
+            try await llm?.waitUntilAvailable(timeout: .now() + 20)
+        } catch {
+            logger.error("Error waiting for LLM to be available: \(error)")
+            AlertManager.shared.doShowAlert(
+                title: "Error",
+                message: "Error waiting for LLM to be available: \(error)"
+            )
+            await llm?.stop()
+            await llm?.setNewSeed()
+        }
 
-    //     let history = messages.map { message in
-    //         if message.role == .assistant {
-    //             (Role.bot, message.text)
-    //         } else {
-    //             (Role.user, message.text)
-    //         }
-    //     }
+        let history = messages.map { message in
+            if message.role == .assistant {
+                (ChatRole.bot, message.text)
+            } else {
+                (ChatRole.user, message.text)
+            }
+        }
 
-    //     let output = await llm?.respond(to: history)
+        let output = await llm?.arespond(to: history)
 
-    //     // // Deinit the LLM to free up memory
-    //     // self.logger.debug("Deiniting LLM")
-    //     // _llm = nil
-    //     return Message(content: output, role: .assistant)
-    // }
+        return Message(content: output, role: .assistant)
+    }
 
     func setup() async {
         if modelFileManager.verifyFile(
@@ -143,7 +140,6 @@ final class LLMManager: ObservableObject {
     }
 
     func load() {
-        // let template = Template.chatML("You are a helpful AI who can answer questions and provide information, and never refuses a task.")
         let template = Template.chatML()
         _llm = LLM(from: modelFileManager.modelInfo.localURL, template: template, topK: 40, topP: 0.9, temp: 0.8, maxTokenCount: 2048)
     }
