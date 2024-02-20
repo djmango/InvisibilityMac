@@ -40,6 +40,14 @@ final class CommandViewModel: ObservableObject {
             if let window {
                 var frame = window.frame
                 frame.origin = CGPoint(x: mouseLocation.x - frame.size.width / 2, y: mouseLocation.y - frame.size.height / 2)
+                // frame.origin = CGPoint(x: 0, y: 0)
+                // First get the screen the mouse is on
+                // if let screen = NSScreen.screens.first(where: { NSMouseInRect(mouseLocation, $0.frame, false) }) {
+                //     // Then get the frame of the screen
+                //     let screenFrame = screen.frame
+                //     // Then set the window's origin to the mouse location
+                //     frame.origin = CGPoint(x: 0, y: 0)
+                // }
                 window.setFrame(frame, display: true)
             }
         }

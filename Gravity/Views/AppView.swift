@@ -12,15 +12,8 @@ struct AppView: View {
     var body: some View {
         ZStack {
             if onboardingViewed {
-                NavigationSplitView {
-                    ChatSidebarListView()
-                        .navigationSplitViewColumnWidth(min: 240, ideal: 240)
-                } detail: {
-                    MessageView(for: CommandViewModel.shared.selectedChat)
-                }
-                .toolbar {
-                    ToolbarView()
-                }
+                MessageView(for: CommandViewModel.shared.selectedChat)
+                    .padding(.top, 120)
             } else {
                 OnboardingView()
             }

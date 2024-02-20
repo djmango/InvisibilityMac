@@ -72,7 +72,12 @@ struct GravityApp: App {
                     }
                 }
         }
-        .windowToolbarStyle(.unified(showsTitle: false))
+        // .handlesExternalEvents(matching: ["openURL:", "openFile:"])
+        // .handlesExternalEvents(preferring: Set(arrayLiteral: "master"), allowing: Set(arrayLiteral: "*"))
+        .windowStyle(.hiddenTitleBar) // Hides the title bar for a more widget-like appearance
+        // .windowToolbarStyle(UnifiedCompactWindowToolbarStyle()) // Optional: Adjusts the toolbar style if needed
+        // .windowToolbarStyle(.unified(showsTitle: false))
+        .windowToolbarStyle(.unifiedCompact(showsTitle: false))
         .modelContainer(SharedModelContainer.shared.modelContainer)
         .commands {
             CommandGroup(after: .appInfo) {

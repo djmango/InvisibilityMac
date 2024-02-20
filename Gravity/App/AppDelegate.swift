@@ -10,13 +10,14 @@ import Foundation
 import OSLog
 import SwiftUI
 
-import IOKit.pwr_mgt
-
 class AppDelegate: NSObject, NSApplicationDelegate {
     private let logger = Logger(subsystem: "ai.grav.app", category: "AppDelegate")
 
     private var isAppActive = false
     private var shouldResumeRecording = false
+
+    var window: NSWindow!
+    private var windowManager = WindowManager.shared
 
     func applicationDidFinishLaunching(_: Notification) {
         // Set up the observer for when the app becomes active
@@ -32,6 +33,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set up the observer for when the system wakes
         NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(sleepListener(_:)),
                                                           name: NSWorkspace.didWakeNotification, object: nil)
+
+        guard let screen = NSScreen.main else { return } // Get the main screen
+        let screenHeight = screen.frame.height
+        let screenWidth = screen.frame.width
+
+        // Define window width and the desired positioning
+        let windowWidth: CGFloat = 400
+
+        // Calculate the x position to pin the window to the right side of the screen
+        let xPos = screenWidth - windowWidth
+
+        // Create a CGRect that represents the desired window frame
+        let windowRect = CGRect(x: xPos, y: screenHeight, width: windowWidth, height: screenHeight)
+
+        let contentView = AppView()
+
+        window = NSApplication.shared.windows.first
+
+        window.setFrame(windowRect, display: true)
+        // window.setFrameAutosaveName("Main Window")
+        // Move to right
+        window.setFrameOrigin(NSPoint(x: 0, y: 0))
+        window.contentView = NSHostingView(rootView: contentView)
+        window.makeKeyAndOrderFront(nil)
+        // window.setIsVisible(true) // Show the window
+        window.styleMask = [.borderless] // Hide the title bar
+        window.level = .floating // Make the window float above all regular windows
+        window.isOpaque = false // Enable transparency
+        window.backgroundColor = NSColor.clear // Set background color to clear
+        window.hasShadow = true // Optional: Disable shadow for a more "overlay" feel
+        window.titlebarAppearsTransparent = true
+        window.titleVisibility = .hidden // Hide the title
     }
 
     @objc private func sleepListener(_ notification: Notification) {
@@ -68,26 +101,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func appDidResignActive(notification _: NSNotification) {
         isAppActive = false
     }
-
-    // var assertionID: IOPMAssertionID = 0
-    // let assertionLevel = UInt32(kIOPMAssertionLevelOn)
-    // let assertionName = "MyAppNeedsToPreventSleep" as CFString
-
-    // func preventSystemSleep(reason: String = "Important Operation") {
-    //     let success = IOPMAssertionCreateWithName(assertionName, assertionLevel, reason as CFString, &assertionID)
-    //     if success == kIOReturnSuccess {
-    //         print("Successfully prevented sleep")
-    //     } else {
-    //         print("Failed to prevent sleep")
-    //     }
-    // }
-
-    // func allowSystemSleep() {
-    //     let success = IOPMAssertionRelease(assertionID)
-    //     if success == kIOReturnSuccess {
-    //         print("Sleep is no longer prevented")
-    //     } else {
-    //         print("Failed to allow sleep")
-    //     }
-    // }
 }

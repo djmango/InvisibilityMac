@@ -145,12 +145,21 @@ struct MessageListItemView: View {
             .padding(.top, 8)
             .visible(if: isAssistant || isFinalMessage, removeCompletely: true)
         }
-        .padding(.vertical)
+        .padding()
         .frame(maxWidth: .infinity, alignment: .leading)
         .onHover {
             isHovered = $0
             isCopied = false
         }
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(Color("WidgetColor"))
+                .shadow(radius: 2)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color(nsColor: .separatorColor))
+                )
+        )
     }
 
     // MARK: - Actions

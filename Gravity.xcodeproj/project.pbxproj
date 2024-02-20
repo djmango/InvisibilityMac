@@ -83,6 +83,7 @@
 		4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */; };
 		4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */; };
 		4DEEEF172B6B1F0900ECDAC5 /* MaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF0D2B6B1F0800ECDAC5 /* MaterialView.swift */; };
+		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -152,6 +153,7 @@
 		4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
 		4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
 		4DEEEF0D2B6B1F0800ECDAC5 /* MaterialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialView.swift; sourceTree = "<group>"; };
+		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +208,7 @@
 				4D3D050F2B59D536009340ED /* WhisperManager.swift */,
 				4D3B635C2B642A1A004AA7DF /* LLMManager.swift */,
 				4D9348C92B5B24C800D57BC2 /* ModelFileManager.swift */,
+				4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -584,6 +587,7 @@
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
 				4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* GravityApp.swift in Sources */,
+				4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */,
 				4D0B52E42B590213008D975D /* AlertManager.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,

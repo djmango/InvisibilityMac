@@ -35,47 +35,51 @@ struct MessageView: View {
     var body: some View {
         ScrollViewReader { scrollViewProxy in
             VStack {
-                if tabViewModel.selectedTab == 0 {
-                    List(messageViewModel.messages.indices, id: \.self) { index in
-                        let message: Message = messageViewModel.messages[index]
-                        let action: () -> Void = {
-                            regenerateAction(for: message)
-                        }
-                        let audioActionPassed: () -> Void = {
-                            guard let audio = message.audio else { return }
-                            audioAction(for: audio)
-                        }
+                List(messageViewModel.messages.indices, id: \.self) { index in
+                    let message: Message = messageViewModel.messages[index]
+                    let action: () -> Void = {
+                        regenerateAction(for: message)
+                    }
+                    let audioActionPassed: () -> Void = {
+                        guard let audio = message.audio else { return }
+                        audioAction(for: audio)
+                    }
 
-                        // Generate the view for the individual message.
-                        MessageListItemView(
-                            message: message,
-                            messageViewModel: messageViewModel,
-                            regenerateAction: action,
-                            audioAction: audioActionPassed
-                        )
-                        .generating(message.content == nil && isGenerating)
-                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                        .error(message.status == .error, message: messageViewModel.sendViewState?.errorMessage)
-                        .audio(message.audio)
-                        .id(message)
-                    }
-                    .onAppear {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                    .onChange(of: messageViewModel.messages) {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                    .onChange(of: messageViewModel.messages.last?.content) {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                } else {
-                    AudioTranscriptView(audio: AudioPlayerViewModel.shared.audio)
+                    // Generate the view for the individual message.
+                    MessageListItemView(
+                        message: message,
+                        messageViewModel: messageViewModel,
+                        regenerateAction: action,
+                        audioAction: audioActionPassed
+                    )
+                    .generating(message.content == nil && isGenerating)
+                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                    .error(message.status == .error, message: messageViewModel.sendViewState?.errorMessage)
+                    .audio(message.audio)
+                    .id(message)
+                }
+                .scrollContentBackground(.hidden)
+                .onAppear {
+                    scrollToBottom(scrollViewProxy)
+                }
+                .onChange(of: messageViewModel.messages) {
+                    scrollToBottom(scrollViewProxy)
+                }
+                .onChange(of: messageViewModel.messages.last?.content) {
+                    scrollToBottom(scrollViewProxy)
                 }
 
                 HStack(alignment: .center) {
                     ChatField("Message", text: $content, action: sendAction)
                         .textFieldStyle(CapsuleChatFieldStyle())
                         .focused($promptFocused)
+                    // .background(
+                    //     LinearGradient(
+                    //         gradient: Gradient(colors: [Color("AccentColor").opacity(0.2), Color("AccentColorGradient1").opacity(0.2)]),
+                    //         startPoint: .top,
+                    //         endPoint: .bottom
+                    //     )
+                    // )
 
                     Button(action: sendAction) {
                         Image(systemName: "paperplane.fill")
@@ -99,6 +103,7 @@ struct MessageView: View {
                 .padding(.bottom, 16)
                 .padding(.horizontal)
             }
+            // .background(Color.red) Above this
             .overlay(
                 Rectangle()
                     .foregroundColor(Color.gray.opacity(0.2))
