@@ -1,7 +1,6 @@
 import OSLog
 import SwiftData
 import SwiftUI
-import SwiftUIIntrospect
 import ViewCondition
 import ViewState
 
@@ -52,6 +51,10 @@ struct MessageView: View {
                     .id(message)
                 }
                 .scrollContentBackground(.hidden)
+                // .listStyle(.plain)
+                .scrollIndicators(.never)
+                // Disable the scroll bar
+
                 .onAppear {
                     scrollToBottom(scrollViewProxy)
                 }
@@ -64,24 +67,30 @@ struct MessageView: View {
 
                 HStack(alignment: .center) {
                     ChatField("Message", text: $content, action: sendAction)
-                        .textFieldStyle(CapsuleChatFieldStyle())
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 12)
+                        .textFieldStyle(.plain)
+                        .cornerRadius(8)
+                        .background(Color(.gray).opacity(0.2))
+                        // .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Color(.separatorColor)))
                         .focused($promptFocused)
                     // .background(
                     //     LinearGradient(
                     //         gradient: Gradient(colors: [Color("AccentColor").opacity(0.2), Color("AccentColorGradient1").opacity(0.2)]),
-                    //         startPoint: .top,
-                    //         endPoint: .bottom
+                    //         startPoint: .leading,
+                    //         endPoint: .trailing
                     //     )
                     // )
 
-                    Button(action: sendAction) {
-                        Image(systemName: "paperplane.fill")
-                            .padding(8)
-                            .frame(width: 28, height: 28)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .help("Send message")
-                    .hide(if: isGenerating, removeCompletely: true)
+                    // Button(action: sendAction) {
+                    //     Image(systemName: "paperplane.fill")
+                    //         .padding(8)
+                    //         .frame(width: 28, height: 28)
+                    // }
+                    // .buttonStyle(.borderedProminent)
+                    // .help("Send message")
+                    // .hide(if: isGenerating, removeCompletely: true)
 
                     Button(action: messageViewModel.stopGenerate) {
                         Image(systemName: "stop.circle.fill")
@@ -96,7 +105,6 @@ struct MessageView: View {
                 .padding(.bottom, 16)
                 .padding(.horizontal)
             }
-            // .background(Color.red) Above this
             .overlay(
                 Rectangle()
                     .foregroundColor(Color.gray.opacity(0.2))
@@ -138,17 +146,15 @@ struct MessageView: View {
 
         tabViewModel.selectedTab = 0
         let message = Message(content: content, role: .user)
+        content = ""
 
         Task {
-            // try ChatViewModel.shared.modify(chat)
-            // content = ""
             await messageViewModel.send(message)
         }
     }
 
     private func regenerateAction(for message: Message) {
         Task {
-            // try ChatViewModel.shared.modify(chat)
             await messageViewModel.regenerate(message)
         }
     }

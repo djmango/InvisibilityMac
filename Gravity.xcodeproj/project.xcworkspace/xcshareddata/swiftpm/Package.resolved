@@ -28,15 +28,6 @@
       }
     },
     {
-      "identity" : "ggml",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ggerganov/ggml.git",
-      "state" : {
-        "branch" : "release",
-        "revision" : "6b14d738d9100c50c199a3b1aaa960f633904476"
-      }
-    },
-    {
       "identity" : "keyboardshortcuts",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sindresorhus/KeyboardShortcuts",
@@ -127,15 +118,6 @@
       }
     },
     {
-      "identity" : "swiftui-introspect",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/siteline/swiftui-introspect",
-      "state" : {
-        "revision" : "18e965f867e37a558ad13c12d330dbe047099180",
-        "version" : "1.1.2"
-      }
-    },
-    {
       "identity" : "swiftwhisper",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/djmango/SwiftWhisper.git",
@@ -168,7 +150,7 @@
       "location" : "https://github.com/ggerganov/whisper.cpp",
       "state" : {
         "branch" : "master",
-        "revision" : "434b8f3b96532d219cecc1ecfd93629e8cf086fa"
+        "revision" : "b602819b6eae21ae7cb10a3eb8857cb9cb1e9c57"
       }
     }
   ],

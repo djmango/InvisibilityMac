@@ -28,8 +28,6 @@
 		4D5896DD2B7C67E700484BFA /* EventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */; };
 		4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */; };
 		4D596AA32B5F2B3E00B9E765 /* String+AppendNewLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */; };
-		4D596AA42B5F2B3E00B9E765 /* Documentation.docc in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9F2B5F2B3E00B9E765 /* Documentation.docc */; };
-		4D596AA52B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AA12B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift */; };
 		4D596AAC2B6085FD00B9E765 /* AudioUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AAB2B6085FD00B9E765 /* AudioUtils.swift */; };
 		4D596AAF2B6197F700B9E765 /* AudioWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AAE2B6197F700B9E765 /* AudioWidgetView.swift */; };
 		4D596AB12B61997100B9E765 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AB02B61997100B9E765 /* Audio.swift */; };
@@ -69,7 +67,6 @@
 		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
-		4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */; };
 		4DEA4ADF2B70689B00393858 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEA4ADE2B70689B00393858 /* MenuBarView.swift */; };
 		4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */; };
 		4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */; };
@@ -96,8 +93,6 @@
 		4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewModel.swift; sourceTree = "<group>"; };
 		4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatField.swift; sourceTree = "<group>"; };
 		4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+AppendNewLine.swift"; sourceTree = "<group>"; };
-		4D596A9F2B5F2B3E00B9E765 /* Documentation.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = Documentation.docc; sourceTree = "<group>"; };
-		4D596AA12B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapsuleTextFieldStyle.swift; sourceTree = "<group>"; };
 		4D596AAB2B6085FD00B9E765 /* AudioUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUtils.swift; sourceTree = "<group>"; };
 		4D596AAE2B6197F700B9E765 /* AudioWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWidgetView.swift; sourceTree = "<group>"; };
 		4D596AB02B61997100B9E765 /* Audio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
@@ -154,7 +149,6 @@
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
-				4DE673702B17F46B00A5F9AE /* SwiftUIIntrospect in Frameworks */,
 				4D3D05132B59DB32009340ED /* AudioKit in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
 			);
@@ -210,8 +204,6 @@
 			children = (
 				4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */,
 				4D596A9D2B5F2B3E00B9E765 /* Extensions */,
-				4D596A9F2B5F2B3E00B9E765 /* Documentation.docc */,
-				4D596AA02B5F2B3E00B9E765 /* Styles */,
 			);
 			path = ChatField;
 			sourceTree = "<group>";
@@ -222,14 +214,6 @@
 				4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		4D596AA02B5F2B3E00B9E765 /* Styles */ = {
-			isa = PBXGroup;
-			children = (
-				4D596AA12B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift */,
-			);
-			path = Styles;
 			sourceTree = "<group>";
 		};
 		4D596AAD2B6197E200B9E765 /* AudioViews */ = {
@@ -429,7 +413,6 @@
 			name = Gravity;
 			packageProductDependencies = (
 				4DE673482B17F46B00A5F9AE /* ViewState */,
-				4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */,
 				4DE6734C2B17F46B00A5F9AE /* ViewCondition */,
 				4DE6734E2B17F46B00A5F9AE /* MarkdownUI */,
 				4D7AB4232B4CB469007F025B /* Pow */,
@@ -468,7 +451,6 @@
 			mainGroup = 0A4D35782AF541D900846890;
 			packageReferences = (
 				0AA41A152AF635AD0053B8DB /* XCRemoteSwiftPackageReference "ViewState" */,
-				0ACA4D5C2AF7AC43000DA76F /* XCRemoteSwiftPackageReference "swiftui-introspect" */,
 				0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */,
 				0ACA4D742AF89C27000DA76F /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */,
@@ -510,7 +492,6 @@
 			files = (
 				4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */,
 				4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */,
-				4D596AA52B5F2B3E00B9E765 /* CapsuleTextFieldStyle.swift in Sources */,
 				4D8E054D2B2516DE00B60D0D /* CommandViewModel.swift in Sources */,
 				4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
@@ -540,7 +521,6 @@
 				4DD282E12B4DF7530041690B /* Shortcuts.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
-				4D596AA42B5F2B3E00B9E765 /* Documentation.docc in Sources */,
 				4DEEEF172B6B1F0900ECDAC5 /* MaterialView.swift in Sources */,
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
 				4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */,
@@ -700,7 +680,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -714,7 +694,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -732,7 +712,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 41;
+				CURRENT_PROJECT_VERSION = 42;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -747,7 +727,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.9.0;
+				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.grav.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -785,14 +765,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.2.1;
-			};
-		};
-		0ACA4D5C2AF7AC43000DA76F /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/swiftui-introspect";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
 			};
 		};
 		0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */ = {
@@ -899,14 +871,6 @@
 				minimumVersion = 1.2.1;
 			};
 		};
-		4DE6734B2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swiftui-introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/swiftui-introspect";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.1;
-			};
-		};
 		4DE6734D2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewCondition" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kevinhermawan/ViewCondition";
@@ -980,11 +944,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */;
 			productName = ViewState;
-		};
-		4DE6734A2B17F46B00A5F9AE /* SwiftUIIntrospect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DE6734B2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swiftui-introspect" */;
-			productName = SwiftUIIntrospect;
 		};
 		4DE6734C2B17F46B00A5F9AE /* ViewCondition */ = {
 			isa = XCSwiftPackageProductDependency;

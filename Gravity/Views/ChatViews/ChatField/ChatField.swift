@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftUIIntrospect
 
 /// A control that displays an editable text interface for chat purposes.
 ///
@@ -34,13 +33,13 @@ public struct ChatField: View {
 
     public var body: some View {
         TextField(titleKey, text: $text, axis: .vertical)
-            .introspect(.textField(axis: .vertical), on: .macOS(.v14)) { textField in
-                textField.lineBreakMode = .byWordWrapping
-            }
-            .onSubmit { macOS_action() }
+            // .introspect(.textField(axis: .vertical), on: .macOS(.v14)) { textField in
+            //     textField.lineBreakMode = .byWordWrapping
+            // }
+            .onSubmit { submit() }
     }
 
-    private func macOS_action() {
+    private func submit() {
         if NSApp.currentEvent?.modifierFlags.contains(.shift) == true {
             text.appendNewLine()
             // Scroll to the bottom of the chat view

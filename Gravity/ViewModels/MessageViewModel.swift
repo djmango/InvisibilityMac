@@ -46,7 +46,7 @@ final class MessageViewModel: ObservableObject {
         modelContext.insert(assistantMessage)
 
         chatTask = Task {
-            await try? LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
+            try? await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
             assistantMessage.status = .complete
             sendViewState = nil
@@ -273,7 +273,7 @@ extension MessageViewModel {
                 _ = try await WhisperManager.shared.whisper?.transcribe(audioFrames: audioFrames)
 
                 // If the audio is longer than x tokens, chunk it and summarize each chunk for easier processing
-                await message.generateSummarizedChunks()
+//                await message.generateSummarizedChunks()
                 await message.generateEmail()
                 DispatchQueue.main.async {
                     message.status = .complete

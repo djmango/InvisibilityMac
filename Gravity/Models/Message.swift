@@ -90,25 +90,25 @@ final class Message: Identifiable {
 }
 
 extension Message {
-    public func generateSummarizedChunks() async {
-        self.status = .chunk_summary_generation
-        DispatchQueue.main.async { self.progress = 0.0 }
+    // public func generateSummarizedChunks() async {
+    //     self.status = .chunk_summary_generation
+    //     DispatchQueue.main.async { self.progress = 0.0 }
 
-        self.summarizedChunks = []
-        // if self.summarizedChunks.count == 0, await LLMManager.shared.llm?.numTokens(self.text) ?? 0 > 1024 {
-        //     let chunks = await LLMManager.shared.llm?.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
-        //     DispatchQueue.main.async { self.progress = 0.2 }
+    //     self.summarizedChunks = []
+    //     if self.summarizedChunks.count == 0, await LLMManager.shared.llm?.numTokens(self.text) ?? 0 > 1024 {
+    //         let chunks = await LLMManager.shared.llm?.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
+    //         DispatchQueue.main.async { self.progress = 0.2 }
 
-        //     for (i, chunk) in chunks?.enumerated() ?? [].enumerated() {
-        //         DispatchQueue.main.async { self.progress = 0.2 + (0.8 * (Double(i) / Double(chunks?.count ?? 1))) }
-        //         let chunkMessage = (role: ChatRole.user, content: "\(chunk)\n\n\(AppPrompts.summarizeChunk)")
-        //         let output = await llm.arespond(to: [chunkMessage])
-        //         self.summarizedChunks.append(output)
-        //     }
+    //         for (i, chunk) in chunks?.enumerated() ?? [].enumerated() {
+    //             DispatchQueue.main.async { self.progress = 0.2 + (0.8 * (Double(i) / Double(chunks?.count ?? 1))) }
+    //             let chunkMessage = (role: ChatRole.user, content: "\(chunk)\n\n\(AppPrompts.summarizeChunk)")
+    //             let output = await llm.arespond(to: [chunkMessage])
+    //             self.summarizedChunks.append(output)
+    //         }
 
-        //     logger.debug("Completed summarization. Chunks: \(self.summarizedChunks)")
-        // }
-    }
+    //         logger.debug("Completed summarization. Chunks: \(self.summarizedChunks)")
+    //     }
+    // }
 
     public func generateEmail(open: Bool = false) async {
         guard let audio = self.audio else {
@@ -120,15 +120,15 @@ extension Message {
             DispatchQueue.main.async { self.status = .email_generation }
             DispatchQueue.main.async { self.progress = 0.0 }
 
-            if self.summarizedChunks.count > 0 {
-                await generateFollowUp(self.summarizedChunks.joined(separator: "\n\n"), message: self)
-            } else {
-                logger.error("Audio not yet summarized. Please wait for the audio to finish processing.")
-                AlertManager.shared.doShowAlert(
-                    title: "Error",
-                    message: "Audio not yet summarized. Please wait for the audio to finish processing."
-                )
-            }
+            // if self.summarizedChunks.count > 0 {
+            await generateFollowUp(self.text, message: self)
+            // } else {
+            //     logger.error("Audio not yet summarized. Please wait for the audio to finish processing.")
+            //     AlertManager.shared.doShowAlert(
+            //         title: "Error",
+            //         message: "Audio not yet summarized. Please wait for the audio to finish processing."
+            //     )
+            // }
         }
         DispatchQueue.main.async { self.status = .complete }
 

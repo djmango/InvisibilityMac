@@ -201,8 +201,7 @@ class CaptureEngine: NSObject, @unchecked Sendable {
                 try await self.overlayAudioFiles(audioFileURLs: [systemFileURL, micFileURL], outputURL: mergedFileURL)
 
                 // Now send it to the chat
-                // MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).handleFile(url: mergedFileURL)
-                // TODO: fix this
+                MessageViewModelManager.shared.messageViewModel.handleFile(url: mergedFileURL)
 
                 // // Now delete the raw audio files
                 // for type in typesToMerge {
