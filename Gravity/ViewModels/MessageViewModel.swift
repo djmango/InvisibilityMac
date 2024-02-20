@@ -15,32 +15,22 @@ final class MessageViewModel: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "MessageViewModel")
 
     private let modelContext = SharedModelContainer.shared.mainContext
-    private var chat: Chat
     private var chatTask: Task<Void, Error>?
     private var lastOpenedImage: Data?
 
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
 
-    init(chat: Chat) {
-        self.chat = chat
-    }
+    init() {}
 
-    deinit {
-        logger.debug("MessageViewModel deinit")
-        self.stopGenerate()
-    }
-
-    func fetch(for chat: Chat) throws {
-        TelemetryManager.send("MessageViewModel.fetch")
-        let chatID = chat.id
-        let predicate = #Predicate<Message> { $0.chat?.id == chatID }
+    func fetch() throws {
         let sortDescriptor = SortDescriptor(\Message.createdAt)
         let fetchDescriptor = FetchDescriptor<Message>(
-            predicate: predicate, sortBy: [sortDescriptor]
+            sortBy: [sortDescriptor]
         )
 
         messages = try modelContext.fetch(fetchDescriptor)
+        logger.debug("Fetched \(self.messages.count) messages")
     }
 
     @MainActor
@@ -51,12 +41,12 @@ final class MessageViewModel: ObservableObject {
         messages.append(message)
         modelContext.insert(message)
 
-        let assistantMessage = Message(content: nil, role: .assistant, chat: chat)
+        let assistantMessage = Message(content: nil, role: .assistant)
         messages.append(assistantMessage)
         modelContext.insert(assistantMessage)
 
         chatTask = Task {
-            await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
+            await try? LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
             assistantMessage.status = .complete
             sendViewState = nil
@@ -67,7 +57,6 @@ final class MessageViewModel: ObservableObject {
     func regenerate(_: Message) async {
         TelemetryManager.send("MessageViewModel.regenerate")
         sendViewState = .loading
-        await LLMManager.shared.llm?.setNewSeed()
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
         // So for that, we'll recreate the original send scenario, when the new user message was sent
@@ -85,8 +74,6 @@ final class MessageViewModel: ObservableObject {
                 logger.error("Error saving context after deletion: \(error)")
             }
         }
-
-        // await LLMManager.shared.llm?.setNewSeed()
 
         // Removes the user message and presents a fresh send scenario
         if let userMessage = messages.popLast() {
@@ -107,27 +94,19 @@ final class MessageViewModel: ObservableObject {
             }
         }
 
-        Task {
-            await LLMManager.shared.llm?.stop()
-        }
+        LLMManager.shared.stop()
     }
 
-    private func processOutput(stream: AsyncStream<String>) async -> String {
-        var result = ""
-        for await line in stream {
-            result += line
-
-            DispatchQueue.main.async {
-                if !self.messages.isEmpty, let lastMessage = self.messages.last {
-                    if lastMessage.content == nil { lastMessage.content = "" }
-                    lastMessage.content?.append(line)
-                }
-
-                self.sendViewState = .loading
+    private func processOutput(output: String) {
+        logger.debug("Processing output: \(output)")
+        DispatchQueue.main.async {
+            if !self.messages.isEmpty, let lastMessage = self.messages.last {
+                if lastMessage.content == nil { lastMessage.content = "" }
+                lastMessage.content?.append(output)
             }
-        }
 
-        return result
+            self.sendViewState = .loading
+        }
     }
 }
 
@@ -244,7 +223,8 @@ extension MessageViewModel {
 
         // Create a new message with the recognized text
         let userMessage = Message(
-            content: "Take a a look at this image for me", role: .user, chat: chat,
+            content: "Take a a look at this image for me",
+            role: .user,
             images: [image]
         )
 
@@ -255,7 +235,8 @@ extension MessageViewModel {
             "I couldn't read anything from this image.\n"
         }
         let assistantMessage = Message(
-            content: assistantContent, role: .assistant, chat: chat
+            content: assistantContent,
+            role: .assistant
         )
 
         // Add the messages to the view model
@@ -273,10 +254,7 @@ extension MessageViewModel {
             sendViewState = .loading
 
             // Add the message to the view model
-            let message = Message(
-                role: .user,
-                chat: chat
-            )
+            let message = Message(role: .user)
             message.status = .audio_generation
 
             messages.append(message)

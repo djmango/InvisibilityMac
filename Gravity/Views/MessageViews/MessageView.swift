@@ -8,8 +8,6 @@ import ViewState
 struct MessageView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "MessageView")
 
-    private var chat: Chat
-
     @ObservedObject private var tabViewModel = TabViewModel.shared
 
     @FocusState private var isEditorFocused: Bool
@@ -20,13 +18,9 @@ struct MessageView: View {
     @State private var isDragActive: Bool = false
     @State private var selection: [Message] = []
 
-    init(for chat: Chat) {
-        self.chat = chat
-    }
+    init() {}
 
-    var messageViewModel: MessageViewModel {
-        MessageViewModelManager.shared.viewModel(for: chat)
-    }
+    let messageViewModel: MessageViewModel = MessageViewModelManager.shared.messageViewModel
 
     var isGenerating: Bool {
         messageViewModel.sendViewState == .loading
@@ -54,7 +48,6 @@ struct MessageView: View {
                     )
                     .generating(message.content == nil && isGenerating)
                     .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                    .error(message.status == .error, message: messageViewModel.sendViewState?.errorMessage)
                     .audio(message.audio)
                     .id(message)
                 }
@@ -118,10 +111,6 @@ struct MessageView: View {
                 initAction()
                 scrollToBottom(scrollViewProxy)
             }
-            .onChange(of: chat) {
-                initAction()
-                scrollToBottom(scrollViewProxy)
-            }
         }
     }
 
@@ -129,16 +118,14 @@ struct MessageView: View {
 
     @MainActor
     private func initAction() {
-        try? messageViewModel.fetch(for: chat)
-
-        CommandViewModel.shared.selectedChat = chat
+        try? messageViewModel.fetch()
 
         isEditorFocused = true
         promptFocused = true
 
         tabViewModel.selectedTab = 0
         AudioPlayerViewModel.shared.stop()
-        let messageViewModel = MessageViewModelManager.shared.viewModel(for: chat)
+        let messageViewModel = MessageViewModel()
         if messageViewModel.messages.contains(where: { $0.audio != nil }) {
             // Set audioplayer audio to the first audio file in the chat.
             AudioPlayerViewModel.shared.audio = messageViewModel.messages.first(where: { $0.audio != nil })?.audio
@@ -150,18 +137,18 @@ struct MessageView: View {
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
         tabViewModel.selectedTab = 0
-        let message = Message(content: content, role: .user, chat: chat)
+        let message = Message(content: content, role: .user)
 
         Task {
-            try ChatViewModel.shared.modify(chat)
-            content = ""
+            // try ChatViewModel.shared.modify(chat)
+            // content = ""
             await messageViewModel.send(message)
         }
     }
 
     private func regenerateAction(for message: Message) {
         Task {
-            try ChatViewModel.shared.modify(chat)
+            // try ChatViewModel.shared.modify(chat)
             await messageViewModel.regenerate(message)
         }
     }

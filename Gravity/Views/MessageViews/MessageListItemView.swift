@@ -15,7 +15,6 @@ struct MessageListItemView: View {
     private var isGenerating: Bool = false
     private var isFinalMessage: Bool = false
     private var isError: Bool = false
-    private var errorMessage: String? = nil
     private var audio: Audio? = nil
 
     init(message: Message,
@@ -53,12 +52,6 @@ struct MessageListItemView: View {
             ProgressView()
                 .controlSize(.small)
                 .visible(if: isGenerating && isFinalMessage && message.audio == nil, removeCompletely: true)
-
-            if let errorMessage {
-                TextError(errorMessage)
-                    .visible(if: isError, removeCompletely: true)
-                    .hide(if: isGenerating, removeCompletely: true)
-            }
 
             Markdown(message.content ?? "")
                 .textSelection(.enabled)
@@ -200,14 +193,6 @@ struct MessageListItemView: View {
     public func finalMessage(_ isFinalMessage: Bool) -> MessageListItemView {
         var view = self
         view.isFinalMessage = isFinalMessage
-
-        return view
-    }
-
-    public func error(_ isError: Bool, message: String?) -> MessageListItemView {
-        var view = self
-        view.isError = isError
-        view.errorMessage = message ?? AppMessages.generalErrorMessage
 
         return view
     }

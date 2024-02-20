@@ -23,7 +23,6 @@ struct GeneralSettingsView: View {
 
     @State private var showDeleteAllDataAlert: Bool = false
 
-    @Query var chats: [Chat]
     @Query var messages: [Message]
     @Query var audios: [Audio]
 
@@ -109,10 +108,6 @@ struct GeneralSettingsView: View {
         TelemetryManager.send("ApplicationWiped")
 
         let context = SharedModelContainer.shared.mainContext
-        for chat in chats {
-            logger.debug("Deleting chat: \(chat.name)")
-            context.delete(chat)
-        }
         for message in messages {
             logger.debug("Deleting message: \(message.content ?? "")")
             context.delete(message)
@@ -132,7 +127,6 @@ struct GeneralSettingsView: View {
         onboardingViewed = false
 
         // Wipe models
-        LLMManager.shared.wipe()
         WhisperManager.shared.wipe()
 
         // Restart app

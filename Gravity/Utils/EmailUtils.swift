@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import LLM
 import OSLog
 import SwiftUI
 
@@ -19,29 +18,24 @@ func encodeForMailto(subject: String, body: String) -> String {
 }
 
 func generateFollowUp(_ input: String, message: Message) async {
-    guard let llm = await LLMManager.shared.llm else {
-        logger.error("LLM not available")
-        return
-    }
-
     guard let audio = message.audio else {
         logger.error("Audio not available")
         return
     }
 
     DispatchQueue.main.async { message.progress = 0.4 }
-    let contentMessage = (role: ChatRole.user, content: input)
+    let contentMessage = Message(content: input, role: .user)
     logger.debug("Generating email on content: \(input)")
 
-    let emailOutline = await llm.arespond(to: [contentMessage, (role: ChatRole.user, content: AppPrompts.emailPromptOutline)])
-    let emailOutlineMessage = (role: ChatRole.user, content: emailOutline)
+    // let emailOutline = await llm.arespond(to: [contentMessage, (role: ChatRole.user, content: AppPrompts.emailPromptOutline)])
+    let emailOutline = await LLMManager.shared.achat(messages: [contentMessage, Message(content: AppPrompts.emailPromptOutline, role: .user)])
+    let emailOutlineMessage = Message(content: emailOutline.content, role: .user)
     DispatchQueue.main.async { message.progress = 0.8 }
     logger.debug("Email outline: \(emailOutline)")
 
-    let emailFollowUp = await llm.arespond(to: [emailOutlineMessage, (role: ChatRole.user, content: AppPrompts.emailPromptFollowUp)])
+    let emailFollowUp = await LLMManager.shared.achat(messages: [emailOutlineMessage, Message(content: AppPrompts.emailPromptFollowUp, role: .user)])
     DispatchQueue.main.async { message.progress = 1.0 }
     logger.debug("Email follow-up: \(emailFollowUp)")
 
-    let email = emailFollowUp
-    audio.email = email
+    audio.email = emailFollowUp.content
 }

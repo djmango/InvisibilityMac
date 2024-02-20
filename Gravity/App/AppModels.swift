@@ -83,4 +83,15 @@ enum ModelRepository {
             .appendingPathComponent("openhermes")
             .appendingPathComponent("openhermes-2.5-mistral-7b.Q5_K_M.gguf")
     )
+
+    static let Phi_2 = ModelInfo(
+        name: "microsoft/phi-2",
+        humanReadableName: "Phi-2",
+        url: URL(string: "https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q5_K_M.gguf?download=true")!,
+        sha256: "ce6bcc8fa75b467e1eb693bcc921fe366ceac14aa92ec3dc84da536c2289510a",
+        localURL: gravityHomeDir
+            .appendingPathComponent("models")
+            .appendingPathComponent("phi")
+            .appendingPathComponent("phi-2.Q5_K_M.gguf")
+    )
 }

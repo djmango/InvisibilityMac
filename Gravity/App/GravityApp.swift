@@ -48,9 +48,6 @@ struct GravityApp: App {
         Task {
             await WhisperManager.shared.setup()
         }
-        Task {
-            await LLMManager.shared.setup()
-        }
 
         DockProgress.style = .pie(color: .accent)
     }
@@ -58,10 +55,10 @@ struct GravityApp: App {
     var body: some Scene {
         Window("Gravity", id: "master") {
             AppView()
-                .pasteDestination(for: URL.self) { urls in
-                    guard let url = urls.first else { return }
-                    MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).handleFile(url: url)
-                }
+                // .pasteDestination(for: URL.self) { urls in
+                //     guard let url = urls.first else { return }
+                // MessageViewMode;.handleFile(url: url)
+                // }
                 .onAppear {
                     Task {
                         if await !ScreenRecorder.shared.canRecord {
@@ -87,22 +84,11 @@ struct GravityApp: App {
                 .disabled(!updaterViewModel.canCheckForUpdates)
             }
 
-            CommandGroup(replacing: .newItem) {
-                Button("New Chat") {
-                    _ = CommandViewModel.shared.addChat()
-                }
-                .keyboardShortcut("n", modifiers: .command)
-            }
-
             CommandGroup(after: .newItem) {
                 Button("Open File") {
-                    MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).openFile()
+                    // MessageViewModelManager.shared.viewModel(for: CommandViewModel.shared.selectedChat).openFile()
                 }
                 .keyboardShortcut("o", modifiers: .command)
-            }
-
-            CommandGroup(replacing: .textEditing) {
-                ChatContextMenu(for: CommandViewModel.shared.selectedChat)
             }
         }
         .settings {

@@ -31,16 +31,16 @@ struct OnboardingView: View {
             // case 2:
             //     OnboardingEmailView { viewIndex = 3 }
 
-            case 3:
-                OnboardingDownloadView {
-                    // viewIndex = 4
-                    onboardingViewed = true
-                    if !emailAddress.isEmpty {
-                        TelemetryManager.send("UserOnboarded", with: ["email": emailAddress, "analytics": analytics.description])
-                    } else {
-                        TelemetryManager.send("UserOnboarded", with: ["analytics": analytics.description])
-                    }
-                }
+            // case 3:
+            //     OnboardingDownloadView {
+            //         // viewIndex = 4
+            //         onboardingViewed = true
+            //         if !emailAddress.isEmpty {
+            //             TelemetryManager.send("UserOnboarded", with: ["email": emailAddress, "analytics": analytics.description])
+            //         } else {
+            //             TelemetryManager.send("UserOnboarded", with: ["analytics": analytics.description])
+            //         }
+            //     }
 
             default:
                 EmptyView()

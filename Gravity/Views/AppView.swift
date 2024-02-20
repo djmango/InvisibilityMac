@@ -12,7 +12,7 @@ struct AppView: View {
     var body: some View {
         ZStack {
             if onboardingViewed {
-                MessageView(for: CommandViewModel.shared.selectedChat)
+                MessageView()
                     .padding(.top, 120)
             } else {
                 OnboardingView()

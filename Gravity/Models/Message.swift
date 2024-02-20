@@ -1,15 +1,10 @@
 import Foundation
-import LLM
+import OpenAI
 import OSLog
 import SwiftData
 import SwiftUI
 
 /// Role for message sender, system, user, or assistant
-// enum MessageRole: String, Codable {
-//     case system = "System"
-//     case user = "User"
-//     case assistant = "Assistant"
-// }
 enum MessageRole: String, Codable {
     case system
     case user
@@ -62,28 +57,20 @@ final class Message: Identifiable {
     var status: MessageStatus? = MessageStatus.pending
     /// The progress of the message processing this is generic and can be used for any processing, useful for UI
     var progress: Double = 0.0
-    /// The parent chat of the message
-    @Relationship var chat: Chat?
     /// The child audio attached to the message
     @Relationship(deleteRule: .cascade, inverse: \Audio.message) var audio: Audio?
 
     /// Summarized chunks, just a list of strings for now, keep it simple
     var summarizedChunks: [String] = []
 
-    init(content: String? = nil, role: MessageRole? = nil, chat: Chat? = nil, images: [Data]? = nil) {
+    init(content: String? = nil, role: MessageRole? = nil, images: [Data]? = nil) {
         self.content = content
         self.role = role
-        self.chat = chat
         self.images = images
     }
 
     @Transient
     private let logger = Logger(subsystem: "ai.grav.app", category: "Message")
-
-    /// The name of the model used to generate the message
-    @Transient var model: String {
-        chat?.model ?? ""
-    }
 
     /// The full text of the message, including the audio text if it exists
     @Transient var text: String {
@@ -104,28 +91,23 @@ final class Message: Identifiable {
 
 extension Message {
     public func generateSummarizedChunks() async {
-        guard let llm = await LLMManager.shared.llm else {
-            logger.error("LLM not available")
-            return
-        }
-
         self.status = .chunk_summary_generation
         DispatchQueue.main.async { self.progress = 0.0 }
 
         self.summarizedChunks = []
-        if self.summarizedChunks.count == 0, await LLMManager.shared.llm?.numTokens(self.text) ?? 0 > 1024 {
-            let chunks = await LLMManager.shared.llm?.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
-            DispatchQueue.main.async { self.progress = 0.2 }
+        // if self.summarizedChunks.count == 0, await LLMManager.shared.llm?.numTokens(self.text) ?? 0 > 1024 {
+        //     let chunks = await LLMManager.shared.llm?.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
+        //     DispatchQueue.main.async { self.progress = 0.2 }
 
-            for (i, chunk) in chunks?.enumerated() ?? [].enumerated() {
-                DispatchQueue.main.async { self.progress = 0.2 + (0.8 * (Double(i) / Double(chunks?.count ?? 1))) }
-                let chunkMessage = (role: ChatRole.user, content: "\(chunk)\n\n\(AppPrompts.summarizeChunk)")
-                let output = await llm.arespond(to: [chunkMessage])
-                self.summarizedChunks.append(output)
-            }
+        //     for (i, chunk) in chunks?.enumerated() ?? [].enumerated() {
+        //         DispatchQueue.main.async { self.progress = 0.2 + (0.8 * (Double(i) / Double(chunks?.count ?? 1))) }
+        //         let chunkMessage = (role: ChatRole.user, content: "\(chunk)\n\n\(AppPrompts.summarizeChunk)")
+        //         let output = await llm.arespond(to: [chunkMessage])
+        //         self.summarizedChunks.append(output)
+        //     }
 
-            logger.debug("Completed summarization. Chunks: \(self.summarizedChunks)")
-        }
+        //     logger.debug("Completed summarization. Chunks: \(self.summarizedChunks)")
+        // }
     }
 
     public func generateEmail(open: Bool = false) async {
@@ -162,6 +144,19 @@ extension Message {
                 NSWorkspace.shared.open(url)
             }
         }
+    }
+}
+
+extension Message {
+    func toChat() -> ChatQuery.ChatCompletionMessageParam? {
+        var role: ChatQuery.ChatCompletionMessageParam.Role = .user
+        if self.role == .assistant {
+            role = .assistant
+        } else if self.role == .system {
+            role = .system
+        }
+
+        return ChatQuery.ChatCompletionMessageParam(role: role, content: content)
     }
 }
 
