@@ -34,10 +34,8 @@ class WindowManager: ObservableObject {
             // If we are just changing screens, don't toggle the window
             let newScreen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }
             if newScreen != self.currentScreen {
-                self.logger.info("Changing screens")
                 self.positionWindowOnCursorScreen()
             } else {
-                self.logger.info("Toggling window")
                 if self.window?.isVisible == true {
                     self.window?.orderOut(nil)
                 } else {
@@ -89,12 +87,15 @@ class WindowManager: ObservableObject {
         let windowWidth: CGFloat = 400
         let windowHeight: CGFloat = screen.frame.height
 
+        // Get the menu bar height to adjust the window position
+        let menuBarHeight = NSStatusBar.system.thickness
+
         // Pin the window to the top left corner of the screen
         let xPos = screen.frame.origin.x
         let yPos = screen.frame.origin.y
 
         // Create a CGRect that represents the desired window frame
-        let windowRect = CGRect(x: xPos, y: yPos, width: windowWidth, height: windowHeight)
+        let windowRect = CGRect(x: xPos, y: yPos, width: windowWidth, height: windowHeight - menuBarHeight)
 
         // Set the window frame
         window.setFrame(windowRect, display: true)

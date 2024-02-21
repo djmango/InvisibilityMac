@@ -57,24 +57,20 @@ struct GravityApp: App {
         //             }
         //         }
         // }
-        // .settings {
-        //     SettingsTab(.new(title: "General", icon: .gearshape), id: "general") {
-        //         SettingsSubtab(.noSelection, id: "general") {
-        //             GeneralSettingsView().modelContext(SharedModelContainer.shared.mainContext)
-        //         }
-        //     }
-        //     .frame(width: 550, height: 200)
-        //     // SettingsTab(.new(title: "Advanced", icon: .gearshape2), id: "advanced") {
-        //     //     SettingsSubtab(.noSelection, id: "advanced") { AdvancedSettingsView() }
-        //     // }
-        //     // .frame(width: 550, height: 200)
-        //     SettingsTab(.new(title: "About", icon: .info), id: "about") {
-        //         SettingsSubtab(.noSelection, id: "about") {
-        //             AboutSettingsView()
-        //         }
-        //     }
-        //     .frame(width: 550, height: 200)
-        // }
+        Settings {
+            SettingsTab(.new(title: "Gravity", icon: .gearshape), id: "gravity") {
+                SettingsSubtab(.new(title: "General", icon: .gearshape), id: "general") {
+                    SettingsSubtab(.noSelection, id: "general") {
+                        GeneralSettingsView().modelContext(SharedModelContainer.shared.mainContext)
+                    }
+                }
+                SettingsSubtab(.new(title: "About", icon: .info), id: "about") {
+                    SettingsSubtab(.noSelection, id: "about") {
+                        AboutSettingsView()
+                    }
+                }
+            }
+        }
         // Main app view is managed in delegate and WindowManager
         MenuBarExtra("Gravity", image: "MenuBarIcon", isInserted: $showMenuBarExtra) {
             MenuBarView()

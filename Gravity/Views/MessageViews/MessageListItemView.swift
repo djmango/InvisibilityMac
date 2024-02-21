@@ -45,44 +45,9 @@ struct MessageListItemView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(isAssistant ? "Gravity" : "You")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(.accent)
-
-            ProgressView()
-                .controlSize(.small)
-                .visible(if: isGenerating && isFinalMessage && message.audio == nil, removeCompletely: true)
-
-            Markdown(message.content ?? "")
-                .textSelection(.enabled)
-                .markdownTextStyle(\.text) {
-                    FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                }
-                .markdownTextStyle(\.code) {
-                    FontFamily(.system(.monospaced))
-                }
-                .markdownBlockStyle(\.codeBlock) { configuration in
-                    configuration
-                        .label
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .markdownTextStyle {
-                            FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                            FontFamily(.system(.monospaced))
-                        }
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(nsColor: .separatorColor))
-                        }
-                        .padding(.bottom)
-                }
-                .hide(if: isGenerating, removeCompletely: true)
-                .hide(if: isError, removeCompletely: true)
-
             if let audio {
                 AudioWidgetView(audio: audio, tapAction: audioAction)
                     .hide(if: isError, removeCompletely: true)
-                    .padding(.top, 8)
                     .onHover { hovering in
                         if hovering {
                             NSCursor.pointingHand.push()
@@ -92,7 +57,7 @@ struct MessageListItemView: View {
                     }
             }
 
-            if let images = message.images {
+            else if let images = message.images {
                 HStack(alignment: .center, spacing: 8) {
                     ForEach(images, id: \.self) { imageData in
                         if let nsImage = NSImage(data: imageData) {
@@ -106,53 +71,90 @@ struct MessageListItemView: View {
                         }
                     }
                 }
-            }
+            } else {
+                VStack {
+                    Text(isAssistant ? "Gravity" : "You")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(.accent)
 
-            HStack(alignment: .center, spacing: 8) {
-                Button(action: copyAction) {
-                    Image(systemName: isCopied ? "list.clipboard.fill" : "clipboard")
+                    ProgressView()
+                        .controlSize(.small)
+                        .visible(if: isGenerating && isFinalMessage && message.audio == nil, removeCompletely: true)
+
+                    Markdown(message.content ?? "")
+                        .textSelection(.enabled)
+                        .markdownTextStyle(\.text) {
+                            FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                        }
+                        .markdownTextStyle(\.code) {
+                            FontFamily(.system(.monospaced))
+                        }
+                        .markdownBlockStyle(\.codeBlock) { configuration in
+                            configuration
+                                .label
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .markdownTextStyle {
+                                    FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                                    FontFamily(.system(.monospaced))
+                                }
+                                .overlay {
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(Color(nsColor: .separatorColor))
+                                }
+                            // .padding(.bottom)
+                        }
+                        .hide(if: isGenerating, removeCompletely: true)
+                        .hide(if: isError, removeCompletely: true)
+
+                    HStack(alignment: .center, spacing: 8) {
+                        Button(action: copyAction) {
+                            Image(systemName: isCopied ? "list.clipboard.fill" : "clipboard")
+                        }
+                        .buttonStyle(.accessoryBar)
+                        .clipShape(.circle)
+                        .help("Copy")
+                        .visible(if: isCopyButtonVisible, removeCompletely: true)
+
+                        Button(action: regenerateAction) {
+                            Image(systemName: "arrow.triangle.2.circlepath")
+                        }
+                        .buttonStyle(.accessoryBar)
+                        .clipShape(.circle)
+                        .help("Regenerate")
+                        .visible(if: isRegenerateButtonVisible, removeCompletely: true)
+
+                        Spacer()
+
+                        Button(action: deleteAction) {
+                            Image(systemName: "trash")
+                        }
+                        .buttonStyle(.accessoryBar)
+                        .clipShape(.circle)
+                        .help("Delete")
+                        .visible(if: isDeleteButtonVisible)
+                    }
+                    .padding(.top, 8)
+                    .visible(if: isAssistant || isFinalMessage, removeCompletely: true)
                 }
-                .buttonStyle(.accessoryBar)
-                .clipShape(.circle)
-                .help("Copy")
-                .visible(if: isCopyButtonVisible, removeCompletely: true)
-
-                Button(action: regenerateAction) {
-                    Image(systemName: "arrow.triangle.2.circlepath")
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .onHover {
+                    isHovered = $0
+                    isCopied = false
                 }
-                .buttonStyle(.accessoryBar)
-                .clipShape(.circle)
-                .help("Regenerate")
-                .visible(if: isRegenerateButtonVisible, removeCompletely: true)
-
-                Spacer()
-
-                Button(action: deleteAction) {
-                    Image(systemName: "trash")
-                }
-                .buttonStyle(.accessoryBar)
-                .clipShape(.circle)
-                .help("Delete")
-                .visible(if: isDeleteButtonVisible)
-            }
-            .padding(.top, 8)
-            .visible(if: isAssistant || isFinalMessage, removeCompletely: true)
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .onHover {
-            isHovered = $0
-            isCopied = false
-        }
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color("WidgetColor"))
-                .shadow(radius: 2)
-                .overlay(
+                .background(
                     RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(nsColor: .separatorColor))
+                        .fill(Color("WidgetColor"))
+                        .shadow(radius: 2)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color(nsColor: .separatorColor))
+                        )
                 )
-        )
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     // MARK: - Actions

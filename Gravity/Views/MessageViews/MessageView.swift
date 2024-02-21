@@ -26,6 +26,8 @@ struct MessageView: View {
     var body: some View {
         ScrollViewReader { scrollViewProxy in
             VStack {
+                Spacer()
+
                 List(messageViewModel.messages.indices, id: \.self) { index in
                     let message: Message = messageViewModel.messages[index]
                     let action: () -> Void = {
@@ -62,34 +64,22 @@ struct MessageView: View {
                     scrollToBottom(scrollViewProxy)
                 }
 
-                HStack(alignment: .center) {
-                    ChatField("Message", text: $content, action: sendAction)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 12)
-                        .textFieldStyle(.plain)
-                        .cornerRadius(8)
-                        // .background(Color(.gray).opacity(0.2))
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .foregroundColor(Color("MenuBarButtonColor"))
-                            // .padding(-4)
-                        )
-                        // .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Color(.separatorColor)))
-                        .focused($promptFocused)
+                ChatField("Message", text: $content, action: sendAction)
+                    .padding()
+                    .textFieldStyle(.plain)
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color("WidgetColor"))
+                            .shadow(radius: 2)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(Color(nsColor: .separatorColor))
+                            )
+                    )
+                    .focused($promptFocused)
+                    .padding(.horizontal, 10)
 
-                    Button(action: messageViewModel.stopGenerate) {
-                        Image(systemName: "stop.circle.fill")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                    }
-                    .buttonStyle(.plain)
-                    .help("Stop generation")
-                    .visible(if: isGenerating, removeCompletely: true)
-                }
-                .padding(.top, 8)
-                .padding(.bottom, 16)
-                .padding(.horizontal)
+                Spacer()
             }
             .overlay(
                 Rectangle()
@@ -116,13 +106,6 @@ struct MessageView: View {
 
         isEditorFocused = true
         promptFocused = true
-
-        AudioPlayerViewModel.shared.stop()
-        let messageViewModel = MessageViewModel()
-        if messageViewModel.messages.contains(where: { $0.audio != nil }) {
-            // Set audioplayer audio to the first audio file in the chat.
-            AudioPlayerViewModel.shared.audio = messageViewModel.messages.first(where: { $0.audio != nil })?.audio
-        }
     }
 
     private func sendAction() {
