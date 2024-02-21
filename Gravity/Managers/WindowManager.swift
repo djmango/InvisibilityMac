@@ -22,6 +22,7 @@ class WindowManager: ObservableObject {
     private let logger = Logger(subsystem: "ai.grav.app", category: "WindowManager")
 
     static let shared = WindowManager()
+    private var contentView = AppView()
 
     /// The current screen the window is on
     @Published var currentScreen: NSScreen?
@@ -46,12 +47,11 @@ class WindowManager: ObservableObject {
     }
 
     public func setupWindow() -> Bool {
-        let contentView = AppView()
+        logger.debug("Setting up window")
 
-        // guard let window = NSApplication.shared.windows.first else { return false }
         // Actually do a panel
         let window = InteractivePanel(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+            contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.borderless, .nonactivatingPanel],
             backing: .buffered,
             defer: false

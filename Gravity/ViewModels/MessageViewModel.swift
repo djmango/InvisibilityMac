@@ -21,7 +21,9 @@ final class MessageViewModel: ObservableObject {
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
 
-    init() {}
+    init() {
+        try? fetch()
+    }
 
     func fetch() throws {
         let sortDescriptor = SortDescriptor(\Message.createdAt)
@@ -46,7 +48,7 @@ final class MessageViewModel: ObservableObject {
         modelContext.insert(assistantMessage)
 
         chatTask = Task {
-            try? await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
+            await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
             assistantMessage.status = .complete
             sendViewState = nil

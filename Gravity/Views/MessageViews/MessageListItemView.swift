@@ -36,7 +36,7 @@ struct MessageListItemView: View {
     }
 
     private var isDeleteButtonVisible: Bool {
-        isHovered && isFinalMessage
+        isHovered
     }
 
     private var isRegenerateButtonVisible: Bool {

@@ -90,25 +90,31 @@ final class Message: Identifiable {
 }
 
 extension Message {
-    // public func generateSummarizedChunks() async {
-    //     self.status = .chunk_summary_generation
-    //     DispatchQueue.main.async { self.progress = 0.0 }
+    public func generateSummarizedChunks() async {
+        self.status = .chunk_summary_generation
+        DispatchQueue.main.async { self.progress = 0.0 }
 
-    //     self.summarizedChunks = []
-    //     if self.summarizedChunks.count == 0, await LLMManager.shared.llm?.numTokens(self.text) ?? 0 > 1024 {
-    //         let chunks = await LLMManager.shared.llm?.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
-    //         DispatchQueue.main.async { self.progress = 0.2 }
+        self.summarizedChunks = []
+        if self.summarizedChunks.count == 0, LLMManager.shared.numTokens(self.text) > LLMManager.maxTokenCountForMessage {
+            let chunks = LLMManager.shared.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
+            DispatchQueue.main.async { self.progress = 0.2 }
 
-    //         for (i, chunk) in chunks?.enumerated() ?? [].enumerated() {
-    //             DispatchQueue.main.async { self.progress = 0.2 + (0.8 * (Double(i) / Double(chunks?.count ?? 1))) }
-    //             let chunkMessage = (role: ChatRole.user, content: "\(chunk)\n\n\(AppPrompts.summarizeChunk)")
-    //             let output = await llm.arespond(to: [chunkMessage])
-    //             self.summarizedChunks.append(output)
-    //         }
+            for (i, chunk) in chunks.enumerated().enumerated() {
+                DispatchQueue.main.async { self.progress = 0.2 + (0.8 * (Double(i) / Double(chunks.count))) }
+                let content = "\(chunk)\n\n\(AppPrompts.summarizeChunk)"
+                // let chunkChat = ChatQuery.ChatCompletionMessageParam(role: .user, content: content)
+                let chunkMessage = Message(content: content, role: .user)
+                let output = await LLMManager.shared.achat(messages: [chunkMessage])
+                if let output_content = output.content {
+                    self.summarizedChunks.append(output_content)
+                } else {
+                    logger.error("No content in output for chunk \(i): \(chunkMessage)")
+                }
+            }
 
-    //         logger.debug("Completed summarization. Chunks: \(self.summarizedChunks)")
-    //     }
-    // }
+            logger.debug("Completed summarization. Chunks: \(self.summarizedChunks)")
+        }
+    }
 
     public func generateEmail(open: Bool = false) async {
         guard let audio = self.audio else {

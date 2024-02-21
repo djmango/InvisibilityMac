@@ -16,7 +16,7 @@ struct MessageView: View {
     @State private var selection: [Message] = []
 
     init() {
-        try? messageViewModel.fetch()
+        logger.debug("Initializing MessageView")
 
         isEditorFocused = true
         promptFocused = true
@@ -78,7 +78,7 @@ struct MessageView: View {
                             .audio(message.audio)
                         }
                     }
-                    // .padding(.horizontal, -5)
+                    .padding(.horizontal, -5)
                     .id(message)
                     .listRowSeparator(.hidden)
                 }
@@ -113,6 +113,9 @@ struct MessageView: View {
                 )
                 .focused($promptFocused)
                 .padding(.horizontal, 10)
+                .onTapGesture {
+                    promptFocused = true
+                }
 
             Spacer()
         }

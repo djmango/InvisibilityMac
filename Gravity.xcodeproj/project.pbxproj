@@ -51,6 +51,7 @@
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
 		4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */; };
 		4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */; };
+		4DB961E72B86B0A000F7ACED /* GPTEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB961E62B86B0A000F7ACED /* GPTEncoder */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
 		4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282D82B4DEB6E0041690B /* SettingsKit */; };
 		4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */; };
@@ -133,6 +134,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D1557B42B684CCA00B8B781 /* DockProgress in Frameworks */,
+				4DB961E72B86B0A000F7ACED /* GPTEncoder in Frameworks */,
 				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */,
@@ -392,6 +394,7 @@
 				4D3D05152B59E1A3009340ED /* SwiftWhisper */,
 				4D1557B32B684CCA00B8B781 /* DockProgress */,
 				4D219F912B847B67006FF8E5 /* OpenAI */,
+				4DB961E62B86B0A000F7ACED /* GPTEncoder */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Gravity.app */;
@@ -430,6 +433,7 @@
 				4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */,
 				4D1557B22B684CCA00B8B781 /* XCRemoteSwiftPackageReference "DockProgress" */,
 				4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */,
+				4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -795,6 +799,14 @@
 				minimumVersion = 1.0.3;
 			};
 		};
+		4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/alfianlosari/GPTEncoder.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.4;
+			};
+		};
 		4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/david-swift/SettingsKit-macOS";
@@ -878,6 +890,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */;
 			productName = Pow;
+		};
+		4DB961E62B86B0A000F7ACED /* GPTEncoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */;
+			productName = GPTEncoder;
 		};
 		4DD282D82B4DEB6E0041690B /* SettingsKit */ = {
 			isa = XCSwiftPackageProductDependency;

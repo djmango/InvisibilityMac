@@ -15,8 +15,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var isAppActive = false
     private var shouldResumeRecording = false
 
-    private var windowManager = WindowManager.shared
-
     func applicationDidFinishLaunching(_: Notification) {
         // Set up the observer for when the app becomes active
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: NSApplication.didBecomeActiveNotification, object: nil)
