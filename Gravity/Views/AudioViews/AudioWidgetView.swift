@@ -64,7 +64,6 @@ struct AudioWidgetView: View {
                             .padding(5)
                             .foregroundColor(.white)
                     }
-                    // .frame(width: 300, height: 30)
                     .buttonStyle(.plain)
                     .background(
                         LinearGradient(
@@ -125,7 +124,6 @@ struct AudioWidgetView: View {
                 Spacer()
             }
         }
-        // .frame(minWidth: 200, maxWidth: 550, minHeight: 100, maxHeight: 100)
         .onTapGesture {
             tapAction()
         }

@@ -15,7 +15,12 @@ struct MessageView: View {
     @State private var isDragActive: Bool = false
     @State private var selection: [Message] = []
 
-    init() {}
+    init() {
+        try? messageViewModel.fetch()
+
+        isEditorFocused = true
+        promptFocused = true
+    }
 
     let messageViewModel: MessageViewModel = MessageViewModelManager.shared.messageViewModel
 
@@ -24,35 +29,61 @@ struct MessageView: View {
     }
 
     var body: some View {
-        ScrollViewReader { scrollViewProxy in
-            VStack {
-                Spacer()
-
+        VStack {
+            ScrollViewReader { scrollViewProxy in
                 List(messageViewModel.messages.indices, id: \.self) { index in
                     let message: Message = messageViewModel.messages[index]
                     let action: () -> Void = {
                         regenerateAction(for: message)
                     }
+
                     let audioActionPassed: () -> Void = {
                         guard let audio = message.audio else { return }
                         audioAction(for: audio)
                     }
 
-                    // Generate the view for the individual message.
-                    MessageListItemView(
-                        message: message,
-                        messageViewModel: messageViewModel,
-                        regenerateAction: action,
-                        audioAction: audioActionPassed
-                    )
-                    .generating(message.content == nil && isGenerating)
-                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                    .audio(message.audio)
+                    VStack {
+                        if let audio = message.audio {
+                            AudioWidgetView(audio: audio, tapAction: audioActionPassed)
+                                .onHover { hovering in
+                                    if hovering {
+                                        NSCursor.pointingHand.push()
+                                    } else {
+                                        NSCursor.pop()
+                                    }
+                                }
+                        } else if let images = message.images {
+                            HStack(alignment: .center, spacing: 8) {
+                                ForEach(images, id: \.self) { imageData in
+                                    if let nsImage = NSImage(data: imageData) {
+                                        Image(nsImage: nsImage)
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
+                                            .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
+                                            .shadow(radius: 2)
+                                    }
+                                }
+                            }
+                        } else {
+                            // Generate the view for the individual message.
+                            MessageListItemView(
+                                message: message,
+                                messageViewModel: messageViewModel,
+                                regenerateAction: action,
+                                audioAction: audioActionPassed
+                            )
+                            .generating(message.content == nil && isGenerating)
+                            .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                            .audio(message.audio)
+                        }
+                    }
+                    // .padding(.horizontal, -5)
                     .id(message)
+                    .listRowSeparator(.hidden)
                 }
-                .listStyle(.plain)
+
                 .scrollContentBackground(.hidden)
-                // Disable the scroll bar
                 .scrollIndicators(.never)
                 .onAppear {
                     scrollToBottom(scrollViewProxy)
@@ -63,50 +94,41 @@ struct MessageView: View {
                 .onChange(of: messageViewModel.messages.last?.content) {
                     scrollToBottom(scrollViewProxy)
                 }
+                .task {
+                    scrollToBottom(scrollViewProxy)
+                }
+            }
 
-                ChatField("Message", text: $content, action: sendAction)
-                    .padding()
-                    .textFieldStyle(.plain)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color("WidgetColor"))
-                            .shadow(radius: 2)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color(nsColor: .separatorColor))
-                            )
-                    )
-                    .focused($promptFocused)
-                    .padding(.horizontal, 10)
+            ChatField("Message", text: $content, action: sendAction)
+                .padding()
+                .textFieldStyle(.plain)
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color("WidgetColor"))
+                        .shadow(radius: 2)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16)
+                                .stroke(Color(nsColor: .separatorColor))
+                        )
+                )
+                .focused($promptFocused)
+                .padding(.horizontal, 10)
 
-                Spacer()
-            }
-            .overlay(
-                Rectangle()
-                    .foregroundColor(Color.gray.opacity(0.2))
-                    .opacity(isDragActive ? 1 : 0)
-            )
-            .border(isDragActive ? Color.blue : Color.clear, width: 5)
-            .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
-                handleDrop(providers: providers)
-            }
-            .copyable(selection.compactMap(\.content))
-            .task {
-                initAction()
-                scrollToBottom(scrollViewProxy)
-            }
+            Spacer()
         }
+        .overlay(
+            Rectangle()
+                .foregroundColor(Color.gray.opacity(0.2))
+                .opacity(isDragActive ? 1 : 0)
+        )
+        .border(isDragActive ? Color.blue : Color.clear, width: 5)
+        .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
+            handleDrop(providers: providers)
+        }
+        .copyable(selection.compactMap(\.content))
     }
 
     // MARK: - Actions
-
-    @MainActor
-    private func initAction() {
-        try? messageViewModel.fetch()
-
-        isEditorFocused = true
-        promptFocused = true
-    }
 
     private func sendAction() {
         guard messageViewModel.sendViewState == nil else { return }
