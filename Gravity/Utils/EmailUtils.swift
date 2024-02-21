@@ -27,7 +27,6 @@ func generateFollowUp(_ input: String, message: Message) async {
     let contentMessage = Message(content: input, role: .user)
     logger.debug("Generating email on content: \(input)")
 
-    // let emailOutline = await llm.arespond(to: [contentMessage, (role: ChatRole.user, content: AppPrompts.emailPromptOutline)])
     let emailOutline = await LLMManager.shared.achat(messages: [contentMessage, Message(content: AppPrompts.emailPromptOutline, role: .user)])
     let emailOutlineMessage = Message(content: emailOutline.content, role: .user)
     DispatchQueue.main.async { message.progress = 0.8 }

@@ -1,4 +1,5 @@
 import OSLog
+import Sparkle
 import SwiftUI
 import ViewState
 
@@ -6,6 +7,7 @@ struct AppView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "AppView")
 
     @ObservedObject private var alertViewModel = AlertManager.shared
+    @ObservedObject private var screenRecorder = ScreenRecorder.shared
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
@@ -13,11 +15,26 @@ struct AppView: View {
         ZStack {
             if onboardingViewed {
                 MessageView()
-                    .padding(.top, 120)
             } else {
                 OnboardingView()
             }
         }
+        .pasteDestination(for: URL.self) { urls in
+            guard let url = urls.first else { return }
+            MessageViewModelManager.shared.messageViewModel.handleFile(url: url)
+        }
+        .onAppear {
+            Task {
+                if await !ScreenRecorder.shared.canRecord {
+                    logger.error("Screen recording is not available")
+                } else {
+                    logger.info("Screen recording is available")
+                }
+            }
+        }
+        // .handlesExternalEvents(matching: ["openURL:", "openFile:"])
+        // .handlesExternalEvents(preferring: Set(arrayLiteral: "master"), allowing: Set(arrayLiteral: "*"))
+        .modelContainer(SharedModelContainer.shared.modelContainer)
         .alert(isPresented: $alertViewModel.showAlert) {
             Alert(
                 title: Text(alertViewModel.alertTitle),

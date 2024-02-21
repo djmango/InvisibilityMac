@@ -33,9 +33,10 @@ public struct ChatField: View {
 
     public var body: some View {
         TextField(titleKey, text: $text, axis: .vertical)
-            // .introspect(.textField(axis: .vertical), on: .macOS(.v14)) { textField in
-            //     textField.lineBreakMode = .byWordWrapping
-            // }
+            .frame(maxHeight: .infinity)
+            .multilineTextAlignment(.leading)
+            .lineLimit(nil)
+            .fixedSize(horizontal: false, vertical: true)
             .onSubmit { submit() }
     }
 

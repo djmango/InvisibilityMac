@@ -120,15 +120,7 @@ extension Message {
             DispatchQueue.main.async { self.status = .email_generation }
             DispatchQueue.main.async { self.progress = 0.0 }
 
-            // if self.summarizedChunks.count > 0 {
             await generateFollowUp(self.text, message: self)
-            // } else {
-            //     logger.error("Audio not yet summarized. Please wait for the audio to finish processing.")
-            //     AlertManager.shared.doShowAlert(
-            //         title: "Error",
-            //         message: "Audio not yet summarized. Please wait for the audio to finish processing."
-            //     )
-            // }
         }
         DispatchQueue.main.async { self.status = .complete }
 
@@ -156,7 +148,7 @@ extension Message {
             role = .system
         }
 
-        return ChatQuery.ChatCompletionMessageParam(role: role, content: content)
+        return ChatQuery.ChatCompletionMessageParam(role: role, content: text)
     }
 }
 

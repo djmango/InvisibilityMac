@@ -98,7 +98,6 @@ final class MessageViewModel: ObservableObject {
     }
 
     private func processOutput(output: String) {
-        logger.debug("Processing output: \(output)")
         DispatchQueue.main.async {
             if !self.messages.isEmpty, let lastMessage = self.messages.last {
                 if lastMessage.content == nil { lastMessage.content = "" }

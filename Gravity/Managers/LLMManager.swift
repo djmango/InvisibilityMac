@@ -31,7 +31,7 @@ final class LLMManager: ObservableObject {
         messages: [Message],
         // Default processOutput function, just appends the output to a variable and returns it
         processOutput: @escaping (String) -> Void = { _ in }
-    ) async throws {
+    ) async {
         // For audio messages, chunk the input and summarize each chunk
         // for message in messages {
         //     if message.audio != nil, message.summarizedChunks.count == 0, await llm?.numTokens(message.text) ?? 0 > 1024 {
@@ -48,12 +48,11 @@ final class LLMManager: ObservableObject {
                     logger.error("No content in result")
                     return
                 }
-                logger.debug("Chat response: \(content)")
                 processOutput(content)
             }
         } catch {
             logger.error("Error in chat: \(error)")
-            throw error
+            AlertManager.shared.doShowAlert(title: "Chat Error", message: "Error in chat: \(error.localizedDescription)")
         }
     }
 
@@ -62,8 +61,14 @@ final class LLMManager: ObservableObject {
         let messages = messages.compactMap { message in message.toChat() }
         let chatQuery = ChatQuery(messages: messages, model: model)
 
-        let result = try? await ai.chats(query: chatQuery)
-        return Message(content: result?.choices.first?.message.content?.string ?? "")
+        do {
+            let result = try await ai.chats(query: chatQuery)
+            return Message(content: result.choices.first?.message.content?.string ?? "")
+        } catch {
+            logger.error("Error in chat: \(error)")
+            AlertManager.shared.doShowAlert(title: "Chat Error", message: "Error in chat: \(error.localizedDescription)")
+            return Message(content: "Error in chat: \(error.localizedDescription)")
+        }
     }
 
     func stop() {

@@ -7,8 +7,6 @@ import ViewState
 struct MessageView: View {
     private let logger = Logger(subsystem: "ai.grav.app", category: "MessageView")
 
-    @ObservedObject private var tabViewModel = TabViewModel.shared
-
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool
 
@@ -50,11 +48,10 @@ struct MessageView: View {
                     .audio(message.audio)
                     .id(message)
                 }
+                .listStyle(.plain)
                 .scrollContentBackground(.hidden)
-                // .listStyle(.plain)
-                .scrollIndicators(.never)
                 // Disable the scroll bar
-
+                .scrollIndicators(.never)
                 .onAppear {
                     scrollToBottom(scrollViewProxy)
                 }
@@ -71,26 +68,15 @@ struct MessageView: View {
                         .padding(.horizontal, 12)
                         .textFieldStyle(.plain)
                         .cornerRadius(8)
-                        .background(Color(.gray).opacity(0.2))
+                        // .background(Color(.gray).opacity(0.2))
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .foregroundColor(Color("MenuBarButtonColor"))
+                            // .padding(-4)
+                        )
                         // .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                         .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Color(.separatorColor)))
                         .focused($promptFocused)
-                    // .background(
-                    //     LinearGradient(
-                    //         gradient: Gradient(colors: [Color("AccentColor").opacity(0.2), Color("AccentColorGradient1").opacity(0.2)]),
-                    //         startPoint: .leading,
-                    //         endPoint: .trailing
-                    //     )
-                    // )
-
-                    // Button(action: sendAction) {
-                    //     Image(systemName: "paperplane.fill")
-                    //         .padding(8)
-                    //         .frame(width: 28, height: 28)
-                    // }
-                    // .buttonStyle(.borderedProminent)
-                    // .help("Send message")
-                    // .hide(if: isGenerating, removeCompletely: true)
 
                     Button(action: messageViewModel.stopGenerate) {
                         Image(systemName: "stop.circle.fill")
@@ -131,7 +117,6 @@ struct MessageView: View {
         isEditorFocused = true
         promptFocused = true
 
-        tabViewModel.selectedTab = 0
         AudioPlayerViewModel.shared.stop()
         let messageViewModel = MessageViewModel()
         if messageViewModel.messages.contains(where: { $0.audio != nil }) {
@@ -144,7 +129,6 @@ struct MessageView: View {
         guard messageViewModel.sendViewState == nil else { return }
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
-        tabViewModel.selectedTab = 0
         let message = Message(content: content, role: .user)
         content = ""
 
@@ -162,7 +146,6 @@ struct MessageView: View {
     @MainActor
     private func audioAction(for audio: Audio) {
         AudioPlayerViewModel.shared.audio = audio
-        tabViewModel.selectedTab = 1
     }
 
     private func openFileAction() {
