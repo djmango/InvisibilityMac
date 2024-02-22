@@ -13,7 +13,7 @@ struct MessageView: View {
     @State private var viewState: ViewState? = nil
     @State private var content: String = ""
     @State private var isDragActive: Bool = false
-    @State private var selection: [Message] = []
+    // @State private var selection: [Message] = []
 
     init() {
         logger.debug("Initializing MessageView")
@@ -22,7 +22,8 @@ struct MessageView: View {
         promptFocused = true
     }
 
-    let messageViewModel: MessageViewModel = MessageViewModelManager.shared.messageViewModel
+    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModelManager.shared.messageViewModel
+    let maxMessages: Int = 20
 
     var isGenerating: Bool {
         messageViewModel.sendViewState == .loading
@@ -31,7 +32,7 @@ struct MessageView: View {
     var body: some View {
         VStack {
             ScrollViewReader { scrollViewProxy in
-                List(messageViewModel.messages.indices, id: \.self) { index in
+                List(messageViewModel.messages.indices.suffix(maxMessages), id: \.self) { index in
                     let message: Message = messageViewModel.messages[index]
                     let action: () -> Void = {
                         regenerateAction(for: message)
@@ -99,20 +100,8 @@ struct MessageView: View {
                 }
             }
 
-            ChatField("Message", text: $content, action: sendAction)
-                .padding()
-                .textFieldStyle(.plain)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color("WidgetColor"))
-                        .shadow(radius: 2)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(nsColor: .separatorColor))
-                        )
-                )
+            ChatField(text: $content, action: sendAction)
                 .focused($promptFocused)
-                .padding(.horizontal, 10)
                 .onTapGesture {
                     promptFocused = true
                 }
@@ -128,7 +117,7 @@ struct MessageView: View {
         .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
             handleDrop(providers: providers)
         }
-        .copyable(selection.compactMap(\.content))
+        // .copyable(selection.compactMap(\.content))
     }
 
     // MARK: - Actions

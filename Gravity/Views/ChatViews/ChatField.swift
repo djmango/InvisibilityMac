@@ -11,7 +11,6 @@ import SwiftUI
 ///
 /// ``ChatField`` extends standard text field capabilities with multiline input and specific behaviors for different platforms.
 public struct ChatField: View {
-    private var titleKey: LocalizedStringKey
     @Binding private var text: String
     private var action: () -> Void
 
@@ -22,22 +21,32 @@ public struct ChatField: View {
     ///   - text: The text to display and edit.
     ///   - action: The action to execute upon text submission.
     public init(
-        _ titleKey: LocalizedStringKey,
         text: Binding<String>,
         action: @escaping () -> Void
     ) {
-        self.titleKey = titleKey
         _text = text
         self.action = action
     }
 
     public var body: some View {
-        TextField(titleKey, text: $text, axis: .vertical)
-            .frame(maxHeight: .infinity)
+        TextEditor(text: $text)
+            .scrollContentBackground(.hidden)
             .multilineTextAlignment(.leading)
-            .lineLimit(nil)
-            .fixedSize(horizontal: false, vertical: true)
+            .font(Font(NSFont.preferredFont(forTextStyle: .title3)))
             .onSubmit { submit() }
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color("WidgetColor"))
+                    .shadow(radius: 2)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color(nsColor: .separatorColor))
+                    )
+            )
+            .padding(.horizontal, 10)
+            .frame(height: 80)
+            .keyboardShortcut(.return, modifiers: [])
     }
 
     private func submit() {
