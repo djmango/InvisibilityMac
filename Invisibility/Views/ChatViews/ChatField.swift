@@ -70,6 +70,7 @@ public struct ChatField: View {
         )
         .padding(.horizontal, 10)
         .frame(height: max(52, min(textHeight, 500)))
+        .animation(.snappy, value: textHeight)
     }
 
     private func handleTextChange() {
