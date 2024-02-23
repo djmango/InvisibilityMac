@@ -12,7 +12,7 @@ import Vision
 
 @Observable
 final class MessageViewModel: ObservableObject {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "MessageViewModel")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageViewModel")
 
     private let modelContext = SharedModelContainer.shared.mainContext
     private var chatTask: Task<Void, Error>?

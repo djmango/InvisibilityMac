@@ -9,7 +9,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
-private let logger = Logger(subsystem: "ai.grav.app", category: "EmailUtils")
+private let logger = Logger(subsystem: "so.invisibility.app", category: "EmailUtils")
 
 func encodeForMailto(subject: String, body: String) -> String {
     let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""

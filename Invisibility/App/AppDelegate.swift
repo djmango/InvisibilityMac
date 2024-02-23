@@ -10,7 +10,7 @@ import OSLog
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "AppDelegate")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "AppDelegate")
 
     private var isAppActive = false
     private var shouldResumeRecording = false

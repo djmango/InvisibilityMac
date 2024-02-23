@@ -12,7 +12,7 @@ import Foundation
 import OSLog
 
 class ModelFileManager: ObservableObject {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "ModelFileManager")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "ModelFileManager")
 
     enum DownloadState: CustomStringConvertible {
         case notStarted

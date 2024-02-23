@@ -11,7 +11,7 @@ import SwiftData
 import SwiftUI
 
 struct AudioWidgetView: View {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "AudioWidgetView")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "AudioWidgetView")
     @Environment(\.colorScheme) var colorScheme
 
     private let audio: Audio

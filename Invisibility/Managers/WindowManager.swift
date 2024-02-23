@@ -19,7 +19,7 @@ class InteractivePanel: NSPanel {
 }
 
 class WindowManager: ObservableObject {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "WindowManager")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "WindowManager")
 
     static let shared = WindowManager()
     private var contentView = AppView()

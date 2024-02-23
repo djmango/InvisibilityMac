@@ -1,1 +1,1 @@
-xcode-build-server config -scheme Gravity -project Gravity.xcodeproj
+xcode-build-server config -scheme Invisibility -project Invisibility.xcodeproj

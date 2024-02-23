@@ -10,7 +10,7 @@ import AVFoundation
 import Foundation
 import OSLog
 
-private let logger = Logger(subsystem: "ai.grav.app", category: "AudioUtils")
+private let logger = Logger(subsystem: "so.invisibility.app", category: "AudioUtils")
 
 func isValidAudioFile(url: URL) -> Bool {
     do {

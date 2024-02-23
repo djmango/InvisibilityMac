@@ -6,7 +6,7 @@ import TelemetryClient
 
 @main
 struct InvisibilityApp: App {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "GravityApp")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "GravityApp")
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 

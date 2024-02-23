@@ -15,11 +15,11 @@ import ScreenCaptureKit
 
 /// An object that wraps an instance of `SCStream`, and returns its results as an `AsyncThrowingStream`.
 class CaptureEngine: NSObject, @unchecked Sendable {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "CaptureEngine")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "CaptureEngine")
 
     private(set) var stream: SCStream?
     private var streamOutput: CaptureEngineStreamOutput?
-    private let audioSampleBufferQueue = DispatchQueue(label: "ai.grav.app.AudioSampleBufferQueue")
+    private let audioSampleBufferQueue = DispatchQueue(label: "so.invisibility.app.AudioSampleBufferQueue")
 
     /// The audio recorder used to capture audio from the mic.
     private var audioRecorder: AVAudioRecorder?

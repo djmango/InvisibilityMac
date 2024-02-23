@@ -4,7 +4,7 @@ import SwiftUI
 import ViewState
 
 struct AppView: View {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "AppView")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "AppView")
 
     @ObservedObject private var alertViewModel = AlertManager.shared
     @ObservedObject private var screenRecorder = ScreenRecorder.shared

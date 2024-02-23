@@ -13,7 +13,7 @@ import OSLog
 import SwiftUI
 
 final class LLMManager: ObservableObject {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "LLMManager")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
 
     static let shared = LLMManager()
 

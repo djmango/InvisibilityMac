@@ -16,7 +16,7 @@ extension KeyboardShortcuts.Name {
 import Foundation
 
 class KeypressManager: ObservableObject {
-    let logger = Logger(subsystem: "ai.grav.app", category: "KeypressManager")
+    let logger = Logger(subsystem: "so.invisibility.app", category: "KeypressManager")
 
     static let shared = KeypressManager()
 

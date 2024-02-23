@@ -13,7 +13,7 @@ import SwiftUI
 import TelemetryClient
 
 struct GeneralSettingsView: View {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "GeneralSettingsView")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "GeneralSettingsView")
 
     @AppStorage("autoLaunch") private var autoLaunch: Bool = false
     @AppStorage("analytics") private var analytics: Bool = true

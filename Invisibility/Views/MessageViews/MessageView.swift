@@ -5,7 +5,7 @@ import ViewCondition
 import ViewState
 
 struct MessageView: View {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "MessageView")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageView")
 
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool

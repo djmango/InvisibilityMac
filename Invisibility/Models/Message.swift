@@ -70,7 +70,7 @@ final class Message: Identifiable {
     }
 
     @Transient
-    private let logger = Logger(subsystem: "ai.grav.app", category: "Message")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "Message")
 
     /// The full text of the message, including the audio text if it exists
     @Transient var text: String {

@@ -13,7 +13,7 @@ import SwiftUI
 import SwiftWhisper
 
 class WhisperHandler: WhisperDelegate {
-    private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "WhisperViewModel")
 
     private let audio: Audio
 
@@ -55,7 +55,7 @@ class WhisperHandler: WhisperDelegate {
 final class WhisperManager {
     static let shared = WhisperManager()
 
-    private let logger = Logger(subsystem: "ai.grav.app", category: "WhisperViewModel")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "WhisperViewModel")
 
     private var whisperModel: Whisper?
     public let modelFileManager: ModelFileManager = ModelFileManager(modelInfo: ModelRepository.Whisper_Small_English)
