@@ -37,33 +37,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             AlertManager.shared.doShowAlert(title: "Error", message: "Failed to set up window")
         }
 
-        setupGlobalKeyListener()
+        // checkAccessibilityPermissions()
+        // setupGlobalKeyListener()
     }
 
-    func setupGlobalKeyListener() {
-        logger.info("Setting up global key listener")
-        eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-            self.logger.info("Key pressed: \(event.keyCode)")
-            if event.keyCode == 36 { // Enter key code
-                DispatchQueue.main.async {
-                    KeypressManager.shared.enterPressed = true
-                    self.logger.info("Enter key pressed")
-                }
-            }
-        }
-    }
+    // func setupGlobalKeyListener() {
+    //     logger.info("Setting up global key listener")
+    //     eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
+    //         self.logger.info("Key pressed: \(event.keyCode)")
+    //         if event.keyCode == 36 { // Enter key code
+    //             DispatchQueue.main.async {
+    //                 KeypressManager.shared.enterPressed = true
+    //                 self.logger.info("Enter key pressed")
+    //             }
+    //         }
+    //     }
+    // }
 
-    func checkAccessibilityPermissions() {
-        let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
-        let accessibilityEnabled = AXIsProcessTrustedWithOptions(options)
+    // func checkAccessibilityPermissions() {
+    //     // let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
+    //     // let accessibilityEnabled = AXIsProcessTrustedWithOptions(options)
 
-        if accessibilityEnabled {
-            setupGlobalKeyListener()
-        } else {
-            // Permissions not granted, the user is prompted, and you might need to handle this case.
-            print("Accessibility permissions not granted.")
-        }
-    }
+    //     let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString: true]
+    //     let accessibilityEnabled = AXIsProcessTrustedWithOptions(options)
+
+    //     if accessibilityEnabled {
+    //         setupGlobalKeyListener()
+    //     } else {
+    //         // Permissions not granted, the user is prompted, and you might need to handle this case.
+    //         AlertManager.shared.doShowAlert(title: "Error", message: "Accessibility permissions not granted.")
+    //         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+    //     }
+    // }
 
     @objc private func sleepListener(_ notification: Notification) {
         logger.info("Listening to sleep")
