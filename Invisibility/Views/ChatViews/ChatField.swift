@@ -74,7 +74,19 @@ public struct ChatField: View {
     }
 
     private func handleTextChange() {
-        if text.count > previousText.count, text.last == "\n" {
+        // Check for newlines in the added text
+        let startIndex: String.Index = if previousText.count < text.count {
+            text.index(text.startIndex, offsetBy: previousText.count)
+        } else {
+            text.startIndex
+        }
+
+        let addedText = String(text[startIndex...])
+
+        // logger.debug("Added text: \(addedText)")
+        if addedText.contains("\n") {
+            // Check if the difference contains a newline character and not caused by a Shift press
+            // if text.count > previousText.count, text.last == "\n" {
             // Attempt to detect Shift key
             // We have to make sure its not a paste with a newline too
             if NSApp.currentEvent?.modifierFlags.contains(.shift) == false, NSApp.currentEvent?.modifierFlags.contains(.command) == false {
