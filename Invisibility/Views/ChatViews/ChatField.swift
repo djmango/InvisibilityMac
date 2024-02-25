@@ -2,7 +2,7 @@
 //  ChatField.swift
 //
 //
-//  Created by Kevin Hermawan on 11/12/23.
+//  Created by Sulaiman Ghori on 22/02/24.
 //
 
 import AppKit
@@ -16,7 +16,7 @@ public struct ChatField: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "ChatField")
 
     @Binding private var text: String
-    @State private var textHeight: CGFloat = 50
+    @State private var textHeight: CGFloat = 52
     @State private var previousText: String = ""
 
     private var action: () -> Void
@@ -39,7 +39,6 @@ public struct ChatField: View {
             TextEditor(text: $text)
                 .scrollContentBackground(.hidden)
                 .multilineTextAlignment(.leading)
-                // .font(Font(NSFont.preferredFont(forTextStyle: .title3)))
                 .font(.title3)
                 .padding()
                 .onChange(of: text) {

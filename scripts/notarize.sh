@@ -18,4 +18,5 @@
 
 # Next, we will sign the DMG and update the appcast.xml
 
-~/Library/Developer/Xcode/DerivedData/Gravity-fllpiguwvjazjyfukrjfuvvkvmpo/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_appcast ~/github/invisibility_inc/App/Gravity
+echo "FIXTHISSCRIPT"
+# ~/Library/Developer/Xcode/DerivedData/Gravity-fllpiguwvjazjyfukrjfuvvkvmpo/SourcePackages/artifacts/sparkle/Sparkle/bin/generate_appcast ~/github/invisibility_inc/App/Gravity

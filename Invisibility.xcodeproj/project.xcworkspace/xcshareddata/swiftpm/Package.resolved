@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "glur",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/joogps/Glur.git",
+      "state" : {
+        "revision" : "ba04affb45766c11bc95b056ccf353038829b147",
+        "version" : "1.0.3"
+      }
+    },
+    {
       "identity" : "gptencoder",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alfianlosari/GPTEncoder.git",

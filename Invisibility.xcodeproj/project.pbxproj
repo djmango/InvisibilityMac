@@ -27,7 +27,6 @@
 		4D5896DB2B7C67D100484BFA /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5896DA2B7C67D100484BFA /* EventView.swift */; };
 		4D5896DD2B7C67E700484BFA /* EventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */; };
 		4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */; };
-		4D596AA32B5F2B3E00B9E765 /* String+AppendNewLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */; };
 		4D596AAC2B6085FD00B9E765 /* AudioUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AAB2B6085FD00B9E765 /* AudioUtils.swift */; };
 		4D596AAF2B6197F700B9E765 /* AudioWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AAE2B6197F700B9E765 /* AudioWidgetView.swift */; };
 		4D596AB12B61997100B9E765 /* Audio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596AB02B61997100B9E765 /* Audio.swift */; };
@@ -35,6 +34,7 @@
 		4D5EA4D32B61F01700CD7966 /* AudioTranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5EA4D22B61F01700CD7966 /* AudioTranscriptView.swift */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
+		4D8095372B89A1BE00A18822 /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8095362B89A1BE00A18822 /* Glur */; };
 		4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */; };
 		4D8E05512B2516DE00B60D0D /* InvisibilityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052F2B2516DE00B60D0D /* InvisibilityApp.swift */; };
 		4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E05322B2516DE00B60D0D /* Assets.xcassets */; };
@@ -89,7 +89,6 @@
 		4D5896DA2B7C67D100484BFA /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewModel.swift; sourceTree = "<group>"; };
 		4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatField.swift; sourceTree = "<group>"; };
-		4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+AppendNewLine.swift"; sourceTree = "<group>"; };
 		4D596AAB2B6085FD00B9E765 /* AudioUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioUtils.swift; sourceTree = "<group>"; };
 		4D596AAE2B6197F700B9E765 /* AudioWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioWidgetView.swift; sourceTree = "<group>"; };
 		4D596AB02B61997100B9E765 /* Audio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Audio.swift; sourceTree = "<group>"; };
@@ -143,6 +142,7 @@
 				4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
+				4D8095372B89A1BE00A18822 /* Glur in Frameworks */,
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
 				4D3D05132B59DB32009340ED /* AudioKit in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
@@ -284,7 +284,6 @@
 		4D8E053C2B2516DE00B60D0D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				4D596A9E2B5F2B3E00B9E765 /* String+AppendNewLine.swift */,
 				4D8E053D2B2516DE00B60D0D /* ModelContext+SaveChanges.swift */,
 				4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */,
 				4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */,
@@ -393,6 +392,7 @@
 				4D1557B32B684CCA00B8B781 /* DockProgress */,
 				4D219F912B847B67006FF8E5 /* OpenAI */,
 				4DB961E62B86B0A000F7ACED /* GPTEncoder */,
+				4D8095362B89A1BE00A18822 /* Glur */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -433,6 +433,7 @@
 				4D1557B22B684CCA00B8B781 /* XCRemoteSwiftPackageReference "DockProgress" */,
 				4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */,
+				4D8095352B89A1BE00A18822 /* XCRemoteSwiftPackageReference "Glur" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -481,7 +482,6 @@
 				4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */,
 				4D3D05102B59D536009340ED /* WhisperManager.swift in Sources */,
 				4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */,
-				4D596AA32B5F2B3E00B9E765 /* String+AppendNewLine.swift in Sources */,
 				4D5EA4D32B61F01700CD7966 /* AudioTranscriptView.swift in Sources */,
 				4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */,
@@ -800,6 +800,14 @@
 				minimumVersion = 1.0.3;
 			};
 		};
+		4D8095352B89A1BE00A18822 /* XCRemoteSwiftPackageReference "Glur" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/joogps/Glur.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
 		4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/alfianlosari/GPTEncoder.git";
@@ -891,6 +899,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */;
 			productName = Pow;
+		};
+		4D8095362B89A1BE00A18822 /* Glur */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D8095352B89A1BE00A18822 /* XCRemoteSwiftPackageReference "Glur" */;
+			productName = Glur;
 		};
 		4DB961E62B86B0A000F7ACED /* GPTEncoder */ = {
 			isa = XCSwiftPackageProductDependency;

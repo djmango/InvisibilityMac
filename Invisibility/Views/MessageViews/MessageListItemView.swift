@@ -45,9 +45,27 @@ struct MessageListItemView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(isAssistant ? "Gravity" : "You")
-                .font(.title3.weight(.semibold))
-                .foregroundStyle(.accent)
+            Text(isAssistant ? "Invisibility" : "You")
+                // .font(.title3.weight(.bold))
+                .font(.custom("SF Pro Display", size: 13))
+                .fontWeight(.bold)
+                .tracking(-0.01)
+                .lineSpacing(10)
+                .opacity(0)
+                .overlay(LinearGradient(
+                    gradient: isAssistant ?
+                        Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]) :
+                        Gradient(colors: [Color("YouText"), Color("YouText")]),
+                    startPoint: .leading, endPoint: .trailing
+                ))
+                .mask(
+                    Text(isAssistant ? "Invisibility" : "You")
+                        .font(.custom("SF Pro Display", size: 13))
+                        .fontWeight(.bold)
+                        .tracking(-0.01)
+                        .lineSpacing(10)
+                )
+            // .foregroundStyle(.accent)
 
             ProgressView()
                 .controlSize(.small)
@@ -56,7 +74,10 @@ struct MessageListItemView: View {
             Markdown(message.content ?? "")
                 .textSelection(.enabled)
                 .markdownTextStyle(\.text) {
-                    FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                    // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                    // SF Pro display regular size 13 line 16
+                    FontSize(14)
+                    // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
                 }
                 .markdownTextStyle(\.code) {
                     FontFamily(.system(.monospaced))
@@ -70,14 +91,10 @@ struct MessageListItemView: View {
                             FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
                             FontFamily(.system(.monospaced))
                         }
-                        .overlay {
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(nsColor: .separatorColor))
-                        }
-                    // .padding(.bottom)
                 }
                 .hide(if: isGenerating, removeCompletely: true)
                 .hide(if: isError, removeCompletely: true)
+                .opacity(0.85)
 
             HStack(alignment: .center, spacing: 8) {
                 Button(action: copyAction) {
