@@ -54,121 +54,134 @@ struct MessageView: View {
 
     var body: some View {
         ZStack {
-            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 50)
-                .blur(radius: 25)
+            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 0)
+                .ignoresSafeArea()
+                // .blur(radius: 25)
+                // .frame(width: 300)
+                // .shadow(radius: 10)
+                .mask(
+                    HStack(spacing: 0) {
+                        // LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black, Color.clear]), startPoint: .leading, endPoint: .trailing)
+                        //     .frame(width: 400) // Adjust width to control the fade area
 
-            VStack {
-                ScrollViewReader { scrollViewProxy in
-                    List(messageViewModel.messages.indices, id: \.self) { index in
-                        let message: Message = messageViewModel.messages[index]
-                        let action: () -> Void = {
-                            regenerateAction(for: message)
-                        }
+                        // LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .leading, endPoint: .trailing)
+                        //     .frame(width: 20) // Adjust width to control the fade area
+                        Rectangle() // This part remains fully opaque
+                            .frame(width: 400) // Adjust width to control the opaque area
+                        LinearGradient(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .leading, endPoint: .trailing)
+                            .frame(width: 10) // Adjust width to control the fade area
+                        Spacer()
 
-                        let audioActionPassed: () -> Void = {
-                            guard let audio = message.audio else { return }
-                            audioAction(for: audio)
-                        }
-                        VStack {
-                            if let audio = message.audio {
-                                AudioWidgetView(audio: audio, tapAction: audioActionPassed)
-                                    .onHover { hovering in
-                                        if hovering {
-                                            NSCursor.pointingHand.push()
-                                        } else {
-                                            NSCursor.pop()
-                                        }
-                                    }
-                            } else if let images = message.images {
-                                HStack(alignment: .center, spacing: 8) {
-                                    ForEach(images, id: \.self) { imageData in
-                                        if let nsImage = NSImage(data: imageData) {
-                                            Image(nsImage: nsImage)
-                                                .resizable()
-                                                .scaledToFit()
-                                                .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
-                                                .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
-                                                .shadow(radius: 2)
-                                        }
-                                    }
-                                }
-                            } else {
-                                // Generate the view for the individual message.
-                                MessageListItemView(
-                                    message: message,
-                                    messageViewModel: messageViewModel,
-                                    regenerateAction: action,
-                                    audioAction: audioActionPassed
-                                )
-                                .generating(message.content == nil && isGenerating)
-                                .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                                .audio(message.audio)
+                        // LinearGradient(gradient: Gradient(colors: [Color.clear, Color.black]), startPoint: .leading, endPoint: .trailing)
+                        //     .frame(width: 100) // Adjust width to control the fade area
+
+                        // Rectangle() // This part remains fully opaque
+                        //     .frame(width: 200) // Adjust width to control the opaque area
+
+                        // LinearGradient(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .leading, endPoint: .trailing)
+                        //     .frame(width: 100) // Adjust width to control the fade area
+                    }
+                )
+            // .mask(
+            //     RoundedRectangle(cornerRadius: 50)
+            //         .blur(radius: 25)
+            // )
+
+            HStack {
+                VStack {
+                    ScrollViewReader { scrollViewProxy in
+                        List(messageViewModel.messages.indices, id: \.self) { index in
+                            let message: Message = messageViewModel.messages[index]
+                            let action: () -> Void = {
+                                regenerateAction(for: message)
                             }
-                        }
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(nsColor: .separatorColor))
-                        )
-                        .padding(.horizontal, -5)
-                        .id(message)
-                        .listRowSeparator(.hidden)
-                    }
-                    .scrollContentBackground(.hidden)
-                    .scrollIndicators(.never)
-                    .onAppear {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                    .onChange(of: messageViewModel.messages) {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                    .onChange(of: messageViewModel.messages.last?.content) {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                    .task {
-                        scrollToBottom(scrollViewProxy)
-                    }
-                }
 
-                ChatField(text: $content, action: sendAction)
-                    .focused($promptFocused)
-                    .onTapGesture {
-                        promptFocused = true
+                            let audioActionPassed: () -> Void = {
+                                guard let audio = message.audio else { return }
+                                audioAction(for: audio)
+                            }
+                            VStack {
+                                if let audio = message.audio {
+                                    AudioWidgetView(audio: audio, tapAction: audioActionPassed)
+                                        .onHover { hovering in
+                                            if hovering {
+                                                NSCursor.pointingHand.push()
+                                            } else {
+                                                NSCursor.pop()
+                                            }
+                                        }
+                                } else if let images = message.images {
+                                    HStack(alignment: .center, spacing: 8) {
+                                        ForEach(images, id: \.self) { imageData in
+                                            if let nsImage = NSImage(data: imageData) {
+                                                Image(nsImage: nsImage)
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
+                                                    .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
+                                                    .shadow(radius: 2)
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    // Generate the view for the individual message.
+                                    MessageListItemView(
+                                        message: message,
+                                        messageViewModel: messageViewModel,
+                                        regenerateAction: action,
+                                        audioAction: audioActionPassed
+                                    )
+                                    .generating(message.content == nil && isGenerating)
+                                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                                    .audio(message.audio)
+                                }
+                            }
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(Color(nsColor: .separatorColor))
+                            )
+                            .padding(.horizontal, -5)
+                            .id(message)
+                            .listRowSeparator(.hidden)
+                        }
+                        .scrollContentBackground(.hidden)
+                        .scrollIndicators(.never)
+                        .onAppear {
+                            scrollToBottom(scrollViewProxy)
+                        }
+                        .onChange(of: messageViewModel.messages) {
+                            scrollToBottom(scrollViewProxy)
+                        }
+                        .onChange(of: messageViewModel.messages.last?.content) {
+                            scrollToBottom(scrollViewProxy)
+                        }
+                        .task {
+                            scrollToBottom(scrollViewProxy)
+                        }
                     }
-                // .background(
-                //     RoundedRectangle(cornerRadius: 90)
-                //         .fill(
-                //             RadialGradient(
-                //                 gradient: Gradient(colors: [Color.white.opacity(0.4), Color.white.opacity(0.1)]),
-                //                 center: .center,
-                //                 startRadius: 0,
-                //                 endRadius: 330
-                //             )
-                //         )
-                //         .blur(radius: 10)
-                //         .frame(width: 330, height: 180)
-                // )
+
+                    ChatField(text: $content, action: sendAction)
+                        .focused($promptFocused)
+                        .onTapGesture {
+                            promptFocused = true
+                        }
+
+                    Spacer()
+                }
+                .overlay(
+                    Rectangle()
+                        .foregroundColor(Color.gray.opacity(0.2))
+                        .opacity(isDragActive ? 1 : 0)
+                )
+                .border(isDragActive ? Color.blue : Color.clear, width: 5)
+                .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
+                    handleDrop(providers: providers)
+                }
+                .frame(width: 400)
 
                 Spacer()
             }
-            .overlay(
-                Rectangle()
-                    .foregroundColor(Color.gray.opacity(0.2))
-                    .opacity(isDragActive ? 1 : 0)
-            )
-            .border(isDragActive ? Color.blue : Color.clear, width: 5)
-            .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
-                handleDrop(providers: providers)
-            }
-            // .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         }
-        // RoundedRectangle(cornerRadius: 8)
-        //     .fill(LinearGradient(
-        //         gradient: Gradient(colors: [Color.white.opacity(0), Color.white.opacity(0.1)]),
-        //         startPoint: .top, endPoint: .bottom
-        //     ))
-        //     .blur(radius: 10)
-        // .background(.ultraThinMaterial.opacity(0.5), in: RoundedRectangle(cornerRadius: 8))
-        // .background(VisualEffectBlur(material: .popover, blendingMode: .behindWindow))
         // .copyable(selection.compactMap(\.content))
     }
 

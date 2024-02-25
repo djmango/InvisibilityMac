@@ -84,7 +84,7 @@ class WindowManager: ObservableObject {
         currentScreen = screen
 
         // Define window width and the desired positioning
-        let windowWidth: CGFloat = 400
+        let windowWidth: CGFloat = 500
         let windowHeight: CGFloat = screen.frame.height
 
         // Get the menu bar height to adjust the window position
