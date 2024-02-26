@@ -87,7 +87,7 @@ class WindowManager: ObservableObject {
         currentScreen = screen
 
         // Define window width and the desired positioning
-        let windowWidth: CGFloat = 500
+        let windowWidth: CGFloat = 400
         // let windowHeight: CGFloat = screen.frame.height
 
         // Get the menu bar height to adjust the window position
@@ -107,7 +107,7 @@ class WindowManager: ObservableObject {
         let windowRect = CGRect(x: xPos, y: yPos, width: windowWidth, height: windowHeight)
 
         // Set the window frame
-        window.setFrame(windowRect, display: true, animate: true)
+        window.setFrame(windowRect, display: true, animate: false)
         window.makeKeyAndOrderFront(nil)
     }
 }

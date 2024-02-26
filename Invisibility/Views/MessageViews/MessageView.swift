@@ -55,10 +55,6 @@ struct MessageView: View {
     var body: some View {
         ZStack {
             VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 0)
-                // .ignoresSafeArea()
-                // .blur(radius: 25)
-                // .frame(width: 300)
-                // .shadow(radius: 10)
                 .mask(
                     HStack(spacing: 0) {
                         Rectangle() // This part remains fully opaque
@@ -68,56 +64,21 @@ struct MessageView: View {
                         Spacer()
                     }
                 )
-
-            HStack {
-                VStack {
-                    Spacer()
-                    GeometryReader { _ in
-                        ScrollView {
-                            // ScrollViewReader { scrollViewProxy in
+            VStack(alignment: .center) {
+                Spacer()
+                GeometryReader { _ in
+                    ScrollView {
+                        ScrollViewReader { scrollViewProxy in
                             VStack(spacing: 0) {
                                 // Spacer(minLength: dynamicTopPadding) // Dynamic padding
                                 ForEach(messageViewModel.messages.indices, id: \.self) { index in
                                     let message: Message = messageViewModel.messages[index]
-                                    // On first add spacer to top
-                                    // if index == 0 {
-                                    //     Spacer()
-                                    //         .frame(maxHeight: .infinity)
-                                    //         .layoutPriority(2)
-                                    // }
                                     let action: () -> Void = {
                                         regenerateAction(for: message)
                                     }
 
-                                    // let audioActionPassed: () -> Void = {
-                                    //     guard let audio = message.audio else { return }
-                                    //     audioAction(for: audio)
-                                    // }
-                                    // VStack {
-                                    //     if let audio = message.audio {
-                                    //         AudioWidgetView(audio: audio, tapAction: audioActionPassed)
-                                    //             .onHover { hovering in
-                                    //                 if hovering {
-                                    //                     NSCursor.pointingHand.push()
-                                    //                 } else {
-                                    //                     NSCursor.pop()
-                                    //                 }
-                                    //             }
-                                    //     } else if let images = message.images {
-                                    //         HStack(alignment: .center, spacing: 8) {
-                                    //             ForEach(images, id: \.self) { imageData in
-                                    //                 if let nsImage = NSImage(data: imageData) {
-                                    //                     Image(nsImage: nsImage)
-                                    //                         .resizable()
-                                    //                         .scaledToFit()
-                                    //                         .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
-                                    //                         .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
-                                    //                         .shadow(radius: 2)
-                                    //                 }
-                                    //             }
-                                    //         }
-                                    //     } else {
                                     // Generate the view for the individual message.
+
                                     MessageListItemView(
                                         message: message,
                                         messageViewModel: messageViewModel,
@@ -126,69 +87,59 @@ struct MessageView: View {
                                     .generating(message.content == nil && isGenerating)
                                     .finalMessage(index == messageViewModel.messages.endIndex - 1)
                                     .audio(message.audio)
-                                    // }
-                                    // }
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 16)
-                                            .stroke(Color(nsColor: .separatorColor))
-                                    )
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 5)
                                     .id(message)
-                                    // .listRowSeparator(.hidden)
-                                    // .layoutPriority(1)
                                 }
                             }
-                            // .onAppear {
-                            //     scrollToBottom(scrollViewProxy)
-                            // }
-                            // .onChange(of: messageViewModel.messages) {
-                            //     scrollToBottom(scrollViewProxy)
-                            // }
-                            // .onChange(of: messageViewModel.messages.last?.content) {
-                            //     scrollToBottom(scrollViewProxy)
-                            // }
-                            // .task {
-                            //     scrollToBottom(scrollViewProxy)
-                            // }
-                            // }
-                        }
 
-                        .scrollContentBackground(.hidden)
-                        .scrollIndicators(.never)
-                        // .onAppear {
-                        //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
-                        // }
-                        // .onChange(of: messageViewModel.messages.last?.content) {
-                        //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
-                        // }
-                        // .onChange(of: messageViewModel.messages) {
-                        //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
-                        // }
+                            .onAppear {
+                                scrollToBottom(scrollViewProxy)
+                            }
+                            .onChange(of: messageViewModel.messages) {
+                                scrollToBottom(scrollViewProxy)
+                            }
+                            .onChange(of: messageViewModel.messages.last?.content) {
+                                scrollToBottom(scrollViewProxy)
+                            }
+                            .task {
+                                scrollToBottom(scrollViewProxy)
+                            }
+                        }
                     }
-
-                    ChatField(text: $content, action: sendAction)
-                        .focused($promptFocused)
-                        .onTapGesture {
-                            promptFocused = true
-                        }
-                        .padding(.vertical, 8)
-
-                    // Spacer()
+                    .scrollContentBackground(.hidden)
+                    .scrollIndicators(.never)
+                    // .onAppear {
+                    //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
+                    // }
+                    // .onChange(of: messageViewModel.messages.last?.content) {
+                    //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
+                    // }
+                    // .onChange(of: messageViewModel.messages) {
+                    //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
+                    // }
                 }
-                .overlay(
-                    Rectangle()
-                        .foregroundColor(Color.gray.opacity(0.2))
-                        .opacity(isDragActive ? 1 : 0)
-                )
-                .border(isDragActive ? Color.blue : Color.clear, width: 5)
-                .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
-                    handleDrop(providers: providers)
-                }
-                .frame(width: 400)
 
-                Spacer()
+                ChatField(text: $content, action: sendAction)
+                    .focused($promptFocused)
+                    .onTapGesture {
+                        promptFocused = true
+                    }
+                    .padding(.vertical, 8)
             }
+            .overlay(
+                Rectangle()
+                    .foregroundColor(Color.gray.opacity(0.2))
+                    .opacity(isDragActive ? 1 : 0)
+            )
+            .border(isDragActive ? Color.blue : Color.clear, width: 5)
+            .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
+                handleDrop(providers: providers)
+            }
+            // .background(
+            //     RoundedRectangle(cornerRadius: 16)
+            //         .fill(
+            //             LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.4), Color.clear]), startPoint: .leading, endPoint: .trailing)
+            //         )
+            // )
         }
     }
 

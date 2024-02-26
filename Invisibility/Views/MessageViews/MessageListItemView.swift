@@ -138,6 +138,8 @@ struct MessageListItemView: View {
                         .stroke(Color(nsColor: .separatorColor))
                 )
         )
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
     }
 
     // MARK: - Actions

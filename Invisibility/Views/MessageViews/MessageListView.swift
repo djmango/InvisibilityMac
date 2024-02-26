@@ -78,10 +78,10 @@ struct MessageListView: View {
                 .audio(message.audio)
                 // }
                 // }
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(nsColor: .separatorColor))
-                )
+                // .overlay(
+                //     RoundedRectangle(cornerRadius: 16)
+                //         .stroke(Color(nsColor: .separatorColor))
+                // )
                 // .padding(.horizontal, -5)
                 .id(message)
                 .listRowSeparator(.hidden)
