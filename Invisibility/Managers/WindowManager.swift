@@ -30,6 +30,9 @@ class WindowManager: ObservableObject {
     private var window: NSPanel?
     private var cancellables = Set<AnyCancellable>()
 
+    // We keep track of the messages so that we can have the min window height
+    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModelManager.shared.messageViewModel
+
     private init() {
         KeyboardShortcuts.onKeyUp(for: .summon) {
             // If we are just changing screens, don't toggle the window
@@ -85,20 +88,26 @@ class WindowManager: ObservableObject {
 
         // Define window width and the desired positioning
         let windowWidth: CGFloat = 500
-        let windowHeight: CGFloat = screen.frame.height
+        // let windowHeight: CGFloat = screen.frame.height
 
         // Get the menu bar height to adjust the window position
         let menuBarHeight = NSStatusBar.system.thickness
+
+        let windowHeight: CGFloat = screen.frame.height - menuBarHeight
+
+        // Use num messages to determine the window height
+        // let numMessages = messageViewModel.messages.count
+        // let windowHeight: CGFloat = CGFloat(numMessages) * 100
 
         // Pin the window to the top left corner of the screen
         let xPos = screen.frame.origin.x
         let yPos = screen.frame.origin.y
 
         // Create a CGRect that represents the desired window frame
-        let windowRect = CGRect(x: xPos, y: yPos, width: windowWidth, height: windowHeight - menuBarHeight)
+        let windowRect = CGRect(x: xPos, y: yPos, width: windowWidth, height: windowHeight)
 
         // Set the window frame
-        window.setFrame(windowRect, display: true)
+        window.setFrame(windowRect, display: true, animate: true)
         window.makeKeyAndOrderFront(nil)
     }
 }
