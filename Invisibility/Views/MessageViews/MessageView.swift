@@ -64,7 +64,7 @@ struct MessageView: View {
                         Spacer()
                     }
                 )
-            VStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 0) {
                 Spacer()
                 GeometryReader { _ in
                     ScrollView {
@@ -118,12 +118,16 @@ struct MessageView: View {
                     // }
                 }
 
+                // Action Icons
+                MessageButtonsView()
+
                 ChatField(text: $content, action: sendAction)
                     .focused($promptFocused)
                     .onTapGesture {
                         promptFocused = true
                     }
-                    .padding(.vertical, 8)
+                    .padding(.top, 5)
+                    .padding(.bottom, 10)
             }
             .overlay(
                 Rectangle()
@@ -134,12 +138,14 @@ struct MessageView: View {
             .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
                 handleDrop(providers: providers)
             }
-            // .background(
-            //     RoundedRectangle(cornerRadius: 16)
-            //         .fill(
-            //             LinearGradient(gradient: Gradient(colors: [Color.white.opacity(0.4), Color.clear]), startPoint: .leading, endPoint: .trailing)
-            //         )
-            // )
+
+            // Blur overlays
+            // VStack {
+            //     Rectangle()
+            //         // .fill(Color.white)
+            //         .frame(maxWidth: .infinity, maxHeight: .infinity)
+            //         .glur()
+            // }
         }
     }
 
@@ -166,10 +172,6 @@ struct MessageView: View {
     @MainActor
     private func audioAction(for audio: Audio) {
         AudioPlayerViewModel.shared.audio = audio
-    }
-
-    private func openFileAction() {
-        messageViewModel.openFile()
     }
 
     private func handleDrop(providers: [NSItemProvider]) -> Bool {
