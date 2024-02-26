@@ -130,6 +130,18 @@ class ScreenRecorder: NSObject,
         isRunning = true
     }
 
+    func toggleRecording() {
+        if isRunning {
+            Task {
+                await stop()
+            }
+        } else {
+            Task {
+                await start()
+            }
+        }
+    }
+
     /// - Tag: UpdateCaptureConfig
     private func updateEngine() {
         guard isRunning else { return }

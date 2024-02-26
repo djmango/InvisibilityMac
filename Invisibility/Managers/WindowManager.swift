@@ -31,7 +31,7 @@ class WindowManager: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     // We keep track of the messages so that we can have the min window height
-    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModelManager.shared.messageViewModel
+    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
 
     private init() {
         KeyboardShortcuts.onKeyUp(for: .summon) {

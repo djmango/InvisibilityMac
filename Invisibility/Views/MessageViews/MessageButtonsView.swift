@@ -12,10 +12,10 @@ import SwiftUI
 struct MessageButtonsView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageListView")
 
-    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModelManager.shared.messageViewModel
+    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject private var screenRecorder = ScreenRecorder.shared
 
     @State private var whoIsHovering: String?
-    // @State private var selection: [Message] = []
 
     var body: some View {
         HStack {
@@ -23,6 +23,7 @@ struct MessageButtonsView: View {
             MessageButtonItemView(label: "Screenshot", icon: "text.viewfinder") {
                 openFileAction()
             }
+            // .keyboardShortcut("1", modifiers: [.command, .shift])
             .onHover { hovering in
                 if hovering {
                     whoIsHovering = "Screenshot"
@@ -44,8 +45,28 @@ struct MessageButtonsView: View {
             }
 
             // Record
-            MessageButtonItemView(label: "Record", icon: "record.circle") {
-                logger.debug("Record")
+            Button(action: {
+                screenRecorder.toggleRecording()
+            }
+            ) {
+                HStack(spacing: 0) {
+                    Image(systemName: "record.circle")
+                        .resizable()
+                        .frame(width: 18, height: 18)
+                        .foregroundColor(screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor"))
+                        .padding(8)
+
+                    Text(screenRecorder.isRunning ? "Recording" : "Record")
+                        .font(.title3)
+                        .foregroundColor(screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor"))
+                        .hide(if: whoIsHovering ?? "" != "Record", removeCompletely: true)
+                        .padding(.trailing, 8)
+                }
+                .background(
+                    RoundedRectangle(cornerRadius: 100)
+                        .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                        .fill(screenRecorder.isRunning ? .red.opacity(0.1) : Color("ChatButtonBackgroundColor"))
+                )
             }
             .onHover { hovering in
                 if hovering {
@@ -54,10 +75,14 @@ struct MessageButtonsView: View {
                     whoIsHovering = nil
                 }
             }
+            .animation(.snappy, value: whoIsHovering)
+            .animation(.snappy, value: screenRecorder.isRunning)
+            .buttonStyle(.plain)
+            .keyboardShortcut("r", modifiers: .command)
 
             // Clear Chat
             MessageButtonItemView(label: "Clear Chat", icon: "eraser") {
-                logger.debug("Clear Chat")
+                messageViewModel.clearChat()
             }
             .onHover { hovering in
                 if hovering {

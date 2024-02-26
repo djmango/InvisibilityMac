@@ -14,6 +14,8 @@ import Vision
 final class MessageViewModel: ObservableObject {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageViewModel")
 
+    static let shared = MessageViewModel()
+
     private let modelContext = SharedModelContainer.shared.mainContext
     private var chatTask: Task<Void, Error>?
     private var lastOpenedImage: Data?
@@ -21,7 +23,7 @@ final class MessageViewModel: ObservableObject {
     var messages: [Message] = []
     var sendViewState: ViewState? = nil
 
-    init() {
+    private init() {
         try? fetch()
     }
 
@@ -97,6 +99,15 @@ final class MessageViewModel: ObservableObject {
         }
 
         LLMManager.shared.stop()
+    }
+
+    func clearChat() {
+        // TelemetryManager.send("MessageViewModel.clearChat")
+        logger.debug("Clearing chat")
+        for message in messages {
+            modelContext.delete(message)
+        }
+        messages.removeAll()
     }
 
     private func processOutput(output: String) {

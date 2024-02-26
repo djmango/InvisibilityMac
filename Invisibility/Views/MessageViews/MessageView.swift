@@ -39,14 +39,14 @@ struct MessageView: View {
     @State private var isDragActive: Bool = false
     @State private var dynamicTopPadding: CGFloat = 0
 
+    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
+
     init() {
         logger.debug("Initializing MessageView")
 
         isEditorFocused = true
         promptFocused = true
     }
-
-    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModelManager.shared.messageViewModel
 
     var isGenerating: Bool {
         messageViewModel.sendViewState == .loading
@@ -78,10 +78,8 @@ struct MessageView: View {
                                     }
 
                                     // Generate the view for the individual message.
-
                                     MessageListItemView(
                                         message: message,
-                                        messageViewModel: messageViewModel,
                                         regenerateAction: action
                                     )
                                     .generating(message.content == nil && isGenerating)
@@ -90,7 +88,6 @@ struct MessageView: View {
                                     .id(message)
                                 }
                             }
-
                             .onAppear {
                                 scrollToBottom(scrollViewProxy)
                             }
@@ -103,6 +100,7 @@ struct MessageView: View {
                             .task {
                                 scrollToBottom(scrollViewProxy)
                             }
+                            .animation(.snappy, value: messageViewModel.messages)
                         }
                     }
                     .scrollContentBackground(.hidden)

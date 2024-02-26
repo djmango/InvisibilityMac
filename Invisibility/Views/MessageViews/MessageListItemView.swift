@@ -6,22 +6,19 @@ import ViewCondition
 
 struct MessageListItemView: View {
     private var message: Message
-    private var messageViewModel: MessageViewModel
+    private let messageViewModel: MessageViewModel = MessageViewModel.shared
     let regenerateAction: () -> Void
 
     // Message state
     private var isAssistant: Bool { message.role == .assistant }
     private var isGenerating: Bool = false
     private var isFinalMessage: Bool = false
-    private var isError: Bool = false
     private var audio: Audio? = nil
 
     init(message: Message,
-         messageViewModel: MessageViewModel,
          regenerateAction: @escaping () -> Void)
     {
         self.message = message
-        self.messageViewModel = messageViewModel
         self.regenerateAction = regenerateAction
     }
 
@@ -29,11 +26,7 @@ struct MessageListItemView: View {
     @State private var isCopied: Bool = false
 
     private var isCopyButtonVisible: Bool {
-        isHovered && isAssistant && !isGenerating
-    }
-
-    private var isDeleteButtonVisible: Bool {
-        isHovered
+        isHovered && !isGenerating
     }
 
     private var isRegenerateButtonVisible: Bool {
@@ -41,105 +34,102 @@ struct MessageListItemView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(isAssistant ? "Invisibility" : "You")
-                // .font(.title3.weight(.bold))
-                .font(.custom("SF Pro Display", size: 13))
-                .fontWeight(.bold)
-                .tracking(-0.01)
-                .lineSpacing(10)
-                .opacity(0)
-                .overlay(LinearGradient(
-                    gradient: isAssistant ?
-                        Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]) :
-                        Gradient(colors: [Color("YouText"), Color("YouText")]),
-                    startPoint: .leading, endPoint: .trailing
-                ))
-                .mask(
-                    Text(isAssistant ? "Invisibility" : "You")
-                        .font(.custom("SF Pro Display", size: 13))
-                        .fontWeight(.bold)
-                        .tracking(-0.01)
-                        .lineSpacing(10)
-                )
-            // .foregroundStyle(.accent)
+        ZStack {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(isAssistant ? "Invisibility" : "You")
+                    // .font(.title3.weight(.bold))
+                    .font(.custom("SF Pro Display", size: 13))
+                    .fontWeight(.bold)
+                    .tracking(-0.01)
+                    .lineSpacing(10)
+                    .opacity(0)
+                    .overlay(LinearGradient(
+                        gradient: isAssistant ?
+                            Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]) :
+                            Gradient(colors: [Color("YouText"), Color("YouText")]),
+                        startPoint: .leading, endPoint: .trailing
+                    ))
+                    .mask(
+                        Text(isAssistant ? "Invisibility" : "You")
+                            .font(.custom("SF Pro Display", size: 13))
+                            .fontWeight(.bold)
+                            .tracking(-0.01)
+                            .lineSpacing(10)
+                    )
+                // .foregroundStyle(.accent)
 
-            ProgressView()
-                .controlSize(.small)
-                .visible(if: isGenerating && isFinalMessage && message.audio == nil, removeCompletely: true)
+                ProgressView()
+                    .controlSize(.small)
+                    .visible(if: isGenerating && isFinalMessage && message.audio == nil, removeCompletely: true)
 
-            Markdown(message.content ?? "")
-                .textSelection(.enabled)
-                .markdownTextStyle(\.text) {
-                    // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                    // SF Pro display regular size 13 line 16
-                    FontSize(14)
-                    // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                }
-                .markdownTextStyle(\.code) {
-                    FontFamily(.system(.monospaced))
-                }
-                .markdownBlockStyle(\.codeBlock) { configuration in
-                    configuration
-                        .label
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .markdownTextStyle {
-                            FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                            FontFamily(.system(.monospaced))
-                        }
-                }
-                .hide(if: isGenerating, removeCompletely: true)
-                .hide(if: isError, removeCompletely: true)
-                .opacity(0.85)
+                Markdown(message.content ?? "")
+                    .textSelection(.enabled)
+                    .markdownTextStyle(\.text) {
+                        // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                        // SF Pro display regular size 13 line 16
+                        FontSize(14)
+                        // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                    }
+                    .markdownTextStyle(\.code) {
+                        FontFamily(.system(.monospaced))
+                    }
+                    .markdownBlockStyle(\.codeBlock) { configuration in
+                        configuration
+                            .label
+                            .padding()
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .markdownTextStyle {
+                                FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                                FontFamily(.system(.monospaced))
+                            }
+                    }
+                    .hide(if: isGenerating, removeCompletely: true)
+                    .opacity(0.85)
 
-            HStack(alignment: .center, spacing: 8) {
-                Button(action: copyAction) {
-                    Image(systemName: isCopied ? "list.clipboard.fill" : "clipboard")
-                }
-                .buttonStyle(.accessoryBar)
-                .clipShape(.circle)
-                .help("Copy")
-                .visible(if: isCopyButtonVisible, removeCompletely: true)
+                HStack(alignment: .center, spacing: 8) {
+                    Button(action: regenerateAction) {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                    }
+                    .buttonStyle(.accessoryBar)
+                    .clipShape(.circle)
+                    .help("Regenerate")
+                    .visible(if: isRegenerateButtonVisible, removeCompletely: true)
 
-                Button(action: regenerateAction) {
-                    Image(systemName: "arrow.triangle.2.circlepath")
+                    Spacer()
                 }
-                .buttonStyle(.accessoryBar)
-                .clipShape(.circle)
-                .help("Regenerate")
-                .visible(if: isRegenerateButtonVisible, removeCompletely: true)
-
-                Spacer()
-
-                Button(action: deleteAction) {
-                    Image(systemName: "trash")
-                }
-                .buttonStyle(.accessoryBar)
-                .clipShape(.circle)
-                .help("Delete")
-                .visible(if: isDeleteButtonVisible)
+                .padding(.top, 8)
+                .visible(if: isAssistant || isFinalMessage, removeCompletely: true)
             }
-            .padding(.top, 8)
-            .visible(if: isAssistant || isFinalMessage, removeCompletely: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color("WidgetColor"))
+                    .shadow(radius: 2)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color(nsColor: .separatorColor))
+                    )
+            )
+            .padding(.horizontal, 10)
+            .padding(.vertical, 5)
+
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    MessageButtonItemView(label: "Copy", icon: "doc.on.doc") {
+                        copyAction()
+                    }
+                }
+            }
+            .animation(.snappy, value: isCopyButtonVisible)
+            .hide(if: !isCopyButtonVisible, removeCompletely: true)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
         .onHover {
             isHovered = $0
             isCopied = false
         }
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color("WidgetColor"))
-                .shadow(radius: 2)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(nsColor: .separatorColor))
-                )
-        )
-        .padding(.horizontal, 10)
-        .padding(.vertical, 5)
     }
 
     // MARK: - Actions

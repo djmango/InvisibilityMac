@@ -31,7 +31,8 @@ struct MessageButtonItemView: View {
                     .padding(8)
 
                 Text(label)
-                    .font(.system(size: 12))
+                    // .font(.system(size: 12))
+                    .font(.title3)
                     .foregroundColor(Color("ChatButtonForegroundColor"))
                     .hide(if: !isHovering, removeCompletely: true)
                     .animation(.snappy, value: isHovering)

@@ -61,8 +61,7 @@ struct EventsView: View {
             // Record status/button and next event time
             HStack {
                 Button(action: {
-                    toggleRecording()
-
+                    screenRecorder.toggleRecording()
                 }) {
                     Text(
                         screenRecorder.isRunning ? "◉ Recording" : "◉ Record"
@@ -87,18 +86,6 @@ struct EventsView: View {
             .animation(.easeInOut(duration: 0.1), value: screenRecorder.isRunning)
             .padding(.top, 5)
             .padding(.bottom, 3)
-        }
-    }
-
-    func toggleRecording() {
-        if screenRecorder.isRunning {
-            Task {
-                await screenRecorder.stop()
-            }
-        } else {
-            Task {
-                await screenRecorder.start()
-            }
         }
     }
 }
