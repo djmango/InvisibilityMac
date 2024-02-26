@@ -37,7 +37,7 @@ struct MessageView: View {
     @State private var viewState: ViewState? = nil
     @State private var content: String = ""
     @State private var isDragActive: Bool = false
-    // @State private var selection: [Message] = []
+    @State private var selection: [Message] = []
 
     init() {
         logger.debug("Initializing MessageView")
@@ -92,58 +92,63 @@ struct MessageView: View {
                     ScrollViewReader { scrollViewProxy in
                         List(messageViewModel.messages.indices, id: \.self) { index in
                             let message: Message = messageViewModel.messages[index]
+                            // On first add spacer to top
+                            // if index == 0 {
+                            //     Spacer()
+                            //         .frame(maxHeight: .infinity)
+                            // }
                             let action: () -> Void = {
                                 regenerateAction(for: message)
                             }
 
-                            let audioActionPassed: () -> Void = {
-                                guard let audio = message.audio else { return }
-                                audioAction(for: audio)
-                            }
-                            VStack {
-                                if let audio = message.audio {
-                                    AudioWidgetView(audio: audio, tapAction: audioActionPassed)
-                                        .onHover { hovering in
-                                            if hovering {
-                                                NSCursor.pointingHand.push()
-                                            } else {
-                                                NSCursor.pop()
-                                            }
-                                        }
-                                } else if let images = message.images {
-                                    HStack(alignment: .center, spacing: 8) {
-                                        ForEach(images, id: \.self) { imageData in
-                                            if let nsImage = NSImage(data: imageData) {
-                                                Image(nsImage: nsImage)
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
-                                                    .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
-                                                    .shadow(radius: 2)
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    // Generate the view for the individual message.
-                                    MessageListItemView(
-                                        message: message,
-                                        messageViewModel: messageViewModel,
-                                        regenerateAction: action,
-                                        audioAction: audioActionPassed
-                                    )
-                                    .generating(message.content == nil && isGenerating)
-                                    .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                                    .audio(message.audio)
-                                }
-                            }
+                            // let audioActionPassed: () -> Void = {
+                            //     guard let audio = message.audio else { return }
+                            //     audioAction(for: audio)
+                            // }
+                            // VStack {
+                            //     if let audio = message.audio {
+                            //         AudioWidgetView(audio: audio, tapAction: audioActionPassed)
+                            //             .onHover { hovering in
+                            //                 if hovering {
+                            //                     NSCursor.pointingHand.push()
+                            //                 } else {
+                            //                     NSCursor.pop()
+                            //                 }
+                            //             }
+                            //     } else if let images = message.images {
+                            //         HStack(alignment: .center, spacing: 8) {
+                            //             ForEach(images, id: \.self) { imageData in
+                            //                 if let nsImage = NSImage(data: imageData) {
+                            //                     Image(nsImage: nsImage)
+                            //                         .resizable()
+                            //                         .scaledToFit()
+                            //                         .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
+                            //                         .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
+                            //                         .shadow(radius: 2)
+                            //                 }
+                            //             }
+                            //         }
+                            //     } else {
+                            // Generate the view for the individual message.
+                            MessageListItemView(
+                                message: message,
+                                messageViewModel: messageViewModel,
+                                regenerateAction: action
+                            )
+                            .generating(message.content == nil && isGenerating)
+                            .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                            .audio(message.audio)
+                            // }
+                            // }
                             .overlay(
                                 RoundedRectangle(cornerRadius: 16)
                                     .stroke(Color(nsColor: .separatorColor))
                             )
-                            .padding(.horizontal, -5)
+                            // .padding(.horizontal, -5)
                             .id(message)
                             .listRowSeparator(.hidden)
                         }
+                        // .listStyle(.sidebar)
                         .scrollContentBackground(.hidden)
                         .scrollIndicators(.never)
                         .onAppear {
@@ -165,8 +170,9 @@ struct MessageView: View {
                         .onTapGesture {
                             promptFocused = true
                         }
+                        .padding(.vertical, 8)
 
-                    Spacer()
+                    // Spacer()
                 }
                 .overlay(
                     Rectangle()
@@ -182,7 +188,7 @@ struct MessageView: View {
                 Spacer()
             }
         }
-        // .copyable(selection.compactMap(\.content))
+        .copyable(selection.compactMap(\.content))
     }
 
     // MARK: - Actions

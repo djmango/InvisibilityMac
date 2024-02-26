@@ -8,7 +8,6 @@ struct MessageListItemView: View {
     private var message: Message
     private var messageViewModel: MessageViewModel
     let regenerateAction: () -> Void
-    let audioAction: () -> Void
 
     // Message state
     private var isAssistant: Bool { message.role == .assistant }
@@ -19,13 +18,11 @@ struct MessageListItemView: View {
 
     init(message: Message,
          messageViewModel: MessageViewModel,
-         regenerateAction: @escaping () -> Void,
-         audioAction: @escaping () -> Void)
+         regenerateAction: @escaping () -> Void)
     {
         self.message = message
         self.messageViewModel = messageViewModel
         self.regenerateAction = regenerateAction
-        self.audioAction = audioAction
     }
 
     @State private var isHovered: Bool = false
