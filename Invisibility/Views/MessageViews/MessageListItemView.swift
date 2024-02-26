@@ -7,7 +7,6 @@ import ViewCondition
 struct MessageListItemView: View {
     private var message: Message
     private let messageViewModel: MessageViewModel = MessageViewModel.shared
-    let regenerateAction: () -> Void
 
     // Message state
     private var isAssistant: Bool { message.role == .assistant }
@@ -15,11 +14,8 @@ struct MessageListItemView: View {
     private var isFinalMessage: Bool = false
     private var audio: Audio? = nil
 
-    init(message: Message,
-         regenerateAction: @escaping () -> Void)
-    {
+    init(message: Message) {
         self.message = message
-        self.regenerateAction = regenerateAction
     }
 
     @State private var isHovered: Bool = false
@@ -27,10 +23,6 @@ struct MessageListItemView: View {
 
     private var isCopyButtonVisible: Bool {
         isHovered && !isGenerating
-    }
-
-    private var isRegenerateButtonVisible: Bool {
-        isCopyButtonVisible && isAssistant && isFinalMessage
     }
 
     var body: some View {
@@ -64,41 +56,28 @@ struct MessageListItemView: View {
 
                 Markdown(message.content ?? "")
                     .textSelection(.enabled)
-                    .markdownTextStyle(\.text) {
-                        // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                        // SF Pro display regular size 13 line 16
-                        FontSize(14)
-                        // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                    }
-                    .markdownTextStyle(\.code) {
-                        FontFamily(.system(.monospaced))
-                    }
-                    .markdownBlockStyle(\.codeBlock) { configuration in
-                        configuration
-                            .label
-                            .padding()
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .markdownTextStyle {
-                                FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                                FontFamily(.system(.monospaced))
-                            }
-                    }
+                    // .markdownTextStyle(\.text) {
+                    //     FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                    //     // SF Pro display regular size 13 line 16
+                    //     // FontSize(14)
+                    //     // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                    // }
+                    // .markdownTextStyle(\.code) {
+                    //     FontFamily(.system(.monospaced))
+                    // }
+                    // .markdownBlockStyle(\.codeBlock) { configuration in
+                    //     configuration
+                    //         .label
+                    //         .padding()
+                    //         .frame(maxWidth: .infinity, alignment: .leading)
+                    //         .markdownTextStyle {
+                    //             FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                    //             FontFamily(.system(.monospaced))
+                    //         }
+                    // }
                     .hide(if: isGenerating, removeCompletely: true)
                     .opacity(0.85)
-
-                HStack(alignment: .center, spacing: 8) {
-                    Button(action: regenerateAction) {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                    }
-                    .buttonStyle(.accessoryBar)
-                    .clipShape(.circle)
-                    .help("Regenerate")
-                    .visible(if: isRegenerateButtonVisible, removeCompletely: true)
-
-                    Spacer()
-                }
-                .padding(.top, 8)
-                .visible(if: isAssistant || isFinalMessage, removeCompletely: true)
+                    .markdownTheme(.gitHub)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
@@ -123,8 +102,9 @@ struct MessageListItemView: View {
                     }
                 }
             }
-            .animation(.snappy, value: isCopyButtonVisible)
+            .animation(.snappy, value: isHovered)
             .hide(if: !isCopyButtonVisible, removeCompletely: true)
+            .focusable(false)
         }
         .onHover {
             isHovered = $0

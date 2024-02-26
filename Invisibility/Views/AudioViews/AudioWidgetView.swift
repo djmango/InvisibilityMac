@@ -15,11 +15,9 @@ struct AudioWidgetView: View {
     @Environment(\.colorScheme) var colorScheme
 
     private let audio: Audio
-    private let tapAction: () -> Void
 
-    init(audio: Audio, tapAction: @escaping () -> Void) {
+    init(audio: Audio) {
         self.audio = audio
-        self.tapAction = tapAction
     }
 
     var showProgress: Bool {
@@ -28,11 +26,11 @@ struct AudioWidgetView: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 10)
+            RoundedRectangle(cornerRadius: 16)
                 .foregroundColor(Color("WidgetColor"))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.gray.opacity(0.2), lineWidth: 2)
+                    RoundedRectangle(cornerRadius: 16)
+                        .stroke(Color(NSColor.separatorColor), lineWidth: 1)
                 )
 
             HStack {
@@ -111,7 +109,6 @@ struct AudioWidgetView: View {
                         .padding(.horizontal)
                         .padding(.bottom, 10)
                         .cornerRadius(10)
-                        // .frame(width: 400, height: 10)
                         .conditionalEffect(
                             .repeat(
                                 .glow(color: .white, radius: 10),
@@ -124,9 +121,11 @@ struct AudioWidgetView: View {
                 Spacer()
             }
         }
-        .onTapGesture {
-            tapAction()
-        }
+        .padding(.horizontal, 10)
+        .padding(.bottom, 5)
+        // .onTapGesture {
+        //     tapAction()
+        // }
     }
 
     /// Draft an email with the audio
