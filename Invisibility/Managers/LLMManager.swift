@@ -18,17 +18,20 @@ final class LLMManager: ObservableObject {
     static let shared = LLMManager()
 
     private let ai: OpenAI
-    private let model: String = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    private let model: String = "gpt-4-vision-preview"
+    private let host: String = "api.openai.com"
     private let encoder: GPTEncoder = GPTEncoder()
-
-    private var cancellables: Set<AnyCancellable> = []
 
     static let maxTokenCountForMessage: Int = 16384
     static let maxTokenCount: Int = 32769
     static let maxNewTokens: Int = 2048
 
     private init() {
-        let configuration = OpenAI.Configuration(token: "9dc11bc9c782a3d1743a63b6da951bf9ca8799d7232574d044de2d2afabc19a9", host: "api.together.xyz", timeoutInterval: 10)
+        let configuration = OpenAI.Configuration(
+            token: "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",
+            host: host,
+            timeoutInterval: 10
+        )
         ai = OpenAI(configuration: configuration)
     }
 
@@ -46,13 +49,13 @@ final class LLMManager: ObservableObject {
         }
 
         let messages = truncateMessages(messages: messages, maxTokenCount: LLMManager.maxTokenCount - LLMManager.maxNewTokens)
-        let chatQuery = ChatQuery(messages: messages, model: model)
+        let chatQuery = ChatQuery(messages: messages, model: model, maxTokens: LLMManager.maxNewTokens)
 
         do {
             for try await result in ai.chatsStream(query: chatQuery) {
-                guard let content = result.choices.first?.delta.content else {
-                    logger.error("No content in result")
-                    return
+                let content = result.choices.first?.delta.content ?? ""
+                if content.isEmpty {
+                    logger.warning("No content in result")
                 }
                 processOutput(content)
             }
@@ -65,7 +68,7 @@ final class LLMManager: ObservableObject {
     // @MainActor
     func achat(messages: [Message]) async -> Message {
         let messages = truncateMessages(messages: messages, maxTokenCount: LLMManager.maxTokenCount - LLMManager.maxNewTokens)
-        let chatQuery = ChatQuery(messages: messages, model: model)
+        let chatQuery = ChatQuery(messages: messages, model: model, maxTokens: LLMManager.maxNewTokens)
 
         do {
             let result = try await ai.chats(query: chatQuery)
@@ -74,12 +77,6 @@ final class LLMManager: ObservableObject {
             logger.error("Error in chat: \(error)")
             AlertManager.shared.doShowAlert(title: "Chat Error", message: "Error in chat: \(error.localizedDescription)")
             return Message(content: "Error in chat: \(error.localizedDescription)")
-        }
-    }
-
-    func stop() {
-        for cancellable in cancellables {
-            cancellable.cancel()
         }
     }
 

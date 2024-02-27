@@ -26,6 +26,7 @@ struct MessageButtonItemView: View {
             HStack(spacing: 0) {
                 Image(systemName: icon)
                     .resizable()
+                    .aspectRatio(contentMode: .fit)
                     .frame(width: 18, height: 18)
                     .foregroundColor(Color("ChatButtonForegroundColor"))
                     .padding(8)

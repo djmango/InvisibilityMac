@@ -42,8 +42,6 @@ struct MessageView: View {
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
 
     init() {
-        logger.debug("Initializing MessageView")
-
         isEditorFocused = true
         promptFocused = true
     }
@@ -60,7 +58,7 @@ struct MessageView: View {
                         Rectangle() // This part remains fully opaque
                             .frame(width: 400) // Adjust width to control the opaque area
                         LinearGradient(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .leading, endPoint: .trailing)
-                            .frame(width: 10) // Adjust width to control the fade area
+                            .frame(width: 20) // Adjust width to control the fade area
                         Spacer()
                     }
                 )
@@ -69,7 +67,7 @@ struct MessageView: View {
                 GeometryReader { _ in
                     ScrollView {
                         ScrollViewReader { scrollViewProxy in
-                            VStack(spacing: 0) {
+                            LazyVStack(spacing: 0) {
                                 // Spacer(minLength: dynamicTopPadding) // Dynamic padding
                                 ForEach(messageViewModel.messages.indices, id: \.self) { index in
                                     let message: Message = messageViewModel.messages[index]
@@ -217,9 +215,6 @@ struct MessageView: View {
         guard messageViewModel.messages.count > 0 else { return }
         let lastIndex = messageViewModel.messages.count - 1
         let lastMessage = messageViewModel.messages[lastIndex]
-
-        logger.debug("Scrolling to bottom")
-        logger.debug("Last message: \(lastMessage)")
 
         proxy.scrollTo(lastMessage, anchor: .bottom)
     }

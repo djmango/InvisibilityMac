@@ -14,6 +14,7 @@ struct MessageButtonsView: View {
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var screenRecorder = ScreenRecorder.shared
+    private let screenshotManager = ScreenshotManager.shared
 
     @State private var whoIsHovering: String?
 
@@ -21,9 +22,9 @@ struct MessageButtonsView: View {
         HStack {
             // Screenshot
             MessageButtonItemView(label: "Screenshot", icon: "text.viewfinder") {
-                openFileAction()
+                screenshotManager.capture()
             }
-            // .keyboardShortcut("1", modifiers: [.command, .shift])
+            .keyboardShortcut("1", modifiers: [.command, .shift])
             .onHover { hovering in
                 if hovering {
                     whoIsHovering = "Screenshot"
@@ -91,6 +92,8 @@ struct MessageButtonsView: View {
                     whoIsHovering = nil
                 }
             }
+            .keyboardShortcut("o", modifiers: [.command, .shift])
+            .keyboardShortcut(.delete, modifiers: [.command, .shift])
         }
         .animation(.snappy, value: whoIsHovering)
         .padding(.vertical, 10)

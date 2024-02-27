@@ -85,22 +85,6 @@ final class MessageViewModel: ObservableObject {
         }
     }
 
-    func stopGenerate() {
-        TelemetryManager.send("MessageViewModel.stopGenerate")
-        logger.debug("Canceling generation")
-        sendViewState = nil
-        chatTask?.cancel()
-        Task {
-            do {
-                try await WhisperManager.shared.whisper?.cancel()
-            } catch {
-                logger.error("Error canceling whisper: \(error)")
-            }
-        }
-
-        LLMManager.shared.stop()
-    }
-
     func clearChat() {
         // TelemetryManager.send("MessageViewModel.clearChat")
         logger.debug("Clearing chat")

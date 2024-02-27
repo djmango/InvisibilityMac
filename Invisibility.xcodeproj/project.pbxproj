@@ -24,6 +24,12 @@
 		4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */; };
 		4D5145762B7D8C4E00A5BA26 /* EventItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5145752B7D8C4E00A5BA26 /* EventItemView.swift */; };
 		4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */; };
+		4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */; };
+		4D5819BC2B8E9F5E00BF07FF /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5819BB2B8E9F5E00BF07FF /* Splash */; };
+		4D5819BE2B8E9F5E00BF07FF /* SplashMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5819BD2B8E9F5E00BF07FF /* SplashMarkdown */; };
+		4D5819C02B8E9F5E00BF07FF /* SplashTokenizer in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5819BF2B8E9F5E00BF07FF /* SplashTokenizer */; };
+		4D5819C32B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */; };
+		4D5819C52B8EA02300BF07FF /* TextOutputFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819C42B8EA02300BF07FF /* TextOutputFormat.swift */; };
 		4D5896DB2B7C67D100484BFA /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5896DA2B7C67D100484BFA /* EventView.swift */; };
 		4D5896DD2B7C67E700484BFA /* EventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */; };
 		4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */; };
@@ -87,6 +93,10 @@
 		4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractAfter.swift"; sourceTree = "<group>"; };
 		4D5145752B7D8C4E00A5BA26 /* EventItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventItemView.swift; sourceTree = "<group>"; };
 		4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileWriter.swift; sourceTree = "<group>"; };
+		4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotManager.swift; sourceTree = "<group>"; };
+		4D5819AE2B8E782E00BF07FF /* OpenAI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenAI; path = ../OpenAI; sourceTree = "<group>"; };
+		4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCodeSyntaxHighlighter.swift; sourceTree = "<group>"; };
+		4D5819C42B8EA02300BF07FF /* TextOutputFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOutputFormat.swift; sourceTree = "<group>"; };
 		4D5896DA2B7C67D100484BFA /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewModel.swift; sourceTree = "<group>"; };
 		4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatField.swift; sourceTree = "<group>"; };
@@ -134,11 +144,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D1557B42B684CCA00B8B781 /* DockProgress in Frameworks */,
+				4D5819BC2B8E9F5E00BF07FF /* Splash in Frameworks */,
 				4DB961E72B86B0A000F7ACED /* GPTEncoder in Frameworks */,
+				4D5819C02B8E9F5E00BF07FF /* SplashTokenizer in Frameworks */,
 				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
+				4D5819BE2B8E9F5E00BF07FF /* SplashMarkdown in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
 				4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */,
@@ -157,6 +170,7 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
+				4D5819AE2B8E782E00BF07FF /* OpenAI */,
 				4D8E05272B2516DE00B60D0D /* Invisibility */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
@@ -174,6 +188,8 @@
 		4D1FC3502B623147009DA851 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				4D5819C12B8E9FFC00BF07FF /* SyntaxHighlighter */,
+				4D5819AB2B8E667600BF07FF /* ScreenshotManager */,
 				4DEEEF042B6B1EF900ECDAC5 /* CaptureManager */,
 				4D0B52E32B590213008D975D /* AlertManager.swift */,
 				4D3D050F2B59D536009340ED /* WhisperManager.swift */,
@@ -183,6 +199,23 @@
 				4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		4D5819AB2B8E667600BF07FF /* ScreenshotManager */ = {
+			isa = PBXGroup;
+			children = (
+				4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */,
+			);
+			path = ScreenshotManager;
+			sourceTree = "<group>";
+		};
+		4D5819C12B8E9FFC00BF07FF /* SyntaxHighlighter */ = {
+			isa = PBXGroup;
+			children = (
+				4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */,
+				4D5819C42B8EA02300BF07FF /* TextOutputFormat.swift */,
+			);
+			path = SyntaxHighlighter;
 			sourceTree = "<group>";
 		};
 		4D5896D92B7C67BD00484BFA /* MenuBarViews */ = {
@@ -396,6 +429,9 @@
 				4D219F912B847B67006FF8E5 /* OpenAI */,
 				4DB961E62B86B0A000F7ACED /* GPTEncoder */,
 				4D8095362B89A1BE00A18822 /* Glur */,
+				4D5819BB2B8E9F5E00BF07FF /* Splash */,
+				4D5819BD2B8E9F5E00BF07FF /* SplashMarkdown */,
+				4D5819BF2B8E9F5E00BF07FF /* SplashTokenizer */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -437,6 +473,7 @@
 				4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */,
 				4D8095352B89A1BE00A18822 /* XCRemoteSwiftPackageReference "Glur" */,
+				4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -475,10 +512,12 @@
 				4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */,
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
 				4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */,
+				4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */,
 				4D1773D82B8C1060004C5D13 /* MessageButtonsView.swift in Sources */,
 				4D9348CA2B5B24C800D57BC2 /* ModelFileManager.swift in Sources */,
+				4D5819C52B8EA02300BF07FF /* TextOutputFormat.swift in Sources */,
 				4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */,
 				4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */,
 				4D1FC34F2B62304E009DA851 /* AudioPlayerViewModel.swift in Sources */,
@@ -497,6 +536,7 @@
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
 				4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* InvisibilityApp.swift in Sources */,
+				4D5819C32B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift in Sources */,
 				4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */,
 				4D0B52E42B590213008D975D /* AlertManager.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
@@ -651,7 +691,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 46;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -684,7 +724,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 46;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -796,6 +836,14 @@
 				kind = branch;
 			};
 		};
+		4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JohnSundell/Splash.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.16.0;
+			};
+		};
 		4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/Pow.git";
@@ -898,6 +946,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */;
 			productName = SwiftWhisper;
+		};
+		4D5819BB2B8E9F5E00BF07FF /* Splash */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */;
+			productName = Splash;
+		};
+		4D5819BD2B8E9F5E00BF07FF /* SplashMarkdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */;
+			productName = SplashMarkdown;
+		};
+		4D5819BF2B8E9F5E00BF07FF /* SplashTokenizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */;
+			productName = SplashTokenizer;
 		};
 		4D7AB4232B4CB469007F025B /* Pow */ = {
 			isa = XCSwiftPackageProductDependency;

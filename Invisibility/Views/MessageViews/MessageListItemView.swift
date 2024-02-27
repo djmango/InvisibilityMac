@@ -1,10 +1,13 @@
 import CoreGraphics
 import MarkdownUI
+import Splash
 import SwiftData
 import SwiftUI
 import ViewCondition
 
 struct MessageListItemView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     private var message: Message
     private let messageViewModel: MessageViewModel = MessageViewModel.shared
 
@@ -29,7 +32,6 @@ struct MessageListItemView: View {
         ZStack {
             VStack(alignment: .leading, spacing: 8) {
                 Text(isAssistant ? "Invisibility" : "You")
-                    // .font(.title3.weight(.bold))
                     .font(.custom("SF Pro Display", size: 13))
                     .fontWeight(.bold)
                     .tracking(-0.01)
@@ -56,28 +58,16 @@ struct MessageListItemView: View {
 
                 Markdown(message.content ?? "")
                     .textSelection(.enabled)
-                    // .markdownTextStyle(\.text) {
-                    //     FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                    //     // SF Pro display regular size 13 line 16
-                    //     // FontSize(14)
-                    //     // FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                    // }
-                    // .markdownTextStyle(\.code) {
-                    //     FontFamily(.system(.monospaced))
-                    // }
-                    // .markdownBlockStyle(\.codeBlock) { configuration in
-                    //     configuration
-                    //         .label
-                    //         .padding()
-                    //         .frame(maxWidth: .infinity, alignment: .leading)
-                    //         .markdownTextStyle {
-                    //             FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                    //             FontFamily(.system(.monospaced))
-                    //         }
-                    // }
+                    // .font(.custom("SF Pro Display", size: 16))
+                    .markdownTheme(.docC)
+                    .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
+                    // .markdownFont(.custom("SF Pro Display", size: 16))
+                    .markdownTextStyle {
+                        // Font
+                        BackgroundColor(nil)
+                    }
                     .hide(if: isGenerating, removeCompletely: true)
                     .opacity(0.85)
-                    .markdownTheme(.gitHub)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
@@ -109,6 +99,15 @@ struct MessageListItemView: View {
         .onHover {
             isHovered = $0
             isCopied = false
+        }
+    }
+
+    private var theme: Splash.Theme {
+        switch self.colorScheme {
+        case .dark:
+            .sundellsColors(withFont: .init(size: 16))
+        default:
+            .sunset(withFont: .init(size: 16))
         }
     }
 

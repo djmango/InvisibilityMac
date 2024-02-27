@@ -77,15 +77,18 @@ public struct ChatField: View {
         let startIndex: String.Index = if previousText.count < text.count {
             text.index(text.startIndex, offsetBy: previousText.count)
         } else {
-            text.startIndex
+            text.endIndex
         }
 
         let addedText = String(text[startIndex...])
 
+        // logger.debug("Previous text: \(previousText)")
+        // logger.debug("Previous text count: \(previousText.count)")
+        // logger.debug("Text: \(text)")
+        // logger.debug("Text count: \(text.count)")
         // logger.debug("Added text: \(addedText)")
+        // logger.debug("Added text count: \(addedText.count)")
         if addedText.contains("\n") {
-            // Check if the difference contains a newline character and not caused by a Shift press
-            // if text.count > previousText.count, text.last == "\n" {
             // Attempt to detect Shift key
             // We have to make sure its not a paste with a newline too
             if NSApp.currentEvent?.modifierFlags.contains(.shift) == false, NSApp.currentEvent?.modifierFlags.contains(.command) == false {
