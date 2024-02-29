@@ -17,11 +17,15 @@ final class MessageViewModel: ObservableObject {
     static let shared = MessageViewModel()
 
     private let modelContext = SharedModelContainer.shared.mainContext
-    private var chatTask: Task<Void, Error>?
-    private var lastOpenedImage: Data?
+    private let chatViewModel = ChatViewModel.shared
 
-    var messages: [Message] = []
-    var sendViewState: ViewState? = nil
+    private var chatTask: Task<Void, Error>?
+
+    /// The list of messages in the chat
+    public var messages: [Message] = []
+
+    /// The current view state of the message being sent
+    public var sendViewState: ViewState? = nil
 
     private init() {
         try? fetch()
@@ -106,7 +110,7 @@ final class MessageViewModel: ObservableObject {
     }
 }
 
-// @MARK Image Handler
+// @MARK File Handler
 extension MessageViewModel {
     /// Public function that can be called to begin the file open process
     func openFile() {
@@ -131,13 +135,13 @@ extension MessageViewModel {
 
         openPanel.begin { result in
             if result == .OK, let url = openPanel.url {
-                self.handleFile(url: url)
+                self.handleFile(url)
             }
         }
     }
 
-    /// Public function that handles the file after it has been selected
-    func handleFile(url: URL) {
+    /// Public function that handles file via a URL regarding a message
+    public func handleFile(_ url: URL) {
         // First determine if we are dealing with an image or audio file
         logger.debug("Selected file \(url)")
         if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
@@ -172,76 +176,23 @@ extension MessageViewModel {
 
     private func handleImage(url: URL) {
         guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
+            logger.error("Failed to create image source from url.")
             return
         }
         guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
+            logger.error("Failed to create image from image source.")
             return
         }
 
         // Standardize and convert the image to a base64 string and store it in the view model
-        if let standardizedImage = standardizeImage(cgImage) {
-            lastOpenedImage = standardizedImage
+        guard let standardizedImage = standardizeImage(cgImage) else {
+            logger.error("Failed to standardize image.")
+            return
         }
 
-        // Create a new image-request handler.
-        let requestHandler = VNImageRequestHandler(cgImage: cgImage)
-
-        // Create a new request to recognize text.
-        let request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
-        do {
-            // Perform the text-recognition request.
-            try requestHandler.perform([request])
-        } catch {
-            logger.error("Unable to perform the requests: \(error).")
+        DispatchQueue.main.async {
+            self.chatViewModel.addImage(standardizedImage)
         }
-    }
-
-    /// Async callback handler, takes the OCR results and spawns messages from them
-    private func recognizeTextHandler(request: VNRequest, error _: Error?) {
-        guard let observations = request.results as? [VNRecognizedTextObservation] else { return }
-        guard let image = lastOpenedImage else { return }
-
-        let recognizedStrings = observations.compactMap { observation in
-            // Return the string of the top VNRecognizedText instance.
-            observation.topCandidates(1).first?.string
-        }
-
-        // Append the recognized strings to chat. Should design this better, just appending is dumb.
-        let joined = recognizedStrings.joined(separator: " ")
-        Task {
-            await handleImageCompletion(image: image, joined: joined)
-        }
-    }
-
-    @MainActor
-    private func handleImageCompletion(image: Data, joined: String) {
-        sendViewState = .loading
-
-        // Create a new message with the recognized text
-        let userMessage = Message(
-            content: "Take a a look at this image for me",
-            role: .user,
-            images: [image]
-        )
-
-        // If joined is empty, we couldn't read anything from the image
-        let assistantContent: String? = if !joined.isEmpty {
-            "It says: \(joined)\n"
-        } else {
-            "I couldn't read anything from this image.\n"
-        }
-        let assistantMessage = Message(
-            content: assistantContent,
-            role: .assistant
-        )
-
-        // Add the messages to the view model
-        messages.append(userMessage)
-        messages.append(assistantMessage)
-        modelContext.insert(userMessage)
-        modelContext.insert(assistantMessage)
-        lastOpenedImage = nil
-        sendViewState = nil
     }
 
     @MainActor

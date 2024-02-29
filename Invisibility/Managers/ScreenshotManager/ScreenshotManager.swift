@@ -11,12 +11,12 @@ import OSLog
 import SwiftUI
 import Vision
 
-// import UserNotifications
-
 class ScreenshotManager {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "ScreenshotManager")
 
     static let shared = ScreenshotManager()
+
+    private let messageViewModel: MessageViewModel = MessageViewModel.shared
 
     var task: Process?
     let sceenCaptureURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
@@ -37,18 +37,43 @@ class ScreenshotManager {
 
     private init() {}
 
-    public func captureText(imagePath: String? = nil) {
+    public func capture() {
+        guard let url = captureImageToURL() else { return }
+        messageViewModel.handleFile(url)
+    }
+
+    public func captureTextToClipboard(imagePath: String? = nil) {
         let text = getText(imagePath)
         guard let text else { return }
         precessDetectedText(text)
     }
 
-    public func capture() {
+    public func captureImageToClipboard() {
         guard let image = getImage() else { return }
         // Add it to clipboard
         let pasteBoard = NSPasteboard.general
         pasteBoard.clearContents()
         pasteBoard.writeObjects([image as NSImage])
+    }
+
+    public func captureImageToURL() -> URL? {
+        task = Process()
+        task?.executableURL = sceenCaptureURL
+
+        task?.arguments = screenCaptureArguments
+
+        do {
+            try task?.run()
+        } catch {
+            logger.error("Failed to capture")
+            task = nil
+            return nil
+        }
+
+        task?.waitUntilExit()
+        task = nil
+
+        return URL(fileURLWithPath: screenShotFilePath)
     }
 
     private func getImage(_: String? = nil) -> NSImage? {
@@ -60,7 +85,7 @@ class ScreenshotManager {
         do {
             try task?.run()
         } catch {
-            print("Failed to capture")
+            logger.error("Failed to capture")
             task = nil
             return nil
         }

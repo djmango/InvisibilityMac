@@ -71,40 +71,12 @@ struct MessageView: View {
                                 // Spacer(minLength: dynamicTopPadding) // Dynamic padding
                                 ForEach(messageViewModel.messages.indices, id: \.self) { index in
                                     let message: Message = messageViewModel.messages[index]
-
-                                    if let audio = message.audio {
-                                        AudioWidgetView(audio: audio)
-                                            .padding(.top, 8)
-                                            .onHover { hovering in
-                                                if hovering {
-                                                    NSCursor.pointingHand.push()
-                                                } else {
-                                                    NSCursor.pop()
-                                                }
-                                            }
-                                            .id(message)
-                                    } else if let images = message.images {
-                                        HStack(alignment: .center, spacing: 8) {
-                                            ForEach(images, id: \.self) { imageData in
-                                                if let nsImage = NSImage(data: imageData) {
-                                                    Image(nsImage: nsImage)
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
-                                                        .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
-                                                        .shadow(radius: 2)
-                                                }
-                                            }
-                                            .id(message)
-                                        }
-                                    } else {
-                                        // Generate the view for the individual message.
-                                        MessageListItemView(message: message)
-                                            .generating(message.content == nil && isGenerating)
-                                            .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                                            .audio(message.audio)
-                                            .id(message)
-                                    }
+                                    // Generate the view for the individual message.
+                                    MessageListItemView(message: message)
+                                        .generating(message.content == nil && isGenerating)
+                                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                                        .audio(message.audio)
+                                        .id(message)
                                 }
                             }
                             .onAppear {
@@ -201,7 +173,7 @@ struct MessageView: View {
                     if let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) {
                         // Process the file URL
                         logger.debug("File URL: \(url)")
-                        messageViewModel.handleFile(url: url)
+                        messageViewModel.handleFile(url)
                     }
                 }
             } else {

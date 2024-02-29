@@ -12,12 +12,16 @@ import SwiftUI
 /// A control that displays an editable text interface for chat purposes.
 ///
 /// ``ChatField`` extends standard text field capabilities with multiline input and specific behaviors for different platforms.
-public struct ChatField: View {
+struct ChatField: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "ChatField")
+
+    @ObservedObject private var messageViewModel = MessageViewModel.shared
+    @ObservedObject private var chatViewModel = ChatViewModel.shared
 
     @Binding private var text: String
     @State private var textHeight: CGFloat = 52
     @State private var previousText: String = ""
+    @State private var whoIsHovering: UUID?
 
     private var action: () -> Void
 
@@ -35,29 +39,49 @@ public struct ChatField: View {
     }
 
     public var body: some View {
-        ScrollView {
-            TextEditor(text: $text)
-                .scrollContentBackground(.hidden)
-                .multilineTextAlignment(.leading)
-                .font(.title3)
-                .padding()
-                .onChange(of: text) {
-                    handleTextChange()
+        // Images
+        VStack {
+            HStack {
+                ForEach(chatViewModel.images) { imageItem in
+                    ChatImage(imageItem: imageItem, whoIsHovering: $whoIsHovering)
                 }
-                .background(
-                    // Invisible Text view to calculate height
-                    GeometryReader { geo in
-                        Text(text)
-                            .font(.title3) // Match TextEditor font
-                            .padding() // Match TextEditor padding
-                            .hidden() // Make the Text view invisible
-                            .onChange(of: text) {
-                                self.textHeight = geo.size.height
-                            }
+
+                Spacer()
+            }
+            .padding(.horizontal, 10)
+            .padding(.top, 10)
+            .visible(if: !chatViewModel.images.isEmpty, removeCompletely: true)
+
+            Divider()
+                .background(Color(nsColor: .separatorColor))
+                .padding(.horizontal, 10)
+                .visible(if: !chatViewModel.images.isEmpty, removeCompletely: true)
+
+            ScrollView {
+                TextEditor(text: $text)
+                    .scrollContentBackground(.hidden)
+                    .multilineTextAlignment(.leading)
+                    .font(.title3)
+                    .padding()
+                    .onChange(of: text) {
+                        handleTextChange()
                     }
-                )
+                    .background(
+                        // Invisible Text view to calculate height
+                        GeometryReader { geo in
+                            Text(text)
+                                .font(.title3) // Match TextEditor font
+                                .padding() // Match TextEditor padding
+                                .hidden() // Make the Text view invisible
+                                .onChange(of: text) {
+                                    self.textHeight = geo.size.height
+                                }
+                        }
+                    )
+            }
+            .scrollIndicators(.never)
+            .frame(height: max(52, min(textHeight, 500)))
         }
-        .scrollIndicators(.never)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color("WidgetColor"))
@@ -68,7 +92,6 @@ public struct ChatField: View {
                 )
         )
         .padding(.horizontal, 10)
-        .frame(height: max(52, min(textHeight, 500)))
         .animation(.snappy, value: textHeight)
     }
 

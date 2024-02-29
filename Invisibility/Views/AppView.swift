@@ -21,7 +21,7 @@ struct AppView: View {
             // }
             .pasteDestination(for: URL.self) { urls in
                 guard let url = urls.first else { return }
-                MessageViewModel.shared.handleFile(url: url)
+                MessageViewModel.shared.handleFile(url)
             }
             .onAppear {
                 Task {

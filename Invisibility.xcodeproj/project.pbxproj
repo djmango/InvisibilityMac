@@ -22,6 +22,8 @@
 		4D451C2A2B834B7F00DCEF48 /* EmailUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C292B834B7F00DCEF48 /* EmailUtils.swift */; };
 		4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */; };
 		4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */; };
+		4D4DB2472B91384D003B9D53 /* ChatImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4DB2462B91384D003B9D53 /* ChatImage.swift */; };
+		4D4DB2492B913E2E003B9D53 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */; };
 		4D5145762B7D8C4E00A5BA26 /* EventItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5145752B7D8C4E00A5BA26 /* EventItemView.swift */; };
 		4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */; };
 		4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */; };
@@ -91,6 +93,8 @@
 		4D451C292B834B7F00DCEF48 /* EmailUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailUtils.swift; sourceTree = "<group>"; };
 		4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractedSubjects.swift"; sourceTree = "<group>"; };
 		4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractAfter.swift"; sourceTree = "<group>"; };
+		4D4DB2462B91384D003B9D53 /* ChatImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatImage.swift; sourceTree = "<group>"; };
+		4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D5145752B7D8C4E00A5BA26 /* EventItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventItemView.swift; sourceTree = "<group>"; };
 		4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileWriter.swift; sourceTree = "<group>"; };
 		4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotManager.swift; sourceTree = "<group>"; };
@@ -260,6 +264,7 @@
 				4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */,
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 				4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */,
+				4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -345,6 +350,7 @@
 			isa = PBXGroup;
 			children = (
 				4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */,
+				4D4DB2462B91384D003B9D53 /* ChatImage.swift */,
 			);
 			path = ChatViews;
 			sourceTree = "<group>";
@@ -527,6 +533,7 @@
 				4D3D05102B59D536009340ED /* WhisperManager.swift in Sources */,
 				4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */,
 				4D5EA4D32B61F01700CD7966 /* AudioTranscriptView.swift in Sources */,
+				4D4DB2492B913E2E003B9D53 /* ChatViewModel.swift in Sources */,
 				4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */,
 				4D3EBF682B6444D700AE230E /* AppModels.swift in Sources */,
@@ -547,6 +554,7 @@
 				4D5896DB2B7C67D100484BFA /* EventView.swift in Sources */,
 				4D5896DD2B7C67E700484BFA /* EventsViewModel.swift in Sources */,
 				4D8E05592B2516DE00B60D0D /* ModelContext+SaveChanges.swift in Sources */,
+				4D4DB2472B91384D003B9D53 /* ChatImage.swift in Sources */,
 				4D451C2A2B834B7F00DCEF48 /* EmailUtils.swift in Sources */,
 				4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */,
 				4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */,

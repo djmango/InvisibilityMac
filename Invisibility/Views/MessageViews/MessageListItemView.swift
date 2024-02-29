@@ -50,11 +50,37 @@ struct MessageListItemView: View {
                             .tracking(-0.01)
                             .lineSpacing(10)
                     )
-                // .foregroundStyle(.accent)
 
                 ProgressView()
                     .controlSize(.small)
                     .visible(if: isGenerating && isFinalMessage && message.audio == nil, removeCompletely: true)
+
+                if let audio {
+                    AudioWidgetView(audio: audio)
+                        .padding(.top, 8)
+                        .onHover { hovering in
+                            if hovering {
+                                NSCursor.pointingHand.push()
+                            } else {
+                                NSCursor.pop()
+                            }
+                        }
+                        .visible(if: message.audio != nil, removeCompletely: true)
+                }
+
+                HStack(alignment: .center, spacing: 8) {
+                    ForEach(message.images ?? [], id: \.self) { imageData in
+                        if let nsImage = NSImage(data: imageData) {
+                            Image(nsImage: nsImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
+                                .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
+                                .shadow(radius: 2)
+                        }
+                    }
+                }
+                .visible(if: message.images != nil, removeCompletely: true)
 
                 Markdown(message.content ?? "")
                     .textSelection(.enabled)
@@ -62,10 +88,10 @@ struct MessageListItemView: View {
                     .markdownTheme(.docC)
                     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
                     // .markdownFont(.custom("SF Pro Display", size: 16))
-                    .markdownTextStyle {
-                        // Font
-                        BackgroundColor(nil)
-                    }
+                    // .markdownTextStyle {
+                    //     // Font
+                    //     BackgroundColor(nil)
+                    // }
                     .hide(if: isGenerating, removeCompletely: true)
                     .opacity(0.85)
             }
