@@ -30,6 +30,8 @@ struct MessageListItemView: View {
 
     var body: some View {
         ZStack {
+            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 16)
+
             VStack(alignment: .leading, spacing: 8) {
                 Text(isAssistant ? "Invisibility" : "You")
                     .font(.custom("SF Pro Display", size: 13))
@@ -101,13 +103,12 @@ struct MessageListItemView: View {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(Color("WidgetColor"))
                     .shadow(radius: 2)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(nsColor: .separatorColor))
-                    )
             )
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color(nsColor: .separatorColor))
+            )
+            .padding(10)
 
             VStack {
                 Spacer()

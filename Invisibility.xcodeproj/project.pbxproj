@@ -78,6 +78,7 @@
 		4DEA4ADF2B70689B00393858 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEA4ADE2B70689B00393858 /* MenuBarView.swift */; };
 		4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */; };
 		4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */; };
+		4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -139,6 +140,7 @@
 		4DEA4ADE2B70689B00393858 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
 		4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
+		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -335,6 +337,7 @@
 		4D8E053E2B2516DE00B60D0D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4DF195012B91B46E0017365F /* Effects */,
 				4D5896D92B7C67BD00484BFA /* MenuBarViews */,
 				4D596AAD2B6197E200B9E765 /* AudioViews */,
 				4DA893AE2B54C44200560DAD /* OnboardingViews */,
@@ -401,6 +404,14 @@
 				4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */,
 			);
 			path = CaptureManager;
+			sourceTree = "<group>";
+		};
+		4DF195012B91B46E0017365F /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+				4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */,
+			);
+			path = Effects;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -517,6 +528,7 @@
 				4D5145762B7D8C4E00A5BA26 /* EventItemView.swift in Sources */,
 				4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */,
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
+				4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */,
 				4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */,
 				4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
@@ -699,7 +711,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -732,7 +744,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 46;
+				CURRENT_PROJECT_VERSION = 47;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;

@@ -96,6 +96,11 @@ struct MessageButtonsView: View {
             .keyboardShortcut(.delete, modifiers: [.command, .shift])
         }
         .animation(.snappy, value: whoIsHovering)
+        .background(
+            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 16)
+                .padding(-5)
+                .animation(.snappy, value: whoIsHovering)
+        )
         .padding(.vertical, 10)
         .focusable(false)
     }

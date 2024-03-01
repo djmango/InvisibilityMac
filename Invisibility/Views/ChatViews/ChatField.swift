@@ -91,6 +91,10 @@ struct ChatField: View {
                         .stroke(Color(nsColor: .separatorColor))
                 )
         )
+        .background(
+            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 16)
+                .padding(-5)
+        )
         .padding(.horizontal, 10)
         .animation(.snappy, value: textHeight)
     }

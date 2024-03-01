@@ -10,6 +10,7 @@ import KeyboardShortcuts
 import OSLog
 
 extension KeyboardShortcuts.Name {
+    // TODO: SET DEFAULTS
     static let summon = Self("summon")
     static let screenshot = Self("screenshot")
 }

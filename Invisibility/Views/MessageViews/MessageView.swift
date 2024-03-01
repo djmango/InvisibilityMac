@@ -5,29 +5,6 @@ import SwiftUI
 import ViewCondition
 import ViewState
 
-struct VisualEffectBlur: NSViewRepresentable {
-    var material: NSVisualEffectView.Material
-    var blendingMode: NSVisualEffectView.BlendingMode = .behindWindow
-    var cornerRadius: CGFloat
-
-    func makeNSView(context _: Context) -> NSVisualEffectView {
-        let view = NSVisualEffectView()
-        view.material = material
-        view.blendingMode = blendingMode
-        view.state = .active
-        view.wantsLayer = true
-        view.layer?.cornerRadius = cornerRadius
-        view.layer?.masksToBounds = true
-        return view
-    }
-
-    func updateNSView(_ nsView: NSVisualEffectView, context _: Context) {
-        nsView.material = material
-        nsView.blendingMode = blendingMode
-        nsView.layer?.cornerRadius = cornerRadius
-    }
-}
-
 struct MessageView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageView")
 
@@ -52,88 +29,49 @@ struct MessageView: View {
     }
 
     var body: some View {
-        ZStack {
-            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 0)
-                .mask(
-                    HStack(spacing: 0) {
-                        Rectangle() // This part remains fully opaque
-                            .frame(width: 400) // Adjust width to control the opaque area
-                        LinearGradient(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .leading, endPoint: .trailing)
-                            .frame(width: 20) // Adjust width to control the fade area
-                        Spacer()
+        VStack(alignment: .center, spacing: 0) {
+            Spacer()
+            ScrollView {
+                LazyVStack(spacing: 4) {
+                    Spacer(minLength: dynamicTopPadding) // Dynamic padding
+                    ForEach(messageViewModel.messages.indices, id: \.self) { index in
+                        let message: Message = messageViewModel.messages.reversed()[index]
+                        // Generate the view for the individual message.
+                        MessageListItemView(message: message)
+                            .generating(message.content == nil && isGenerating)
+                            .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                            .audio(message.audio)
+                            .id(message)
+                            .rotationEffect(.degrees(180))
                     }
-                )
-            VStack(alignment: .center, spacing: 0) {
-                Spacer()
-                GeometryReader { _ in
-                    ScrollView {
-                        ScrollViewReader { scrollViewProxy in
-                            LazyVStack(spacing: 0) {
-                                // Spacer(minLength: dynamicTopPadding) // Dynamic padding
-                                ForEach(messageViewModel.messages.indices, id: \.self) { index in
-                                    let message: Message = messageViewModel.messages[index]
-                                    // Generate the view for the individual message.
-                                    MessageListItemView(message: message)
-                                        .generating(message.content == nil && isGenerating)
-                                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                                        .audio(message.audio)
-                                        .id(message)
-                                }
-                            }
-                            .onAppear {
-                                scrollToBottom(scrollViewProxy)
-                            }
-                            .onChange(of: messageViewModel.messages) {
-                                scrollToBottom(scrollViewProxy)
-                            }
-                            .onChange(of: messageViewModel.messages.last?.content) {
-                                scrollToBottom(scrollViewProxy)
-                            }
-                            .animation(.snappy, value: messageViewModel.messages)
-                        }
-                    }
-                    .scrollContentBackground(.hidden)
-                    .scrollIndicators(.never)
-                    // .onAppear {
-                    //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
-                    // }
-                    // .onChange(of: messageViewModel.messages.last?.content) {
-                    //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
-                    // }
-                    // .onChange(of: messageViewModel.messages) {
-                    //     adjustDynamicTopPadding(totalHeight: geometry.size.height)
-                    // }
                 }
-
-                // Action Icons
-                MessageButtonsView()
-
-                ChatField(text: $content, action: sendAction)
-                    .focused($promptFocused)
-                    .onTapGesture {
-                        promptFocused = true
-                    }
-                    .padding(.top, 5)
-                    .padding(.bottom, 10)
-                    .scrollIndicators(.never)
+                .animation(.snappy, value: messageViewModel.messages)
             }
-            .overlay(
-                Rectangle()
-                    .foregroundColor(Color.gray.opacity(0.2))
-                    .opacity(isDragActive ? 1 : 0)
-            )
-            .border(isDragActive ? Color.blue : Color.clear, width: 5)
-            .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
-                handleDrop(providers: providers)
-            }
+            // Upside down
+            .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
+            .scrollContentBackground(.hidden)
+            .scrollIndicators(.never)
 
-            // Blur overlays
-            // VStack {
-            //     Rectangle()
-            //         // .fill(Color.white)
-            //         .frame(maxWidth: .infinity, maxHeight: .infinity)
-            //         .glur()
-            // }
+            // Action Icons
+            MessageButtonsView()
+
+            ChatField(text: $content, action: sendAction)
+                .focused($promptFocused)
+                .onTapGesture {
+                    promptFocused = true
+                }
+                .padding(.top, 5)
+                .padding(.bottom, 10)
+                .scrollIndicators(.never)
+        }
+        .overlay(
+            Rectangle()
+                .foregroundColor(Color.gray.opacity(0.2))
+                .opacity(isDragActive ? 1 : 0)
+        )
+        .border(isDragActive ? Color.blue : Color.clear, width: 5)
+        .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
+            handleDrop(providers: providers)
         }
     }
 

@@ -40,6 +40,8 @@ class ScreenshotManager {
     public func capture() {
         guard let url = captureImageToURL() else { return }
         messageViewModel.handleFile(url)
+        // TODO: is this actuallly a good idea????
+        try? FileManager.default.removeItem(atPath: screenShotFilePath)
     }
 
     public func captureTextToClipboard(imagePath: String? = nil) {
