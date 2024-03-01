@@ -32,28 +32,26 @@ struct MessageView: View {
         VStack(alignment: .center, spacing: 0) {
             Spacer()
             ScrollView {
-                LazyVStack(spacing: 4) {
-                    Spacer(minLength: dynamicTopPadding) // Dynamic padding
-                    ForEach(messageViewModel.messages.indices, id: \.self) { index in
-                        let message: Message = messageViewModel.messages.reversed()[index]
-                        // Generate the view for the individual message.
-                        MessageListItemView(message: message)
-                            .generating(message.content == nil && isGenerating)
-                            .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                            .audio(message.audio)
-                            .id(message)
-                            .rotationEffect(.degrees(180))
-                    }
+                Spacer(minLength: dynamicTopPadding) // Dynamic padding
+                ForEach(messageViewModel.messages.indices, id: \.self) { index in
+                    let message: Message = messageViewModel.messages.reversed()[index]
+                    // Generate the view for the individual message.
+                    MessageListItemView(message: message)
+                        .generating(message.content == nil && isGenerating)
+                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                        .audio(message.audio)
+                        .id(message)
+                        .rotationEffect(.degrees(180))
                 }
-                .animation(.snappy, value: messageViewModel.messages)
             }
-            // Upside down
+            .animation(.snappy, value: messageViewModel.messages)
             .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
             .scrollContentBackground(.hidden)
             .scrollIndicators(.never)
 
             // Action Icons
             MessageButtonsView()
+                .padding(.top, 5)
 
             ChatField(text: $content, action: sendAction)
                 .focused($promptFocused)

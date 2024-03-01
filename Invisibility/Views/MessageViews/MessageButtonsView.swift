@@ -97,7 +97,7 @@ struct MessageButtonsView: View {
         }
         .animation(.snappy, value: whoIsHovering)
         .background(
-            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 16)
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
                 .padding(-5)
                 .animation(.snappy, value: whoIsHovering)
         )

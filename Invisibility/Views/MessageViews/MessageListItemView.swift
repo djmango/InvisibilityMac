@@ -30,7 +30,7 @@ struct MessageListItemView: View {
 
     var body: some View {
         ZStack {
-            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 16)
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(isAssistant ? "Invisibility" : "You")
@@ -92,23 +92,16 @@ struct MessageListItemView: View {
                     // .markdownFont(.custom("SF Pro Display", size: 16))
                     // .markdownTextStyle {
                     //     // Font
-                    //     BackgroundColor(nil)
                     // }
                     .hide(if: isGenerating, removeCompletely: true)
                     .opacity(0.85)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(Color("WidgetColor"))
-                    .shadow(radius: 2)
-            )
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color(nsColor: .separatorColor))
             )
-            .padding(10)
 
             VStack {
                 Spacer()
@@ -123,6 +116,8 @@ struct MessageListItemView: View {
             .hide(if: !isCopyButtonVisible, removeCompletely: true)
             .focusable(false)
         }
+        .padding(.horizontal, 10)
+        .padding(.top, 5)
         .onHover {
             isHovered = $0
             isCopied = false

@@ -82,18 +82,18 @@ struct ChatField: View {
             .scrollIndicators(.never)
             .frame(height: max(52, min(textHeight, 500)))
         }
+        // .background(
+        //     RoundedRectangle(cornerRadius: 16)
+        //         .fill(Color("WidgetColor"))
+        //         .shadow(radius: 2)
+        //         .overlay(
+        //             RoundedRectangle(cornerRadius: 16)
+        //                 .stroke(Color(nsColor: .separatorColor))
+        //         )
+        // )
         .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(Color("WidgetColor"))
-                .shadow(radius: 2)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(nsColor: .separatorColor))
-                )
-        )
-        .background(
-            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 16)
-                .padding(-5)
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+            // .padding(-5)
         )
         .padding(.horizontal, 10)
         .animation(.snappy, value: textHeight)
