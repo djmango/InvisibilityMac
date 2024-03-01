@@ -32,8 +32,15 @@ struct GeneralSettingsView: View {
             Form {
                 Section {
                     HStack {
-                        Text("Summon Gravity:").bold()
+                        Text("Summon Invisibility:").bold()
                         KeyboardShortcuts.Recorder(for: .summon)
+                    }
+                }
+
+                Section {
+                    HStack {
+                        Text("Screenshot:").bold()
+                        KeyboardShortcuts.Recorder(for: .screenshot)
                     }
                 }
 

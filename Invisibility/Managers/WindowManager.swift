@@ -22,13 +22,13 @@ class WindowManager: ObservableObject {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "WindowManager")
 
     static let shared = WindowManager()
+
     private var contentView = AppView()
+    private var window: NSPanel?
+    private var cancellables = Set<AnyCancellable>()
 
     /// The current screen the window is on
     @Published var currentScreen: NSScreen?
-
-    private var window: NSPanel?
-    private var cancellables = Set<AnyCancellable>()
 
     // We keep track of the messages so that we can have the min window height
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
@@ -47,6 +47,11 @@ class WindowManager: ObservableObject {
                 }
             }
         }
+
+        KeyboardShortcuts.onKeyUp(for: .screenshot) {
+            ScreenshotManager.shared.capture()
+            self.positionWindowOnCursorScreen()
+        }
     }
 
     public func setupWindow() -> Bool {
@@ -56,6 +61,7 @@ class WindowManager: ObservableObject {
         let window = InteractivePanel(
             contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.borderless, .nonactivatingPanel],
+            // styleMask: [.nonactivatingPanel],
             backing: .buffered,
             defer: false
         )
@@ -88,16 +94,11 @@ class WindowManager: ObservableObject {
 
         // Define window width and the desired positioning
         let windowWidth: CGFloat = 400
-        // let windowHeight: CGFloat = screen.frame.height
 
         // Get the menu bar height to adjust the window position
         let menuBarHeight = NSStatusBar.system.thickness
 
         let windowHeight: CGFloat = screen.frame.height - menuBarHeight
-
-        // Use num messages to determine the window height
-        // let numMessages = messageViewModel.messages.count
-        // let windowHeight: CGFloat = CGFloat(numMessages) * 100
 
         // Pin the window to the top left corner of the screen
         let xPos = screen.frame.origin.x
