@@ -32,19 +32,17 @@ struct MessageButtonItemView: View {
                     .padding(8)
 
                 Text(label)
-                    // .font(.system(size: 12))
                     .font(.title3)
                     .foregroundColor(Color("ChatButtonForegroundColor"))
                     .hide(if: !isHovering, removeCompletely: true)
                     .animation(.snappy, value: isHovering)
                     .padding(.trailing, 8)
             }
-            .background(
-                RoundedRectangle(cornerRadius: 100)
-                    .fill(Color("ChatButtonBackgroundColor"))
-                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-            )
         }
+        .overlay(
+            RoundedRectangle(cornerRadius: 100)
+                .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+        )
         .onHover { hovering in
             isHovering = hovering
         }

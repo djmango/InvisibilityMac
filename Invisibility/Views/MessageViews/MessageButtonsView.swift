@@ -63,11 +63,6 @@ struct MessageButtonsView: View {
                         .hide(if: whoIsHovering ?? "" != "Record", removeCompletely: true)
                         .padding(.trailing, 8)
                 }
-                .background(
-                    RoundedRectangle(cornerRadius: 100)
-                        .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-                        .fill(screenRecorder.isRunning ? .red.opacity(0.1) : Color("ChatButtonBackgroundColor"))
-                )
             }
             .onHover { hovering in
                 if hovering {
@@ -76,6 +71,10 @@ struct MessageButtonsView: View {
                     whoIsHovering = nil
                 }
             }
+            .overlay(
+                RoundedRectangle(cornerRadius: 100)
+                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+            )
             .animation(.snappy, value: whoIsHovering)
             .animation(.snappy, value: screenRecorder.isRunning)
             .buttonStyle(.plain)
@@ -97,8 +96,9 @@ struct MessageButtonsView: View {
         }
         .animation(.snappy, value: whoIsHovering)
         .background(
-            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
-                .padding(-5)
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
+                .padding(.horizontal, -10)
+                .padding(.vertical, -5)
                 .animation(.snappy, value: whoIsHovering)
         )
         .padding(.vertical, 10)

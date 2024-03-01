@@ -88,7 +88,7 @@ final class LLMManager: ObservableObject {
             }
         }
 
-        let chat_messages = truncateMessages(messages: messages, maxTokenCount: LLMManager.maxTokenCount - LLMManager.maxNewTokens)
+        let chat_messages = truncateMessages(messages: messages, maxTokenCount: LLMManager.maxTokenCount - LLMManager.maxNewTokens, allow_images: model == vision_model)
 
         // If the last message has any images use the vision model, otherwise use the regular model
         return ChatQuery(messages: chat_messages, model: model, maxTokens: LLMManager.maxNewTokens)
@@ -139,7 +139,7 @@ final class LLMManager: ObservableObject {
     }
 
     /// Returns list of tokens, encoded from the history, truncated to the maximum token count.
-    private func truncateMessages(messages: [Message], maxTokenCount: Int) -> [ChatQuery.ChatCompletionMessageParam] {
+    private func truncateMessages(messages: [Message], maxTokenCount: Int, allow_images: Bool) -> [ChatQuery.ChatCompletionMessageParam] {
         var truncatedChats: [ChatQuery.ChatCompletionMessageParam] = []
         var token_count: Int { numTokens(truncatedChats.map { message in message.content?.string ?? "" }.joined(separator: "\n\n")) }
 
@@ -148,7 +148,7 @@ final class LLMManager: ObservableObject {
 
         // In reverse, prepend content to each chat until we reach the max token count
         for message in messages.reversed() {
-            guard let chat = message.toChat() else {
+            guard let chat = message.toChat(allow_images: allow_images) else {
                 logger.error("Chat is nil")
                 continue
             }

@@ -149,7 +149,7 @@ extension Message {
 }
 
 extension Message {
-    func toChat() -> ChatQuery.ChatCompletionMessageParam? {
+    func toChat(allow_images: Bool = false) -> ChatQuery.ChatCompletionMessageParam? {
         var role: ChatQuery.ChatCompletionMessageParam.Role = .user
         if self.role == .assistant {
             role = .assistant
@@ -157,7 +157,7 @@ extension Message {
             role = .system
         }
 
-        if let images = self.images {
+        if let images = self.images, allow_images {
             // Images, multimodal
             let imageUrls = images.map { VisionContent.ChatCompletionContentPartImageParam.ImageURL(url: $0, detail: .auto) }
             let imageParams = imageUrls.map { VisionContent.ChatCompletionContentPartImageParam(imageUrl: $0) }
