@@ -4,6 +4,9 @@ import OSLog
 import SwiftData
 import SwiftUI
 
+// Alias for ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent(images: images)
+typealias VisionContent = ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent
+
 /// Role for message sender, system, user, or assistant
 enum MessageRole: String, Codable {
     case system
@@ -154,7 +157,22 @@ extension Message {
             role = .system
         }
 
-        return ChatQuery.ChatCompletionMessageParam(role: role, content: text)
+        if let images = self.images {
+            // Images, multimodal
+            let imageUrls = images.map { VisionContent.ChatCompletionContentPartImageParam.ImageURL(url: $0, detail: .auto) }
+            let imageParams = imageUrls.map { VisionContent.ChatCompletionContentPartImageParam(imageUrl: $0) }
+            let visionContent = imageParams.map { VisionContent(chatCompletionContentPartImageParam: $0) }
+
+            let textParam = VisionContent.ChatCompletionContentPartTextParam(text: self.text)
+            let textVisionContent = VisionContent(chatCompletionContentPartTextParam: textParam)
+
+            let content = [textVisionContent] + visionContent
+
+            return ChatQuery.ChatCompletionMessageParam(role: role, content: content)
+        } else {
+            // Pure text
+            return ChatQuery.ChatCompletionMessageParam(role: role, content: text)
+        }
     }
 }
 

@@ -118,7 +118,7 @@ struct ChatField: View {
                 // If Shift is not pressed, and a newline is added, submit
                 text = text.trimmingCharacters(in: .newlines) // Optional: remove the newline
                 action()
-                text = "" // Clear the text field after submission
+                // text = "" // Clear the text field after submission
             }
             // If Shift is pressed, just allow the newline (normal behavior)
         }

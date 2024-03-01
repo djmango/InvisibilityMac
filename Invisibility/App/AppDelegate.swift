@@ -71,25 +71,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // }
 
     @objc private func sleepListener(_ notification: Notification) {
-        logger.info("Listening to sleep")
-
         if notification.name == NSWorkspace.willSleepNotification {
-            logger.info("Going to sleep")
+            logger.debug("Going to sleep")
             DispatchQueue.global(qos: .userInitiated).async {
                 Task {
                     if await ScreenRecorder.shared.pause() {
                         self.shouldResumeRecording = true
-                        self.logger.info("Paused recording")
+                        self.logger.debug("Paused recording")
                     }
                 }
             }
         } else if notification.name == NSWorkspace.didWakeNotification {
-            logger.info("Woke up")
+            logger.debug("Woke up")
             Task {
                 if shouldResumeRecording {
                     shouldResumeRecording = false
                     await ScreenRecorder.shared.resume()
-                    logger.info("Resumed recording")
+                    logger.debug("Resumed recording")
                 }
             }
         } else {

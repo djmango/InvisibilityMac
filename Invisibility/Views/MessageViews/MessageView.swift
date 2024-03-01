@@ -40,6 +40,7 @@ struct MessageView: View {
     @State private var dynamicTopPadding: CGFloat = 0
 
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject var chatViewModel: ChatViewModel = ChatViewModel.shared
 
     init() {
         isEditorFocused = true
@@ -88,9 +89,6 @@ struct MessageView: View {
                             .onChange(of: messageViewModel.messages.last?.content) {
                                 scrollToBottom(scrollViewProxy)
                             }
-                            .task {
-                                scrollToBottom(scrollViewProxy)
-                            }
                             .animation(.snappy, value: messageViewModel.messages)
                         }
                     }
@@ -112,12 +110,12 @@ struct MessageView: View {
 
                 ChatField(text: $content, action: sendAction)
                     .focused($promptFocused)
-                    // .focused(true)
                     .onTapGesture {
                         promptFocused = true
                     }
                     .padding(.top, 5)
                     .padding(.bottom, 10)
+                    .scrollIndicators(.never)
             }
             .overlay(
                 Rectangle()
@@ -145,8 +143,11 @@ struct MessageView: View {
         guard messageViewModel.sendViewState == nil else { return }
         guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
-        let message = Message(content: content, role: .user)
+        let images = chatViewModel.images.map(\.imageData)
+
+        let message = Message(content: content, role: .user, images: images)
         content = ""
+        chatViewModel.images.removeAll()
 
         Task {
             await messageViewModel.send(message)

@@ -18,7 +18,6 @@ final class LLMManager: ObservableObject {
     static let shared = LLMManager()
 
     private let ai: OpenAI
-    private let model: String = "gpt-4-vision-preview"
     private let host: String = "api.openai.com"
     private let encoder: GPTEncoder = GPTEncoder()
 
@@ -41,15 +40,7 @@ final class LLMManager: ObservableObject {
         // Default processOutput function, just appends the output to a variable and returns it
         processOutput: @escaping (String) -> Void = { _ in }
     ) async {
-        // For audio messages, chunk the input and summarize each chunk
-        for message in messages {
-            if message.audio != nil, message.summarizedChunks.count == 0, numTokens(message.text) > LLMManager.maxTokenCountForMessage {
-                await message.generateSummarizedChunks()
-            }
-        }
-
-        let messages = truncateMessages(messages: messages, maxTokenCount: LLMManager.maxTokenCount - LLMManager.maxNewTokens)
-        let chatQuery = ChatQuery(messages: messages, model: model, maxTokens: LLMManager.maxNewTokens)
+        let chatQuery = await constructChatQuery(messages: messages)
 
         do {
             for try await result in ai.chatsStream(query: chatQuery) {
@@ -67,8 +58,7 @@ final class LLMManager: ObservableObject {
 
     // @MainActor
     func achat(messages: [Message]) async -> Message {
-        let messages = truncateMessages(messages: messages, maxTokenCount: LLMManager.maxTokenCount - LLMManager.maxNewTokens)
-        let chatQuery = ChatQuery(messages: messages, model: model, maxTokens: LLMManager.maxNewTokens)
+        let chatQuery = await constructChatQuery(messages: messages)
 
         do {
             let result = try await ai.chats(query: chatQuery)
@@ -78,6 +68,30 @@ final class LLMManager: ObservableObject {
             AlertManager.shared.doShowAlert(title: "Chat Error", message: "Error in chat: \(error.localizedDescription)")
             return Message(content: "Error in chat: \(error.localizedDescription)")
         }
+    }
+
+    func constructChatQuery(messages: [Message]) async -> ChatQuery {
+        let vision_model: String = "gpt-4-vision-preview"
+        let reg_model: String = "gpt-4-turbo-preview"
+
+        // If the last message has any images use the vision model, otherwise use the regular model
+        let model: String = if messages.last?.images?.count ?? 0 > 0 {
+            vision_model
+        } else {
+            reg_model
+        }
+
+        // For audio messages, chunk the input and summarize each chunk
+        for message in messages {
+            if message.audio != nil, message.summarizedChunks.count == 0, numTokens(message.text) > LLMManager.maxTokenCountForMessage {
+                await message.generateSummarizedChunks()
+            }
+        }
+
+        let chat_messages = truncateMessages(messages: messages, maxTokenCount: LLMManager.maxTokenCount - LLMManager.maxNewTokens)
+
+        // If the last message has any images use the vision model, otherwise use the regular model
+        return ChatQuery(messages: chat_messages, model: model, maxTokens: LLMManager.maxNewTokens)
     }
 
     /// Returns the number of tokens in the input text.
