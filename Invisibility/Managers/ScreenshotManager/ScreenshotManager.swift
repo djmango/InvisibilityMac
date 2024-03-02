@@ -38,9 +38,10 @@ class ScreenshotManager {
     private init() {}
 
     public func capture() {
+        WindowManager.shared.hideWindow()
         guard let url = captureImageToURL() else { return }
+        WindowManager.shared.showWindow()
         messageViewModel.handleFile(url)
-        // TODO: is this actuallly a good idea????
         try? FileManager.default.removeItem(atPath: screenShotFilePath)
     }
 

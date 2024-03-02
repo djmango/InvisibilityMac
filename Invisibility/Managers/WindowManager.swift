@@ -34,17 +34,18 @@ class WindowManager: ObservableObject {
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
 
     private init() {
+        setupShortcuts()
+    }
+
+    private func setupShortcuts() {
         KeyboardShortcuts.onKeyUp(for: .summon) {
             // If we are just changing screens, don't toggle the window
             let newScreen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }
             if newScreen != self.currentScreen {
+                // Just move to the new screen
                 self.positionWindowOnCursorScreen()
             } else {
-                if self.window?.isVisible == true {
-                    self.window?.orderOut(nil)
-                } else {
-                    self.positionWindowOnCursorScreen()
-                }
+                self.toggleWindow()
             }
         }
 
@@ -52,6 +53,22 @@ class WindowManager: ObservableObject {
             ScreenshotManager.shared.capture()
             self.positionWindowOnCursorScreen()
         }
+    }
+
+    public func toggleWindow() {
+        if window?.isVisible == true {
+            window?.orderOut(nil)
+        } else {
+            positionWindowOnCursorScreen()
+        }
+    }
+
+    public func showWindow() {
+        positionWindowOnCursorScreen()
+    }
+
+    public func hideWindow() {
+        window?.orderOut(nil)
     }
 
     public func setupWindow() -> Bool {
@@ -81,7 +98,7 @@ class WindowManager: ObservableObject {
         return true
     }
 
-    func positionWindowOnCursorScreen() {
+    private func positionWindowOnCursorScreen() {
         guard let window else { return }
 
         // Get the current mouse location
