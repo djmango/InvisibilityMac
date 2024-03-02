@@ -18,57 +18,54 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_: Notification) {
         // Set up the observer for when the app becomes active
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: NSApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appDidBecomeActive),
+            name: NSApplication.didBecomeActiveNotification,
+            object: nil
+        )
 
         // Set up the observer for when the app resigns active
-        NotificationCenter.default.addObserver(self, selector: #selector(appDidResignActive), name: NSApplication.didResignActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appDidResignActive),
+            name: NSApplication.didResignActiveNotification,
+            object: nil
+        )
 
         // Set up the observer for when the system will sleep
-        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(sleepListener(_:)),
-                                                          name: NSWorkspace.willSleepNotification, object: nil)
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(sleepListener(_:)),
+            name: NSWorkspace.willSleepNotification,
+            object: nil
+        )
 
         // Set up the observer for when the system wakes
-        NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(sleepListener(_:)),
-                                                          name: NSWorkspace.didWakeNotification, object: nil)
+        NSWorkspace.shared.notificationCenter.addObserver(
+            self,
+            selector: #selector(sleepListener(_:)),
+            name: NSWorkspace.didWakeNotification,
+            object: nil
+        )
 
         let windowSuccess = WindowManager.shared.setupWindow()
         if !windowSuccess {
             logger.error("Failed to set up window")
             AlertManager.shared.doShowAlert(title: "Error", message: "Failed to set up window")
         }
-
-        // checkAccessibilityPermissions()
-        // setupGlobalKeyListener()
     }
 
-    // func setupGlobalKeyListener() {
-    //     logger.info("Setting up global key listener")
-    //     eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-    //         self.logger.info("Key pressed: \(event.keyCode)")
-    //         if event.keyCode == 36 { // Enter key code
-    //             DispatchQueue.main.async {
-    //                 KeypressManager.shared.enterPressed = true
-    //                 self.logger.info("Enter key pressed")
-    //             }
-    //         }
-    //     }
-    // }
+    func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows _: Bool) -> Bool {
+        // If the window is visible and on the screen with the cursor, don't show it again
+        if WindowManager.shared.windowIsVisible, WindowManager.shared.windowIsOnScreenWithCursor {
+            return true
+        }
 
-    // func checkAccessibilityPermissions() {
-    //     // let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as NSString: true]
-    //     // let accessibilityEnabled = AXIsProcessTrustedWithOptions(options)
-
-    //     let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString: true]
-    //     let accessibilityEnabled = AXIsProcessTrustedWithOptions(options)
-
-    //     if accessibilityEnabled {
-    //         setupGlobalKeyListener()
-    //     } else {
-    //         // Permissions not granted, the user is prompted, and you might need to handle this case.
-    //         AlertManager.shared.doShowAlert(title: "Error", message: "Accessibility permissions not granted.")
-    //         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
-    //     }
-    // }
+        // Otherwise, show the window on the screen with the cursor
+        WindowManager.shared.showWindow()
+        return false
+    }
 
     @objc private func sleepListener(_ notification: Notification) {
         if notification.name == NSWorkspace.willSleepNotification {

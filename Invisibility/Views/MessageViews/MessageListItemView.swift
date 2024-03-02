@@ -31,6 +31,7 @@ struct MessageListItemView: View {
     var body: some View {
         ZStack {
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+            // .animation(.snappy, value: message.content)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(isAssistant ? "Invisibility" : "You")
@@ -77,7 +78,7 @@ struct MessageListItemView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(maxWidth: 256, maxHeight: 384) // 2:3 aspect ratio max
-                                .cornerRadius(8) // Rounding is strange for large images, seems to be proportional to size for some reason
+                                .cornerRadius(8)
                                 .shadow(radius: 2)
                         }
                     }
@@ -86,21 +87,17 @@ struct MessageListItemView: View {
 
                 Markdown(message.content ?? "")
                     .textSelection(.enabled)
-                    // .font(.custom("SF Pro Display", size: 16))
                     .markdownTheme(.docC)
                     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                    // .markdownFont(.custom("SF Pro Display", size: 16))
-                    // .markdownTextStyle {
-                    //     // Font
-                    // }
+                    .animation(nil, value: message.content)
                     .hide(if: isGenerating, removeCompletely: true)
-                    .opacity(0.85)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color(nsColor: .separatorColor))
+                // .animation(.snappy, value: message.content)
             )
 
             VStack {
@@ -110,6 +107,7 @@ struct MessageListItemView: View {
                     MessageButtonItemView(label: "Copy", icon: "doc.on.doc") {
                         copyAction()
                     }
+                    .padding(.horizontal, -15)
                 }
             }
             .animation(.snappy, value: isHovered)

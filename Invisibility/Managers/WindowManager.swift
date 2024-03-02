@@ -27,11 +27,29 @@ class WindowManager: ObservableObject {
     private var window: NSPanel?
     private var cancellables = Set<AnyCancellable>()
 
+    private let animationDuration: TimeInterval = 0.2
+
     /// The current screen the window is on
     @Published var currentScreen: NSScreen?
 
     // We keep track of the messages so that we can have the min window height
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
+
+    /// Whether the window is visible
+    public var windowIsVisible: Bool {
+        guard let window else { return false }
+        return window.isVisible
+    }
+
+    /// Whether the window is on the screen with the cursor
+    public var windowIsOnScreenWithCursor: Bool {
+        let newScreen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }
+        if newScreen != self.currentScreen {
+            return false
+        } else {
+            return true
+        }
+    }
 
     private init() {
         setupShortcuts()
@@ -40,35 +58,53 @@ class WindowManager: ObservableObject {
     private func setupShortcuts() {
         KeyboardShortcuts.onKeyUp(for: .summon) {
             // If we are just changing screens, don't toggle the window
-            let newScreen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }
-            if newScreen != self.currentScreen {
+            if self.windowIsOnScreenWithCursor {
+                self.logger.debug("Toggling window")
+                self.toggleWindow()
+            } else {
+                self.logger.debug("Changing screens")
                 // Just move to the new screen
                 self.positionWindowOnCursorScreen()
-            } else {
-                self.toggleWindow()
+                self.showWindow()
             }
         }
 
         KeyboardShortcuts.onKeyUp(for: .screenshot) {
+            self.logger.debug("Taking screenshot")
             ScreenshotManager.shared.capture()
             self.positionWindowOnCursorScreen()
         }
     }
 
     public func toggleWindow() {
-        if window?.isVisible == true {
-            window?.orderOut(nil)
+        guard let window else { return }
+        if window.isVisible == true {
+            hideWindow()
         } else {
-            positionWindowOnCursorScreen()
+            showWindow()
         }
     }
 
     public func showWindow() {
+        guard let window else { return }
+        // Animate opacity
+        window.alphaValue = 0
         positionWindowOnCursorScreen()
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = animationDuration
+            window.animator().alphaValue = 1
+        }
     }
 
     public func hideWindow() {
-        window?.orderOut(nil)
+        guard let window else { return }
+        // Animate opacity
+        NSAnimationContext.runAnimationGroup({ context in
+            context.duration = animationDuration
+            window.animator().alphaValue = 0
+        }, completionHandler: {
+            window.orderOut(nil)
+        })
     }
 
     public func setupWindow() -> Bool {
@@ -94,7 +130,9 @@ class WindowManager: ObservableObject {
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.orderFrontRegardless()
 
-        positionWindowOnCursorScreen()
+        logger.debug("Window set up")
+        showWindow()
+        logger.debug("Window positioned")
         return true
     }
 

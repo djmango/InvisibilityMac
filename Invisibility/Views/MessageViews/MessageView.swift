@@ -30,24 +30,28 @@ struct MessageView: View {
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Spacer()
-            ScrollView {
-                Spacer(minLength: dynamicTopPadding) // Dynamic padding
-                ForEach(messageViewModel.messages.indices, id: \.self) { index in
-                    let message: Message = messageViewModel.messages.reversed()[index]
-                    // Generate the view for the individual message.
-                    MessageListItemView(message: message)
-                        .generating(message.content == nil && isGenerating)
-                        .finalMessage(index == messageViewModel.messages.endIndex - 1)
-                        .audio(message.audio)
-                        .id(message)
-                        .rotationEffect(.degrees(180))
+            GeometryReader { geometry in
+                Spacer()
+                ScrollView {
+                    Spacer(minLength: dynamicTopPadding) // Dynamic padding
+                    ForEach(messageViewModel.messages.indices, id: \.self) { index in
+                        let message: Message = messageViewModel.messages.reversed()[index]
+                        // Generate the view for the individual message.
+                        MessageListItemView(message: message)
+                            .generating(message.content == nil && isGenerating)
+                            .finalMessage(index == messageViewModel.messages.endIndex - 1)
+                            .audio(message.audio)
+                            .id(message)
+                            .rotationEffect(.degrees(180))
+                    }
                 }
+                // .animation(.snappy, value: messageViewModel.messages)
+                // .animation(.snappy, value: messageViewModel.messages.last?.content)
+                .animation(.snappy, value: geometry.size.height)
+                .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
+                .scrollContentBackground(.hidden)
+                .scrollIndicators(.never)
             }
-            .animation(.snappy, value: messageViewModel.messages)
-            .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
-            .scrollContentBackground(.hidden)
-            .scrollIndicators(.never)
 
             // Action Icons
             MessageButtonsView()
