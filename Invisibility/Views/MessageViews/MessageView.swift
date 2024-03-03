@@ -3,7 +3,6 @@ import OSLog
 import SwiftData
 import SwiftUI
 import ViewCondition
-import ViewState
 
 struct MessageView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageView")
@@ -11,7 +10,6 @@ struct MessageView: View {
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool
 
-    @State private var viewState: ViewState? = nil
     @State private var content: String = ""
     @State private var isDragActive: Bool = false
 
@@ -23,29 +21,32 @@ struct MessageView: View {
         promptFocused = true
     }
 
-    var isGenerating: Bool {
-        messageViewModel.sendViewState == .loading
-    }
-
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            Spacer()
             ScrollView {
-                LazyVStack(spacing: 0) {
+                LazyVStack(spacing: 5) {
                     ForEach(messageViewModel.messages.indices, id: \.self) { index in
                         let message: Message = messageViewModel.messages.reversed()[index]
                         // Generate the view for the individual message.
                         MessageListItemView(message: message)
-                            .generating(message.content == nil && isGenerating)
-                            .finalMessage(index == messageViewModel.messages.endIndex - 1)
                             .audio(message.audio)
                             .id(message)
                             .rotationEffect(.degrees(180))
                     }
                 }
             }
-            // .animation(.snappy, value: messageViewModel.messages)
-            // .animation(.snappy, value: messageViewModel.messages.last?.content)
+            .mask(
+                LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: .clear, location: 0),
+                        .init(color: .black, location: 0.005), // Finish fading in
+                        .init(color: .black, location: 0.995), // Start fading out
+                        .init(color: .clear, location: 1.0),
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
             .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
             .scrollContentBackground(.hidden)
             .scrollIndicators(.never)
@@ -71,6 +72,12 @@ struct MessageView: View {
         .border(isDragActive ? Color.blue : Color.clear, width: 5)
         .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
             handleDrop(providers: providers)
+        }
+        .onAppear {
+            promptFocused = true
+        }
+        .onChange(of: chatViewModel.images) {
+            promptFocused = true
         }
     }
 

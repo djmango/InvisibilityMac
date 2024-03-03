@@ -39,6 +39,9 @@ struct MessageButtonItemView: View {
                     .padding(.trailing, 8)
             }
         }
+        .onTapGesture {
+            action()
+        }
         .overlay(
             RoundedRectangle(cornerRadius: 100)
                 .stroke(Color(NSColor.separatorColor), lineWidth: 1)

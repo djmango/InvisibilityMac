@@ -4,24 +4,26 @@ import Splash
 import SwiftData
 import SwiftUI
 import ViewCondition
+import ViewState
 
 struct MessageListItemView: View {
     @Environment(\.colorScheme) private var colorScheme
+    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
 
     private var message: Message
-    private let messageViewModel: MessageViewModel = MessageViewModel.shared
 
     // Message state
     private var isAssistant: Bool { message.role == .assistant }
-    private var isGenerating: Bool = false
-    private var isFinalMessage: Bool = false
+    private var isGenerating: Bool {
+        messageViewModel.sendViewState == .loading && (message.content?.isEmpty ?? true)
+    }
+
     private var audio: Audio? = nil
 
     @State private var textHeight: CGFloat = 0
 
     init(message: Message) {
         self.message = message
-        print("Init MessageListItemView")
     }
 
     @State private var isHovered: Bool = false
@@ -34,8 +36,6 @@ struct MessageListItemView: View {
     var body: some View {
         ZStack {
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
-            // .shadow(radius: 2)
-            // .animation(.snappy, value: message.content)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(isAssistant ? "Invisibility" : "You")
@@ -60,7 +60,7 @@ struct MessageListItemView: View {
 
                 ProgressView()
                     .controlSize(.small)
-                    .visible(if: isGenerating && isFinalMessage && message.audio == nil, removeCompletely: true)
+                    .visible(if: isGenerating, removeCompletely: true)
 
                 if let audio {
                     AudioWidgetView(audio: audio)
@@ -100,7 +100,6 @@ struct MessageListItemView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color(nsColor: .separatorColor))
-                // .animation(.snappy, value: message.content)
             )
 
             VStack {
@@ -110,15 +109,14 @@ struct MessageListItemView: View {
                     MessageButtonItemView(label: "Copy", icon: "doc.on.doc") {
                         copyAction()
                     }
-                    .padding(.horizontal, -15)
                 }
             }
             .animation(.snappy, value: isHovered)
-            .hide(if: !isCopyButtonVisible, removeCompletely: true)
+            .visible(if: isCopyButtonVisible, removeCompletely: true)
             .focusable(false)
         }
         .padding(.horizontal, 10)
-        .padding(.vertical, 2)
+        .padding(.vertical, 3)
         .onHover {
             isHovered = $0
             isCopied = false
@@ -152,26 +150,12 @@ struct MessageListItemView: View {
 
     // MARK: - Modifiers
 
-    public func generating(_ isGenerating: Bool) -> MessageListItemView {
-        var view = self
-        view.isGenerating = isGenerating
-
-        return view
-    }
-
     public func audio(_ audio: Audio?) -> MessageListItemView {
         guard let audio else {
             return self
         }
         var view = self
         view.audio = audio
-
-        return view
-    }
-
-    public func finalMessage(_ isFinalMessage: Bool) -> MessageListItemView {
-        var view = self
-        view.isFinalMessage = isFinalMessage
 
         return view
     }

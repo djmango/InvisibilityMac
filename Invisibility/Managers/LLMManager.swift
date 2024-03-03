@@ -21,8 +21,9 @@ final class LLMManager: ObservableObject {
     private let host: String = "api.openai.com"
     private let encoder: GPTEncoder = GPTEncoder()
 
-    static let maxTokenCountForMessage: Int = 16384
-    static let maxTokenCount: Int = 32769
+    static let maxInputTokenCount: Int = 16384
+    static let maxInputTokenCountVision: Int = 2048
+    static let maxTokenCountPerMessage: Int = 8096
     static let maxNewTokens: Int = 2048
 
     private init() {
@@ -81,12 +82,24 @@ final class LLMManager: ObservableObject {
 
         // For audio messages, chunk the input and summarize each chunk
         for message in messages {
-            if message.audio != nil, message.summarizedChunks.count == 0, numTokens(message.text) > LLMManager.maxTokenCountForMessage {
+            if message.audio != nil, message.summarizedChunks.count == 0,
+               numTokens(message.text) > LLMManager.maxTokenCountPerMessage
+            {
                 await message.generateSummarizedChunks()
             }
         }
 
-        let chat_messages = truncateMessages(messages: messages, maxTokenCount: LLMManager.maxTokenCount - LLMManager.maxNewTokens, allow_images: model == vision_model)
+        let maxTokens = if model == vision_model {
+            LLMManager.maxInputTokenCountVision
+        } else {
+            LLMManager.maxInputTokenCount
+        }
+
+        let chat_messages = truncateMessages(
+            messages: messages,
+            maxTokenCount: maxTokens,
+            allow_images: model == vision_model
+        )
 
         // If the last message has any images use the vision model, otherwise use the regular model
         return ChatQuery(messages: chat_messages, model: model, maxTokens: LLMManager.maxNewTokens)

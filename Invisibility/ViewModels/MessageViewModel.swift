@@ -221,7 +221,7 @@ extension MessageViewModel {
 
                 // If the audio is longer than x tokens, chunk it and summarize each chunk for easier processing
 //                await message.generateSummarizedChunks()
-                await message.generateEmail()
+                // await message.generateEmail()
                 DispatchQueue.main.async {
                     message.status = .complete
                     self.sendViewState = nil

@@ -87,6 +87,7 @@ struct ChatField: View {
         )
         .padding(.horizontal, 10)
         .animation(.snappy, value: textHeight)
+        .animation(.easeIn(duration: 0.2), value: chatViewModel.images)
     }
 
     private func handleTextChange() {
@@ -99,13 +100,14 @@ struct ChatField: View {
 
         let addedText = String(text[startIndex...])
 
-        // logger.debug("Previous text: \(previousText)")
-        // logger.debug("Previous text count: \(previousText.count)")
-        // logger.debug("Text: \(text)")
-        // logger.debug("Text count: \(text.count)")
-        // logger.debug("Added text: \(addedText)")
-        // logger.debug("Added text count: \(addedText.count)")
+        logger.debug("Previous text: \(previousText)")
+        logger.debug("Previous text count: \(previousText.count)")
+        logger.debug("Text: \(text)")
+        logger.debug("Text count: \(text.count)")
+        logger.debug("Added text: \(addedText)")
+        logger.debug("Added text count: \(addedText.count)")
         if addedText.contains("\n") {
+            logger.debug("Newline detected")
             // Attempt to detect Shift key
             // We have to make sure its not a paste with a newline too
             if NSApp.currentEvent?.modifierFlags.contains(.shift) == false, NSApp.currentEvent?.modifierFlags.contains(.command) == false {

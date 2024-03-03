@@ -9,9 +9,13 @@
 import Foundation
 import OSLog
 
-struct ChatImageItem: Identifiable {
+struct ChatImageItem: Identifiable, Equatable {
     let id = UUID()
     let imageData: Data
+
+    static func == (lhs: ChatImageItem, rhs: ChatImageItem) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
 @Observable

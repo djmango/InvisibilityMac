@@ -98,7 +98,7 @@ extension Message {
         DispatchQueue.main.async { self.progress = 0.0 }
 
         self.summarizedChunks = []
-        if self.summarizedChunks.count == 0, LLMManager.shared.numTokens(self.text) > LLMManager.maxTokenCountForMessage {
+        if self.summarizedChunks.count == 0, LLMManager.shared.numTokens(self.text) > LLMManager.maxTokenCountPerMessage {
             let chunks = LLMManager.shared.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
             DispatchQueue.main.async { self.progress = 0.2 }
 

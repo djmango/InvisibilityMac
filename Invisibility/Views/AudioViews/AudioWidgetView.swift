@@ -27,11 +27,7 @@ struct AudioWidgetView: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 16)
-                .foregroundColor(Color("WidgetColor"))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-                )
+                .stroke(Color(NSColor.separatorColor), lineWidth: 1)
 
             HStack {
                 Spacer()
@@ -62,15 +58,13 @@ struct AudioWidgetView: View {
                             .padding(5)
                             .foregroundColor(.white)
                     }
-                    .buttonStyle(.plain)
-                    .background(
-                        LinearGradient(
-                            gradient: Gradient(colors: [Color.accentColor, Color("AccentColorGradient1")]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(Color(NSColor.separatorColor), lineWidth: 1)
                     )
-                    .cornerRadius(8)
+                    .buttonStyle(.plain)
                     .padding(.bottom, 3)
                     .padding(.horizontal, 10)
                     .focusable(false)

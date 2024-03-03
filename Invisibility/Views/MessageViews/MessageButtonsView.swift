@@ -34,16 +34,16 @@ struct MessageButtonsView: View {
             }
 
             // Search Audio
-            MessageButtonItemView(label: "Search Audio", icon: "waveform") {
-                logger.debug("Search Audio")
-            }
-            .onHover { hovering in
-                if hovering {
-                    whoIsHovering = "Search Audio"
-                } else {
-                    whoIsHovering = nil
-                }
-            }
+            // MessageButtonItemView(label: "Search Audio", icon: "waveform") {
+            //     logger.debug("Search Audio")
+            // }
+            // .onHover { hovering in
+            //     if hovering {
+            //         whoIsHovering = "Search Audio"
+            //     } else {
+            //         whoIsHovering = nil
+            //     }
+            // }
 
             // Record
             Button(action: {
@@ -101,7 +101,8 @@ struct MessageButtonsView: View {
                 .padding(.vertical, -5)
                 .animation(.snappy, value: whoIsHovering)
         )
-        .padding(.vertical, 10)
+        .padding(.top, 7)
+        .padding(.bottom, 10)
         .focusable(false)
     }
 
