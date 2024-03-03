@@ -64,6 +64,10 @@ struct MessageButtonsView: View {
                         .padding(.trailing, 8)
                 }
             }
+            .contentShape(RoundedRectangle(cornerRadius: 100))
+            .onTapGesture {
+                screenRecorder.toggleRecording()
+            }
             .onHover { hovering in
                 if hovering {
                     whoIsHovering = "Record"

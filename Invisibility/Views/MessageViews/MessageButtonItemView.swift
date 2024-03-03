@@ -39,6 +39,7 @@ struct MessageButtonItemView: View {
                     .padding(.trailing, 8)
             }
         }
+        .contentShape(RoundedRectangle(cornerRadius: 100))
         .onTapGesture {
             action()
         }
