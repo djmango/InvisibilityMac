@@ -28,12 +28,10 @@ final class ChatViewModel: ObservableObject {
 
     private init() {}
 
-    @MainActor
     public func addImage(_ data: Data) {
         images.append(ChatImageItem(imageData: data))
     }
 
-    @MainActor
     public func removeImage(id: UUID) {
         images.removeAll { $0.id == id }
     }

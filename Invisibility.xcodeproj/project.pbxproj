@@ -27,9 +27,6 @@
 		4D5145762B7D8C4E00A5BA26 /* EventItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5145752B7D8C4E00A5BA26 /* EventItemView.swift */; };
 		4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */; };
 		4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */; };
-		4D5819BC2B8E9F5E00BF07FF /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5819BB2B8E9F5E00BF07FF /* Splash */; };
-		4D5819BE2B8E9F5E00BF07FF /* SplashMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5819BD2B8E9F5E00BF07FF /* SplashMarkdown */; };
-		4D5819C02B8E9F5E00BF07FF /* SplashTokenizer in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5819BF2B8E9F5E00BF07FF /* SplashTokenizer */; };
 		4D5819C32B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */; };
 		4D5819C52B8EA02300BF07FF /* TextOutputFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819C42B8EA02300BF07FF /* TextOutputFormat.swift */; };
 		4D5896DB2B7C67D100484BFA /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5896DA2B7C67D100484BFA /* EventView.swift */; };
@@ -41,6 +38,10 @@
 		4D5A9EA22B8C65D40018F6E4 /* MessageButtonItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D5EA4D32B61F01700CD7966 /* AudioTranscriptView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5EA4D22B61F01700CD7966 /* AudioTranscriptView.swift */; };
+		4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E712B93FEB6007AE7E2 /* Splash */; };
+		4D671E742B93FEB6007AE7E2 /* SplashHTMLGen in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E732B93FEB6007AE7E2 /* SplashHTMLGen */; };
+		4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E752B93FEB6007AE7E2 /* SplashMarkdown */; };
+		4D671E782B93FEB6007AE7E2 /* SplashTokenizer in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E772B93FEB6007AE7E2 /* SplashTokenizer */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
 		4D8095372B89A1BE00A18822 /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8095362B89A1BE00A18822 /* Glur */; };
@@ -150,20 +151,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D1557B42B684CCA00B8B781 /* DockProgress in Frameworks */,
-				4D5819BC2B8E9F5E00BF07FF /* Splash in Frameworks */,
+				4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */,
 				4DB961E72B86B0A000F7ACED /* GPTEncoder in Frameworks */,
-				4D5819C02B8E9F5E00BF07FF /* SplashTokenizer in Frameworks */,
 				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
+				4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */,
+				4D671E742B93FEB6007AE7E2 /* SplashHTMLGen in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
-				4D5819BE2B8E9F5E00BF07FF /* SplashMarkdown in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
 				4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
 				4D8095372B89A1BE00A18822 /* Glur in Frameworks */,
+				4D671E782B93FEB6007AE7E2 /* SplashTokenizer in Frameworks */,
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
 				4D3D05132B59DB32009340ED /* AudioKit in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
@@ -446,9 +448,10 @@
 				4D219F912B847B67006FF8E5 /* OpenAI */,
 				4DB961E62B86B0A000F7ACED /* GPTEncoder */,
 				4D8095362B89A1BE00A18822 /* Glur */,
-				4D5819BB2B8E9F5E00BF07FF /* Splash */,
-				4D5819BD2B8E9F5E00BF07FF /* SplashMarkdown */,
-				4D5819BF2B8E9F5E00BF07FF /* SplashTokenizer */,
+				4D671E712B93FEB6007AE7E2 /* Splash */,
+				4D671E732B93FEB6007AE7E2 /* SplashHTMLGen */,
+				4D671E752B93FEB6007AE7E2 /* SplashMarkdown */,
+				4D671E772B93FEB6007AE7E2 /* SplashTokenizer */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -490,7 +493,7 @@
 				4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */,
 				4D8095352B89A1BE00A18822 /* XCRemoteSwiftPackageReference "Glur" */,
-				4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */,
+				4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -813,7 +816,7 @@
 			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.0;
+				minimumVersion = 2.3.0;
 			};
 		};
 		0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
@@ -856,7 +859,7 @@
 				kind = branch;
 			};
 		};
-		4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */ = {
+		4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JohnSundell/Splash.git";
 			requirement = {
@@ -967,19 +970,24 @@
 			package = 4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */;
 			productName = SwiftWhisper;
 		};
-		4D5819BB2B8E9F5E00BF07FF /* Splash */ = {
+		4D671E712B93FEB6007AE7E2 /* Splash */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */;
+			package = 4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */;
 			productName = Splash;
 		};
-		4D5819BD2B8E9F5E00BF07FF /* SplashMarkdown */ = {
+		4D671E732B93FEB6007AE7E2 /* SplashHTMLGen */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */;
+			package = 4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */;
+			productName = SplashHTMLGen;
+		};
+		4D671E752B93FEB6007AE7E2 /* SplashMarkdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */;
 			productName = SplashMarkdown;
 		};
-		4D5819BF2B8E9F5E00BF07FF /* SplashTokenizer */ = {
+		4D671E772B93FEB6007AE7E2 /* SplashTokenizer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4D5819BA2B8E9F5E00BF07FF /* XCRemoteSwiftPackageReference "Splash" */;
+			package = 4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */;
 			productName = SplashTokenizer;
 		};
 		4D7AB4232B4CB469007F025B /* Pow */ = {

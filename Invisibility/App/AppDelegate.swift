@@ -12,7 +12,6 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "AppDelegate")
 
-    private var isAppActive = false
     private var shouldResumeRecording = false
     private var eventMonitor: Any?
 
@@ -67,6 +66,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
 
+    @objc func appDidBecomeActive(notification _: NSNotification) {
+        logger.debug("App did become active")
+        // If the window is visible and on the screen with the cursor, don't show it again
+        if WindowManager.shared.windowIsVisible, WindowManager.shared.windowIsOnScreenWithCursor {
+            return
+        } else {
+            // Otherwise, show the window on the screen with the cursor
+            WindowManager.shared.showWindow()
+        }
+    }
+
+    @objc func appDidResignActive(notification _: NSNotification) {
+        logger.debug("App did resign active")
+    }
+
     @objc private func sleepListener(_ notification: Notification) {
         if notification.name == NSWorkspace.willSleepNotification {
             logger.debug("Going to sleep")
@@ -90,14 +104,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         } else {
             logger.warning("Some other event other than sleep/wake: \(notification.name.rawValue)")
         }
-    }
-
-    @objc func appDidBecomeActive(notification _: NSNotification) {
-        isAppActive = true
-    }
-
-    @objc func appDidResignActive(notification _: NSNotification) {
-        isAppActive = false
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_: NSApplication) -> Bool {

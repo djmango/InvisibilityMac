@@ -45,7 +45,7 @@ enum MessageStatus: String, Codable {
 }
 
 @Model
-final class Message: Identifiable {
+final class Message: Identifiable, ObservableObject {
     /// Unique identifier for the message
     @Attribute(.unique) var id: UUID = UUID()
     /// Datetime the message was created

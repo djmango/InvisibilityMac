@@ -17,8 +17,11 @@ struct MessageListItemView: View {
     private var isFinalMessage: Bool = false
     private var audio: Audio? = nil
 
+    @State private var textHeight: CGFloat = 0
+
     init(message: Message) {
         self.message = message
+        print("Init MessageListItemView")
     }
 
     @State private var isHovered: Bool = false
@@ -31,6 +34,7 @@ struct MessageListItemView: View {
     var body: some View {
         ZStack {
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+            // .shadow(radius: 2)
             // .animation(.snappy, value: message.content)
 
             VStack(alignment: .leading, spacing: 8) {
@@ -89,7 +93,6 @@ struct MessageListItemView: View {
                     .textSelection(.enabled)
                     .markdownTheme(.docC)
                     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                    .animation(nil, value: message.content)
                     .hide(if: isGenerating, removeCompletely: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -115,7 +118,7 @@ struct MessageListItemView: View {
             .focusable(false)
         }
         .padding(.horizontal, 10)
-        .padding(.top, 5)
+        .padding(.vertical, 2)
         .onHover {
             isHovered = $0
             isCopied = false

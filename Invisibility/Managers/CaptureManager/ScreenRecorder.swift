@@ -13,10 +13,7 @@ import ScreenCaptureKit
 import SwiftUI
 
 /// A class that manages screen recording. Primarily audio at the moment.
-@MainActor
-class ScreenRecorder: NSObject,
-    ObservableObject
-{
+class ScreenRecorder: NSObject, ObservableObject {
     private let logger = Logger()
 
     public static let shared = ScreenRecorder()
@@ -29,20 +26,20 @@ class ScreenRecorder: NSObject,
 
     // MARK: - Video Properties
 
-    @Published var selectedDisplay: SCDisplay? {
+    var selectedDisplay: SCDisplay? {
         didSet { updateEngine() }
     }
 
-    @Published var isAppExcluded = true {
+    var isAppExcluded = true {
         didSet { updateEngine() }
     }
 
     private var availableApps = [SCRunningApplication]()
-    @Published private(set) var availableDisplays = [SCDisplay]()
+    private(set) var availableDisplays = [SCDisplay]()
 
     // MARK: - Audio Properties
 
-    @Published var isAudioCaptureEnabled = true {
+    var isAudioCaptureEnabled = true {
         didSet {
             updateEngine()
         }
@@ -82,6 +79,7 @@ class ScreenRecorder: NSObject,
     }
 
     /// Starts capturing screen content.
+    @MainActor
     func start() async {
         // Exit early if already running.
         guard !isRunning else { return }
@@ -111,12 +109,14 @@ class ScreenRecorder: NSObject,
     }
 
     /// Stops capturing screen content.
+    @MainActor
     func stop() async {
         guard isRunning else { return }
         await captureEngine.stopCapture()
         isRunning = false
     }
 
+    @MainActor
     func pause() async -> Bool {
         guard isRunning else { return false }
         await captureEngine.pauseCapture()
@@ -124,12 +124,14 @@ class ScreenRecorder: NSObject,
         return true
     }
 
+    @MainActor
     func resume() async {
         guard !isRunning else { return }
         let _ = captureEngine.resumeCapture()
         isRunning = true
     }
 
+    @MainActor
     func toggleRecording() {
         if isRunning {
             Task {

@@ -34,7 +34,6 @@ final class LLMManager: ObservableObject {
         ai = OpenAI(configuration: configuration)
     }
 
-    @MainActor
     func chat(
         messages: [Message],
         // Default processOutput function, just appends the output to a variable and returns it
@@ -56,7 +55,6 @@ final class LLMManager: ObservableObject {
         }
     }
 
-    // @MainActor
     func achat(messages: [Message]) async -> Message {
         let chatQuery = await constructChatQuery(messages: messages)
 

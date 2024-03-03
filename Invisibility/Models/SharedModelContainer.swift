@@ -55,11 +55,6 @@ class SharedModelContainer {
             modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
             mainContext = modelContainer.mainContext
             mainContext.autosaveEnabled = true
-            // modelContainer.migrationPlan = { migration in
-            //     // Perform migration logic here
-            //     // Example: Update database schema, transform data, etc.
-            //     // Remember to handle failures and ensure data integrity.
-            // }
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }

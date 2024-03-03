@@ -14,7 +14,6 @@ struct MessageView: View {
     @State private var viewState: ViewState? = nil
     @State private var content: String = ""
     @State private var isDragActive: Bool = false
-    @State private var dynamicTopPadding: CGFloat = 0
 
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject var chatViewModel: ChatViewModel = ChatViewModel.shared
@@ -30,10 +29,9 @@ struct MessageView: View {
 
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
-            GeometryReader { geometry in
-                Spacer()
-                ScrollView {
-                    Spacer(minLength: dynamicTopPadding) // Dynamic padding
+            Spacer()
+            ScrollView {
+                LazyVStack(spacing: 0) {
                     ForEach(messageViewModel.messages.indices, id: \.self) { index in
                         let message: Message = messageViewModel.messages.reversed()[index]
                         // Generate the view for the individual message.
@@ -45,13 +43,12 @@ struct MessageView: View {
                             .rotationEffect(.degrees(180))
                     }
                 }
-                // .animation(.snappy, value: messageViewModel.messages)
-                // .animation(.snappy, value: messageViewModel.messages.last?.content)
-                .animation(.snappy, value: geometry.size.height)
-                .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
-                .scrollContentBackground(.hidden)
-                .scrollIndicators(.never)
             }
+            // .animation(.snappy, value: messageViewModel.messages)
+            // .animation(.snappy, value: messageViewModel.messages.last?.content)
+            .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
+            .scrollContentBackground(.hidden)
+            .scrollIndicators(.never)
 
             // Action Icons
             MessageButtonsView()
@@ -94,11 +91,6 @@ struct MessageView: View {
         }
     }
 
-    @MainActor
-    private func audioAction(for audio: Audio) {
-        AudioPlayerViewModel.shared.audio = audio
-    }
-
     private func handleDrop(providers: [NSItemProvider]) -> Bool {
         logger.debug("Handling drop")
         logger.debug("Providers: \(providers)")
@@ -130,14 +122,5 @@ struct MessageView: View {
         let lastMessage = messageViewModel.messages[lastIndex]
 
         proxy.scrollTo(lastMessage, anchor: .bottom)
-    }
-
-    private func adjustDynamicTopPadding(totalHeight: CGFloat) {
-        // Calculate the total content height; this is an approximation
-        let totalContentHeight = CGFloat(messageViewModel.messages.count * 60) // Assuming each message view's height is ~60 points
-
-        // Calculate the remaining space that needs to be filled by the top padding
-        dynamicTopPadding = max(0, totalHeight - totalContentHeight - 100) // Adjust 100 for any fixed components like input fields
-        logger.debug("Dynamic top padding: \(dynamicTopPadding)")
     }
 }
