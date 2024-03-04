@@ -100,7 +100,6 @@
 		4D5145752B7D8C4E00A5BA26 /* EventItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventItemView.swift; sourceTree = "<group>"; };
 		4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileWriter.swift; sourceTree = "<group>"; };
 		4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotManager.swift; sourceTree = "<group>"; };
-		4D5819AE2B8E782E00BF07FF /* OpenAI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenAI; path = ../OpenAI; sourceTree = "<group>"; };
 		4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCodeSyntaxHighlighter.swift; sourceTree = "<group>"; };
 		4D5819C42B8EA02300BF07FF /* TextOutputFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOutputFormat.swift; sourceTree = "<group>"; };
 		4D5896DA2B7C67D100484BFA /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
@@ -178,7 +177,6 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
-				4D5819AE2B8E782E00BF07FF /* OpenAI */,
 				4D8E05272B2516DE00B60D0D /* Invisibility */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
@@ -714,7 +712,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -747,7 +745,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 48;
+				CURRENT_PROJECT_VERSION = 49;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;

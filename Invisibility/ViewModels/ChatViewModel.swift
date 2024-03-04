@@ -24,6 +24,9 @@ final class ChatViewModel: ObservableObject {
 
     static let shared = ChatViewModel()
 
+    /// A boolean value that indicates whether the text field should be focused.
+    public var shouldFocusTextField: Bool = false
+
     /// List of JPEG images to be sent with the message
     public var images: [ChatImageItem] = []
 
@@ -38,5 +41,9 @@ final class ChatViewModel: ObservableObject {
 
     public func removeImage(id: UUID) {
         images.removeAll { $0.id == id }
+    }
+
+    public func focusTextField() {
+        shouldFocusTextField = true
     }
 }

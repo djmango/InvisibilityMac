@@ -90,6 +90,7 @@ class WindowManager: ObservableObject {
         // Animate opacity
         window.alphaValue = 0
         positionWindowOnCursorScreen()
+        ChatViewModel.shared.focusTextField()
         NSAnimationContext.runAnimationGroup { context in
             context.duration = animationDuration
             window.animator().alphaValue = 1

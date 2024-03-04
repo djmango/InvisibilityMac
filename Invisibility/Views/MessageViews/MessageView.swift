@@ -79,6 +79,12 @@ struct MessageView: View {
         .onChange(of: chatViewModel.images) {
             promptFocused = true
         }
+        .onChange(of: chatViewModel.shouldFocusTextField) {
+            if chatViewModel.shouldFocusTextField {
+                promptFocused = true
+                chatViewModel.shouldFocusTextField = false
+            }
+        }
     }
 
     // MARK: - Actions

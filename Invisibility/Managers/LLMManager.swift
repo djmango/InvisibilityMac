@@ -18,7 +18,9 @@ final class LLMManager: ObservableObject {
     static let shared = LLMManager()
 
     private let ai: OpenAI
-    private let host: String = "api.openai.com"
+    // private let host: String = "api.openai.com"
+    // private let host: String = "http://localhost:8000/oai"
+    private let host: String = "invisibility.shuttleapp.rs/oai"
     private let encoder: GPTEncoder = GPTEncoder()
 
     static let maxInputTokenCount: Int = 16384
@@ -28,7 +30,7 @@ final class LLMManager: ObservableObject {
 
     private init() {
         let configuration = OpenAI.Configuration(
-            token: "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",
+            token: "",
             host: host,
             timeoutInterval: 10
         )
