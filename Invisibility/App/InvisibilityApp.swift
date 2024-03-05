@@ -3,7 +3,7 @@ import SwiftUI
 
 @main
 struct InvisibilityApp: App {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "GravityApp")
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "InvisibilityApp")
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
@@ -12,7 +12,7 @@ struct InvisibilityApp: App {
         SharedModelContainer.shared = SharedModelContainer()
 
         Task {
-            await WhisperManager.shared.setup()
+            // await WhisperManager.shared.setup()
             await UserManager.shared.setup()
         }
     }
@@ -23,9 +23,9 @@ struct InvisibilityApp: App {
                 .modelContext(SharedModelContainer.shared.mainContext)
         }
         // Main app view is managed in delegate and WindowManager
-        MenuBarExtra("Gravity", image: "MenuBarIcon", isInserted: $showMenuBarExtra) {
-            MenuBarView()
-        }
-        .menuBarExtraStyle(.window)
+        // MenuBarExtra("Invisibility", image: "MenuBarIcon", isInserted: $showMenuBarExtra) {
+        //     MenuBarView()
+        // }
+        // .menuBarExtraStyle(.window)
     }
 }

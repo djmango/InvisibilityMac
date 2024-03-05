@@ -79,6 +79,7 @@ final class UserManager: ObservableObject {
         } else {
             logger.info("User is not logged in")
         }
+        LLMManager.shared.setup()
     }
 
     func userIsLoggedIn() async -> Bool {

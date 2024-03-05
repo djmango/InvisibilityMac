@@ -84,7 +84,7 @@ class ScreenRecorder: NSObject, ObservableObject {
         // Exit early if already running.
         guard !isRunning else { return }
         guard await canRecord else {
-            AlertManager.shared.doShowAlert(title: "Screen Recording Permission Grant", message: "Gravity has not been granted permission to record the screen. Please enable this permission in System Preferences > Security & Privacy > Screen & System Audio Recording.")
+            AlertManager.shared.doShowAlert(title: "Screen Recording Permission Grant", message: "Invisibility has not been granted permission to record the screen. Please enable this permission in System Preferences > Security & Privacy > Screen & System Audio Recording.")
             // Open the System Preferences app to the Screen Recording settings.
             if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
                 NSWorkspace.shared.open(url)
@@ -92,7 +92,7 @@ class ScreenRecorder: NSObject, ObservableObject {
             return
         }
         guard await canRecordMic else {
-            AlertManager.shared.doShowAlert(title: "Microphone Permission Grant", message: "Gravity has not been granted permission to record the microphone. Please enable this permission in System Preferences > Security & Privacy > Microphone.")
+            AlertManager.shared.doShowAlert(title: "Microphone Permission Grant", message: "Invisibility has not been granted permission to record the microphone. Please enable this permission in System Preferences > Security & Privacy > Microphone.")
             // Open the System Preferences app to the Microphone settings.
             if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone") {
                 NSWorkspace.shared.open(url)

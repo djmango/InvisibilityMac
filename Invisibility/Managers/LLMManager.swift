@@ -17,9 +17,9 @@ final class LLMManager: ObservableObject {
 
     static let shared = LLMManager()
 
-    private let ai: OpenAI
-    private let host: String = "http://localhost:8000/oai"
-    // private let host: String = "cloak.invisibility.so/oai"
+    private var ai: OpenAI
+    // private let host: String = "http://localhost:8000/oai"
+    private let host: String = "cloak.invisibility.so/oai"
     private let encoder: GPTEncoder = GPTEncoder()
 
     static let maxInputTokenCount: Int = 8192
@@ -28,8 +28,19 @@ final class LLMManager: ObservableObject {
     static let maxNewTokens: Int = 2048
 
     private init() {
+        let token = UserManager.shared.token ?? ""
         let configuration = OpenAI.Configuration(
-            token: "",
+            token: token,
+            host: host,
+            timeoutInterval: 10
+        )
+        ai = OpenAI(configuration: configuration)
+    }
+
+    func setup() {
+        let token = UserManager.shared.token ?? ""
+        let configuration = OpenAI.Configuration(
+            token: token,
             host: host,
             timeoutInterval: 10
         )

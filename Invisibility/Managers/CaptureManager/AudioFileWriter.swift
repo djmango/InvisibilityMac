@@ -12,8 +12,8 @@ import OSLog
 class AudioFileWriter {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "AudioFileWriter")
 
-    static let gravityHomeDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".gravity")
-    static let audioDir = gravityHomeDir.appendingPathComponent("audio")
+    static let invisibilityHomeDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".invisibility")
+    static let audioDir = invisibilityHomeDir.appendingPathComponent("audio")
 
     private var assetWriter: AVAssetWriter?
     private var assetWriterInput: AVAssetWriterInput?

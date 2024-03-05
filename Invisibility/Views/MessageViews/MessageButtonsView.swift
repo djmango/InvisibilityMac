@@ -13,7 +13,7 @@ struct MessageButtonsView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageListView")
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
-    @ObservedObject private var screenRecorder = ScreenRecorder.shared
+    // @ObservedObject private var screenRecorder = ScreenRecorder.shared
     private let screenshotManager = ScreenshotManager.shared
 
     @State private var whoIsHovering: String?
@@ -46,43 +46,43 @@ struct MessageButtonsView: View {
             // }
 
             // Record
-            Button(action: {
-                screenRecorder.toggleRecording()
-            }
-            ) {
-                HStack(spacing: 0) {
-                    Image(systemName: "record.circle")
-                        .resizable()
-                        .frame(width: 18, height: 18)
-                        .foregroundColor(screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor"))
-                        .padding(8)
+            // Button(action: {
+            //     screenRecorder.toggleRecording()
+            // }
+            // ) {
+            //     HStack(spacing: 0) {
+            //         Image(systemName: "record.circle")
+            //             .resizable()
+            //             .frame(width: 18, height: 18)
+            //             .foregroundColor(screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor"))
+            //             .padding(8)
 
-                    Text(screenRecorder.isRunning ? "Recording" : "Record")
-                        .font(.title3)
-                        .foregroundColor(screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor"))
-                        .hide(if: whoIsHovering ?? "" != "Record", removeCompletely: true)
-                        .padding(.trailing, 8)
-                }
-            }
-            .contentShape(RoundedRectangle(cornerRadius: 100))
-            .onTapGesture {
-                screenRecorder.toggleRecording()
-            }
-            .onHover { hovering in
-                if hovering {
-                    whoIsHovering = "Record"
-                } else {
-                    whoIsHovering = nil
-                }
-            }
-            .overlay(
-                RoundedRectangle(cornerRadius: 100)
-                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-            )
-            .animation(.snappy, value: whoIsHovering)
-            .animation(.snappy, value: screenRecorder.isRunning)
-            .buttonStyle(.plain)
-            .keyboardShortcut("r", modifiers: .command)
+            //         Text(screenRecorder.isRunning ? "Recording" : "Record")
+            //             .font(.title3)
+            //             .foregroundColor(screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor"))
+            //             .hide(if: whoIsHovering ?? "" != "Record", removeCompletely: true)
+            //             .padding(.trailing, 8)
+            //     }
+            // }
+            // .contentShape(RoundedRectangle(cornerRadius: 100))
+            // .onTapGesture {
+            //     screenRecorder.toggleRecording()
+            // }
+            // .onHover { hovering in
+            //     if hovering {
+            //         whoIsHovering = "Record"
+            //     } else {
+            //         whoIsHovering = nil
+            //     }
+            // }
+            // .overlay(
+            //     RoundedRectangle(cornerRadius: 100)
+            //         .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+            // )
+            // .animation(.snappy, value: whoIsHovering)
+            // .animation(.snappy, value: screenRecorder.isRunning)
+            // .buttonStyle(.plain)
+            // .keyboardShortcut("r", modifiers: .command)
 
             // Clear Chat
             MessageButtonItemView(label: "Clear Chat", icon: "eraser") {

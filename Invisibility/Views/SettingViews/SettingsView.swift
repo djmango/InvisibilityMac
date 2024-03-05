@@ -31,40 +31,40 @@ struct SettingsView: View {
     var body: some View {
         ZStack {
             VStack(alignment: .center) {
-                Image("GravityLogo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 80, height: 80)
-                    .padding(.top, 10)
                 Spacer()
 
                 // User profile pic and login/logout button
                 HStack {
                     Spacer()
                     // Profile pic from url
-                    AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                            .shadow(radius: 10)
-                            .padding(10)
-                    } placeholder: {
-                        ProgressView()
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                            .shadow(radius: 10)
-                            .padding(10)
-                    }
-
                     VStack {
+                        AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 50, height: 50)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                .shadow(radius: 10)
+                                .padding(10)
+                        } placeholder: {
+                            ProgressView()
+                                .frame(width: 50, height: 50)
+                                .clipShape(Circle())
+                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                .shadow(radius: 10)
+                                .padding(10)
+                        }
+                        .visible(if: userManager.user?.profilePictureUrl != nil)
+
                         Text(userManager.user?.email ?? "")
                             .font(.headline)
-                            .bold()
                             .padding(.bottom, 5)
+
+                        Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
+                            .font(.headline)
+                            .padding(.bottom, 5)
+                            .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
 
                         Button(action: {
                             UserManager.shared.logout()
@@ -72,12 +72,12 @@ struct SettingsView: View {
                             Text("Logout")
                         }
                         .buttonStyle(.bordered)
-                        .padding(10)
                     }
 
                     Spacer()
                 }
                 .visible(if: userManager.user != nil)
+                .padding(.bottom, 10)
 
                 HStack {
                     Spacer()
@@ -91,20 +91,18 @@ struct SettingsView: View {
                     Spacer()
                 }
                 .visible(if: userManager.user == nil)
-
-                Spacer()
+                .padding(.bottom, 10)
 
                 LaunchAtLogin.Toggle()
-                    .bold()
                     .padding(.bottom, 10)
 
                 HStack {
-                    Text("Summon Invisibility:").bold()
+                    Text("Summon Invisibility:")
                     KeyboardShortcuts.Recorder(for: .summon)
                 }
 
                 HStack {
-                    Text("Screenshot:").bold()
+                    Text("Screenshot:")
                     KeyboardShortcuts.Recorder(for: .screenshot)
                 }
                 .padding(.bottom, 10)
@@ -112,9 +110,14 @@ struct SettingsView: View {
                 Button("Reset Onboarding") {
                     onboardingViewed = false
                 }
-                .bold()
 
                 Spacer()
+
+                Image("AppIconBitmap")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 30, height: 30)
+                    .padding(.vertical, 10)
 
                 HStack(spacing: 0) {
                     Text("Founded by ")

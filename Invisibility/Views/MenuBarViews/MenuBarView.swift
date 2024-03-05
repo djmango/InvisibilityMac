@@ -68,7 +68,7 @@ struct MenuBarView: View {
                 Divider()
 
                 HStack {
-                    Button("Quit Gravity") {
+                    Button("Quit") {
                         NSApplication.shared.terminate(self)
                     }
                     .keyboardShortcut("q", modifiers: .command)
