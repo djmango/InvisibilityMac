@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import TelemetryClient
 
 struct OnboardingView: View {
     @State private var viewIndex: Int = 0
@@ -35,11 +34,6 @@ struct OnboardingView: View {
             //     OnboardingDownloadView {
             //         // viewIndex = 4
             //         onboardingViewed = true
-            //         if !emailAddress.isEmpty {
-            //             TelemetryManager.send("UserOnboarded", with: ["email": emailAddress, "analytics": analytics.description])
-            //         } else {
-            //             TelemetryManager.send("UserOnboarded", with: ["analytics": analytics.description])
-            //         }
             //     }
 
             default:

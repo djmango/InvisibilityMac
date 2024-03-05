@@ -10,33 +10,6 @@
       }
     },
     {
-      "identity" : "colibricomponents-macos",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/david-swift/ColibriComponents-macOS",
-      "state" : {
-        "revision" : "ce8b4accee3361a904831a3c659de0c99369e8bf",
-        "version" : "0.1.11"
-      }
-    },
-    {
-      "identity" : "dockprogress",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sindresorhus/DockProgress",
-      "state" : {
-        "revision" : "963e9ef32e9e0315f3bbc4b3d31c7f4207eef675",
-        "version" : "4.2.2"
-      }
-    },
-    {
-      "identity" : "glur",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/joogps/Glur.git",
-      "state" : {
-        "revision" : "ba04affb45766c11bc95b056ccf353038829b147",
-        "version" : "1.0.3"
-      }
-    },
-    {
       "identity" : "gptencoder",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/alfianlosari/GPTEncoder.git",
@@ -52,6 +25,15 @@
       "state" : {
         "revision" : "ac12762853126cf2e7ad63a6a58e1c9f58c6a0ee",
         "version" : "1.17.0"
+      }
+    },
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "e0c7eebc5a4465a3c4680764f26b7a61f567cdaf"
       }
     },
     {
@@ -91,24 +73,6 @@
       }
     },
     {
-      "identity" : "settingskit-macos",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/david-swift/SettingsKit-macOS",
-      "state" : {
-        "revision" : "eca48656b1ccf01b64e8162710e6ff0aacbfd738",
-        "version" : "0.2.3"
-      }
-    },
-    {
-      "identity" : "sfsafesymbols",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SFSafeSymbols/SFSafeSymbols",
-      "state" : {
-        "revision" : "7cca2d60925876b5953a2cf7341cd80fbeac983c",
-        "version" : "4.1.1"
-      }
-    },
-    {
       "identity" : "sparkle",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
@@ -133,24 +97,6 @@
       "state" : {
         "revision" : "ae799d015a5374708f7b4c85f3294c05f2a564e2",
         "version" : "2.3.0"
-      }
-    },
-    {
-      "identity" : "swiftclient",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/TelemetryDeck/SwiftClient",
-      "state" : {
-        "revision" : "d20ccc4b8266cf739eede58cdfc7e9c6ffb41cda",
-        "version" : "1.5.1"
-      }
-    },
-    {
-      "identity" : "swiftlintplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/lukepistrol/SwiftLintPlugin",
-      "state" : {
-        "revision" : "ea6d3ca895b49910f790e98e4b4ca658e0fe490e",
-        "version" : "0.54.0"
       }
     },
     {

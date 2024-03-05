@@ -5,7 +5,6 @@ import Foundation
 import OSLog
 import SwiftData
 import SwiftUI
-import TelemetryClient
 import UniformTypeIdentifiers
 import ViewState
 import Vision
@@ -43,7 +42,6 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func send(_ message: Message) async {
-        TelemetryManager.send("MessageViewModel.send")
         sendViewState = .loading
 
         messages.append(message)
@@ -62,8 +60,7 @@ final class MessageViewModel: ObservableObject {
     }
 
     @MainActor
-    func regenerate(_: Message) async {
-        TelemetryManager.send("MessageViewModel.regenerate")
+    func regenerate() async {
         sendViewState = .loading
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
@@ -90,7 +87,6 @@ final class MessageViewModel: ObservableObject {
     }
 
     func clearChat() {
-        // TelemetryManager.send("MessageViewModel.clearChat")
         logger.debug("Clearing chat")
         for message in messages {
             modelContext.delete(message)
@@ -114,7 +110,6 @@ final class MessageViewModel: ObservableObject {
 extension MessageViewModel {
     /// Public function that can be called to begin the file open process
     func openFile() {
-        TelemetryManager.send("MessageViewModel.openFile")
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseFiles = true

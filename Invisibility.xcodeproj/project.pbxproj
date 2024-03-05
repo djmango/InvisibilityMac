@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */; };
 		4D0B52E42B590213008D975D /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E32B590213008D975D /* AlertManager.swift */; };
-		4D1557B42B684CCA00B8B781 /* DockProgress in Frameworks */ = {isa = PBXBuildFile; productRef = 4D1557B32B684CCA00B8B781 /* DockProgress */; };
 		4D1773D82B8C1060004C5D13 /* MessageButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1773D72B8C1060004C5D13 /* MessageButtonsView.swift */; };
 		4D1FC34F2B62304E009DA851 /* AudioPlayerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1FC34E2B62304E009DA851 /* AudioPlayerViewModel.swift */; };
 		4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D219F912B847B67006FF8E5 /* OpenAI */; };
@@ -44,7 +43,9 @@
 		4D671E782B93FEB6007AE7E2 /* SplashTokenizer in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E772B93FEB6007AE7E2 /* SplashTokenizer */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
-		4D8095372B89A1BE00A18822 /* Glur in Frameworks */ = {isa = PBXBuildFile; productRef = 4D8095362B89A1BE00A18822 /* Glur */; };
+		4D885C772B96D969009A1F48 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D885C762B96D969009A1F48 /* SettingsView.swift */; };
+		4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D885C7B2B96E53E009A1F48 /* UserManager.swift */; };
+		4D885C7F2B96E693009A1F48 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = 4D885C7E2B96E693009A1F48 /* KeychainAccess */; };
 		4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */; };
 		4D8E05512B2516DE00B60D0D /* InvisibilityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052F2B2516DE00B60D0D /* InvisibilityApp.swift */; };
 		4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E05322B2516DE00B60D0D /* Assets.xcassets */; };
@@ -63,13 +64,9 @@
 		4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */; };
 		4DB961E72B86B0A000F7ACED /* GPTEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB961E62B86B0A000F7ACED /* GPTEncoder */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
-		4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282D82B4DEB6E0041690B /* SettingsKit */; };
-		4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */; };
 		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
 		4DD282E12B4DF7530041690B /* KeypressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E02B4DF7530041690B /* KeypressManager.swift */; };
-		4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E42B4E08660041690B /* AboutSettingsView.swift */; };
 		4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282E72B4E3C4A0041690B /* LaunchAtLogin */; };
-		4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282EA2B4E3D810041690B /* TelemetryClient */; };
 		4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */; };
 		4DD5E36A2B6243D300C35B1C /* AppPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5E3692B6243D300C35B1C /* AppPrompts.swift */; };
 		4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DDCE8522B50BA0900A22B1E /* Sparkle */; };
@@ -112,6 +109,8 @@
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D5EA4D22B61F01700CD7966 /* AudioTranscriptView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioTranscriptView.swift; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		4D885C762B96D969009A1F48 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4D885C7B2B96E53E009A1F48 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 		4D8E052F2B2516DE00B60D0D /* InvisibilityApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvisibilityApp.swift; sourceTree = "<group>"; };
 		4D8E05312B2516DE00B60D0D /* Invisibility.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Invisibility.entitlements; sourceTree = "<group>"; };
@@ -130,9 +129,7 @@
 		4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingExplainerView.swift; sourceTree = "<group>"; };
 		4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingEmailView.swift; sourceTree = "<group>"; };
 		4DC610ED2B57369B00255358 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
-		4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSettingsView.swift; sourceTree = "<group>"; };
 		4DD282E02B4DF7530041690B /* KeypressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypressManager.swift; sourceTree = "<group>"; };
-		4DD282E42B4E08660041690B /* AboutSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutSettingsView.swift; sourceTree = "<group>"; };
 		4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidUrl.swift"; sourceTree = "<group>"; };
 		4DD5E3692B6243D300C35B1C /* AppPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPrompts.swift; sourceTree = "<group>"; };
 		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -149,10 +146,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D1557B42B684CCA00B8B781 /* DockProgress in Frameworks */,
 				4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */,
 				4DB961E72B86B0A000F7ACED /* GPTEncoder in Frameworks */,
-				4DD282D92B4DEB6E0041690B /* SettingsKit in Frameworks */,
 				4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */,
@@ -160,11 +155,10 @@
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
-				4DD282EB2B4E3D810041690B /* TelemetryClient in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
-				4D8095372B89A1BE00A18822 /* Glur in Frameworks */,
 				4D671E782B93FEB6007AE7E2 /* SplashTokenizer in Frameworks */,
+				4D885C7F2B96E693009A1F48 /* KeychainAccess in Frameworks */,
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
 				4D3D05132B59DB32009340ED /* AudioKit in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
@@ -203,6 +197,7 @@
 				4D3B635C2B642A1A004AA7DF /* LLMManager.swift */,
 				4D9348C92B5B24C800D57BC2 /* ModelFileManager.swift */,
 				4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */,
+				4D885C7B2B96E53E009A1F48 /* UserManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -383,8 +378,7 @@
 		4DD282DA2B4DEF6E0041690B /* SettingViews */ = {
 			isa = PBXGroup;
 			children = (
-				4DD282DB2B4DEF890041690B /* GeneralSettingsView.swift */,
-				4DD282E42B4E08660041690B /* AboutSettingsView.swift */,
+				4D885C762B96D969009A1F48 /* SettingsView.swift */,
 			);
 			path = SettingViews;
 			sourceTree = "<group>";
@@ -435,21 +429,18 @@
 				4DE6734C2B17F46B00A5F9AE /* ViewCondition */,
 				4DE6734E2B17F46B00A5F9AE /* MarkdownUI */,
 				4D7AB4232B4CB469007F025B /* Pow */,
-				4DD282D82B4DEB6E0041690B /* SettingsKit */,
 				4DD282DE2B4DF7050041690B /* KeyboardShortcuts */,
 				4DD282E72B4E3C4A0041690B /* LaunchAtLogin */,
-				4DD282EA2B4E3D810041690B /* TelemetryClient */,
 				4DDCE8522B50BA0900A22B1E /* Sparkle */,
 				4D3D05122B59DB32009340ED /* AudioKit */,
 				4D3D05152B59E1A3009340ED /* SwiftWhisper */,
-				4D1557B32B684CCA00B8B781 /* DockProgress */,
 				4D219F912B847B67006FF8E5 /* OpenAI */,
 				4DB961E62B86B0A000F7ACED /* GPTEncoder */,
-				4D8095362B89A1BE00A18822 /* Glur */,
 				4D671E712B93FEB6007AE7E2 /* Splash */,
 				4D671E732B93FEB6007AE7E2 /* SplashHTMLGen */,
 				4D671E752B93FEB6007AE7E2 /* SplashMarkdown */,
 				4D671E772B93FEB6007AE7E2 /* SplashTokenizer */,
+				4D885C7E2B96E693009A1F48 /* KeychainAccess */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -481,17 +472,14 @@
 				0ACA4D742AF89C27000DA76F /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */,
-				4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */,
 				4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				4DD282E62B4E3C4A0041690B /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
-				4DD282E92B4E3D810041690B /* XCRemoteSwiftPackageReference "SwiftClient" */,
 				4D3D05112B59DB32009340ED /* XCRemoteSwiftPackageReference "AudioKit" */,
 				4D3D05142B59E1A3009340ED /* XCRemoteSwiftPackageReference "SwiftWhisper" */,
-				4D1557B22B684CCA00B8B781 /* XCRemoteSwiftPackageReference "DockProgress" */,
 				4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */,
 				4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */,
-				4D8095352B89A1BE00A18822 /* XCRemoteSwiftPackageReference "Glur" */,
 				4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */,
+				4D885C7D2B96E693009A1F48 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -530,7 +518,6 @@
 				4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */,
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
 				4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */,
-				4DD282E52B4E08660041690B /* AboutSettingsView.swift in Sources */,
 				4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */,
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */,
@@ -538,8 +525,8 @@
 				4D9348CA2B5B24C800D57BC2 /* ModelFileManager.swift in Sources */,
 				4D5819C52B8EA02300BF07FF /* TextOutputFormat.swift in Sources */,
 				4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */,
-				4DD282DC2B4DEF890041690B /* GeneralSettingsView.swift in Sources */,
 				4D1FC34F2B62304E009DA851 /* AudioPlayerViewModel.swift in Sources */,
+				4D885C772B96D969009A1F48 /* SettingsView.swift in Sources */,
 				4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */,
 				4D596AB12B61997100B9E765 /* Audio.swift in Sources */,
 				4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */,
@@ -552,6 +539,7 @@
 				4D3EBF682B6444D700AE230E /* AppModels.swift in Sources */,
 				4DD282E12B4DF7530041690B /* KeypressManager.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
+				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
 				4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */,
@@ -825,14 +813,6 @@
 				minimumVersion = 2.5.1;
 			};
 		};
-		4D1557B22B684CCA00B8B781 /* XCRemoteSwiftPackageReference "DockProgress" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/DockProgress";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.2.2;
-			};
-		};
 		4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/djmango/OpenAI.git";
@@ -873,12 +853,12 @@
 				minimumVersion = 1.0.3;
 			};
 		};
-		4D8095352B89A1BE00A18822 /* XCRemoteSwiftPackageReference "Glur" */ = {
+		4D885C7D2B96E693009A1F48 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/joogps/Glur.git";
+			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.3;
+				branch = master;
+				kind = branch;
 			};
 		};
 		4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */ = {
@@ -887,14 +867,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.4;
-			};
-		};
-		4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/david-swift/SettingsKit-macOS";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.3;
 			};
 		};
 		4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
@@ -911,14 +883,6 @@
 			requirement = {
 				branch = main;
 				kind = branch;
-			};
-		};
-		4DD282E92B4E3D810041690B /* XCRemoteSwiftPackageReference "SwiftClient" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/TelemetryDeck/SwiftClient";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
 			};
 		};
 		4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */ = {
@@ -948,11 +912,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		4D1557B32B684CCA00B8B781 /* DockProgress */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4D1557B22B684CCA00B8B781 /* XCRemoteSwiftPackageReference "DockProgress" */;
-			productName = DockProgress;
-		};
 		4D219F912B847B67006FF8E5 /* OpenAI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */;
@@ -993,20 +952,15 @@
 			package = 4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */;
 			productName = Pow;
 		};
-		4D8095362B89A1BE00A18822 /* Glur */ = {
+		4D885C7E2B96E693009A1F48 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4D8095352B89A1BE00A18822 /* XCRemoteSwiftPackageReference "Glur" */;
-			productName = Glur;
+			package = 4D885C7D2B96E693009A1F48 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
+			productName = KeychainAccess;
 		};
 		4DB961E62B86B0A000F7ACED /* GPTEncoder */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */;
 			productName = GPTEncoder;
-		};
-		4DD282D82B4DEB6E0041690B /* SettingsKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DD282D72B4DEB6E0041690B /* XCRemoteSwiftPackageReference "SettingsKit-macOS" */;
-			productName = SettingsKit;
 		};
 		4DD282DE2B4DF7050041690B /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1017,11 +971,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DD282E62B4E3C4A0041690B /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */;
 			productName = LaunchAtLogin;
-		};
-		4DD282EA2B4E3D810041690B /* TelemetryClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DD282E92B4E3D810041690B /* XCRemoteSwiftPackageReference "SwiftClient" */;
-			productName = TelemetryClient;
 		};
 		4DDCE8522B50BA0900A22B1E /* Sparkle */ = {
 			isa = XCSwiftPackageProductDependency;

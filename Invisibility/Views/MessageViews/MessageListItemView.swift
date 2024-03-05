@@ -28,9 +28,18 @@ struct MessageListItemView: View {
 
     @State private var isHovered: Bool = false
     @State private var isCopied: Bool = false
+    @State private var whoIsHovering: String?
 
     private var isCopyButtonVisible: Bool {
         isHovered && !isGenerating
+    }
+
+    private var isRegenerateButtonVisible: Bool {
+        isHovered && isLastMessage
+    }
+
+    private var isLastMessage: Bool {
+        message.id == messageViewModel.messages.last?.id
     }
 
     var body: some View {
@@ -106,13 +115,32 @@ struct MessageListItemView: View {
                 Spacer()
                 HStack {
                     Spacer()
+                    MessageButtonItemView(label: "Regenerate", icon: "arrow.clockwise") {
+                        regenerateAction()
+                    }
+                    .onHover { hovering in
+                        if hovering {
+                            whoIsHovering = "Regenerate"
+                        } else {
+                            whoIsHovering = nil
+                        }
+                    }
+                    .visible(if: isRegenerateButtonVisible, removeCompletely: true)
                     MessageButtonItemView(label: "Copy", icon: "doc.on.doc") {
                         copyAction()
                     }
+                    .onHover { hovering in
+                        if hovering {
+                            whoIsHovering = "Copy"
+                        } else {
+                            whoIsHovering = nil
+                        }
+                    }
+                    .visible(if: isCopyButtonVisible, removeCompletely: true)
                 }
+                .animation(.snappy, value: whoIsHovering)
             }
             .animation(.snappy, value: isHovered)
-            .visible(if: isCopyButtonVisible, removeCompletely: true)
             .focusable(false)
         }
         .padding(.horizontal, 10)
@@ -140,6 +168,12 @@ struct MessageListItemView: View {
         pasteBoard.setString(message.content ?? "", forType: .string)
 
         isCopied = true
+    }
+
+    private func regenerateAction() {
+        Task {
+            await messageViewModel.regenerate()
+        }
     }
 
     private func deleteAction() {

@@ -55,6 +55,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    func application(_: NSApplication, open urls: [URL]) {
+        for url in urls {
+            // Parse and handle the URL as needed
+            print("URL received: \(url)")
+            // Example: Check the scheme and handle the URL
+            if url.scheme == "invisibility", let components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
+                // Perform actions based on the URL components, such as extracting a token
+                if let token = components.queryItems?.first(where: { $0.name == "token" })?.value {
+                    logger.debug("Received JWT Token: \(token)")
+                    // Handle the authentication with the received token
+                    UserManager.shared.token = token
+                    Task {
+                        await UserManager.shared.setup()
+                    }
+                } else {
+                    logger.error("No token found in URL")
+                    AlertManager.shared.doShowAlert(title: "Error", message: "No token found in URL. Please try again, or contact support.")
+                }
+            }
+        }
+    }
+
     func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows _: Bool) -> Bool {
         // If the window is visible and on the screen with the cursor, don't show it again
         if WindowManager.shared.windowIsVisible, WindowManager.shared.windowIsOnScreenWithCursor {

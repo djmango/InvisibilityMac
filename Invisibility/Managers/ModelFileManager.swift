@@ -7,7 +7,6 @@
 
 import Combine
 import CryptoKit
-import DockProgress
 import Foundation
 import OSLog
 
@@ -52,13 +51,11 @@ class ModelFileManager: ObservableObject {
     @Published var progress: Double = 0.0
 
     private var cancellables: Set<AnyCancellable> = []
-    private let reportDockProgress: Bool
 
     public let modelInfo: ModelInfo
 
-    init(modelInfo: ModelInfo, reportDockProgress: Bool = false) {
+    init(modelInfo: ModelInfo) {
         self.modelInfo = modelInfo
-        self.reportDockProgress = reportDockProgress
     }
 
     /// Downloads a file from a given URL to a given destination URL, verifying the SHA256 hash of the file
@@ -106,13 +103,6 @@ class ModelFileManager: ObservableObject {
                     if progress > self?.progress ?? 0.0 {
                         self?.progress = progress
                         self?.logger.debug("Download progress for \(self?.modelInfo.name ?? ""): \(progress)")
-
-                        // And only report progress to Dock if we're supposed to, to avoid flickering
-                        if self?.reportDockProgress ?? false {
-                            DispatchQueue.main.async {
-                                DockProgress.progress = progress
-                            }
-                        }
                     }
                 })
                 .store(in: &self.cancellables)

@@ -18,14 +18,13 @@ final class LLMManager: ObservableObject {
     static let shared = LLMManager()
 
     private let ai: OpenAI
-    // private let host: String = "api.openai.com"
-    // private let host: String = "http://localhost:8000/oai"
-    private let host: String = "invisibility.shuttleapp.rs/oai"
+    private let host: String = "http://localhost:8000/oai"
+    // private let host: String = "cloak.invisibility.so/oai"
     private let encoder: GPTEncoder = GPTEncoder()
 
-    static let maxInputTokenCount: Int = 16384
+    static let maxInputTokenCount: Int = 8192
     static let maxInputTokenCountVision: Int = 2048
-    static let maxTokenCountPerMessage: Int = 8096
+    static let maxTokenCountPerMessage: Int = 4096
     static let maxNewTokens: Int = 2048
 
     private init() {
