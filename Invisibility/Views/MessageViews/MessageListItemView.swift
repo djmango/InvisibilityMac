@@ -20,8 +20,6 @@ struct MessageListItemView: View {
 
     private var audio: Audio? = nil
 
-    @State private var textHeight: CGFloat = 0
-
     init(message: Message) {
         self.message = message
     }
@@ -71,18 +69,18 @@ struct MessageListItemView: View {
                     .controlSize(.small)
                     .visible(if: isGenerating, removeCompletely: true)
 
-                if let audio {
-                    AudioWidgetView(audio: audio)
-                        .padding(.top, 8)
-                        .onHover { hovering in
-                            if hovering {
-                                NSCursor.pointingHand.push()
-                            } else {
-                                NSCursor.pop()
-                            }
-                        }
-                        .visible(if: message.audio != nil, removeCompletely: true)
-                }
+                // if let audio {
+                //     AudioWidgetView(audio: audio)
+                //         .padding(.top, 8)
+                //         .onHover { hovering in
+                //             if hovering {
+                //                 NSCursor.pointingHand.push()
+                //             } else {
+                //                 NSCursor.pop()
+                //             }
+                //         }
+                //         .visible(if: message.audio != nil, removeCompletely: true)
+                // }
 
                 HStack(alignment: .center, spacing: 8) {
                     ForEach(message.images ?? [], id: \.self) { imageData in

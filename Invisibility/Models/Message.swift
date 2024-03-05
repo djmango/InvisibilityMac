@@ -55,7 +55,7 @@ final class Message: Identifiable, ObservableObject {
     /// Role for message sender, system, user, or assistant
     var role: MessageRole?
     /// Optional list of images stored externally to avoid bloating the database
-    @Attribute(.externalStorage) var images: [Data]? // TODO: refactor this into its own model
+    @Attribute(.externalStorage) var images: [Data]?
     /// The status of the message generation and processing
     var status: MessageStatus? = MessageStatus.pending
     /// The progress of the message processing this is generic and can be used for any processing, useful for UI

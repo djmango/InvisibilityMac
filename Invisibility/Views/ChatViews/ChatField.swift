@@ -19,7 +19,6 @@ struct ChatField: View {
     @ObservedObject private var chatViewModel = ChatViewModel.shared
 
     @Binding private var text: String
-    @State private var textHeight: CGFloat = 52
     @State private var previousText: String = ""
     @State private var whoIsHovering: UUID?
 
@@ -60,6 +59,8 @@ struct ChatField: View {
             ScrollView {
                 TextEditor(text: $text)
                     .scrollContentBackground(.hidden)
+                    .scrollIndicatorsFlash(onAppear: false)
+                    .scrollIndicators(.never)
                     .multilineTextAlignment(.leading)
                     .font(.title3)
                     .padding()
@@ -74,19 +75,18 @@ struct ChatField: View {
                                 .padding() // Match TextEditor padding
                                 .hidden() // Make the Text view invisible
                                 .onChange(of: text) {
-                                    self.textHeight = geo.size.height
+                                    self.chatViewModel.textHeight = geo.size.height
                                 }
                         }
                     )
             }
-            .scrollIndicators(.never)
-            .frame(height: max(52, min(textHeight, 500)))
+            .frame(height: max(52, min(chatViewModel.textHeight, 500)))
         }
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
         )
         .padding(.horizontal, 10)
-        .animation(.snappy, value: textHeight)
+        // .animation(.snappy, value: chatViewModel.textHeight)
         .animation(.easeIn(duration: 0.2), value: chatViewModel.images)
     }
 

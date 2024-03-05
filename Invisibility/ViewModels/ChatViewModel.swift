@@ -33,6 +33,9 @@ final class ChatViewModel: ObservableObject {
     /// UUID of the currently hovered image
     public var whoIsHovering: UUID?
 
+    /// The height of the text field.
+    public var textHeight: CGFloat = 52
+
     private init() {}
 
     public func addImage(_ data: Data) {

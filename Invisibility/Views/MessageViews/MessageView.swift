@@ -34,6 +34,7 @@ struct MessageView: View {
                     }
                 }
             }
+            // .scrollPosition(id: Binding<(Hashable)?>, anchor: UnitPoint?)
             .mask(
                 LinearGradient(
                     gradient: Gradient(stops: [
@@ -63,6 +64,7 @@ struct MessageView: View {
                 .padding(.bottom, 10)
                 .scrollIndicators(.never)
         }
+        .animation(.snappy, value: chatViewModel.textHeight)
         .overlay(
             Rectangle()
                 .foregroundColor(Color.gray.opacity(0.2))

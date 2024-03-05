@@ -111,6 +111,7 @@
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D885C762B96D969009A1F48 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4D885C7B2B96E53E009A1F48 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		4D885C802B972F38009A1F48 /* swift-markdown-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-markdown-ui"; path = "../swift-markdown-ui"; sourceTree = "<group>"; };
 		4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewModel.swift; sourceTree = "<group>"; };
 		4D8E052F2B2516DE00B60D0D /* InvisibilityApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvisibilityApp.swift; sourceTree = "<group>"; };
 		4D8E05312B2516DE00B60D0D /* Invisibility.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Invisibility.entitlements; sourceTree = "<group>"; };
@@ -171,6 +172,7 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
+				4D885C802B972F38009A1F48 /* swift-markdown-ui */,
 				4D8E05272B2516DE00B60D0D /* Invisibility */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,

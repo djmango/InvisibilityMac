@@ -20,6 +20,7 @@ final class LLMManager: ObservableObject {
     private var ai: OpenAI
     // private let host: String = "http://localhost:8000/oai"
     private let host: String = "cloak.invisibility.so/oai"
+    private let timeoutInterval: TimeInterval = 20
     private let encoder: GPTEncoder = GPTEncoder()
 
     static let maxInputTokenCount: Int = 8192
@@ -32,7 +33,7 @@ final class LLMManager: ObservableObject {
         let configuration = OpenAI.Configuration(
             token: token,
             host: host,
-            timeoutInterval: 10
+            timeoutInterval: timeoutInterval
         )
         ai = OpenAI(configuration: configuration)
     }
@@ -42,7 +43,7 @@ final class LLMManager: ObservableObject {
         let configuration = OpenAI.Configuration(
             token: token,
             host: host,
-            timeoutInterval: 10
+            timeoutInterval: timeoutInterval
         )
         ai = OpenAI(configuration: configuration)
     }
