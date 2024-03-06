@@ -12,6 +12,32 @@ import OpenAI
 import OSLog
 import SwiftUI
 
+struct LLMModel: Codable, Equatable {
+    let text: String
+    let vision: String
+    let human_name: String
+
+    // Equatable
+    static func == (lhs: LLMModel, rhs: LLMModel) -> Bool {
+        lhs.text == rhs.text && lhs.vision == rhs.vision && lhs.human_name == rhs.human_name
+    }
+}
+
+enum LLMModels {
+    static let claude3_opus = LLMModel(
+        text: "anthropic/claude-3-opus:beta",
+        vision: "anthropic/claude-3-opus:beta",
+        human_name: "Claude 3 Opus"
+    )
+
+    static let gpt4 = LLMModel(
+        text: "gpt-4-turbo-preview",
+        vision: "gpt-4-vision-preview",
+        human_name: "GPT-4"
+    )
+}
+
+@Observable
 final class LLMManager: ObservableObject {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
 
@@ -23,9 +49,12 @@ final class LLMManager: ObservableObject {
     private let timeoutInterval: TimeInterval = 20
     private let encoder: GPTEncoder = GPTEncoder()
 
-    static let maxInputTokenCount: Int = 8192
+    public var model: LLMModel = LLMModels.gpt4
+
+    // Magic params that make me not lose all my money
+    static let maxInputTokenCount: Int = 4096
     static let maxInputTokenCountVision: Int = 2048
-    static let maxTokenCountPerMessage: Int = 4096
+    static let maxTokenCountPerMessage: Int = 2048
     static let maxNewTokens: Int = 2048
 
     private init() {
@@ -83,14 +112,13 @@ final class LLMManager: ObservableObject {
     }
 
     func constructChatQuery(messages: [Message]) async -> ChatQuery {
-        let vision_model: String = "gpt-4-vision-preview"
-        let reg_model: String = "gpt-4-turbo-preview"
-
         // If the last message has any images use the vision model, otherwise use the regular model
-        let model: String = if messages.last?.images?.count ?? 0 > 0 {
-            vision_model
+        let allow_images = messages.last?.images?.count ?? 0 > 0
+
+        let model_id: String = if allow_images {
+            model.vision
         } else {
-            reg_model
+            model.text
         }
 
         // For audio messages, chunk the input and summarize each chunk
@@ -102,7 +130,7 @@ final class LLMManager: ObservableObject {
             }
         }
 
-        let maxTokens = if model == vision_model {
+        let maxTokens = if allow_images {
             LLMManager.maxInputTokenCountVision
         } else {
             LLMManager.maxInputTokenCount
@@ -111,11 +139,11 @@ final class LLMManager: ObservableObject {
         let chat_messages = truncateMessages(
             messages: messages,
             maxTokenCount: maxTokens,
-            allow_images: model == vision_model
+            allow_images: allow_images
         )
 
         // If the last message has any images use the vision model, otherwise use the regular model
-        return ChatQuery(messages: chat_messages, model: model, maxTokens: LLMManager.maxNewTokens)
+        return ChatQuery(messages: chat_messages, model: model_id, maxTokens: LLMManager.maxNewTokens)
     }
 
     /// Returns the number of tokens in the input text.

@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Invisibility Logo.png",
+      "filename" : "256px Invisibility App Icon.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Invisibility Logo 1.png",
+      "filename" : "512px Invisibility App Icon.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Invisibility Logo 2.png",
+      "filename" : "1024px Invisibility App Icon.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -138,6 +138,7 @@ struct MessageListItemView: View {
                 }
                 .animation(.snappy, value: whoIsHovering)
             }
+            .padding(5)
             .animation(.snappy, value: isHovered)
             .focusable(false)
         }

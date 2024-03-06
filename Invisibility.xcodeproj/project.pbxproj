@@ -63,6 +63,7 @@
 		4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */; };
 		4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */; };
 		4DB961E72B86B0A000F7ACED /* GPTEncoder in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB961E62B86B0A000F7ACED /* GPTEncoder */; };
+		4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
 		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
 		4DD282E12B4DF7530041690B /* KeypressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E02B4DF7530041690B /* KeypressManager.swift */; };
@@ -149,6 +150,7 @@
 			files = (
 				4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */,
 				4DB961E72B86B0A000F7ACED /* GPTEncoder in Frameworks */,
+				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
 				4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D3D05162B59E1A3009340ED /* SwiftWhisper in Frameworks */,
@@ -443,6 +445,7 @@
 				4D671E752B93FEB6007AE7E2 /* SplashMarkdown */,
 				4D671E772B93FEB6007AE7E2 /* SplashTokenizer */,
 				4D885C7E2B96E693009A1F48 /* KeychainAccess */,
+				4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -482,6 +485,7 @@
 				4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */,
 				4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */,
 				4D885C7D2B96E693009A1F48 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
+				4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -702,7 +706,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 52;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -735,7 +739,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 51;
+				CURRENT_PROJECT_VERSION = 52;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -871,6 +875,14 @@
 				minimumVersion = 1.0.4;
 			};
 		};
+		4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Cindori/FluidGradient.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
@@ -963,6 +975,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DB961E52B86B0A000F7ACED /* XCRemoteSwiftPackageReference "GPTEncoder" */;
 			productName = GPTEncoder;
+		};
+		4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */;
+			productName = FluidGradient;
 		};
 		4DD282DE2B4DF7050041690B /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;

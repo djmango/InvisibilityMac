@@ -31,8 +31,6 @@ struct SettingsView: View {
     var body: some View {
         ZStack {
             VStack(alignment: .center) {
-                Spacer()
-
                 // User profile pic and login/logout button
                 HStack {
                     Spacer()
@@ -77,7 +75,7 @@ struct SettingsView: View {
                     Spacer()
                 }
                 .visible(if: userManager.user != nil)
-                .padding(.bottom, 10)
+                .padding(.vertical, 10)
 
                 HStack {
                     Spacer()
@@ -90,8 +88,8 @@ struct SettingsView: View {
                     .padding(.trailing, 10)
                     Spacer()
                 }
-                .visible(if: userManager.user == nil)
                 .padding(.bottom, 10)
+                .visible(if: userManager.user == nil)
 
                 LaunchAtLogin.Toggle()
                     .padding(.bottom, 10)
@@ -116,7 +114,7 @@ struct SettingsView: View {
                 Image("AppIconBitmap")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 30, height: 30)
+                    .frame(width: 64, height: 64)
                     .padding(.vertical, 10)
 
                 HStack(spacing: 0) {

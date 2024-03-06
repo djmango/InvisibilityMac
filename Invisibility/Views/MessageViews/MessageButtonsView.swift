@@ -12,9 +12,10 @@ import SwiftUI
 struct MessageButtonsView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageListView")
 
-    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
-    // @ObservedObject private var screenRecorder = ScreenRecorder.shared
     private let screenshotManager = ScreenshotManager.shared
+
+    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject private var llmManager: LLMManager = LLMManager.shared
 
     @State private var whoIsHovering: String?
 
@@ -33,59 +34,57 @@ struct MessageButtonsView: View {
                 }
             }
 
-            // Search Audio
-            // MessageButtonItemView(label: "Search Audio", icon: "waveform") {
-            //     logger.debug("Search Audio")
-            // }
-            // .onHover { hovering in
-            //     if hovering {
-            //         whoIsHovering = "Search Audio"
-            //     } else {
-            //         whoIsHovering = nil
-            //     }
-            // }
+            // Model picker
+            MessageButtonItemView(label: llmManager.model.human_name, icon: "sparkles") {
+                if llmManager.model == LLMModels.gpt4 {
+                    llmManager.model = LLMModels.claude3_opus
+                    logger.debug("Switching to Claude 3 Opus")
+                } else {
+                    llmManager.model = LLMModels.gpt4
+                    logger.debug("Switching to GPT-4")
+                }
+            }
+            .onHover { hovering in
+                if hovering {
+                    whoIsHovering = "Model Picker"
+                } else {
+                    whoIsHovering = nil
+                }
+            }
 
-            // Record
-            // Button(action: {
-            //     screenRecorder.toggleRecording()
-            // }
-            // ) {
-            //     HStack(spacing: 0) {
-            //         Image(systemName: "record.circle")
-            //             .resizable()
-            //             .frame(width: 18, height: 18)
-            //             .foregroundColor(screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor"))
-            //             .padding(8)
+            // Settings
+            SettingsLink {
+                HStack(spacing: 0) {
+                    Image(systemName: "gearshape")
+                        .resizable()
+                        .frame(width: 18, height: 18)
+                        .foregroundColor(Color("ChatButtonForegroundColor"))
+                        .padding(8)
 
-            //         Text(screenRecorder.isRunning ? "Recording" : "Record")
-            //             .font(.title3)
-            //             .foregroundColor(screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor"))
-            //             .hide(if: whoIsHovering ?? "" != "Record", removeCompletely: true)
-            //             .padding(.trailing, 8)
-            //     }
-            // }
-            // .contentShape(RoundedRectangle(cornerRadius: 100))
-            // .onTapGesture {
-            //     screenRecorder.toggleRecording()
-            // }
-            // .onHover { hovering in
-            //     if hovering {
-            //         whoIsHovering = "Record"
-            //     } else {
-            //         whoIsHovering = nil
-            //     }
-            // }
-            // .overlay(
-            //     RoundedRectangle(cornerRadius: 100)
-            //         .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-            // )
-            // .animation(.snappy, value: whoIsHovering)
-            // .animation(.snappy, value: screenRecorder.isRunning)
-            // .buttonStyle(.plain)
-            // .keyboardShortcut("r", modifiers: .command)
+                    Text("Settings")
+                        .font(.title3)
+                        .foregroundColor(Color("ChatButtonForegroundColor"))
+                        .hide(if: whoIsHovering ?? "" != "Settings", removeCompletely: true)
+                        .padding(.trailing, 8)
+                }
+            }
+            .contentShape(RoundedRectangle(cornerRadius: 100))
+            .onHover { hovering in
+                if hovering {
+                    whoIsHovering = "Settings"
+                } else {
+                    whoIsHovering = nil
+                }
+            }
+            .overlay(
+                RoundedRectangle(cornerRadius: 100)
+                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+            )
+            .animation(.snappy, value: whoIsHovering)
+            .buttonStyle(.plain)
 
             // Clear Chat
-            MessageButtonItemView(label: "Clear Chat", icon: "eraser") {
+            MessageButtonItemView(label: "Clear Chat", icon: "rays") {
                 messageViewModel.clearChat()
             }
             .onHover { hovering in
@@ -99,6 +98,7 @@ struct MessageButtonsView: View {
             .keyboardShortcut(.delete, modifiers: [.command, .shift])
         }
         .animation(.snappy, value: whoIsHovering)
+        .animation(.snappy, value: llmManager.model)
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
                 .padding(.horizontal, -10)

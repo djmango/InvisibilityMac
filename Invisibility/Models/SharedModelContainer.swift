@@ -8,38 +8,6 @@
 import Foundation
 import SwiftData
 
-// enum DatabaseVersion {
-//     static let currentVersion = 2
-// }
-
-// func checkDatabaseVersionAndMigrateIfNeeded() {
-//     let storedVersion = UserDefaults.standard.integer(forKey: "databaseVersion")
-
-//     if storedVersion < DatabaseVersion.currentVersion {
-//         // Perform migration logic here
-//         migrateDatabase(from: storedVersion)
-
-//         // Update the stored version to the current version after successful migration
-//         UserDefaults.standard.set(DatabaseVersion.currentVersion, forKey: "databaseVersion")
-//     }
-// }
-
-// func migrateDatabase(from oldVersion: Int) {
-//     switch oldVersion {
-//     case 0:
-//         // Migrate from version 1 to 2
-//         print("Migrating database from version 1 to 2...")
-//         // Example: Update database schema, transform data, etc.
-//         // Remember to handle failures and ensure data integrity.
-
-//     // Add more cases as needed for future versions
-//     default:
-//         print("No migration needed or migration path not supported.")
-//     }
-
-//     print("Migration completed.")
-// }
-
 class SharedModelContainer {
     static var shared: SharedModelContainer!
 
