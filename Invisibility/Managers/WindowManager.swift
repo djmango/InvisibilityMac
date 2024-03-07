@@ -87,6 +87,7 @@ class WindowManager: ObservableObject {
 
     public func showWindow() {
         guard let window else { return }
+        guard OnboardingManager.shared.onboardingViewed else { return }
         // Animate opacity
         window.alphaValue = 0
         positionWindowOnCursorScreen()
@@ -115,7 +116,6 @@ class WindowManager: ObservableObject {
         let window = InteractivePanel(
             contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.borderless, .nonactivatingPanel],
-            // styleMask: [.nonactivatingPanel],
             backing: .buffered,
             defer: false
         )
@@ -132,8 +132,6 @@ class WindowManager: ObservableObject {
         window.orderFrontRegardless()
 
         logger.debug("Window set up")
-        showWindow()
-        logger.debug("Window positioned")
         return true
     }
 

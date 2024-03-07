@@ -13,6 +13,8 @@
 		4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D219F912B847B67006FF8E5 /* OpenAI */; };
 		4D2564BB2B61D08200F2D089 /* SwiftUI+HexColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */; };
 		4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3B635C2B642A1A004AA7DF /* LLMManager.swift */; };
+		4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */; };
+		4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */; };
 		4D3EBF682B6444D700AE230E /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3EBF672B6444D700AE230E /* AppModels.swift */; };
 		4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */; };
 		4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */; };
@@ -49,6 +51,7 @@
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
 		4D9348CA2B5B24C800D57BC2 /* ModelFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9348C92B5B24C800D57BC2 /* ModelFileManager.swift */; };
 		4D9354292B99851E00C34A63 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4D9354282B99851E00C34A63 /* Alamofire */; };
+		4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D93542A2B99A81400C34A63 /* OnboardingManager.swift */; };
 		4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */; };
 		4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893AF2B54C45300560DAD /* OnboardingView.swift */; };
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
@@ -78,6 +81,7 @@
 		4D1773D72B8C1060004C5D13 /* MessageButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonsView.swift; sourceTree = "<group>"; };
 		4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+HexColors.swift"; sourceTree = "<group>"; };
 		4D3B635C2B642A1A004AA7DF /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
+		4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = invis_launch.mp3; sourceTree = "<group>"; };
 		4D3EBF672B6444D700AE230E /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
 		4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractedSubjects.swift"; sourceTree = "<group>"; };
 		4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractAfter.swift"; sourceTree = "<group>"; };
@@ -108,6 +112,7 @@
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		4D9348C92B5B24C800D57BC2 /* ModelFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelFileManager.swift; sourceTree = "<group>"; };
+		4D93542A2B99A81400C34A63 /* OnboardingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingManager.swift; sourceTree = "<group>"; };
 		4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4DA893AF2B54C45300560DAD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
@@ -137,6 +142,7 @@
 				4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */,
 				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D671E742B93FEB6007AE7E2 /* SplashHTMLGen in Frameworks */,
+				4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
@@ -181,6 +187,7 @@
 				4D9348C92B5B24C800D57BC2 /* ModelFileManager.swift */,
 				4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */,
 				4D885C7B2B96E53E009A1F48 /* UserManager.swift */,
+				4D93542A2B99A81400C34A63 /* OnboardingManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -253,6 +260,7 @@
 		4D8E05302B2516DE00B60D0D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */,
 				4DDCE84F2B509F9800A22B1E /* Info.plist */,
 				4D8E05312B2516DE00B60D0D /* Invisibility.entitlements */,
 				4D8E05322B2516DE00B60D0D /* Assets.xcassets */,
@@ -409,6 +417,7 @@
 				4D885C7E2B96E693009A1F48 /* KeychainAccess */,
 				4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */,
 				4D9354282B99851E00C34A63 /* Alamofire */,
+				4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -447,6 +456,7 @@
 				4D885C7D2B96E693009A1F48 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */,
 				4D9354272B99851E00C34A63 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -463,6 +473,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
+				4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -477,6 +488,7 @@
 				4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */,
 				4D5A9EA22B8C65D40018F6E4 /* MessageButtonItemView.swift in Sources */,
 				4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */,
+				4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */,
 				4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
@@ -781,6 +793,14 @@
 				kind = branch;
 			};
 		};
+		4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/simibac/ConfettiSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
 		4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/JohnSundell/Splash.git";
@@ -868,6 +888,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;
+		};
+		4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
+			productName = ConfettiSwiftUI;
 		};
 		4D671E712B93FEB6007AE7E2 /* Splash */ = {
 			isa = XCSwiftPackageProductDependency;

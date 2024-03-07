@@ -15,6 +15,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var shouldResumeRecording = false
     private var eventMonitor: Any?
 
+    @AppStorage("onboardingViewed") private var onboardingViewed = false
+
     func applicationDidFinishLaunching(_: Notification) {
         // Set up the observer for when the app becomes active
         NotificationCenter.default.addObserver(
@@ -49,9 +51,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
 
         let windowSuccess = WindowManager.shared.setupWindow()
-        if !windowSuccess {
+        guard windowSuccess else {
             logger.error("Failed to set up window")
             AlertManager.shared.doShowAlert(title: "Error", message: "Failed to set up window")
+            return
+        }
+        logger.debug("Window set up successfully")
+
+        if !onboardingViewed {
+            logger.debug("Onboarding not viewed")
+            WindowManager.shared.hideWindow()
+            OnboardingManager.shared.setupWindow()
+        } else {
+            logger.debug("Onboarding viewed")
+            WindowManager.shared.showWindow()
         }
     }
 

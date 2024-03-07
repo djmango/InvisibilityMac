@@ -9,6 +9,9 @@ import Pow
 import SwiftUI
 
 struct OnboardingIntroView: View {
+    @State private var animationStep = 0
+    @State private var showSub = false
+
     private var callback: () -> Void
 
     init(callback: @escaping () -> Void = {}) {
@@ -17,70 +20,102 @@ struct OnboardingIntroView: View {
 
     var body: some View {
         VStack {
-            Spacer()
+            switch animationStep {
+            case 0:
+                Text("Shh im not here")
+                    .opacity(0)
 
-            Image("GravityAppIcon")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 200, height: 200)
-                .conditionalEffect(
-                    .repeat(
-                        .shine(duration: 0.3),
-                        // .glow(color: .white, radius: 20),
-                        // .jump(height: 10),
-                        // .pulse(shape: Circle(), count: 3),
-                        // .wiggle(rate: .fast),
-                        every: 3
-                    ), condition: true
-                )
+            case 1:
+                Image("LogoWhite")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 150, height: 150)
+                    .padding()
+                    .transition(
+                        .asymmetric(
+                            insertion: .movingParts.move(
+                                angle: .degrees(270)
+                            ).combined(with: .movingParts.blur).combined(with: .opacity),
+                            removal: .movingParts.blur.combined(with: .opacity)
+                        )
+                    )
 
-            Text("Gravity")
-                .font(.largeTitle)
-                .bold()
-                .foregroundColor(.white)
-                .padding()
+            case 2:
+                Text("Meet your invisible AI")
+                    .font(Font.custom("SF Pro Rounded", size: 70))
+                    .bold()
+                    .foregroundColor(.white)
+                    .padding()
+                    .transition(.asymmetric(
+                        insertion: .movingParts.blur.combined(with: .opacity).combined(with: .scale(scale: 0.8)),
+                        removal: .movingParts.blur.combined(with: .opacity).combined(with: .scale(scale: 0.8))
+                    ))
 
-            Text("Your personal AI assistant")
-                .font(.title)
-                .bold()
-                .foregroundColor(.gray)
-
-            Spacer()
-
-            Button(action: callback) {
-                HStack {
-                    Spacer()
-                    Text("Get started")
-                        .font(.system(size: 18))
-                        .bold()
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-
-                    // Black line in the middle
-                    Rectangle()
-                        .frame(width: 2, height: 30)
-                        .cornerRadius(1)
-                        .foregroundColor(.black.opacity(0.1))
-                        .padding(.trailing, 10)
-
-                    Image(systemName: "chevron.right")
-                        .font(.title)
-                        .foregroundColor(.white)
-                    Spacer()
+                if showSub {
+                    // Boxed arrow for next step
+                    Button(action: {
+                        callback()
+                    }) {
+                        VStack {
+                            Image(systemName: "arrowshape.right.fill")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 20, height: 20)
+                                .foregroundColor(.white)
+                        }
+                        .padding()
+                        .padding(.horizontal, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(.white, lineWidth: 2)
+                        )
+                        .contentShape(RoundedRectangle(cornerRadius: 12))
+                    }
+                    .opacity(0.85)
+                    .buttonStyle(.plain)
+                    .transition(
+                        .asymmetric(
+                            insertion: .movingParts.move(
+                                angle: .degrees(270)
+                            ).combined(with: .movingParts.blur).combined(with: .opacity),
+                            removal: .movingParts.blur.combined(with: .opacity)
+                        )
+                    )
+                    .onHover { inside in
+                        if inside {
+                            NSCursor.pointingHand.push()
+                        } else {
+                            NSCursor.pop()
+                        }
+                    }
                 }
-                .frame(width: 200, height: 50)
+
+            default:
+                Text("Shh im not here")
+                    .opacity(0)
             }
-            .buttonStyle(.plain)
-            .background(Color(red: 255 / 255, green: 105 / 255, blue: 46 / 255, opacity: 1))
-            .cornerRadius(25)
-            .padding()
-            .focusable(false)
-            .onTapGesture(perform: callback)
-            .onHover { hovering in
-                if hovering {
-                    NSCursor.pointingHand.push()
-                } else {
-                    NSCursor.pop()
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.25) {
+                withAnimation(.spring(response: 0.5, dampingFraction: 1, blendDuration: 1.5)) {
+                    animationStep = 1
+                }
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+                    withAnimation(.easeIn(duration: 1)) {
+                        animationStep = 0
+                    }
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        withAnimation(.timingCurve(0.4, 0, 0.4, 1, duration: 2.8)) {
+                            animationStep = 2
+                        }
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4.2) {
+                        withAnimation(.easeOut(duration: 0.5)) {
+                            showSub = true
+                        }
+                    }
                 }
             }
         }

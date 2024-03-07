@@ -5,44 +5,66 @@
 //  Created by Sulaiman Ghori on 1/14/24.
 //
 
+import AVFoundation
+import FluidGradient
+import OSLog
 import SwiftUI
 
 struct OnboardingView: View {
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "OnboardingView")
     @State private var viewIndex: Int = 0
+    @State private var audioPlayer: AVAudioPlayer?
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
-    @AppStorage("emailAddress") private var emailAddress: String = ""
-    @AppStorage("analytics") private var analytics: Bool = true
 
     var body: some View {
         ZStack {
-            // #212222
-            // rgba(33,34,34,1)
-            Color(red: 33 / 255, green: 34 / 255, blue: 34 / 255, opacity: 1).edgesIgnoringSafeArea(.all)
+            VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 0)
+                .ignoresSafeArea()
+
+            FluidGradient(
+                blobs: [.blue, .teal, .indigo],
+                highlights: [.blue, .teal, .indigo],
+                speed: 0.70,
+                blur: 0
+            )
+            .blur(radius: 70)
+            .background(.quaternary)
+            .ignoresSafeArea()
 
             switch viewIndex {
             case 0:
                 OnboardingIntroView { viewIndex = 3 }
 
-            // case 1:
-            //     OnboardingExplainerView { viewIndex = 3 }
+            case 1:
+                OnboardingExplainerView { viewIndex = 3 }
 
-            // case 2:
-            //     OnboardingEmailView { viewIndex = 3 }
-
-            // case 3:
-            //     OnboardingDownloadView {
-            //         // viewIndex = 4
-            //         onboardingViewed = true
-            //     }
+            case 2:
+                OnboardingEmailView { viewIndex = 3 }
 
             default:
                 EmptyView()
             }
         }
+        .animation(.snappy, value: viewIndex)
+        .onAppear {
+            if !onboardingViewed {
+                play()
+            }
+        }
     }
-}
 
-#Preview {
-    OnboardingView()
+    func play() {
+        guard let url = Bundle.main.url(forResource: "invis_launch", withExtension: "mp3") else {
+            logger.error("Sound file not found.")
+            return
+        }
+
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer?.play()
+        } catch {
+            logger.error("Failed to play sound. Error: \(error)")
+        }
+    }
 }
