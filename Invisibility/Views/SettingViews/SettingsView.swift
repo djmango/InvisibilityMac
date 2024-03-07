@@ -6,6 +6,7 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import FluidGradient
 import KeyboardShortcuts
 import LaunchAtLogin
 import OSLog
@@ -31,70 +32,111 @@ struct SettingsView: View {
         ZStack {
             VStack(alignment: .center) {
                 // User profile pic and login/logout button
-                HStack {
-                    Spacer()
-                    // Profile pic from url
-                    VStack {
-                        AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                .shadow(radius: 10)
-                                .padding(10)
-                        } placeholder: {
-                            ProgressView()
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                .shadow(radius: 10)
-                                .padding(10)
-                        }
-                        .visible(if: userManager.user?.profilePictureUrl != nil)
-
-                        Text(userManager.user?.email ?? "")
-                            .font(.headline)
-                            .padding(.bottom, 5)
-
-                        Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
-                            .font(.headline)
-                            .padding(.bottom, 5)
-                            .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
-
-                        Button(action: {
-                            UserManager.shared.logout()
-                        }) {
-                            Text("Logout")
-                        }
-                        .buttonStyle(.bordered)
+                // Profile pic from url
+                VStack(alignment: .center) {
+                    AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            .padding(10)
+                    } placeholder: {
+                        ProgressView()
+                            .frame(width: 50, height: 50)
+                            .clipShape(Circle())
+                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
                     }
+                    .visible(if: userManager.user?.profilePictureUrl != nil)
+                    .shadow(radius: 2)
 
-                    Spacer()
-                }
-                .visible(if: userManager.user != nil)
-                .padding(.vertical, 10)
+                    Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
+                        .font(.title3)
+                        .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
+                        .shadow(radius: 2)
 
-                HStack {
-                    Spacer()
+                    Text(userManager.user?.email ?? "")
+                        .font(.caption)
+                        .padding(.bottom, 15)
+                        .shadow(radius: 2)
+
+                    // Pro status
+                    Text("Invisibility Plus")
+                        .font(.caption)
+                        // .bold()
+                        .italic()
+                        .foregroundColor(.white)
+                        .visible(if: userManager.isPaid)
+                        .shadow(radius: 2)
+
                     Button(action: {
-                        UserManager.shared.login()
+                        UserManager.shared.manage()
                     }) {
-                        Text("Login")
+                        Text("Manage")
                     }
                     .buttonStyle(.bordered)
-                    .padding(.trailing, 10)
-                    Spacer()
+                    .shadow(radius: 2)
+
+                    Button(action: {
+                        UserManager.shared.logout()
+                    }) {
+                        Text("Logout")
+                    }
+                    .buttonStyle(.bordered)
+                    .shadow(radius: 2)
                 }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 15)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(
+                            Color.white
+                                // LinearGradient(
+                                //     gradient: Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]),
+                                //     startPoint: .topLeading,
+                                //     endPoint: .bottomTrailing
+                                // )
+                                .opacity(0.30)
+                        )
+                        .stroke(Color.white, lineWidth: 1)
+                    // .background(
+                    // FluidGradient(
+                    //     // blobs: [.red, .green, .blue],
+                    //     blobs: [Color("InvisGrad1"), Color("InvisGrad2")],
+                    //     highlights: [.black, .purple, .blue],
+                    //     speed: 1.0,
+                    //     blur: 0.75
+                    // )
+                    // .background(.quaternary)
+                    // )
+                )
+                .shadow(radius: 2)
+                .visible(if: userManager.user != nil)
+                .padding(.top, 20)
+
+                Button(action: {
+                    UserManager.shared.login()
+                }) {
+                    Text("Login")
+                }
+                .buttonStyle(.bordered)
                 .padding(.bottom, 10)
                 .visible(if: userManager.user == nil)
 
-                LaunchAtLogin.Toggle()
+                Divider()
+                    .padding(.horizontal, 100)
                     .padding(.bottom, 10)
 
                 HStack {
-                    Text("Summon Invisibility:")
+                    Text("Launch at Login:")
+                    LaunchAtLogin.Toggle()
+                        .labelsHidden()
+                }
+                .padding(.bottom, 10)
+
+                HStack {
+                    Text("Summon")
                     KeyboardShortcuts.Recorder(for: .summon)
                 }
 
@@ -109,12 +151,6 @@ struct SettingsView: View {
                 }
 
                 Spacer()
-
-                Image("AppIconBitmap")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 64, height: 64)
-                    .padding(.vertical, 10)
 
                 HStack(spacing: 0) {
                     Text("Founded by ")
@@ -185,44 +221,21 @@ struct SettingsView: View {
                     .foregroundColor(.gray)
                     .padding(.bottom, 10)
             }
-
-            // VStack {
-            //     Spacer()
-            //     HStack {
-            //         Spacer()
-            //         Button(action: {
-            //             showDeleteAllDataAlert = true
-            //         }) {
-            //             Text("Wipe all data")
-            //                 .foregroundColor(.red)
-            //             Image(systemName: "trash")
-            //                 .foregroundColor(.red)
-            //         }
-            //         .buttonStyle(.plain)
-            //         .onHover { hovering in
-            //             if hovering {
-            //                 NSCursor.pointingHand.push()
-            //             } else {
-            //                 NSCursor.pop()
-            //             }
-            //         }
-            //         .confirmationDialog(
-            //             AppMessages.wipeAllDataTitle,
-            //             isPresented: $showDeleteAllDataAlert
-            //         ) {
-            //             Button("Cancel", role: .cancel) {}
-            //             Button("Delete", role: .destructive) { wipeAllData() }
-            //         } message: {
-            //             Text(AppMessages.wipeAllDataMessage)
-            //         }
-            //         .dialogSeverity(.critical)
-            //     }
-            //     .padding(.trailing, 10)
-            //     .padding(.bottom, 10)
-            // }
         }
-        .frame(minWidth: 500, minHeight: 500)
+        .frame(minWidth: 500, minHeight: 550)
         .focusable(false)
+        .background(
+            // FluidGradient(blobs: [.red, .blue],
+            //               highlights: [.yellow, .orange, .purple],
+            //               speed: 0.3,
+            //               blur: 0.75)
+            //     .background(.quaternary)
+            // LinearGradient(
+            //     gradient: Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]),
+            //     startPoint: .topLeading,
+            //     endPoint: .bottomTrailing
+            // )
+        )
     }
 
     private func wipeAllData() {

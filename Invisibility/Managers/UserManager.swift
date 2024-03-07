@@ -6,6 +6,7 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import Alamofire
 import Foundation
 import KeychainAccess
 import OSLog
@@ -41,7 +42,9 @@ final class UserManager: ObservableObject {
 
     private let tokenKey = "invis_jwt"
 
-    var user: User?
+    public var user: User?
+    public var isPaid: Bool = false
+
     var token: String? {
         get {
             // Try to get the token from the keychain
@@ -59,9 +62,11 @@ final class UserManager: ObservableObject {
             do {
                 if let newValue {
                     // Set the token in the keychain
+                    logger.debug("Setting token in keychain")
                     try keychain.set(newValue, key: tokenKey)
                 } else {
                     // Remove the token from the keychain if newValue is nil
+                    logger.debug("Removing token from keychain")
                     try keychain.remove(tokenKey)
                 }
             } catch {
@@ -76,6 +81,12 @@ final class UserManager: ObservableObject {
     func setup() async {
         if await userIsLoggedIn() {
             logger.info("User is logged in")
+            if await checkPaymentStatus() {
+                logger.info("User is paid")
+                self.isPaid = true
+            } else {
+                logger.info("User is not paid")
+            }
         } else {
             logger.info("User is not logged in")
         }
@@ -100,7 +111,7 @@ final class UserManager: ObservableObject {
         if self.user != nil {
             return self.user
         }
-        if let user = await fetchUser() {
+        if let user = try? await fetchUser() {
             self.user = user
             return user
         } else {
@@ -108,26 +119,30 @@ final class UserManager: ObservableObject {
         }
     }
 
-    func fetchUser() async -> User? {
+    func fetchUser() async throws -> User? {
         let urlString = "https://cloak.invisibility.so/auth/user"
-        guard let url = URL(string: urlString) else {
-            logger.error("Invalid URL")
-            return nil
-        }
+        // let urlString = "http://localhost:8000/auth/user"
         guard let jwtToken = self.token else {
             logger.error("No JWT token")
             return nil
         }
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("Bearer \(jwtToken)", forHTTPHeaderField: "Authorization")
+        return try await withCheckedThrowingContinuation { continuation in
+            AF.request(urlString, method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
+                .validate()
+                .responseDecodable(of: User.self, decoder: customDecoder()) { response in
+                    switch response.result {
+                    case let .success(user):
+                        self.logger.debug("Fetched user: \(user.email)")
+                        continuation.resume(returning: user)
+                    case let .failure(error):
+                        self.logger.error("Error fetching user: \(error)")
+                        continuation.resume(throwing: error)
+                    }
+                }
+        }
 
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-
-            logger.debug("Fetched user data: \(String(data: data, encoding: .utf8) ?? "nil")")
-
+        func customDecoder() -> JSONDecoder {
             let decoder = JSONDecoder()
 
             // Define a custom DateFormatter
@@ -137,21 +152,46 @@ final class UserManager: ObservableObject {
             iso8601Formatter.timeZone = TimeZone(secondsFromGMT: 0)
             iso8601Formatter.locale = Locale(identifier: "en_US_POSIX")
 
-            // Setup decoder with the custom date decoding strategy
+            // Set up the decoder with the custom date decoding strategy
             decoder.dateDecodingStrategy = .formatted(iso8601Formatter)
 
-            let user = try decoder.decode(User.self, from: data)
-            return user
-        } catch {
-            print("Error fetching user:", error)
-            return nil
+            return decoder
+        }
+    }
+
+    func checkPaymentStatus() async -> Bool {
+        guard let jwtToken = self.token else {
+            logger.error("No JWT token")
+            return false
+        }
+
+        return await withCheckedContinuation { continuation in
+            AF.request("https://cloak.invisibility.so/pay/paid", method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
+                .validate()
+                .response { response in
+                    switch response.result {
+                    case .success:
+                        if response.response?.statusCode == 200 {
+                            continuation.resume(returning: true)
+                        } else {
+                            continuation.resume(returning: false)
+                        }
+                    case .failure:
+                        continuation.resume(returning: false)
+                    }
+                }
+        }
+    }
+
+    func manage() {
+        guard token != nil else {
+            return
         }
     }
 
     func login() {
         // Open the login page in the default browser
-        // if let url = URL(string: "https://cloak.invisibility.so/auth/login") {
-        if let url = URL(string: "https://courteous-poem-46-staging.authkit.app/") {
+        if let url = URL(string: "https://authkit.invisibility.so/") {
             NSWorkspace.shared.open(url)
         }
     }

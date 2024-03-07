@@ -41,10 +41,7 @@ struct MessageButtonItemView: View {
                     .animation(.snappy, value: isHovering)
                     .padding(.trailing, 8)
             }
-        }
-        .contentShape(RoundedRectangle(cornerRadius: 100))
-        .onTapGesture {
-            actionWrapped()
+            .contentShape(RoundedRectangle(cornerRadius: 100))
         }
         .overlay(
             RoundedRectangle(cornerRadius: 100)

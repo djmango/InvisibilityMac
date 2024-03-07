@@ -67,8 +67,8 @@ struct MessageButtonsView: View {
                         .hide(if: whoIsHovering ?? "" != "Settings", removeCompletely: true)
                         .padding(.trailing, 8)
                 }
+                .contentShape(RoundedRectangle(cornerRadius: 100))
             }
-            .contentShape(RoundedRectangle(cornerRadius: 100))
             .onHover { hovering in
                 if hovering {
                     whoIsHovering = "Settings"

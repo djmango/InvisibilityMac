@@ -32,8 +32,8 @@ struct MessageView: View {
                             .rotationEffect(.degrees(180))
                     }
                 }
+                .animation(.snappy, value: messageViewModel.messages.count)
             }
-            // .scrollPosition(id: Binding<(Hashable)?>, anchor: UnitPoint?)
             .mask(
                 LinearGradient(
                     gradient: Gradient(stops: [

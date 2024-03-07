@@ -75,7 +75,13 @@ final class Message: Identifiable, ObservableObject {
 
     /// The full text of the message, including the audio text if it exists
     @Transient var text: String {
-        let text = content ?? ""
+        var text = content ?? ""
+        // truncate characters
+        let truncNum = 50000
+        if text.count > truncNum {
+            logger.warning("Truncating message to \(truncNum) characters")
+            text = String(text.prefix(truncNum))
+        }
         return text
     }
 }

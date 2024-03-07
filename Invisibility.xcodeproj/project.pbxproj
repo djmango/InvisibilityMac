@@ -48,6 +48,7 @@
 		4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */; };
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
 		4D9348CA2B5B24C800D57BC2 /* ModelFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9348C92B5B24C800D57BC2 /* ModelFileManager.swift */; };
+		4D9354292B99851E00C34A63 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4D9354282B99851E00C34A63 /* Alamofire */; };
 		4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */; };
 		4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893AF2B54C45300560DAD /* OnboardingView.swift */; };
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
@@ -130,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D9354292B99851E00C34A63 /* Alamofire in Frameworks */,
 				4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */,
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
 				4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */,
@@ -406,6 +408,7 @@
 				4D671E772B93FEB6007AE7E2 /* SplashTokenizer */,
 				4D885C7E2B96E693009A1F48 /* KeychainAccess */,
 				4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */,
+				4D9354282B99851E00C34A63 /* Alamofire */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -443,6 +446,7 @@
 				4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */,
 				4D885C7D2B96E693009A1F48 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 				4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */,
+				4D9354272B99851E00C34A63 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -656,7 +660,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 55;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -689,7 +693,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 54;
+				CURRENT_PROJECT_VERSION = 55;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -801,6 +805,14 @@
 				kind = branch;
 			};
 		};
+		4D9354272B99851E00C34A63 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.0;
+			};
+		};
 		4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Cindori/FluidGradient.git";
@@ -886,6 +898,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D885C7D2B96E693009A1F48 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
 			productName = KeychainAccess;
+		};
+		4D9354282B99851E00C34A63 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D9354272B99851E00C34A63 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 		4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */ = {
 			isa = XCSwiftPackageProductDependency;
