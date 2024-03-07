@@ -32,7 +32,6 @@ struct SettingsView: View {
         ZStack {
             VStack(alignment: .center) {
                 // User profile pic and login/logout button
-                // Profile pic from url
                 VStack(alignment: .center) {
                     AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
                         image
@@ -49,26 +48,19 @@ struct SettingsView: View {
                             .overlay(Circle().stroke(Color.white, lineWidth: 2))
                     }
                     .visible(if: userManager.user?.profilePictureUrl != nil)
-                    .shadow(radius: 2)
 
                     Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
                         .font(.title3)
                         .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
-                        .shadow(radius: 2)
 
                     Text(userManager.user?.email ?? "")
                         .font(.caption)
                         .padding(.bottom, 15)
-                        .shadow(radius: 2)
 
-                    // Pro status
                     Text("Invisibility Plus")
                         .font(.caption)
-                        // .bold()
                         .italic()
-                        .foregroundColor(.white)
                         .visible(if: userManager.isPaid)
-                        .shadow(radius: 2)
 
                     Button(action: {
                         UserManager.shared.manage()
@@ -76,7 +68,6 @@ struct SettingsView: View {
                         Text("Manage")
                     }
                     .buttonStyle(.bordered)
-                    .shadow(radius: 2)
 
                     Button(action: {
                         UserManager.shared.logout()
@@ -84,31 +75,23 @@ struct SettingsView: View {
                         Text("Logout")
                     }
                     .buttonStyle(.bordered)
-                    .shadow(radius: 2)
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(
-                            Color.white
-                                // LinearGradient(
-                                //     gradient: Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]),
-                                //     startPoint: .topLeading,
-                                //     endPoint: .bottomTrailing
-                                // )
-                                .opacity(0.30)
-                        )
+                        .fill(Color("ChatButtonBackgroundColor"))
                         .stroke(Color.white, lineWidth: 1)
                     // .background(
-                    // FluidGradient(
-                    //     // blobs: [.red, .green, .blue],
-                    //     blobs: [Color("InvisGrad1"), Color("InvisGrad2")],
-                    //     highlights: [.black, .purple, .blue],
-                    //     speed: 1.0,
-                    //     blur: 0.75
-                    // )
-                    // .background(.quaternary)
+                    //     FluidGradient(
+                    //         blobs: [.blue, .teal, .indigo],
+                    //         highlights: [.blue, .teal, .indigo],
+                    //         speed: 0.5,
+                    //         blur: 0
+                    //     )
+                    //     .blur(radius: 70)
+                    //     .background(.quaternary)
+                    //     .clipShape(RoundedRectangle(cornerRadius: 10))
                     // )
                 )
                 .shadow(radius: 2)
@@ -148,6 +131,7 @@ struct SettingsView: View {
 
                 Button("Reset Onboarding") {
                     onboardingViewed = false
+                    OnboardingManager.shared.startOnboarding()
                 }
 
                 Spacer()

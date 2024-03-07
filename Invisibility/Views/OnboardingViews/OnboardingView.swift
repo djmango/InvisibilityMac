@@ -16,8 +16,6 @@ struct OnboardingView: View {
     @State private var audioPlayer: AVAudioPlayer?
     @State private var fluidSpeed: CGFloat = 0.50
 
-    @AppStorage("onboardingViewed") private var onboardingViewed = false
-
     var body: some View {
         ZStack {
             VisualEffectBlur(material: .hudWindow, blendingMode: .behindWindow, cornerRadius: 0)
@@ -44,7 +42,7 @@ struct OnboardingView: View {
                 OnboardingExplainerView { viewIndex = 2 }
 
             case 2:
-                OnboardingAccountView { viewIndex = 3 }
+                OnboardingAccountView { OnboardingManager.shared.completeOnboarding() }
 
             default:
                 EmptyView()
@@ -52,9 +50,7 @@ struct OnboardingView: View {
         }
         .animation(.snappy, value: viewIndex)
         .onAppear {
-            if !onboardingViewed {
-                // play()
-            }
+            play()
         }
     }
 

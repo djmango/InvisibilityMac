@@ -34,10 +34,12 @@ class ScreenshotManager {
 
     private init() {}
 
-    public func capture() {
-        WindowManager.shared.hideWindow()
+    public func capture() async {
+        guard await ScreenRecorder.shared.askForScreenRecordingPermission() else { return }
+
+        await WindowManager.shared.hideWindow()
         guard let url = captureImageToURL() else { return }
-        WindowManager.shared.showWindow()
+        await WindowManager.shared.showWindow()
         messageViewModel.handleFile(url)
         try? FileManager.default.removeItem(atPath: screenShotFilePath)
     }

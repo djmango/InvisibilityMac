@@ -22,11 +22,22 @@ class OnboardingManager: ObservableObject {
     private var window: NSWindow?
     private var cancellables = Set<AnyCancellable>()
 
-    private let animationDuration: TimeInterval = 0.2
-
     @AppStorage("onboardingViewed") public var onboardingViewed = false
 
     private init() {}
+
+    public func startOnboarding() {
+        logger.debug("Starting onboarding")
+        WindowManager.shared.hideWindow()
+        setupWindow()
+    }
+
+    public func completeOnboarding() {
+        logger.debug("Completing onboarding")
+        onboardingViewed = true
+        window?.close()
+        WindowManager.shared.showWindow()
+    }
 
     public func setupWindow() {
         logger.debug("Setting up onboarding")

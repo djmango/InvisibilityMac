@@ -71,7 +71,7 @@ class WindowManager: ObservableObject {
 
         KeyboardShortcuts.onKeyUp(for: .screenshot) {
             self.logger.debug("Taking screenshot")
-            ScreenshotManager.shared.capture()
+            Task { await ScreenshotManager.shared.capture() }
             self.positionWindowOnCursorScreen()
         }
     }

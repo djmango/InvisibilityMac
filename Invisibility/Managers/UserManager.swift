@@ -44,6 +44,7 @@ final class UserManager: ObservableObject {
 
     public var user: User?
     public var isPaid: Bool = false
+    public var confettis: Int = 0
 
     var token: String? {
         get {
@@ -80,12 +81,15 @@ final class UserManager: ObservableObject {
 
     func setup() async {
         if await userIsLoggedIn() {
+            self.confettis = 1
             logger.info("User is logged in")
             if await checkPaymentStatus() {
                 logger.info("User is paid")
                 self.isPaid = true
+                self.confettis = 2
             } else {
                 logger.info("User is not paid")
+                self.pay()
             }
         } else {
             logger.info("User is not logged in")
@@ -121,7 +125,6 @@ final class UserManager: ObservableObject {
 
     func fetchUser() async throws -> User? {
         let urlString = "https://cloak.invisibility.so/auth/user"
-        // let urlString = "http://localhost:8000/auth/user"
         guard let jwtToken = self.token else {
             logger.error("No JWT token")
             return nil
@@ -189,9 +192,27 @@ final class UserManager: ObservableObject {
         }
     }
 
+    func pay() {
+        guard let user = self.user else {
+            logger.error("No user")
+            return
+        }
+
+        if let url = URL(string: "https://cloak.invisibility.so/pay/checkout?email=\(user.email)") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
     func login() {
         // Open the login page in the default browser
         if let url = URL(string: "https://authkit.invisibility.so/") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    func signup() {
+        // Open the signup page in the default browser
+        if let url = URL(string: "https://authkit.invisibility.so/sign-up") {
             NSWorkspace.shared.open(url)
         }
     }

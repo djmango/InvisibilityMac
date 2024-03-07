@@ -60,8 +60,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if !onboardingViewed {
             logger.debug("Onboarding not viewed")
-            WindowManager.shared.hideWindow()
-            OnboardingManager.shared.setupWindow()
+            OnboardingManager.shared.startOnboarding()
         } else {
             logger.debug("Onboarding viewed")
             WindowManager.shared.showWindow()
@@ -79,6 +78,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     logger.debug("Received JWT Token: \(token)")
                     // Handle the authentication with the received token
                     UserManager.shared.token = token
+                    Task {
+                        await UserManager.shared.setup()
+                    }
+                } else if components.path == "/paid" {
+                    logger.debug("User paid")
                     Task {
                         await UserManager.shared.setup()
                     }

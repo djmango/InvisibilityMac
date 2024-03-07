@@ -78,6 +78,21 @@ class ScreenRecorder: NSObject, ObservableObject {
         }
     }
 
+    func askForScreenRecordingPermission() async -> Bool {
+        guard await canRecord else {
+            if OnboardingManager.shared.onboardingViewed {
+                AlertManager.shared.doShowAlert(title: "Screen Recording Permission Grant", message: "Invisibility has not been granted permission to record the screen. Please enable this permission in System Preferences > Security & Privacy > Screen & System Audio Recording.")
+            }
+            // Open the System Preferences app to the Screen Recording settings.
+            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
+                NSWorkspace.shared.open(url)
+            }
+            return false
+        }
+        logger.debug("Screen recording permission granted.")
+        return true
+    }
+
     /// Starts capturing screen content.
     @MainActor
     func start() async {

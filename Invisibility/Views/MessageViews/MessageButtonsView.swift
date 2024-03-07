@@ -23,7 +23,7 @@ struct MessageButtonsView: View {
         HStack {
             // Screenshot
             MessageButtonItemView(label: "Screenshot", icon: "text.viewfinder") {
-                screenshotManager.capture()
+                Task { await screenshotManager.capture() }
             }
             .keyboardShortcut("1", modifiers: [.command, .shift])
             .onHover { hovering in
