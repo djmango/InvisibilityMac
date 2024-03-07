@@ -26,12 +26,14 @@ class OnboardingManager: ObservableObject {
 
     private init() {}
 
+    @MainActor
     public func startOnboarding() {
         logger.debug("Starting onboarding")
         WindowManager.shared.hideWindow()
         setupWindow()
     }
 
+    @MainActor
     public func completeOnboarding() {
         logger.debug("Completing onboarding")
         onboardingViewed = true
@@ -39,6 +41,7 @@ class OnboardingManager: ObservableObject {
         WindowManager.shared.showWindow()
     }
 
+    @MainActor
     public func setupWindow() {
         logger.debug("Setting up onboarding")
 

@@ -10,7 +10,6 @@ import FluidGradient
 import KeyboardShortcuts
 import LaunchAtLogin
 import OSLog
-import SwiftData
 import SwiftUI
 
 struct SettingsView: View {
@@ -24,9 +23,7 @@ struct SettingsView: View {
     @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
     @ObservedObject private var userManager = UserManager.shared
 
-    @State private var showDeleteAllDataAlert: Bool = false
-
-    @Query var messages: [Message]
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         ZStack {
@@ -94,7 +91,7 @@ struct SettingsView: View {
                     //     .clipShape(RoundedRectangle(cornerRadius: 10))
                     // )
                 )
-                .shadow(radius: 2)
+                .shadow(radius: colorScheme == .dark ? 2 : 0)
                 .visible(if: userManager.user != nil)
                 .padding(.top, 20)
 
@@ -220,23 +217,5 @@ struct SettingsView: View {
             //     endPoint: .bottomTrailing
             // )
         )
-    }
-
-    private func wipeAllData() {
-        logger.debug("Deleting all data...")
-
-        let context = SharedModelContainer.shared.mainContext
-        for message in messages {
-            logger.debug("Deleting message: \(message.content ?? "")")
-            context.delete(message)
-        }
-
-        // Reset settings
-        autoLaunch = false
-        showMenuBarExtra = true
-        onboardingViewed = false
-
-        // Restart app
-        NSApplication.shared.terminate(self)
     }
 }

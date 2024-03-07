@@ -12,17 +12,37 @@ import SwiftUI
 struct OnboardingExplainerView: View {
     private var callback: () -> Void
 
-    let videoNames = ["summon", "screenshot"]
+    let summonPlayer = AVPlayer(url: Bundle.main.url(forResource: "summon", withExtension: "mp4")!)
+    let screenshotPlayer = AVPlayer(url: Bundle.main.url(forResource: "screenshot", withExtension: "mp4")!)
 
     init(callback: @escaping () -> Void = {}) {
         self.callback = callback
+        self.summonPlayer.actionAtItemEnd = .none
+        self.screenshotPlayer.actionAtItemEnd = .none
     }
 
     var body: some View {
         VStack {
             HStack {
                 VStack {
-                    VideoPlayerView(videoName: "summon")
+                    VideoPlayer(player: summonPlayer)
+                        .onAppear {
+                            summonPlayer.play()
+                            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: summonPlayer.currentItem, queue: .main) { _ in
+                                summonPlayer.seek(to: .zero)
+                                summonPlayer.play()
+                            }
+                        }
+                        .onDisappear {
+                            summonPlayer.pause()
+                            NotificationCenter.default.removeObserver(self)
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.white, lineWidth: 2)
+                        )
+                        .shadow(radius: 10)
                         .frame(width: 285, height: 240)
                         .padding()
 
@@ -52,7 +72,24 @@ struct OnboardingExplainerView: View {
                         .labelsHidden()
                         .padding(.bottom, 20)
 
-                    VideoPlayerView(videoName: "screenshot")
+                    VideoPlayer(player: screenshotPlayer)
+                        .onAppear {
+                            screenshotPlayer.play()
+                            NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: screenshotPlayer.currentItem, queue: .main) { _ in
+                                screenshotPlayer.seek(to: .zero)
+                                screenshotPlayer.play()
+                            }
+                        }
+                        .onDisappear {
+                            screenshotPlayer.pause()
+                            NotificationCenter.default.removeObserver(self)
+                        }
+                        .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10)
+                                .stroke(Color.white, lineWidth: 2)
+                        )
+                        .shadow(radius: 10)
                         .frame(width: 355, height: 240)
                         .padding()
                 }
@@ -83,6 +120,7 @@ struct OnboardingExplainerView: View {
                 }
                 .opacity(0.85)
                 .buttonStyle(.plain)
+                .keyboardShortcut(.defaultAction)
                 .transition(
                     .asymmetric(
                         insertion: .movingParts.move(
@@ -109,34 +147,5 @@ struct OnboardingExplainerView: View {
                 await ScreenRecorder.shared.askForScreenRecordingPermission()
             }
         }
-    }
-}
-
-struct VideoPlayerView: View {
-    let videoName: String
-
-    var body: some View {
-        let player = AVPlayer(url: Bundle.main.url(forResource: videoName, withExtension: "mp4")!)
-        player.actionAtItemEnd = .none
-
-        return VideoPlayer(player: player)
-            .onAppear {
-                player.play()
-                NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player.currentItem, queue: .main) { _ in
-                    player.seek(to: .zero)
-                    player.play()
-                }
-            }
-            .onDisappear {
-                player.pause()
-                NotificationCenter.default.removeObserver(self)
-            }
-            .edgesIgnoringSafeArea(.all)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.white, lineWidth: 2)
-            )
-            .shadow(radius: 10)
     }
 }

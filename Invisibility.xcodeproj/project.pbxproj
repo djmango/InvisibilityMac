@@ -15,8 +15,6 @@
 		4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3B635C2B642A1A004AA7DF /* LLMManager.swift */; };
 		4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */; };
 		4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */; };
-		4D3BA0DB2B99F094007020D2 /* summon.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0DA2B99F054007020D2 /* summon.mp4 */; };
-		4D3BA0DC2B99F094007020D2 /* screenshot.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0D92B99F054007020D2 /* screenshot.mp4 */; };
 		4D3EBF682B6444D700AE230E /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3EBF672B6444D700AE230E /* AppModels.swift */; };
 		4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */; };
 		4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */; };
@@ -32,6 +30,9 @@
 		4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */; };
 		4D5A9EA22B8C65D40018F6E4 /* MessageButtonItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
+		4D6185692B9A25D300E550D2 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6185682B9A25D300E550D2 /* AVKit.framework */; };
+		4D61856C2B9A262E00E550D2 /* screenshot.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D61856A2B9A25E900E550D2 /* screenshot.mp4 */; };
+		4D61856D2B9A262E00E550D2 /* summon.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D61856B2B9A25E900E550D2 /* summon.mp4 */; };
 		4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E712B93FEB6007AE7E2 /* Splash */; };
 		4D671E742B93FEB6007AE7E2 /* SplashHTMLGen in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E732B93FEB6007AE7E2 /* SplashHTMLGen */; };
 		4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E752B93FEB6007AE7E2 /* SplashMarkdown */; };
@@ -84,8 +85,6 @@
 		4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+HexColors.swift"; sourceTree = "<group>"; };
 		4D3B635C2B642A1A004AA7DF /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
 		4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = invis_launch.mp3; sourceTree = "<group>"; };
-		4D3BA0D92B99F054007020D2 /* screenshot.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = screenshot.mp4; sourceTree = "<group>"; };
-		4D3BA0DA2B99F054007020D2 /* summon.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = summon.mp4; sourceTree = "<group>"; };
 		4D3EBF672B6444D700AE230E /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
 		4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractedSubjects.swift"; sourceTree = "<group>"; };
 		4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractAfter.swift"; sourceTree = "<group>"; };
@@ -101,6 +100,9 @@
 		4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatField.swift; sourceTree = "<group>"; };
 		4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonItemView.swift; sourceTree = "<group>"; };
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
+		4D6185682B9A25D300E550D2 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
+		4D61856A2B9A25E900E550D2 /* screenshot.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = screenshot.mp4; sourceTree = "<group>"; };
+		4D61856B2B9A25E900E550D2 /* summon.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = summon.mp4; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D885C762B96D969009A1F48 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4D885C7B2B96E53E009A1F48 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -140,6 +142,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D6185692B9A25D300E550D2 /* AVKit.framework in Frameworks */,
 				4D9354292B99851E00C34A63 /* Alamofire in Frameworks */,
 				4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */,
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
@@ -264,8 +267,8 @@
 		4D8E05302B2516DE00B60D0D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				4D3BA0DA2B99F054007020D2 /* summon.mp4 */,
-				4D3BA0D92B99F054007020D2 /* screenshot.mp4 */,
+				4D61856A2B9A25E900E550D2 /* screenshot.mp4 */,
+				4D61856B2B9A25E900E550D2 /* summon.mp4 */,
 				4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */,
 				4DDCE84F2B509F9800A22B1E /* Info.plist */,
 				4D8E05312B2516DE00B60D0D /* Invisibility.entitlements */,
@@ -369,6 +372,7 @@
 		4DDCE8512B50BA0900A22B1E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				4D6185682B9A25D300E550D2 /* AVKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -478,8 +482,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4D3BA0DB2B99F094007020D2 /* summon.mp4 in Resources */,
-				4D3BA0DC2B99F094007020D2 /* screenshot.mp4 in Resources */,
+				4D61856C2B9A262E00E550D2 /* screenshot.mp4 in Resources */,
+				4D61856D2B9A262E00E550D2 /* summon.mp4 in Resources */,
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
 				4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
@@ -680,7 +684,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 55;
+				CURRENT_PROJECT_VERSION = 63;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -713,7 +717,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 55;
+				CURRENT_PROJECT_VERSION = 63;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;

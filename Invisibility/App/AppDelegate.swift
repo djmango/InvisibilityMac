@@ -81,14 +81,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     Task {
                         await UserManager.shared.setup()
                     }
-                } else if components.path == "/paid" {
-                    logger.debug("User paid")
+                } else {
+                    logger.error("No token found in URL")
+                    logger.debug("URL: \(url)")
+                    logger.debug("Components: \(components)")
+                    logger.debug("Path: \(components.path)")
+                    // Just run it anyway, good enough for now
                     Task {
                         await UserManager.shared.setup()
                     }
-                } else {
-                    logger.error("No token found in URL")
-                    AlertManager.shared.doShowAlert(title: "Error", message: "No token found in URL. Please try again, or contact support.")
                 }
             }
         }

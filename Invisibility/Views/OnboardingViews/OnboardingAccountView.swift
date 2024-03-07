@@ -77,6 +77,7 @@ struct OnboardingAccountView: View {
                 .contentShape(RoundedRectangle(cornerRadius: 12))
             }
             .buttonStyle(.plain)
+            .keyboardShortcut(.defaultAction)
             .transition(
                 .asymmetric(
                     insertion: .movingParts.move(
@@ -134,6 +135,7 @@ struct OnboardingAccountView: View {
             .contentShape(RoundedRectangle(cornerRadius: 12))
         }
         .buttonStyle(.plain)
+        .keyboardShortcut(.defaultAction)
         .transition(
             .asymmetric(
                 insertion: .movingParts.move(

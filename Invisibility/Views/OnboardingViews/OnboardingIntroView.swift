@@ -73,6 +73,7 @@ struct OnboardingIntroView: View {
                     }
                     .opacity(0.85)
                     .buttonStyle(.plain)
+                    .keyboardShortcut(.defaultAction)
                     .transition(
                         .asymmetric(
                             insertion: .movingParts.move(
