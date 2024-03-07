@@ -16,7 +16,7 @@ class SharedModelContainer {
 
     @MainActor
     init() {
-        let schema = Schema([Message.self, Audio.self])
+        let schema = Schema([Message.self])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
         do {

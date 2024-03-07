@@ -26,7 +26,6 @@ struct SettingsView: View {
     @State private var showDeleteAllDataAlert: Bool = false
 
     @Query var messages: [Message]
-    @Query var audios: [Audio]
 
     var body: some View {
         ZStack {
@@ -234,18 +233,11 @@ struct SettingsView: View {
             logger.debug("Deleting message: \(message.content ?? "")")
             context.delete(message)
         }
-        for audio in audios {
-            logger.debug("Deleting audio: \(audio.name)")
-            context.delete(audio)
-        }
 
         // Reset settings
         autoLaunch = false
         showMenuBarExtra = true
         onboardingViewed = false
-
-        // Wipe models
-        WhisperManager.shared.wipe()
 
         // Restart app
         NSApplication.shared.terminate(self)

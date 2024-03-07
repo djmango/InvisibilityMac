@@ -18,8 +18,6 @@ struct MessageListItemView: View {
         messageViewModel.sendViewState == .loading && (message.content?.isEmpty ?? true)
     }
 
-    private var audio: Audio? = nil
-
     init(message: Message) {
         self.message = message
     }
@@ -68,19 +66,6 @@ struct MessageListItemView: View {
                 ProgressView()
                     .controlSize(.small)
                     .visible(if: isGenerating, removeCompletely: true)
-
-                // if let audio {
-                //     AudioWidgetView(audio: audio)
-                //         .padding(.top, 8)
-                //         .onHover { hovering in
-                //             if hovering {
-                //                 NSCursor.pointingHand.push()
-                //             } else {
-                //                 NSCursor.pop()
-                //             }
-                //         }
-                //         .visible(if: message.audio != nil, removeCompletely: true)
-                // }
 
                 HStack(alignment: .center, spacing: 8) {
                     ForEach(message.images ?? [], id: \.self) { imageData in
@@ -179,17 +164,5 @@ struct MessageListItemView: View {
         messageViewModel.messages.removeAll { $0.id == message.id }
         let context = SharedModelContainer.shared.mainContext
         context.delete(message)
-    }
-
-    // MARK: - Modifiers
-
-    public func audio(_ audio: Audio?) -> MessageListItemView {
-        guard let audio else {
-            return self
-        }
-        var view = self
-        view.audio = audio
-
-        return view
     }
 }

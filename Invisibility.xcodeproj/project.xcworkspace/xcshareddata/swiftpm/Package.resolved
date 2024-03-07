@@ -1,30 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "audiokit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AudioKit/AudioKit.git",
-      "state" : {
-        "revision" : "b2dbaed8cd38077092b6b6e311699ddf5d94dbd7",
-        "version" : "5.6.3"
-      }
-    },
-    {
       "identity" : "fluidgradient",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Cindori/FluidGradient.git",
       "state" : {
         "revision" : "9ddda4cf23671ef0228e88681ec6210cb3e0d7f7",
         "version" : "1.0.0"
-      }
-    },
-    {
-      "identity" : "gptencoder",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/alfianlosari/GPTEncoder.git",
-      "state" : {
-        "revision" : "a86968867ab4380e36b904a14c42215f71efe8b4",
-        "version" : "1.0.4"
       }
     },
     {
@@ -100,30 +82,12 @@
       }
     },
     {
-      "identity" : "swift-snapshot-testing",
+      "identity" : "swift-markdown-ui",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
+      "location" : "https://github.com/gonzalezreal/swift-markdown-ui",
       "state" : {
-        "revision" : "5b0c434778f2c1a4c9b5ebdb8682b28e84dd69bd",
-        "version" : "1.15.4"
-      }
-    },
-    {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax",
-      "state" : {
-        "revision" : "08a2f0a9a30e0f705f79c9cfaca1f68b71bdc775",
-        "version" : "510.0.0"
-      }
-    },
-    {
-      "identity" : "swiftwhisper",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/djmango/SwiftWhisper.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "af2a66c49d9db714bb38d4e13e3e7e88ceeaca01"
+        "revision" : "ae799d015a5374708f7b4c85f3294c05f2a564e2",
+        "version" : "2.3.0"
       }
     },
     {
@@ -142,15 +106,6 @@
       "state" : {
         "revision" : "8e5a5efbbf3fb5a2d2621533a115a9da031214cb",
         "version" : "1.2.1"
-      }
-    },
-    {
-      "identity" : "whisper.cpp",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ggerganov/whisper.cpp",
-      "state" : {
-        "branch" : "master",
-        "revision" : "b602819b6eae21ae7cb10a3eb8857cb9cb1e9c57"
       }
     }
   ],

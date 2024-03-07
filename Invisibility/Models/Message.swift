@@ -60,8 +60,6 @@ final class Message: Identifiable, ObservableObject {
     var status: MessageStatus? = MessageStatus.pending
     /// The progress of the message processing this is generic and can be used for any processing, useful for UI
     var progress: Double = 0.0
-    /// The child audio attached to the message
-    @Relationship(deleteRule: .cascade, inverse: \Audio.message) var audio: Audio?
 
     /// Summarized chunks, just a list of strings for now, keep it simple
     var summarizedChunks: [String] = []
@@ -77,74 +75,8 @@ final class Message: Identifiable, ObservableObject {
 
     /// The full text of the message, including the audio text if it exists
     @Transient var text: String {
-        var text = content ?? ""
-        if let audio {
-            // If the message has been summarized, use the summarized chunks. Tbh not clean, but it works for now. I guess we treat text like a high-level macro
-            if summarizedChunks.count > 0 {
-                text += summarizedChunks.joined(separator: "\n\n")
-            }
-            // Otherwise, use the full audio text
-            else {
-                text += audio.text
-            }
-        }
+        let text = content ?? ""
         return text
-    }
-}
-
-extension Message {
-    public func generateSummarizedChunks() async {
-        self.status = .chunk_summary_generation
-        DispatchQueue.main.async { self.progress = 0.0 }
-
-        self.summarizedChunks = []
-        if self.summarizedChunks.count == 0, LLMManager.shared.numTokens(self.text) > LLMManager.maxTokenCountPerMessage {
-            let chunks = LLMManager.shared.chunkInputByTokenCount(input: self.text, maxTokenCount: 1024)
-            DispatchQueue.main.async { self.progress = 0.2 }
-
-            for (i, chunk) in chunks.enumerated().enumerated() {
-                DispatchQueue.main.async { self.progress = 0.2 + (0.8 * (Double(i) / Double(chunks.count))) }
-                let content = "\(chunk)\n\n\(AppPrompts.summarizeChunk)"
-                // let chunkChat = ChatQuery.ChatCompletionMessageParam(role: .user, content: content)
-                let chunkMessage = Message(content: content, role: .user)
-                let output = await LLMManager.shared.achat(messages: [chunkMessage])
-                if let output_content = output.content {
-                    self.summarizedChunks.append(output_content)
-                } else {
-                    logger.error("No content in output for chunk \(i): \(chunkMessage)")
-                }
-            }
-
-            logger.debug("Completed summarization. Chunks: \(self.summarizedChunks)")
-        }
-    }
-
-    public func generateEmail(open: Bool = false) async {
-        guard let audio = self.audio else {
-            logger.error("Audio not available")
-            return
-        }
-
-        if audio.email == nil {
-            DispatchQueue.main.async { self.status = .email_generation }
-            DispatchQueue.main.async { self.progress = 0.0 }
-
-            await generateFollowUp(self.text, message: self)
-        }
-        DispatchQueue.main.async { self.status = .complete }
-
-        if let email = audio.email, open {
-            // Extract subject via regex
-            let subject = email.extractAfter(pattern: "Subject: ") ?? "Follow Up"
-
-            // Replace subject in body
-            let body = email.replacingOccurrences(of: "Subject: \(subject)", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
-
-            let mailto = encodeForMailto(subject: subject, body: body)
-            if let url = URL(string: mailto), open {
-                NSWorkspace.shared.open(url)
-            }
-        }
     }
 }
 

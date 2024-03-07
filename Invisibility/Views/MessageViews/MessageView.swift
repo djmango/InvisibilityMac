@@ -28,7 +28,6 @@ struct MessageView: View {
                         let message: Message = messageViewModel.messages.reversed()[index]
                         // Generate the view for the individual message.
                         MessageListItemView(message: message)
-                            .audio(message.audio)
                             .id(message)
                             .rotationEffect(.degrees(180))
                     }

@@ -118,14 +118,11 @@ extension MessageViewModel {
         // Define allowed content types using UTType
         openPanel.allowedContentTypes = [
             UTType.image,
-            UTType.audio,
-            UTType.movie,
         ]
 
         // Technically doesn't work for the following types:
         // SVGs: Our image standardization function doesn't support SVGs
         // PDFs: Just need to add support for them
-        // Video without audio: We don't support video without audio
         // TODO: fix the above issues
 
         openPanel.begin { result in
@@ -144,21 +141,6 @@ extension MessageViewModel {
             if fileType.conforms(to: .image) {
                 logger.debug("Selected file \(url) is an image.")
                 handleImage(url: url)
-            }
-            // Check if it's an audio or video type
-            else if fileType.conforms(to: .audio) || fileType.conforms(to: .movie) {
-                if !isValidAudioFile(url: url) {
-                    logger.error("Selected file \(url) is not a valid audio file.")
-                    AlertManager.shared.doShowAlert(
-                        title: AppMessages.invalidAudioFileTitle,
-                        message: AppMessages.invalidAudioFileMessage
-                    )
-                    return
-                }
-                logger.debug("Selected file \(url) is an audio or video.")
-                Task {
-                    await self.handleAudio(url: url)
-                }
             } else {
                 logger.error("Selected file \(url) is of an unknown type.")
                 AlertManager.shared.doShowAlert(
@@ -187,45 +169,6 @@ extension MessageViewModel {
 
         DispatchQueue.main.async {
             self.chatViewModel.addImage(standardizedImage)
-        }
-    }
-
-    @MainActor
-    private func handleAudio(url: URL) async {
-        do {
-            sendViewState = .loading
-
-            // Add the message to the view model
-            let message = Message(role: .user)
-            message.status = .audio_generation
-
-            messages.append(message)
-            modelContext.insert(message)
-
-            // Convert the audio file to a wav file and an array of PCM audio frames
-            let (data, audioFrames) = try await convertAudioFileToWavAndPCMArray(fileURL: url)
-            let audio = Audio(audioFile: data)
-            modelContext.insert(audio)
-            message.audio = audio
-            AudioPlayerViewModel.shared.audio = audio
-
-            let delegate = WhisperHandler(audio: audio, messageViewModel: self)
-            await WhisperManager.shared.whisper?.delegate = delegate
-            Task {
-                _ = try await WhisperManager.shared.whisper?.transcribe(audioFrames: audioFrames)
-
-                // If the audio is longer than x tokens, chunk it and summarize each chunk for easier processing
-//                await message.generateSummarizedChunks()
-                // await message.generateEmail()
-                DispatchQueue.main.async {
-                    message.status = .complete
-                    self.sendViewState = nil
-                }
-            }
-
-        } catch {
-            logger.error("Error transcribing audio: \(error)")
-            sendViewState = .error(message: "Error transcribing audio: \(error)")
         }
     }
 }
