@@ -15,6 +15,8 @@
 		4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3B635C2B642A1A004AA7DF /* LLMManager.swift */; };
 		4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */; };
 		4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */; };
+		4D3BA0DB2B99F094007020D2 /* summon.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0DA2B99F054007020D2 /* summon.mp4 */; };
+		4D3BA0DC2B99F094007020D2 /* screenshot.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0D92B99F054007020D2 /* screenshot.mp4 */; };
 		4D3EBF682B6444D700AE230E /* AppModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3EBF672B6444D700AE230E /* AppModels.swift */; };
 		4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */; };
 		4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */; };
@@ -56,11 +58,11 @@
 		4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893AF2B54C45300560DAD /* OnboardingView.swift */; };
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
 		4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */; };
-		4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */; };
+		4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */; };
 		4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
 		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
-		4DD282E12B4DF7530041690B /* KeypressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E02B4DF7530041690B /* KeypressManager.swift */; };
+		4DD282E12B4DF7530041690B /* ShortcutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD282E02B4DF7530041690B /* ShortcutManager.swift */; };
 		4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282E72B4E3C4A0041690B /* LaunchAtLogin */; };
 		4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */; };
 		4DD5E36A2B6243D300C35B1C /* AppPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5E3692B6243D300C35B1C /* AppPrompts.swift */; };
@@ -82,6 +84,8 @@
 		4D2564BA2B61D08200F2D089 /* SwiftUI+HexColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SwiftUI+HexColors.swift"; sourceTree = "<group>"; };
 		4D3B635C2B642A1A004AA7DF /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
 		4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = invis_launch.mp3; sourceTree = "<group>"; };
+		4D3BA0D92B99F054007020D2 /* screenshot.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = screenshot.mp4; sourceTree = "<group>"; };
+		4D3BA0DA2B99F054007020D2 /* summon.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = summon.mp4; sourceTree = "<group>"; };
 		4D3EBF672B6444D700AE230E /* AppModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModels.swift; sourceTree = "<group>"; };
 		4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractedSubjects.swift"; sourceTree = "<group>"; };
 		4D451C2F2B83604600DCEF48 /* String+extractAfter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractAfter.swift"; sourceTree = "<group>"; };
@@ -117,9 +121,9 @@
 		4DA893AF2B54C45300560DAD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
 		4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingExplainerView.swift; sourceTree = "<group>"; };
-		4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingEmailView.swift; sourceTree = "<group>"; };
+		4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingAccountView.swift; sourceTree = "<group>"; };
 		4DC610ED2B57369B00255358 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
-		4DD282E02B4DF7530041690B /* KeypressManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypressManager.swift; sourceTree = "<group>"; };
+		4DD282E02B4DF7530041690B /* ShortcutManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutManager.swift; sourceTree = "<group>"; };
 		4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidUrl.swift"; sourceTree = "<group>"; };
 		4DD5E3692B6243D300C35B1C /* AppPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPrompts.swift; sourceTree = "<group>"; };
 		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -182,7 +186,7 @@
 				4D5819AB2B8E667600BF07FF /* ScreenshotManager */,
 				4DEEEF042B6B1EF900ECDAC5 /* CaptureManager */,
 				4D0B52E32B590213008D975D /* AlertManager.swift */,
-				4DD282E02B4DF7530041690B /* KeypressManager.swift */,
+				4DD282E02B4DF7530041690B /* ShortcutManager.swift */,
 				4D3B635C2B642A1A004AA7DF /* LLMManager.swift */,
 				4D9348C92B5B24C800D57BC2 /* ModelFileManager.swift */,
 				4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */,
@@ -260,6 +264,8 @@
 		4D8E05302B2516DE00B60D0D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4D3BA0DA2B99F054007020D2 /* summon.mp4 */,
+				4D3BA0D92B99F054007020D2 /* screenshot.mp4 */,
 				4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */,
 				4DDCE84F2B509F9800A22B1E /* Info.plist */,
 				4D8E05312B2516DE00B60D0D /* Invisibility.entitlements */,
@@ -347,7 +353,7 @@
 				4DA893AF2B54C45300560DAD /* OnboardingView.swift */,
 				4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */,
 				4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */,
-				4DA893B52B54CA6100560DAD /* OnboardingEmailView.swift */,
+				4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */,
 			);
 			path = OnboardingViews;
 			sourceTree = "<group>";
@@ -472,6 +478,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4D3BA0DB2B99F094007020D2 /* summon.mp4 in Resources */,
+				4D3BA0DC2B99F094007020D2 /* screenshot.mp4 in Resources */,
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
 				4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
@@ -489,7 +497,7 @@
 				4D5A9EA22B8C65D40018F6E4 /* MessageButtonItemView.swift in Sources */,
 				4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */,
 				4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */,
-				4DA893B62B54CA6100560DAD /* OnboardingEmailView.swift in Sources */,
+				4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
 				4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */,
@@ -512,7 +520,7 @@
 				4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */,
 				4D3EBF682B6444D700AE230E /* AppModels.swift in Sources */,
-				4DD282E12B4DF7530041690B /* KeypressManager.swift in Sources */,
+				4DD282E12B4DF7530041690B /* ShortcutManager.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
 				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,

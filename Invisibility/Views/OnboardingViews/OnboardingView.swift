@@ -12,8 +12,9 @@ import SwiftUI
 
 struct OnboardingView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "OnboardingView")
-    @State private var viewIndex: Int = 0
+    @State private var viewIndex: Int = 1
     @State private var audioPlayer: AVAudioPlayer?
+    @State private var fluidSpeed: CGFloat = 0.50
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
@@ -25,7 +26,7 @@ struct OnboardingView: View {
             FluidGradient(
                 blobs: [.blue, .teal, .indigo],
                 highlights: [.blue, .teal, .indigo],
-                speed: 0.70,
+                speed: fluidSpeed,
                 blur: 0
             )
             .blur(radius: 70)
@@ -34,13 +35,16 @@ struct OnboardingView: View {
 
             switch viewIndex {
             case 0:
-                OnboardingIntroView { viewIndex = 3 }
+                OnboardingIntroView {
+                    viewIndex = 1
+                    fluidSpeed = 0.30
+                }
 
             case 1:
-                OnboardingExplainerView { viewIndex = 3 }
+                OnboardingExplainerView { viewIndex = 2 }
 
             case 2:
-                OnboardingEmailView { viewIndex = 3 }
+                OnboardingAccountView { viewIndex = 3 }
 
             default:
                 EmptyView()
@@ -49,7 +53,7 @@ struct OnboardingView: View {
         .animation(.snappy, value: viewIndex)
         .onAppear {
             if !onboardingViewed {
-                play()
+                // play()
             }
         }
     }

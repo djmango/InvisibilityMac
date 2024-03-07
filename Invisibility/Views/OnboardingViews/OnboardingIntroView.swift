@@ -81,6 +81,7 @@ struct OnboardingIntroView: View {
                             removal: .movingParts.blur.combined(with: .opacity)
                         )
                     )
+                    .conditionalEffect(.repeat(.jump(height: 10), every: .seconds(3)), condition: true)
                     .onHover { inside in
                         if inside {
                             NSCursor.pointingHand.push()

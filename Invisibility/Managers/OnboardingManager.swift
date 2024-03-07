@@ -49,9 +49,16 @@ class OnboardingManager: ObservableObject {
         let windowHeight: CGFloat = 600
 
         // Middle of the screen
-        let screenFrame = NSScreen.main?.frame
-        let xPos = (screenFrame?.width ?? 0) / 2 - windowWidth / 2
-        let yPos = (screenFrame?.height ?? 0) / 2 - windowHeight / 2
+
+        // Find the screen that contains the cursor
+        let screen = NSScreen.screens.first { $0.frame.contains(NSEvent.mouseLocation) }
+        guard let screen else { return }
+
+        // let screenFrame = NSScreen.main?.visibleFrame
+        let screenFrame = screen.visibleFrame
+
+        let xPos = (screenFrame.midX) - windowWidth / 2
+        let yPos = (screenFrame.midY) - windowHeight / 2
 
         // Create a CGRect that represents the desired window frame
         let windowRect = CGRect(x: xPos, y: yPos, width: windowWidth, height: windowHeight)
