@@ -46,7 +46,7 @@ class OnboardingManager: ObservableObject {
         window.orderFrontRegardless()
 
         let windowWidth: CGFloat = 1000
-        let windowHeight: CGFloat = 600
+        let windowHeight: CGFloat = 650
 
         // Middle of the screen
 

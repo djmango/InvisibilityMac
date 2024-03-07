@@ -19,52 +19,47 @@ struct OnboardingExplainerView: View {
     }
 
     var body: some View {
-        ZStack {
-            VStack {
-                HStack {
+        VStack {
+            HStack {
+                VStack {
                     VideoPlayerView(videoName: "summon")
                         .frame(width: 285, height: 240)
                         .padding()
 
-                    VStack {
-                        Text("Summon")
-                            .font(Font.custom("SF Pro Rounded", size: 30))
-                            .foregroundColor(.white)
-                            .padding()
+                    Text("Summon")
+                        .font(Font.custom("SF Pro Rounded", size: 30))
+                        .foregroundColor(.white)
+                        .padding()
 
-                        KeyboardShortcuts.Recorder(for: .summon)
-                            .labelsHidden()
-                    }
+                    KeyboardShortcuts.Recorder(for: .summon)
+                        .labelsHidden()
 
                     Spacer()
                 }
-                Spacer()
-            }
-            .padding(.leading, 100)
-            .padding(.top, 40)
+                .padding(.top, 40)
+                .padding(.leading, 100)
 
-            VStack {
                 Spacer()
-                HStack {
+
+                VStack {
                     Spacer()
+                    Text("Screenshot")
+                        .font(Font.custom("SF Pro Rounded", size: 30))
+                        .foregroundColor(.white)
+                        .padding()
 
-                    VStack {
-                        Text("Screenshot")
-                            .font(Font.custom("SF Pro Rounded", size: 30))
-                            .foregroundColor(.white)
-                            .padding()
-
-                        KeyboardShortcuts.Recorder(for: .screenshot)
-                            .labelsHidden()
-                    }
+                    KeyboardShortcuts.Recorder(for: .screenshot)
+                        .labelsHidden()
+                        .padding(.bottom, 20)
 
                     VideoPlayerView(videoName: "screenshot")
                         .frame(width: 355, height: 240)
                         .padding()
                 }
+                .padding(.bottom, 20)
+                .padding(.trailing, 50)
             }
-            .padding(.trailing, 15)
-            .padding(.bottom, 80)
+            .padding(.top, 20)
 
             VStack {
                 Spacer()

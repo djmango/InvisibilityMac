@@ -12,7 +12,7 @@ import SwiftUI
 
 struct OnboardingView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "OnboardingView")
-    @State private var viewIndex: Int = 1
+    @State private var viewIndex: Int = 0
     @State private var audioPlayer: AVAudioPlayer?
     @State private var fluidSpeed: CGFloat = 0.50
 
