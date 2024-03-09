@@ -8,7 +8,6 @@
 
 import Alamofire
 import Foundation
-import KeychainAccess
 import OSLog
 import SwiftUI
 
@@ -36,43 +35,21 @@ struct User: Decodable {
 @Observable
 final class UserManager: ObservableObject {
     static let shared = UserManager()
+    // static let urlBase = "https://cloak.invisibility.so"
+    static let urlBase = "http://localhost:8000"
 
     private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
-    private let keychain = Keychain(service: "so.invisibility.app")
-
-    private let tokenKey = "invis_jwt"
 
     public var user: User?
     public var isPaid: Bool = false
     public var confettis: Int = 0
 
-    var token: String? {
-        get {
-            // Try to get the token from the keychain
-            do {
-                return try keychain.get(tokenKey)
-            } catch {
-                // Handle any errors (e.g., item not found, access denied)
-                logger.error("Keychain read error: \(error)")
-                return nil
-            }
-        }
-
-        set {
-            // newValue is the new value of token
-            do {
-                if let newValue {
-                    // Set the token in the keychain
-                    logger.debug("Setting token in keychain")
-                    try keychain.set(newValue, key: tokenKey)
-                } else {
-                    // Remove the token from the keychain if newValue is nil
-                    logger.debug("Removing token from keychain")
-                    try keychain.remove(tokenKey)
+    @ObservationIgnored @AppStorage("token") public var token: String? {
+        didSet {
+            if token != nil {
+                Task {
+                    await setup()
                 }
-            } catch {
-                // Handle any errors (e.g., unable to save, access denied)
-                logger.error("Keychain write error: \(error)")
             }
         }
     }
@@ -124,7 +101,7 @@ final class UserManager: ObservableObject {
     }
 
     func fetchUser() async throws -> User? {
-        let urlString = "https://cloak.invisibility.so/auth/user"
+        let urlString = UserManager.urlBase + "/auth/user"
         guard let jwtToken = self.token else {
             logger.error("No JWT token")
             return nil
@@ -168,8 +145,10 @@ final class UserManager: ObservableObject {
             return false
         }
 
+        let url = UserManager.urlBase + "/pay/paid"
+
         return await withCheckedContinuation { continuation in
-            AF.request("https://cloak.invisibility.so/pay/paid", method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
+            AF.request(url, method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
                 .validate()
                 .response { response in
                     switch response.result {
@@ -187,9 +166,42 @@ final class UserManager: ObservableObject {
     }
 
     func manage() {
-        guard token != nil else {
-            return
+        if let url = URL(string: "https://billing.stripe.com/p/login/eVa17KdHk6D62qcbII") {
+            NSWorkspace.shared.open(url)
         }
+        // guard let token = self.token else {
+        //     return
+        // }
+
+        // let url = UserManager.urlBase + "/pay/manage"
+
+        // AF.request(url, method: .get, headers: ["Authorization": "Bearer \(token)"])
+        //     .validate()
+        //     .response { response in
+        //         switch response.result {
+        //         case .success:
+        //             if response.response?.statusCode == 200 {
+        //                 // Get url from response body json
+        //                 self.logger.info("Got manage url")
+        //                 if let data = response.data {
+        //                     do {
+        //                         let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+        //                         if let url = json?["url"] as? String {
+        //                             if let url = URL(string: url) {
+        //                                 NSWorkspace.shared.open(url)
+        //                             }
+        //                         }
+        //                     } catch {
+        //                         self.logger.error("Error parsing manage url")
+        //                     }
+        //                 }
+        //             } else {
+        //                 self.logger.error("Error getting manage url")
+        //             }
+        //         case .failure:
+        //             self.logger.error("Error creating billing session")
+        //         }
+        //     }
     }
 
     func pay() {
@@ -198,7 +210,7 @@ final class UserManager: ObservableObject {
             return
         }
 
-        if let url = URL(string: "https://cloak.invisibility.so/pay/checkout?email=\(user.email)") {
+        if let url = URL(string: UserManager.urlBase + "/pay/checkout?email=\(user.email)") {
             NSWorkspace.shared.open(url)
         }
     }

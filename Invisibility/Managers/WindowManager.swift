@@ -110,12 +110,13 @@ class WindowManager: ObservableObject {
     }
 
     public func setupWindow() -> Bool {
-        logger.debug("Setting up window")
+        logger.debug("Setting up panel")
 
         // Actually do a panel
         let window = InteractivePanel(
             contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.borderless, .nonactivatingPanel],
+            // styleMask: [.borderless, .nonactivatingPanel, .resizable],
             backing: .buffered,
             defer: false
         )
@@ -131,7 +132,11 @@ class WindowManager: ObservableObject {
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.orderFrontRegardless()
 
-        logger.debug("Window set up")
+        // Allow resizing horizontally
+        window.showsResizeIndicator = true
+        window.minSize = CGSize(width: 400, height: 200)
+
+        logger.debug("Panel set up")
         return true
     }
 

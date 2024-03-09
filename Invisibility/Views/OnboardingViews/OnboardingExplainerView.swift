@@ -101,6 +101,9 @@ struct OnboardingExplainerView: View {
             VStack {
                 Spacer()
                 Button(action: {
+                    Task {
+                        await ScreenRecorder.shared.askForScreenRecordingPermission()
+                    }
                     callback()
                 }) {
                     VStack {
@@ -143,9 +146,6 @@ struct OnboardingExplainerView: View {
         .onAppear {
             KeyboardShortcuts.setShortcut(.init(.g, modifiers: [.command]), for: .summon)
             KeyboardShortcuts.setShortcut(.init(.one, modifiers: [.command, .shift]), for: .screenshot)
-            Task {
-                await ScreenRecorder.shared.askForScreenRecordingPermission()
-            }
         }
     }
 }

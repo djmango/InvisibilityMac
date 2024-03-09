@@ -78,12 +78,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     logger.debug("Received JWT Token: \(token)")
                     // Handle the authentication with the received token
                     UserManager.shared.token = token
-                    Task {
-                        await UserManager.shared.setup()
-                    }
+                } else if url == URL(string: "invisibility://paid") {
+                    UserManager.shared.isPaid = true
                 } else {
                     logger.error("No token found in URL")
                     logger.debug("URL: \(url)")
+                    logger.debug("Last path: \(url.lastPathComponent)")
                     logger.debug("Components: \(components)")
                     logger.debug("Path: \(components.path)")
                     // Just run it anyway, good enough for now
