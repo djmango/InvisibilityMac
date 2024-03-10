@@ -14,7 +14,6 @@ struct MessageView: View {
 
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject var chatViewModel: ChatViewModel = ChatViewModel.shared
-    @ObservedObject var windowManager: WindowManager = WindowManager.shared
 
     init() {
         isEditorFocused = true

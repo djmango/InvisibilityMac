@@ -96,64 +96,79 @@ struct MessageListItemView: View {
                     .markdownTheme(.docC)
                     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
                     .hide(if: isGenerating, removeCompletely: true)
-                // .animation(.nil, value: messageViewModel.expansionTotal)
+
+                // ForEach(message.textBlocks, id: \.content) { block in
+                //     switch block.type {
+                //     case .string:
+                //         Text(block.content)
+                //             // .font(.custom("SF Pro Rounded", size: 14))
+                //             .textSelection(.enabled)
+                //     case .markdown:
+                //         Text(block.content)
+                //             .textSelection(.enabled)
+                //         // Markdown(block.content)
+                //         // .textSelection(.enabled)
+                //         // .markdownTheme(.docC)
+                //         // .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
+                //     }
+                // }
+                // .hide(if: isGenerating, removeCompletely: true)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: width, alignment: .leading)
             .padding()
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color(nsColor: .separatorColor))
-                    .overlay(
-                        // Message action buttons
-                        VStack {
-                            Spacer()
-
-                            // Resize button
-                            HStack {
-                                Spacer()
-                                MessageButtonItemView(label: "Resize", icon: self.width == MessageListItemView.defaultWidth ? "arrow.right" : "arrow.left") {
-                                    resizeAction()
-                                }
-                            }
-                            .visible(if: isResizeButtonVisible, removeCompletely: true)
-
-                            // Regenerate and copy buttons
-                            HStack {
-                                Spacer()
-                                MessageButtonItemView(label: "Regenerate", icon: "arrow.clockwise") {
-                                    regenerateAction()
-                                }
-                                .onHover { hovering in
-                                    if hovering {
-                                        whoIsHovering = "Regenerate"
-                                    } else {
-                                        whoIsHovering = nil
-                                    }
-                                }
-                                .visible(if: isRegenerateButtonVisible, removeCompletely: true)
-                                MessageButtonItemView(label: "Copy", icon: isCopied ? "checkmark" : "doc.on.doc") {
-                                    copyAction()
-                                }
-                                .changeEffect(.jump(height: 10), value: isCopied)
-                                .onHover { hovering in
-                                    if hovering {
-                                        whoIsHovering = "Copy"
-                                    } else {
-                                        whoIsHovering = nil
-                                    }
-                                }
-                                .visible(if: isCopyButtonVisible, removeCompletely: true)
-                            }
-                        }
-                        .animation(.snappy, value: whoIsHovering)
-                        .animation(.snappy, value: isHovered)
-                        .padding(8)
-                        .onHover {
-                            isHovered = $0
-                            isCopied = false
-                        }
-                    )
             )
+
+            // Message action buttons
+            VStack(alignment: .trailing) {
+                Spacer()
+
+                // Resize button
+                HStack {
+                    Spacer()
+                    MessageButtonItemView(label: "Resize", icon: self.width == MessageListItemView.defaultWidth ? "arrow.right" : "arrow.left") {
+                        resizeAction()
+                    }
+                }
+                .visible(if: isResizeButtonVisible, removeCompletely: true)
+
+                // Regenerate and copy buttons
+                HStack {
+                    Spacer()
+                    MessageButtonItemView(label: "Regenerate", icon: "arrow.clockwise") {
+                        regenerateAction()
+                    }
+                    .onHover { hovering in
+                        if hovering {
+                            whoIsHovering = "Regenerate"
+                        } else {
+                            whoIsHovering = nil
+                        }
+                    }
+                    .visible(if: isRegenerateButtonVisible, removeCompletely: true)
+                    MessageButtonItemView(label: "Copy", icon: isCopied ? "checkmark" : "doc.on.doc") {
+                        copyAction()
+                    }
+                    .changeEffect(.jump(height: 10), value: isCopied)
+                    .onHover { hovering in
+                        if hovering {
+                            whoIsHovering = "Copy"
+                        } else {
+                            whoIsHovering = nil
+                        }
+                    }
+                    .visible(if: isCopyButtonVisible, removeCompletely: true)
+                }
+            }
+            .animation(.snappy, value: whoIsHovering)
+            .animation(.snappy, value: isHovered)
+            .padding(8)
+        }
+        .onHover {
+            isHovered = $0
+            isCopied = false
         }
         .padding(.horizontal, 10)
         .frame(maxWidth: width, alignment: .leading)
@@ -185,6 +200,7 @@ struct MessageListItemView: View {
         }
     }
 
+    @MainActor
     private func resizeAction() {
         let newWidth = width == MessageListItemView.defaultWidth ? MessageListItemView.resizeWidth : MessageListItemView.defaultWidth
         width = CGFloat(newWidth)

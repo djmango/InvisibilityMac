@@ -16,7 +16,6 @@ struct MessageButtonsView: View {
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var llmManager: LLMManager = LLMManager.shared
-    @ObservedObject private var windowManager: WindowManager = WindowManager.shared
 
     @State private var whoIsHovering: String?
 

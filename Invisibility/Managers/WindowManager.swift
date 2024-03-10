@@ -18,7 +18,7 @@ class InteractivePanel: NSPanel {
     }
 }
 
-class WindowManager: ObservableObject {
+class WindowManager {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "WindowManager")
 
     static let shared = WindowManager()
@@ -30,7 +30,7 @@ class WindowManager: ObservableObject {
     private let animationDuration: TimeInterval = 0.2
 
     /// The current screen the window is on
-    @Published var currentScreen: NSScreen?
+    private var currentScreen: NSScreen?
 
     /// The width of the panel
     private var width: CGFloat = 1000
