@@ -35,8 +35,8 @@ struct User: Decodable {
 @Observable
 final class UserManager: ObservableObject {
     static let shared = UserManager()
-    // static let urlBase = "https://cloak.invisibility.so"
-    static let urlBase = "http://localhost:8000"
+    static let urlBase = "https://cloak.invisibility.so"
+    // static let urlBase = "http://localhost:8000"
 
     private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
 
@@ -169,39 +169,6 @@ final class UserManager: ObservableObject {
         if let url = URL(string: "https://billing.stripe.com/p/login/eVa17KdHk6D62qcbII") {
             NSWorkspace.shared.open(url)
         }
-        // guard let token = self.token else {
-        //     return
-        // }
-
-        // let url = UserManager.urlBase + "/pay/manage"
-
-        // AF.request(url, method: .get, headers: ["Authorization": "Bearer \(token)"])
-        //     .validate()
-        //     .response { response in
-        //         switch response.result {
-        //         case .success:
-        //             if response.response?.statusCode == 200 {
-        //                 // Get url from response body json
-        //                 self.logger.info("Got manage url")
-        //                 if let data = response.data {
-        //                     do {
-        //                         let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-        //                         if let url = json?["url"] as? String {
-        //                             if let url = URL(string: url) {
-        //                                 NSWorkspace.shared.open(url)
-        //                             }
-        //                         }
-        //                     } catch {
-        //                         self.logger.error("Error parsing manage url")
-        //                     }
-        //                 }
-        //             } else {
-        //                 self.logger.error("Error getting manage url")
-        //             }
-        //         case .failure:
-        //             self.logger.error("Error creating billing session")
-        //         }
-        //     }
     }
 
     func pay() {

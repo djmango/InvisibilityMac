@@ -32,8 +32,8 @@ class WindowManager: ObservableObject {
     /// The current screen the window is on
     @Published var currentScreen: NSScreen?
 
-    // We keep track of the messages so that we can have the min window height
-    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
+    /// The width of the panel
+    private var width: CGFloat = 1000
 
     /// Whether the window is visible
     public var windowIsVisible: Bool {
@@ -60,12 +60,16 @@ class WindowManager: ObservableObject {
             // If we are just changing screens, don't toggle the window
             if self.windowIsOnScreenWithCursor {
                 self.logger.debug("Toggling window")
-                self.toggleWindow()
+                Task {
+                    await self.toggleWindow()
+                }
             } else {
                 self.logger.debug("Changing screens")
                 // Just move to the new screen
                 self.positionWindowOnCursorScreen()
-                self.showWindow()
+                Task {
+                    await self.showWindow()
+                }
             }
         }
 
@@ -76,6 +80,7 @@ class WindowManager: ObservableObject {
         }
     }
 
+    @MainActor
     public func toggleWindow() {
         guard let window else { return }
         if window.isVisible == true {
@@ -85,6 +90,7 @@ class WindowManager: ObservableObject {
         }
     }
 
+    @MainActor
     public func showWindow() {
         guard let window else { return }
         guard OnboardingManager.shared.onboardingViewed else { return }
@@ -98,6 +104,7 @@ class WindowManager: ObservableObject {
         }
     }
 
+    @MainActor
     public func hideWindow() {
         guard let window else { return }
         // Animate opacity
@@ -116,7 +123,6 @@ class WindowManager: ObservableObject {
         let window = InteractivePanel(
             contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.borderless, .nonactivatingPanel],
-            // styleMask: [.borderless, .nonactivatingPanel, .resizable],
             backing: .buffered,
             defer: false
         )
@@ -132,15 +138,12 @@ class WindowManager: ObservableObject {
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.orderFrontRegardless()
 
-        // Allow resizing horizontally
-        window.showsResizeIndicator = true
-        window.minSize = CGSize(width: 400, height: 200)
-
         logger.debug("Panel set up")
         return true
     }
 
-    private func positionWindowOnCursorScreen() {
+    /// Position the window on the screen with the cursor
+    private func positionWindowOnCursorScreen(animate: Bool = false) {
         guard let window else { return }
 
         // Get the current mouse location
@@ -152,7 +155,7 @@ class WindowManager: ObservableObject {
         currentScreen = screen
 
         // Define window width and the desired positioning
-        let windowWidth: CGFloat = 400
+        let windowWidth: CGFloat = self.width
 
         // Get the menu bar height to adjust the window position
         let menuBarHeight = NSStatusBar.system.thickness
@@ -167,7 +170,7 @@ class WindowManager: ObservableObject {
         let windowRect = CGRect(x: xPos, y: yPos, width: windowWidth, height: windowHeight)
 
         // Set the window frame
-        window.setFrame(windowRect, display: true, animate: false)
+        window.setFrame(windowRect, display: true, animate: animate)
         window.makeKeyAndOrderFront(nil)
     }
 }

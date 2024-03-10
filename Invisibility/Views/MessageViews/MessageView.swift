@@ -14,6 +14,7 @@ struct MessageView: View {
 
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject var chatViewModel: ChatViewModel = ChatViewModel.shared
+    @ObservedObject var windowManager: WindowManager = WindowManager.shared
 
     init() {
         isEditorFocused = true
@@ -21,9 +22,9 @@ struct MessageView: View {
     }
 
     var body: some View {
-        VStack(alignment: .center, spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             ScrollView {
-                LazyVStack(spacing: 5) {
+                LazyVStack(alignment: .trailing, spacing: 5) {
                     ForEach(messageViewModel.messages.indices, id: \.self) { index in
                         let message: Message = messageViewModel.messages.reversed()[index]
                         // Generate the view for the individual message.
@@ -33,6 +34,7 @@ struct MessageView: View {
                     }
                 }
                 .animation(.snappy, value: messageViewModel.messages.count)
+                .animation(.snappy, value: messageViewModel.expansionTotal)
             }
             .mask(
                 LinearGradient(
@@ -53,6 +55,7 @@ struct MessageView: View {
             // Action Icons
             MessageButtonsView()
                 .padding(.top, 5)
+                .frame(maxWidth: 400)
 
             ChatField(text: $content, action: sendAction)
                 .focused($promptFocused)
@@ -62,6 +65,7 @@ struct MessageView: View {
                 .padding(.top, 5)
                 .padding(.bottom, 10)
                 .scrollIndicators(.never)
+                .frame(maxWidth: 400)
         }
         .animation(.snappy, value: chatViewModel.textHeight)
         .overlay(

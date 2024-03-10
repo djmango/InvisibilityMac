@@ -116,7 +116,7 @@ struct SettingsView: View {
                 .padding(.bottom, 10)
 
                 HStack {
-                    Text("Summon")
+                    Text("Toggle panel")
                     KeyboardShortcuts.Recorder(for: .summon)
                 }
 
@@ -200,7 +200,7 @@ struct SettingsView: View {
                 Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
                     .font(.caption)
                     .foregroundColor(.gray)
-                    .padding(.bottom, 10)
+                    .padding(.vertical, 5)
             }
         }
         .frame(minWidth: 500, minHeight: 550)

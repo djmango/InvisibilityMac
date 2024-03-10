@@ -113,7 +113,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         } else {
             // Otherwise, show the window on the screen with the cursor
-            WindowManager.shared.showWindow()
+            Task {
+                await WindowManager.shared.showWindow()
+            }
         }
     }
 

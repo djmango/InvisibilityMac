@@ -46,7 +46,7 @@ struct OnboardingExplainerView: View {
                         .frame(width: 285, height: 240)
                         .padding()
 
-                    Text("Summon")
+                    Text("Toggle panel")
                         .font(Font.custom("SF Pro Rounded", size: 30))
                         .foregroundColor(.white)
                         .padding()

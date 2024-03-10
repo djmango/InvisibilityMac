@@ -26,7 +26,13 @@ enum LLMModels {
     static let claude3_opus = LLMModel(
         text: "anthropic/claude-3-opus:beta",
         vision: "anthropic/claude-3-opus:beta",
-        human_name: "Claude 3 Opus"
+        human_name: "Claude-3 Opus"
+    )
+
+    static let gemini_pro = LLMModel(
+        text: "google/gemini-pro",
+        vision: "google/gemini-pro-vision",
+        human_name: "Gemini Pro"
     )
 
     static let gpt4 = LLMModel(

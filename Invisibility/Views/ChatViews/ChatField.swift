@@ -85,8 +85,11 @@ struct ChatField: View {
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(nsColor: .separatorColor))
+        )
         .padding(.horizontal, 10)
-        // .animation(.snappy, value: chatViewModel.textHeight)
         .animation(.easeIn(duration: 0.2), value: chatViewModel.images)
     }
 

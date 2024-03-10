@@ -43,6 +43,10 @@ struct MessageButtonItemView: View {
             }
             .contentShape(RoundedRectangle(cornerRadius: 100))
         }
+        .background(
+            RoundedRectangle(cornerRadius: 100)
+                .fill(Color("ChatButtonBackgroundColor"))
+        )
         .overlay(
             RoundedRectangle(cornerRadius: 100)
                 .stroke(Color(NSColor.separatorColor), lineWidth: 1)
