@@ -11,9 +11,17 @@ struct MessageView: View {
 
     @State private var content: String = ""
     @State private var isDragActive: Bool = false
+    @State private var isResizeHovered: Bool = false
+    @State private var offset = CGSize.zero
 
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject var chatViewModel: ChatViewModel = ChatViewModel.shared
+    @ObservedObject var windowManager: WindowManager = WindowManager.shared
+
+    private var isResizeButtonVisible: Bool {
+        // isHovered && isAssistant
+        true
+    }
 
     init() {
         isEditorFocused = true
@@ -21,71 +29,95 @@ struct MessageView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ScrollView {
-                LazyVStack(alignment: .trailing, spacing: 5) {
-                    ForEach(messageViewModel.messages.indices, id: \.self) { index in
-                        let message: Message = messageViewModel.messages.reversed()[index]
-                        // Generate the view for the individual message.
-                        MessageListItemView(message: message)
-                            .id(message)
-                            .rotationEffect(.degrees(180))
+        ZStack {
+            VStack(alignment: .leading, spacing: 0) {
+                ScrollView {
+                    LazyVStack(alignment: .trailing, spacing: 5) {
+                        ForEach(messageViewModel.messages.indices, id: \.self) { index in
+                            let message: Message = messageViewModel.messages.reversed()[index]
+                            // Generate the view for the individual message.
+                            MessageListItemView(message: message)
+                                .id(message)
+                                .rotationEffect(.degrees(180))
+                        }
                     }
+                    .animation(.snappy, value: messageViewModel.messages.count)
+                    .animation(.snappy, value: windowManager.resized)
+                    // .animation(.snappy, value: messageViewModel.expansionTotal)
+                    // .animation(.easeOut, value: messageViewModel.expansionTotal)
                 }
-                .animation(.snappy, value: messageViewModel.messages.count)
-                .animation(.snappy, value: messageViewModel.expansionTotal)
-            }
-            .mask(
-                LinearGradient(
-                    gradient: Gradient(stops: [
-                        .init(color: .clear, location: 0),
-                        .init(color: .black, location: 0.005), // Finish fading in
-                        .init(color: .black, location: 0.995), // Start fading out
-                        .init(color: .clear, location: 1.0),
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
+                .mask(
+                    LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: .black, location: 0.005), // Finish fading in
+                            .init(color: .black, location: 0.995), // Start fading out
+                            .init(color: .clear, location: 1.0),
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 )
-            )
-            .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
-            .scrollContentBackground(.hidden)
-            .scrollIndicators(.never)
-
-            // Action Icons
-            MessageButtonsView()
-                .padding(.top, 5)
-                .frame(maxWidth: 400)
-
-            ChatField(text: $content, action: sendAction)
-                .focused($promptFocused)
-                .onTapGesture {
-                    promptFocused = true
-                }
-                .padding(.top, 5)
-                .padding(.bottom, 10)
+                .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
+                .scrollContentBackground(.hidden)
                 .scrollIndicators(.never)
-                .frame(maxWidth: 400)
-        }
-        .animation(.snappy, value: chatViewModel.textHeight)
-        .overlay(
-            Rectangle()
-                .foregroundColor(Color.gray.opacity(0.2))
-                .opacity(isDragActive ? 1 : 0)
-        )
-        .border(isDragActive ? Color.blue : Color.clear, width: 5)
-        .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
-            handleDrop(providers: providers)
-        }
-        .onAppear {
-            promptFocused = true
-        }
-        .onChange(of: chatViewModel.images) {
-            promptFocused = true
-        }
-        .onChange(of: chatViewModel.shouldFocusTextField) {
-            if chatViewModel.shouldFocusTextField {
+                .padding(.trailing, 40)
+                .overlay(
+                    // Resize button
+                    VStack(alignment: .trailing) {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            MessageButtonItemView(label: "Resize", icon: windowManager.resized ? "arrow.left" : "arrow.right") {
+                                resizeAction()
+                            }
+                        }
+                        .visible(if: isResizeButtonVisible, removeCompletely: true)
+                        .onHover { hovering in
+                            isResizeHovered = hovering
+                        }
+                        Spacer()
+                    }
+                    .animation(.snappy, value: isResizeHovered)
+                    .padding(8)
+                )
+
+                // Action Icons
+                MessageButtonsView()
+                    .padding(.top, 5)
+                    .frame(maxWidth: 400)
+
+                ChatField(text: $content, action: sendAction)
+                    .focused($promptFocused)
+                    .onTapGesture {
+                        promptFocused = true
+                    }
+                    .padding(.top, 5)
+                    .padding(.bottom, 10)
+                    .scrollIndicators(.never)
+                    .frame(maxWidth: 400)
+            }
+            .animation(.snappy, value: chatViewModel.textHeight)
+            .overlay(
+                Rectangle()
+                    .foregroundColor(Color.gray.opacity(0.2))
+                    .opacity(isDragActive ? 1 : 0)
+            )
+            .border(isDragActive ? Color.blue : Color.clear, width: 5)
+            .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
+                handleDrop(providers: providers)
+            }
+            .onAppear {
                 promptFocused = true
-                chatViewModel.shouldFocusTextField = false
+            }
+            .onChange(of: chatViewModel.images) {
+                promptFocused = true
+            }
+            .onChange(of: chatViewModel.shouldFocusTextField) {
+                if chatViewModel.shouldFocusTextField {
+                    promptFocused = true
+                    chatViewModel.shouldFocusTextField = false
+                }
             }
         }
     }
@@ -138,5 +170,10 @@ struct MessageView: View {
         let lastMessage = messageViewModel.messages[lastIndex]
 
         proxy.scrollTo(lastMessage, anchor: .bottom)
+    }
+
+    @MainActor
+    private func resizeAction() {
+        windowManager.resizeWindow()
     }
 }

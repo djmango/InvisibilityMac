@@ -21,6 +21,7 @@ struct ChatField: View {
     @Binding private var text: String
     @State private var previousText: String = ""
     @State private var whoIsHovering: UUID?
+    @State private var lastTextHeight: CGFloat = 0
 
     private var action: () -> Void
 
@@ -56,29 +57,37 @@ struct ChatField: View {
                 .padding(.horizontal, 10)
                 .visible(if: !chatViewModel.images.isEmpty, removeCompletely: true)
 
-            ScrollView {
-                TextEditor(text: $text)
-                    .scrollContentBackground(.hidden)
-                    .scrollIndicatorsFlash(onAppear: false)
-                    .scrollIndicators(.never)
-                    .multilineTextAlignment(.leading)
-                    .font(.title3)
-                    .padding()
-                    .onChange(of: text) {
-                        handleTextChange()
-                    }
-                    .background(
-                        // Invisible Text view to calculate height
-                        GeometryReader { geo in
-                            Text(text)
-                                .font(.title3) // Match TextEditor font
-                                .padding() // Match TextEditor padding
-                                .hidden() // Make the Text view invisible
-                                .onChange(of: text) {
-                                    self.chatViewModel.textHeight = geo.size.height
+            ScrollViewReader { proxy in
+                ScrollView {
+                    LazyVStack(alignment: .trailing, spacing: 0) {
+                        TextEditor(text: $text)
+                            .scrollContentBackground(.hidden)
+                            .scrollIndicatorsFlash(onAppear: false)
+                            .scrollIndicators(.never)
+                            .multilineTextAlignment(.leading)
+                            .font(.title3)
+                            .padding()
+                            .background(
+                                // Invisible Text view to calculate height
+                                // TODO: optimize this, maybe only have geometry reader under a certain size
+                                GeometryReader { geo in
+                                    Text(text)
+                                        .hidden() // Make the Text view invisible
+                                        .font(.title3) // Match TextEditor font
+                                        .padding() // Match TextEditor padding
+                                        .onChange(of: text) {
+                                            handleTextChange(scrollView: proxy)
+                                            if geo.size.height != lastTextHeight {
+                                                self.chatViewModel.textHeight = geo.size.height
+                                                self.lastTextHeight = geo.size.height
+                                            }
+                                        }
                                 }
-                        }
-                    )
+                                .hidden()
+                            )
+                            .id("bottom")
+                    }
+                }
             }
             .frame(height: max(52, min(chatViewModel.textHeight, 500)))
         }
@@ -93,7 +102,7 @@ struct ChatField: View {
         .animation(.easeIn(duration: 0.2), value: chatViewModel.images)
     }
 
-    private func handleTextChange() {
+    private func handleTextChange(scrollView: ScrollViewProxy) {
         // Check for newlines in the added text
         let startIndex: String.Index = if previousText.count < text.count {
             text.index(text.startIndex, offsetBy: previousText.count)
@@ -101,27 +110,20 @@ struct ChatField: View {
             text.endIndex
         }
 
-        // TODO: fix bug where inline newlines do not register as newline for addedText. Just a bug in added text it seems, not actually correct logic
-
         let addedText = String(text[startIndex...])
 
-        // logger.debug("Previous text: \(previousText)")
-        // logger.debug("Previous text count: \(previousText.count)")
-        // logger.debug("Text: \(text)")
-        // logger.debug("Text count: \(text.count)")
-        // logger.debug("Added text: \(addedText)")
-        // logger.debug("Added text count: \(addedText.count)")
         if addedText.contains("\n") {
-            // logger.debug("Newline detected")
             // Attempt to detect Shift key
             // We have to make sure its not a paste with a newline too
             if NSApp.currentEvent?.modifierFlags.contains(.shift) == false, NSApp.currentEvent?.modifierFlags.contains(.command) == false {
                 // If Shift is not pressed, and a newline is added, submit
                 text = text.trimmingCharacters(in: .newlines) // Optional: remove the newline
                 action()
-                // text = "" // Clear the text field after submission
+                self.lastTextHeight = 52
             }
-            // If Shift is pressed, just allow the newline (normal behavior)
+            // If Shift is pressed, just allow the newline (normal behavior) and scroll to the bottom
+            // For some reason this actually works how its supposed to, only scrolling to bottom if we are at bottom, actually keeping the newline in view no matter where we are
+            scrollView.scrollTo("bottom", anchor: .bottom)
         }
         previousText = text // Update previous text state for next change
     }

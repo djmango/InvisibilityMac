@@ -9,8 +9,6 @@ import ViewState
 
 struct MessageListItemView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageListItemView")
-    private static let defaultWidth: CGFloat = 400
-    private static let resizeWidth: CGFloat = 800
 
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
@@ -30,7 +28,7 @@ struct MessageListItemView: View {
     @State private var isHovered: Bool = false
     @State private var isCopied: Bool = false
     @State private var whoIsHovering: String?
-    @State private var width: CGFloat = MessageListItemView.defaultWidth
+    // @State private var width: CGFloat = MessageListItemView.defaultWidth
 
     private var isResizeButtonVisible: Bool {
         isHovered && isAssistant
@@ -96,6 +94,10 @@ struct MessageListItemView: View {
                     .markdownTheme(.docC)
                     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
                     .hide(if: isGenerating, removeCompletely: true)
+                // .animation(.none, value: width)
+
+                // Text(message.text)
+                //     .textSelection(.enabled)
 
                 // ForEach(message.textBlocks, id: \.content) { block in
                 //     switch block.type {
@@ -114,25 +116,12 @@ struct MessageListItemView: View {
                 // }
                 // .hide(if: isGenerating, removeCompletely: true)
             }
-            .frame(maxWidth: width, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color(nsColor: .separatorColor))
-            )
 
             // Message action buttons
             VStack(alignment: .trailing) {
                 Spacer()
-
-                // Resize button
-                HStack {
-                    Spacer()
-                    MessageButtonItemView(label: "Resize", icon: self.width == MessageListItemView.defaultWidth ? "arrow.right" : "arrow.left") {
-                        resizeAction()
-                    }
-                }
-                .visible(if: isResizeButtonVisible, removeCompletely: true)
 
                 // Regenerate and copy buttons
                 HStack {
@@ -170,8 +159,12 @@ struct MessageListItemView: View {
             isHovered = $0
             isCopied = false
         }
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(nsColor: .separatorColor))
+        )
         .padding(.horizontal, 10)
-        .frame(maxWidth: width, alignment: .leading)
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.bottom, 3)
     }
 
@@ -197,19 +190,6 @@ struct MessageListItemView: View {
     private func regenerateAction() {
         Task {
             await messageViewModel.regenerate()
-        }
-    }
-
-    @MainActor
-    private func resizeAction() {
-        let newWidth = width == MessageListItemView.defaultWidth ? MessageListItemView.resizeWidth : MessageListItemView.defaultWidth
-        width = CGFloat(newWidth)
-
-        // For global animation
-        if newWidth == MessageListItemView.resizeWidth {
-            messageViewModel.expansionTotal += 1
-        } else {
-            messageViewModel.expansionTotal -= 1
         }
     }
 

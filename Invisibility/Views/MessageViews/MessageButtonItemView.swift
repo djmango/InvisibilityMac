@@ -15,7 +15,6 @@ struct MessageButtonItemView: View {
     private let icon: String
 
     @State private var isHovering: Bool = false
-    @State private var isAnimating: Bool = false
 
     init(label: String, icon: String, action: @escaping () -> Void) {
         self.label = label
@@ -32,7 +31,6 @@ struct MessageButtonItemView: View {
                     .frame(width: 18, height: 18)
                     .foregroundColor(Color("ChatButtonForegroundColor"))
                     .padding(8)
-                    .animation(.snappy, value: isAnimating)
 
                 Text(label)
                     .font(.title3)
@@ -56,25 +54,10 @@ struct MessageButtonItemView: View {
         }
         .animation(.snappy, value: isHovering)
         .animation(.snappy, value: label)
-        // .changeEffect(.spin, value: isAnimating)
-        // .changeEffect(
-        //     .spray(origin: UnitPoint(x: 0.25, y: 0.5)) {
-        //         Image(systemName: icon)
-        //     }, value: isAnimating
-        // )
-        // .conditionalEffect(.repeat(.wiggle(rate: .fast), every: .seconds(1)), condition: isAnimating)
-        // .conditionalEffect(.glow, condition: isAnimating)
         .buttonStyle(.plain)
     }
 
     func actionWrapped() {
-        // withAnimation(.default) {
-        //     isAnimating = true
-        // }
         action()
-        // Reset after the animation completes
-        // DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-        //     isAnimating = false
-        // }
     }
 }

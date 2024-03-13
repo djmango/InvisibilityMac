@@ -18,10 +18,14 @@ class InteractivePanel: NSPanel {
     }
 }
 
-class WindowManager {
+@Observable
+class WindowManager: ObservableObject {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "WindowManager")
 
     static let shared = WindowManager()
+
+    private static let defaultWidth: CGFloat = 440
+    private static let resizeWidth: CGFloat = 1000
 
     private var contentView = AppView()
     private var window: NSPanel?
@@ -33,7 +37,12 @@ class WindowManager {
     private var currentScreen: NSScreen?
 
     /// The width of the panel
-    private var width: CGFloat = 1000
+    public var width: CGFloat = WindowManager.defaultWidth
+
+    /// The state of resizing the window
+    public var resized: Bool {
+        width != WindowManager.defaultWidth
+    }
 
     /// Whether the window is visible
     public var windowIsVisible: Bool {
@@ -114,6 +123,14 @@ class WindowManager {
         }, completionHandler: {
             window.orderOut(nil)
         })
+    }
+
+    @MainActor
+    public func resizeWindow() {
+        guard let window else { return }
+        guard window.isVisible else { return }
+        width = width == WindowManager.defaultWidth ? WindowManager.resizeWidth : WindowManager.defaultWidth
+        positionWindowOnCursorScreen(animate: true)
     }
 
     public func setupWindow() -> Bool {
