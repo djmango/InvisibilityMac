@@ -11,17 +11,11 @@ struct MessageView: View {
 
     @State private var content: String = ""
     @State private var isDragActive: Bool = false
-    @State private var isResizeHovered: Bool = false
     @State private var offset = CGSize.zero
 
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject var windowManager: WindowManager = WindowManager.shared
-
-    private var isResizeButtonVisible: Bool {
-        // isHovered && isAssistant
-        true
-    }
 
     init() {
         isEditorFocused = true
@@ -30,62 +24,44 @@ struct MessageView: View {
 
     var body: some View {
         ZStack {
-            VStack(alignment: .leading, spacing: 0) {
-                ScrollView {
-                    LazyVStack(alignment: .trailing, spacing: 5) {
-                        ForEach(messageViewModel.messages.indices, id: \.self) { index in
-                            let message: Message = messageViewModel.messages.reversed()[index]
-                            // Generate the view for the individual message.
-                            MessageListItemView(message: message)
-                                .id(message)
-                                .rotationEffect(.degrees(180))
-                        }
-                    }
-                    .animation(.snappy, value: messageViewModel.messages.count)
-                    .animation(.snappy, value: windowManager.resized)
-                    // .animation(.snappy, value: messageViewModel.expansionTotal)
-                    // .animation(.easeOut, value: messageViewModel.expansionTotal)
-                }
-                .mask(
-                    LinearGradient(
-                        gradient: Gradient(stops: [
-                            .init(color: .clear, location: 0),
-                            .init(color: .black, location: 0.005), // Finish fading in
-                            .init(color: .black, location: 0.995), // Start fading out
-                            .init(color: .clear, location: 1.0),
-                        ]),
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
-                .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
-                .scrollContentBackground(.hidden)
-                .scrollIndicators(.never)
-                .padding(.trailing, 40)
-                .overlay(
-                    // Resize button
-                    VStack(alignment: .trailing) {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            MessageButtonItemView(label: "Resize", icon: windowManager.resized ? "arrow.left" : "arrow.right") {
-                                resizeAction()
+            VStack(alignment: .center, spacing: 0) {
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        LazyVStack(alignment: .trailing, spacing: 5) {
+                            ForEach(messageViewModel.messages.indices, id: \.self) { index in
+                                let message: Message = messageViewModel.messages.reversed()[index]
+                                // Generate the view for the individual message.
+                                MessageListItemView(message: message)
+                                    .id(message)
+                                    .rotationEffect(.degrees(180))
                             }
                         }
-                        .visible(if: isResizeButtonVisible, removeCompletely: true)
-                        .onHover { hovering in
-                            isResizeHovered = hovering
+                        .animation(.snappy, value: messageViewModel.messages.count)
+                        .animation(.snappy, value: windowManager.resized)
+                        .onChange(of: messageViewModel.messages.count) {
+                            scrollToBottom(proxy)
                         }
-                        Spacer()
                     }
-                    .animation(.snappy, value: isResizeHovered)
-                    .padding(8)
-                )
+                    .mask(
+                        LinearGradient(
+                            gradient: Gradient(stops: [
+                                .init(color: .clear, location: 0),
+                                .init(color: .black, location: 0.005), // Finish fading in
+                                .init(color: .black, location: 0.995), // Start fading out
+                                .init(color: .clear, location: 1.0),
+                            ]),
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
+                    .scrollContentBackground(.hidden)
+                    .scrollIndicators(.never)
+                }
 
                 // Action Icons
                 MessageButtonsView()
                     .padding(.top, 5)
-                    .frame(maxWidth: 400)
 
                 ChatField(text: $content, action: sendAction)
                     .focused($promptFocused)
@@ -95,8 +71,8 @@ struct MessageView: View {
                     .padding(.top, 5)
                     .padding(.bottom, 10)
                     .scrollIndicators(.never)
-                    .frame(maxWidth: 400)
             }
+            .padding(.trailing, 40)
             .animation(.snappy, value: chatViewModel.textHeight)
             .overlay(
                 Rectangle()
@@ -170,10 +146,5 @@ struct MessageView: View {
         let lastMessage = messageViewModel.messages[lastIndex]
 
         proxy.scrollTo(lastMessage, anchor: .bottom)
-    }
-
-    @MainActor
-    private func resizeAction() {
-        windowManager.resizeWindow()
     }
 }

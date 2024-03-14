@@ -80,6 +80,7 @@ struct ChatField: View {
                                             if geo.size.height != lastTextHeight {
                                                 self.chatViewModel.textHeight = geo.size.height
                                                 self.lastTextHeight = geo.size.height
+                                                proxy.scrollTo("bottom", anchor: .bottom)
                                             }
                                         }
                                 }
@@ -119,7 +120,9 @@ struct ChatField: View {
                 // If Shift is not pressed, and a newline is added, submit
                 text = text.trimmingCharacters(in: .newlines) // Optional: remove the newline
                 action()
-                self.lastTextHeight = 52
+                DispatchQueue.main.async {
+                    chatViewModel.textHeight = 52 // Reset height
+                }
             }
             // If Shift is pressed, just allow the newline (normal behavior) and scroll to the bottom
             // For some reason this actually works how its supposed to, only scrolling to bottom if we are at bottom, actually keeping the newline in view no matter where we are

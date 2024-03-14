@@ -14,11 +14,14 @@ struct MessageButtonItemView: View {
     private let label: String
     private let icon: String
 
-    @State private var isHovering: Bool = false
+    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
 
-    init(label: String, icon: String, action: @escaping () -> Void) {
+    @Binding var isHovering: Bool
+
+    init(label: String, icon: String, isHovering: Binding<Bool>, action: @escaping () -> Void) {
         self.label = label
         self.icon = icon
+        self._isHovering = isHovering
         self.action = action
     }
 
@@ -51,6 +54,11 @@ struct MessageButtonItemView: View {
         )
         .onHover { hovering in
             isHovering = hovering
+            if hovering {
+                messageViewModel.whoIsHovering = label
+            } else {
+                messageViewModel.whoIsHovering = nil
+            }
         }
         .animation(.snappy, value: isHovering)
         .animation(.snappy, value: label)

@@ -25,7 +25,7 @@ class WindowManager: ObservableObject {
     static let shared = WindowManager()
 
     private static let defaultWidth: CGFloat = 440
-    private static let resizeWidth: CGFloat = 1000
+    private static let resizeWidth: CGFloat = 840
 
     private var contentView = AppView()
     private var window: NSPanel?

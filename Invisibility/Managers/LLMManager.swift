@@ -49,8 +49,8 @@ final class LLMManager: ObservableObject {
     static let shared = LLMManager()
 
     private var ai: OpenAI
-    // private let host: String = "http://localhost:8000/oai"
-    private let host: String = "cloak.invisibility.so/oai"
+    private let host: String = "http://localhost:8000/oai"
+    // private let host: String = "cloak.invisibility.so/oai"
     private let timeoutInterval: TimeInterval = 20
 
     public var model: LLMModel = LLMModels.claude3_opus

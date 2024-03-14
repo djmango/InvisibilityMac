@@ -28,7 +28,8 @@ struct MessageListItemView: View {
     @State private var isHovered: Bool = false
     @State private var isCopied: Bool = false
     @State private var whoIsHovering: String?
-    // @State private var width: CGFloat = MessageListItemView.defaultWidth
+    @State private var isRegenerateHovered: Bool = false
+    @State private var isCopyHovered: Bool = false
 
     private var isResizeButtonVisible: Bool {
         isHovered && isAssistant
@@ -94,7 +95,6 @@ struct MessageListItemView: View {
                     .markdownTheme(.docC)
                     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
                     .hide(if: isGenerating, removeCompletely: true)
-                // .animation(.none, value: width)
 
                 // Text(message.text)
                 //     .textSelection(.enabled)
@@ -126,18 +126,19 @@ struct MessageListItemView: View {
                 // Regenerate and copy buttons
                 HStack {
                     Spacer()
-                    MessageButtonItemView(label: "Regenerate", icon: "arrow.clockwise") {
+                    MessageButtonItemView(
+                        label: "Regenerate",
+                        icon: "arrow.clockwise",
+                        isHovering: $isRegenerateHovered
+                    ) {
                         regenerateAction()
                     }
-                    .onHover { hovering in
-                        if hovering {
-                            whoIsHovering = "Regenerate"
-                        } else {
-                            whoIsHovering = nil
-                        }
-                    }
                     .visible(if: isRegenerateButtonVisible, removeCompletely: true)
-                    MessageButtonItemView(label: "Copy", icon: isCopied ? "checkmark" : "doc.on.doc") {
+                    MessageButtonItemView(
+                        label: "Copy",
+                        icon: isCopied ? "checkmark" : "doc.on.doc",
+                        isHovering: $isCopyHovered
+                    ) {
                         copyAction()
                     }
                     .changeEffect(.jump(height: 10), value: isCopied)
