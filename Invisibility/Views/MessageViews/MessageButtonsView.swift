@@ -18,11 +18,7 @@ struct MessageButtonsView: View {
     @ObservedObject private var windowManager: WindowManager = WindowManager.shared
     @ObservedObject private var llmManager: LLMManager = LLMManager.shared
 
-    @State private var isScreenshotHovered: Bool = false
-    @State private var isModelPickerHovered: Bool = false
-    @State private var isSettingsHovered: Bool = false
-    @State private var isClearChatHovered: Bool = false
-    @State private var isResizeHovered: Bool = false
+    @State private var whoIsHovering: String?
 
     var body: some View {
         HStack {
@@ -32,46 +28,23 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: "Screenshot",
                     icon: "text.viewfinder",
-                    isHovering: $isScreenshotHovered
+                    whoIsHovering: $whoIsHovering
                 ) {
                     Task { await screenshotManager.capture() }
                 }
                 .keyboardShortcut("1", modifiers: [.command, .shift])
-                .onHover { hovering in
-                    if hovering {
-                        messageViewModel.whoIsHovering = "Screenshot"
-                    } else {
-                        messageViewModel.whoIsHovering = nil
-                    }
-                }
 
                 // Model picker
                 MessageButtonItemView(
                     label: llmManager.model.human_name,
                     icon: "sparkles",
-                    isHovering: $isModelPickerHovered
+                    whoIsHovering: $whoIsHovering
                 ) {
-                    // Claud-3 Opus -> GPT-4 -> Gemini Pro
-                    // if llmManager.model == LLMModels.gemini_pro {
-                    //     llmManager.model = LLMModels.claude3_opus
-                    // } else if llmManager.model == LLMModels.claude3_opus {
-                    //     llmManager.model = LLMModels.gpt4
-                    // } else {
-                    //     llmManager.model = LLMModels.gemini_pro
-                    // }
-
                     // Claud-3 Opus -> GPT-4 ->
                     if llmManager.model == LLMModels.gpt4 {
                         llmManager.model = LLMModels.claude3_opus
                     } else {
                         llmManager.model = LLMModels.gpt4
-                    }
-                }
-                .onHover { hovering in
-                    if hovering {
-                        messageViewModel.whoIsHovering = "Model Picker"
-                    } else {
-                        messageViewModel.whoIsHovering = nil
                     }
                 }
 
@@ -87,17 +60,16 @@ struct MessageButtonsView: View {
                         Text("Settings")
                             .font(.title3)
                             .foregroundColor(Color("ChatButtonForegroundColor"))
-                            .hide(if: messageViewModel.whoIsHovering ?? "" != "Settings", removeCompletely: true)
+                            .hide(if: whoIsHovering ?? "" != "Settings", removeCompletely: true)
                             .padding(.trailing, 8)
                     }
                     .contentShape(RoundedRectangle(cornerRadius: 100))
                 }
                 .onHover { hovering in
-                    isSettingsHovered = hovering
                     if hovering {
-                        messageViewModel.whoIsHovering = "Settings"
+                        whoIsHovering = "Settings"
                     } else {
-                        messageViewModel.whoIsHovering = nil
+                        whoIsHovering = nil
                     }
                 }
                 .background(
@@ -108,23 +80,15 @@ struct MessageButtonsView: View {
                     RoundedRectangle(cornerRadius: 100)
                         .stroke(Color(NSColor.separatorColor), lineWidth: 1)
                 )
-                .animation(.snappy, value: messageViewModel.whoIsHovering)
                 .buttonStyle(.plain)
 
                 // Clear Chat
                 MessageButtonItemView(
                     label: "Clear Chat",
                     icon: "rays",
-                    isHovering: $isClearChatHovered
+                    whoIsHovering: $whoIsHovering
                 ) {
                     messageViewModel.clearChat()
-                }
-                .onHover { hovering in
-                    if hovering {
-                        messageViewModel.whoIsHovering = "Clear Chat"
-                    } else {
-                        messageViewModel.whoIsHovering = nil
-                    }
                 }
                 .keyboardShortcut("o", modifiers: [.command, .shift])
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
@@ -132,25 +96,28 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: windowManager.resized ? "Shrink" : "Expand",
                     icon: windowManager.resized ? "arrow.left" : "arrow.right",
-                    isHovering: $isResizeHovered
+                    whoIsHovering: $whoIsHovering
                 ) {
                     resizeAction()
                 }
                 .keyboardShortcut("s", modifiers: [.command, .shift])
             }
-            .animation(.snappy, value: messageViewModel.whoIsHovering)
-            .animation(.snappy, value: llmManager.model)
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 21)
+                            .stroke(Color(nsColor: .separatorColor))
+                    )
                     .padding(.horizontal, -10)
                     .padding(.vertical, -5)
-                    .animation(.snappy, value: messageViewModel.whoIsHovering)
             )
             .padding(.top, 7)
             .padding(.bottom, 10)
             .focusable(false)
             Spacer()
         }
+        .animation(.snappy, value: whoIsHovering)
+        .animation(.snappy, value: llmManager.model)
     }
 
     private func openFileAction() {

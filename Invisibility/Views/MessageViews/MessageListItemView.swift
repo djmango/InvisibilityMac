@@ -28,8 +28,6 @@ struct MessageListItemView: View {
     @State private var isHovered: Bool = false
     @State private var isCopied: Bool = false
     @State private var whoIsHovering: String?
-    @State private var isRegenerateHovered: Bool = false
-    @State private var isCopyHovered: Bool = false
 
     private var isResizeButtonVisible: Bool {
         isHovered && isAssistant
@@ -129,7 +127,7 @@ struct MessageListItemView: View {
                     MessageButtonItemView(
                         label: "Regenerate",
                         icon: "arrow.clockwise",
-                        isHovering: $isRegenerateHovered
+                        whoIsHovering: $whoIsHovering
                     ) {
                         regenerateAction()
                     }
@@ -137,18 +135,11 @@ struct MessageListItemView: View {
                     MessageButtonItemView(
                         label: "Copy",
                         icon: isCopied ? "checkmark" : "doc.on.doc",
-                        isHovering: $isCopyHovered
+                        whoIsHovering: $whoIsHovering
                     ) {
                         copyAction()
                     }
                     .changeEffect(.jump(height: 10), value: isCopied)
-                    .onHover { hovering in
-                        if hovering {
-                            whoIsHovering = "Copy"
-                        } else {
-                            whoIsHovering = nil
-                        }
-                    }
                     .visible(if: isCopyButtonVisible, removeCompletely: true)
                 }
             }

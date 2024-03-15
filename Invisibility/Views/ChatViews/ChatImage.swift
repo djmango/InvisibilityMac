@@ -14,18 +14,18 @@ struct ChatImage: View {
 
     let imageItem: ChatImageItem
     let nsImage: NSImage
-    @Binding private var whoIsHovering: UUID?
+    @Binding private var whichImageIsHovering: UUID?
 
     @ObservedObject private var chatViewModel = ChatViewModel.shared
 
     var isHovering: Bool {
-        whoIsHovering == imageItem.id
+        whichImageIsHovering == imageItem.id
     }
 
-    init(imageItem: ChatImageItem, whoIsHovering: Binding<UUID?>) {
+    init(imageItem: ChatImageItem, whichImageIsHovering: Binding<UUID?>) {
         self.imageItem = imageItem
         self.nsImage = NSImage(data: imageItem.imageData) ?? NSImage()
-        self._whoIsHovering = whoIsHovering
+        self._whichImageIsHovering = whichImageIsHovering
     }
 
     var body: some View {
@@ -39,11 +39,11 @@ struct ChatImage: View {
             .onHover { hovering in
                 // logger.debug("Hovering: \(hovering) for \(imageItem.id)")
                 if hovering {
-                    whoIsHovering = imageItem.id
+                    whichImageIsHovering = imageItem.id
                 } else {
                     // First check if we still have command over var, ensuring someone else hasn't changed it
-                    if whoIsHovering == imageItem.id {
-                        whoIsHovering = nil
+                    if whichImageIsHovering == imageItem.id {
+                        whichImageIsHovering = nil
                     }
                 }
             }

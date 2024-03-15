@@ -20,7 +20,7 @@ struct ChatField: View {
 
     @Binding private var text: String
     @State private var previousText: String = ""
-    @State private var whoIsHovering: UUID?
+    @State private var whichImageIsHovering: UUID?
     @State private var lastTextHeight: CGFloat = 0
 
     private var action: () -> Void
@@ -43,7 +43,7 @@ struct ChatField: View {
         VStack {
             HStack {
                 ForEach(chatViewModel.images) { imageItem in
-                    ChatImage(imageItem: imageItem, whoIsHovering: $whoIsHovering)
+                    ChatImage(imageItem: imageItem, whichImageIsHovering: $whichImageIsHovering)
                 }
 
                 Spacer()

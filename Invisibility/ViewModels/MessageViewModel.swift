@@ -26,9 +26,6 @@ final class MessageViewModel: ObservableObject {
     /// The current view state of the message being sent
     public var sendViewState: ViewState? = nil
 
-    /// The current button that is being hovered over
-    public var whoIsHovering: String?
-
     private init() {
         try? fetch()
     }
