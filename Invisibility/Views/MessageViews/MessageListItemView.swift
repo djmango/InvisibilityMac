@@ -143,8 +143,8 @@ struct MessageListItemView: View {
                     .visible(if: isCopyButtonVisible, removeCompletely: true)
                 }
             }
-            .animation(.snappy, value: whoIsHovering)
-            .animation(.snappy, value: isHovered)
+            .animation(.snappy(duration: 0.2), value: whoIsHovering)
+            .animation(.snappy(duration: 0.2), value: isHovered)
             .padding(8)
         }
         .onHover {

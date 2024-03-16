@@ -6,15 +6,10 @@ struct InvisibilityApp: App {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "InvisibilityApp")
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
+    // @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
 
     init() {
         SharedModelContainer.shared = SharedModelContainer()
-
-        Task {
-            // await WhisperManager.shared.setup()
-            await UserManager.shared.setup()
-        }
     }
 
     var body: some Scene {

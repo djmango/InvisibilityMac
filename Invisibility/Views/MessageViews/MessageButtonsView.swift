@@ -116,8 +116,8 @@ struct MessageButtonsView: View {
             .focusable(false)
             Spacer()
         }
-        .animation(.snappy, value: whoIsHovering)
-        .animation(.snappy, value: llmManager.model)
+        .animation(.snappy(duration: 0.2), value: whoIsHovering)
+        .animation(.snappy(duration: 0.2), value: llmManager.model)
     }
 
     private func openFileAction() {

@@ -40,7 +40,6 @@ struct MessageButtonItemView: View {
                     .font(.title3)
                     .foregroundColor(Color("ChatButtonForegroundColor"))
                     .hide(if: !isHovering, removeCompletely: true)
-                    .animation(.snappy, value: isHovering)
                     .padding(.trailing, 8)
             }
             .contentShape(RoundedRectangle(cornerRadius: 100))
@@ -61,8 +60,8 @@ struct MessageButtonItemView: View {
                 whoIsHovering = nil
             }
         }
-        .animation(.snappy, value: isHovering)
-        .animation(.snappy, value: label)
+        .animation(.snappy(duration: 0.2), value: label)
+        .animation(.snappy(duration: 0.2), value: isHovering)
         .buttonStyle(.plain)
     }
 

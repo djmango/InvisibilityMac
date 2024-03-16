@@ -7,6 +7,7 @@
 
 import Foundation
 import OSLog
+import Sentry
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -18,6 +19,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
     func applicationDidFinishLaunching(_: Notification) {
+        SentrySDK.start { options in
+            options.dsn = "https://a345c7071f6f1c4adee0a33e5f359e9e@o4506922235592704.ingest.us.sentry.io/4506922241097728"
+            // options.debug = true // Enabled debug when first installing is always helpful
+
+            options.tracesSampleRate = 1.0 // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+            options.profilesSampleRate = 1.0 // see also `profilesSampler` if you need custom sampling logic
+        }
+
         // Set up the observer for when the app becomes active
         NotificationCenter.default.addObserver(
             self,
@@ -49,6 +58,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: NSWorkspace.didWakeNotification,
             object: nil
         )
+
+        Task {
+            await UserManager.shared.setup()
+            let refresh_status = await UserManager.shared.refresh_jwt()
+            if !refresh_status {
+                logger.error("Failed to refresh JWT token")
+            }
+        }
 
         let windowSuccess = WindowManager.shared.setupWindow()
         guard windowSuccess else {

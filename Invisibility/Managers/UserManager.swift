@@ -32,6 +32,10 @@ struct User: Decodable {
     }
 }
 
+struct RefreshTokenResponse: Decodable {
+    let token: String
+}
+
 @Observable
 final class UserManager: ObservableObject {
     static let shared = UserManager()
@@ -59,28 +63,26 @@ final class UserManager: ObservableObject {
     func setup() async {
         if await userIsLoggedIn() {
             self.confettis = 1
-            logger.info("User is logged in")
             if await checkPaymentStatus() {
-                logger.info("User is paid")
                 self.isPaid = true
                 self.confettis = 2
             } else {
-                logger.info("User is not paid")
                 self.pay()
             }
-        } else {
-            logger.info("User is not logged in")
         }
         LLMManager.shared.setup()
     }
 
     func userIsLoggedIn() async -> Bool {
         guard token != nil else {
+            logger.info("User is not logged in")
             return false
         }
         if await getUser() != nil {
+            logger.info("User is logged in")
             return true
         } else {
+            logger.info("User is not logged in")
             return false
         }
     }
@@ -142,6 +144,7 @@ final class UserManager: ObservableObject {
     func checkPaymentStatus() async -> Bool {
         guard let jwtToken = self.token else {
             logger.error("No JWT token")
+            logger.info("User is not paid")
             return false
         }
 
@@ -154,11 +157,14 @@ final class UserManager: ObservableObject {
                     switch response.result {
                     case .success:
                         if response.response?.statusCode == 200 {
+                            self.logger.info("User is paid")
                             continuation.resume(returning: true)
                         } else {
+                            self.logger.info("User is not paid")
                             continuation.resume(returning: false)
                         }
                     case .failure:
+                        self.logger.info("User is not paid")
                         continuation.resume(returning: false)
                     }
                 }
@@ -193,6 +199,48 @@ final class UserManager: ObservableObject {
         // Open the signup page in the default browser
         if let url = URL(string: "https://authkit.invisibility.so/sign-up") {
             NSWorkspace.shared.open(url)
+        }
+    }
+
+    func refresh_jwt() async -> Bool {
+        guard let jwtToken = self.token else {
+            logger.error("No JWT token")
+            return false
+        }
+
+        let url = UserManager.urlBase + "/auth/token/refresh"
+
+        return await withCheckedContinuation { continuation in
+            AF.request(url, method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
+                .validate()
+                .responseDecodable(of: RefreshTokenResponse.self) { response in
+                    switch response.result {
+                    case let .success(refreshTokenResponse):
+                        if response.response?.statusCode == 200 {
+                            DispatchQueue.main.async {
+                                Task {
+                                    // Set the new token from the response
+                                    let oldToken = self.token
+                                    self.token = refreshTokenResponse.token
+                                    if await self.userIsLoggedIn() {
+                                        self.logger.info("Token refreshed")
+                                        continuation.resume(returning: true)
+                                    } else {
+                                        self.token = oldToken
+                                        self.logger.error("Error refreshing token, invalid token")
+                                        continuation.resume(returning: false)
+                                    }
+                                }
+                            }
+                        } else {
+                            self.logger.error("Error refreshing token, status code: \(response.response?.statusCode ?? -1)")
+                            continuation.resume(returning: false)
+                        }
+                    case .failure:
+                        self.logger.error("Error refreshing token, response: \(response)")
+                        continuation.resume(returning: false)
+                    }
+                }
         }
     }
 

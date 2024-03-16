@@ -1,4 +1,5 @@
 import OSLog
+import SentrySwiftUI
 import SwiftData
 import SwiftUI
 import ViewCondition
@@ -34,10 +35,9 @@ struct MessageView: View {
                                 MessageListItemView(message: message)
                                     .id(message)
                                     .rotationEffect(.degrees(180))
+                                    .sentryTrace("MessageListItemView")
                             }
                         }
-                        .animation(.snappy, value: messageViewModel.messages.count)
-                        .animation(.snappy, value: windowManager.resized)
                         .onChange(of: messageViewModel.messages.count) {
                             scrollToBottom(proxy)
                         }
@@ -57,11 +57,13 @@ struct MessageView: View {
                     .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
                     .scrollContentBackground(.hidden)
                     .scrollIndicators(.never)
+                    .sentryTrace("ScrollView")
                 }
 
                 // Action Icons
                 MessageButtonsView()
                     .padding(.top, 5)
+                    .sentryTrace("MessageButtonsView")
 
                 ChatField(text: $content, action: sendAction)
                     .focused($promptFocused)
@@ -71,9 +73,10 @@ struct MessageView: View {
                     .padding(.top, 5)
                     .padding(.bottom, 10)
                     .scrollIndicators(.never)
+                    .sentryTrace("ChatField")
             }
             .padding(.trailing, 40)
-            .animation(.snappy, value: chatViewModel.textHeight)
+            .animation(.snappy(duration: 0.2), value: chatViewModel.textHeight)
             .overlay(
                 Rectangle()
                     .foregroundColor(Color.gray.opacity(0.2))
@@ -96,6 +99,7 @@ struct MessageView: View {
                 }
             }
         }
+        .sentryTrace("MessageView")
     }
 
     // MARK: - Actions

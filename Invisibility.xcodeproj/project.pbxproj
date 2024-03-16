@@ -72,6 +72,8 @@
 		4DEEEF102B6B1F0900ECDAC5 /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF052B6B1F0800ECDAC5 /* CaptureEngine.swift */; };
 		4DEEEF122B6B1F0900ECDAC5 /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEEEF072B6B1F0800ECDAC5 /* ScreenRecorder.swift */; };
 		4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */; };
+		4DF2D8FA2BA628530093CA3E /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8F92BA628530093CA3E /* Sentry */; };
+		4DF2D8FC2BA628530093CA3E /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -138,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D6185692B9A25D300E550D2 /* AVKit.framework in Frameworks */,
+				4DF2D8FC2BA628530093CA3E /* SentrySwiftUI in Frameworks */,
 				4D9354292B99851E00C34A63 /* Alamofire in Frameworks */,
 				4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */,
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
@@ -151,6 +154,7 @@
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
 				4D671E782B93FEB6007AE7E2 /* SplashTokenizer in Frameworks */,
+				4DF2D8FA2BA628530093CA3E /* Sentry in Frameworks */,
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
 			);
@@ -419,6 +423,8 @@
 				4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */,
 				4D9354282B99851E00C34A63 /* Alamofire */,
 				4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */,
+				4DF2D8F92BA628530093CA3E /* Sentry */,
+				4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -457,6 +463,7 @@
 				4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */,
 				4D9354272B99851E00C34A63 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
+				4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -672,7 +679,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 76;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -687,7 +694,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -705,7 +712,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 73;
+				CURRENT_PROJECT_VERSION = 76;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -721,7 +728,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.1;
+				MARKETING_VERSION = 2.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -873,6 +880,14 @@
 				minimumVersion = 2.2.0;
 			};
 		};
+		4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.21.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -950,6 +965,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DE6734F2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
 			productName = MarkdownUI;
+		};
+		4DF2D8F92BA628530093CA3E /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+		4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = SentrySwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
