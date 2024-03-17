@@ -76,7 +76,7 @@ struct MessageView: View {
                     .sentryTrace("ChatField")
             }
             .padding(.trailing, 40)
-            .animation(.snappy(duration: 0.2), value: chatViewModel.textHeight)
+            .animation(AppConfig.snappy, value: chatViewModel.textHeight)
             .overlay(
                 Rectangle()
                     .foregroundColor(Color.gray.opacity(0.2))
@@ -149,6 +149,9 @@ struct MessageView: View {
         let lastIndex = messageViewModel.messages.count - 1
         let lastMessage = messageViewModel.messages[lastIndex]
 
-        proxy.scrollTo(lastMessage, anchor: .bottom)
+        // proxy.scrollTo(lastMessage, anchor: .bottom)
+        withAnimation(.easeOut(duration: 0.3)) {
+            proxy.scrollTo(lastMessage, anchor: .bottom)
+        }
     }
 }

@@ -60,8 +60,8 @@ struct MessageButtonItemView: View {
                 whoIsHovering = nil
             }
         }
-        .animation(.snappy(duration: 0.2), value: label)
-        .animation(.snappy(duration: 0.2), value: isHovering)
+        .animation(AppConfig.snappy, value: label)
+        .animation(AppConfig.snappy, value: isHovering)
         .buttonStyle(.plain)
     }
 

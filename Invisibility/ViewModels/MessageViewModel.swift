@@ -3,6 +3,7 @@ import Combine
 import CoreGraphics
 import Foundation
 import OSLog
+import PostHog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
@@ -26,6 +27,11 @@ final class MessageViewModel: ObservableObject {
     /// The current view state of the message being sent
     public var sendViewState: ViewState? = nil
 
+    /// Whether the chat is currently generating
+    public var isGenerating: Bool {
+        sendViewState == .loading
+    }
+
     private init() {
         try? fetch()
     }
@@ -43,6 +49,7 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func send(_ message: Message) async {
         sendViewState = .loading
+        PostHogSDK.shared.capture("send_message")
 
         messages.append(message)
         modelContext.insert(message)
@@ -62,6 +69,7 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func regenerate() async {
         sendViewState = .loading
+        PostHogSDK.shared.capture("regenerate_message")
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
         // So for that, we'll recreate the original send scenario, when the new user message was sent
@@ -88,10 +96,18 @@ final class MessageViewModel: ObservableObject {
 
     func clearChat() {
         logger.debug("Clearing chat")
+        PostHogSDK.shared.capture("clear_chat")
         for message in messages {
             modelContext.delete(message)
         }
         messages.removeAll()
+    }
+
+    func stopGenerating() {
+        logger.debug("Stopping generation")
+        PostHogSDK.shared.capture("stop_generating")
+        chatTask?.cancel()
+        sendViewState = nil
     }
 
     private func processOutput(output: String) {
@@ -110,6 +126,7 @@ final class MessageViewModel: ObservableObject {
 extension MessageViewModel {
     /// Public function that can be called to begin the file open process
     func openFile() {
+        PostHogSDK.shared.capture("open_file")
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseFiles = true
@@ -134,6 +151,7 @@ extension MessageViewModel {
 
     /// Public function that handles file via a URL regarding a message
     public func handleFile(_ url: URL) {
+        PostHogSDK.shared.capture("handle_file")
         // First determine if we are dealing with an image or audio file
         logger.debug("Selected file \(url)")
         if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
@@ -152,6 +170,7 @@ extension MessageViewModel {
     }
 
     private func handleImage(url: URL) {
+        PostHogSDK.shared.capture("handle_image")
         guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
             logger.error("Failed to create image source from url.")
             return

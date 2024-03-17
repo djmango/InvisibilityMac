@@ -9,6 +9,7 @@
 import Alamofire
 import Foundation
 import OSLog
+import PostHog
 import SwiftUI
 
 struct User: Decodable {
@@ -39,9 +40,6 @@ struct RefreshTokenResponse: Decodable {
 @Observable
 final class UserManager: ObservableObject {
     static let shared = UserManager()
-    static let urlBase = "https://cloak.invisibility.so"
-    // static let urlBase = "http://localhost:8000"
-
     private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
 
     public var user: User?
@@ -63,9 +61,16 @@ final class UserManager: ObservableObject {
     func setup() async {
         if await userIsLoggedIn() {
             self.confettis = 1
+            if let user {
+                PostHogSDK.shared.identify(
+                    user.email,
+                    userProperties: ["name": "\(user.firstName ?? "") \(user.lastName ?? "")", "email": user.email, "id": user.id]
+                )
+            }
             if await checkPaymentStatus() {
                 self.isPaid = true
                 self.confettis = 2
+
             } else {
                 self.pay()
             }
@@ -103,7 +108,7 @@ final class UserManager: ObservableObject {
     }
 
     func fetchUser() async throws -> User? {
-        let urlString = UserManager.urlBase + "/auth/user"
+        let urlString = AppConfig.invisibility_api_base + "/auth/user"
         guard let jwtToken = self.token else {
             logger.error("No JWT token")
             return nil
@@ -148,7 +153,7 @@ final class UserManager: ObservableObject {
             return false
         }
 
-        let url = UserManager.urlBase + "/pay/paid"
+        let url = AppConfig.invisibility_api_base + "/pay/paid"
 
         return await withCheckedContinuation { continuation in
             AF.request(url, method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
@@ -183,7 +188,7 @@ final class UserManager: ObservableObject {
             return
         }
 
-        if let url = URL(string: UserManager.urlBase + "/pay/checkout?email=\(user.email)") {
+        if let url = URL(string: AppConfig.invisibility_api_base + "/pay/checkout?email=\(user.email)") {
             NSWorkspace.shared.open(url)
         }
     }
@@ -208,7 +213,7 @@ final class UserManager: ObservableObject {
             return false
         }
 
-        let url = UserManager.urlBase + "/auth/token/refresh"
+        let url = AppConfig.invisibility_api_base + "/auth/token/refresh"
 
         return await withCheckedContinuation { continuation in
             AF.request(url, method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])

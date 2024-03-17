@@ -72,7 +72,7 @@ struct MessageListItemView: View {
 
                 ProgressView()
                     .controlSize(.small)
-                    .visible(if: isGenerating, removeCompletely: true)
+                    .visible(if: isGenerating && isLastMessage, removeCompletely: true)
 
                 HStack(alignment: .center, spacing: 8) {
                     ForEach(message.images ?? [], id: \.self) { imageData in
@@ -143,8 +143,8 @@ struct MessageListItemView: View {
                     .visible(if: isCopyButtonVisible, removeCompletely: true)
                 }
             }
-            .animation(.snappy(duration: 0.2), value: whoIsHovering)
-            .animation(.snappy(duration: 0.2), value: isHovered)
+            .animation(AppConfig.snappy, value: whoIsHovering)
+            .animation(AppConfig.snappy, value: isHovered)
             .padding(8)
         }
         .onHover {

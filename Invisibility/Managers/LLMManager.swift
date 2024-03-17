@@ -50,28 +50,23 @@ final class LLMManager: ObservableObject {
 
     private var ai: OpenAI
 
-    // private let host: String = "http://localhost:8000/oai"
-    private let host: String = "cloak.invisibility.so/oai"
-
     private let timeoutInterval: TimeInterval = 20
 
     public var model: LLMModel = LLMModels.claude3_opus
 
     private init() {
-        let token = UserManager.shared.token ?? ""
         let configuration = OpenAI.Configuration(
-            token: token,
-            host: host,
+            token: UserManager.shared.token ?? "",
+            host: AppConfig.invisibility_api_base + "/oai",
             timeoutInterval: timeoutInterval
         )
         ai = OpenAI(configuration: configuration)
     }
 
     func setup() {
-        let token = UserManager.shared.token ?? ""
         let configuration = OpenAI.Configuration(
-            token: token,
-            host: host,
+            token: UserManager.shared.token ?? "",
+            host: AppConfig.invisibility_api_base + "/oai",
             timeoutInterval: timeoutInterval
         )
         ai = OpenAI(configuration: configuration)
@@ -91,6 +86,11 @@ final class LLMManager: ObservableObject {
                     logger.warning("No content in result")
                 }
                 processOutput(content)
+
+                // If the stop flag is set, break the loop
+                // if result.choices.first?.stop ?? false {
+                //     break
+                // }
             }
         } catch {
             logger.error("Error in chat: \(error)")

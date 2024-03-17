@@ -92,7 +92,9 @@ struct MessageButtonsView: View {
                 }
                 .keyboardShortcut("o", modifiers: [.command, .shift])
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
+                .visible(if: messageViewModel.messages.count > 0, removeCompletely: true)
 
+                // Resize
                 MessageButtonItemView(
                     label: windowManager.resized ? "Shrink" : "Expand",
                     icon: windowManager.resized ? "arrow.left" : "arrow.right",
@@ -101,6 +103,16 @@ struct MessageButtonsView: View {
                     resizeAction()
                 }
                 .keyboardShortcut("s", modifiers: [.command, .shift])
+
+                // Stop generating
+                MessageButtonItemView(
+                    label: "Stop",
+                    icon: "stop.circle.fill",
+                    whoIsHovering: $whoIsHovering
+                ) {
+                    messageViewModel.stopGenerating()
+                }
+                .visible(if: messageViewModel.isGenerating, removeCompletely: true)
             }
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
@@ -116,8 +128,10 @@ struct MessageButtonsView: View {
             .focusable(false)
             Spacer()
         }
-        .animation(.snappy(duration: 0.2), value: whoIsHovering)
-        .animation(.snappy(duration: 0.2), value: llmManager.model)
+        .animation(AppConfig.snappy, value: whoIsHovering)
+        .animation(AppConfig.snappy, value: llmManager.model)
+        .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
+        .animation(AppConfig.snappy, value: messageViewModel.messages.count)
     }
 
     private func openFileAction() {
