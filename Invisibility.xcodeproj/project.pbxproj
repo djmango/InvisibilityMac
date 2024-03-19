@@ -65,7 +65,6 @@
 		4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */; };
 		4DD5E36A2B6243D300C35B1C /* AppPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5E3692B6243D300C35B1C /* AppPrompts.swift */; };
 		4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DDCE8522B50BA0900A22B1E /* Sparkle */; };
-		4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE673482B17F46B00A5F9AE /* ViewState */; };
 		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
 		4DEA4ADF2B70689B00393858 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEA4ADE2B70689B00393858 /* MenuBarView.swift */; };
@@ -149,7 +148,6 @@
 				4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */,
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
 				4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */,
-				4DE6736D2B17F46B00A5F9AE /* ViewState in Frameworks */,
 				4D671E742B93FEB6007AE7E2 /* SplashHTMLGen in Frameworks */,
 				4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
@@ -406,6 +404,7 @@
 				4DE673542B17F46B00A5F9AE /* Sources */,
 				4DE6736A2B17F46B00A5F9AE /* Frameworks */,
 				4DE673722B17F46B00A5F9AE /* Resources */,
+				4D9099BC2BAA545800522DD2 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -413,7 +412,6 @@
 			);
 			name = Invisibility;
 			packageProductDependencies = (
-				4DE673482B17F46B00A5F9AE /* ViewState */,
 				4DE6734C2B17F46B00A5F9AE /* ViewCondition */,
 				4DE6734E2B17F46B00A5F9AE /* MarkdownUI */,
 				4D7AB4232B4CB469007F025B /* Pow */,
@@ -457,7 +455,6 @@
 			);
 			mainGroup = 0A4D35782AF541D900846890;
 			packageReferences = (
-				0AA41A152AF635AD0053B8DB /* XCRemoteSwiftPackageReference "ViewState" */,
 				0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */,
 				0ACA4D742AF89C27000DA76F /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */,
@@ -495,6 +492,28 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		4D9099BC2BAA545800522DD2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which sentry-cli >/dev/null; then\nexport SENTRY_ORG=invisibility-inc\nexport SENTRY_PROJECT=invisibility-app\nexport SENTRY_AUTH_TOKEN=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\nERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\nif [ ! $? -eq 0 ]; then\necho \"warning: sentry-cli - $ERROR\"\nfi\nelse\necho \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4DE673542B17F46B00A5F9AE /* Sources */ = {
@@ -687,10 +706,9 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 76;
+				CURRENT_PROJECT_VERSION = 77;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Invisibility;
@@ -702,7 +720,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -720,11 +738,10 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 76;
+				CURRENT_PROJECT_VERSION = 77;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Invisibility;
@@ -736,7 +753,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.2;
+				MARKETING_VERSION = 2.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -768,14 +785,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		0AA41A152AF635AD0053B8DB /* XCRemoteSwiftPackageReference "ViewState" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kevinhermawan/ViewState.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.1;
-			};
-		};
 		0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kevinhermawan/ViewCondition";
@@ -862,14 +871,6 @@
 			requirement = {
 				branch = main;
 				kind = branch;
-			};
-		};
-		4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kevinhermawan/ViewState.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.1;
 			};
 		};
 		4DE6734D2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewCondition" */ = {
@@ -966,11 +967,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */;
 			productName = Sparkle;
-		};
-		4DE673482B17F46B00A5F9AE /* ViewState */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DE673492B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewState" */;
-			productName = ViewState;
 		};
 		4DE6734C2B17F46B00A5F9AE /* ViewCondition */ = {
 			isa = XCSwiftPackageProductDependency;

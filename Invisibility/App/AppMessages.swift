@@ -12,8 +12,6 @@ enum AppMessages {
     static let wipeModelsTitle = "Are you sure you want to wipe all models?"
     static let wipeModelsMessage = "All models will be permanently removed."
 
-    static let ollamaServerUnreachable = "The model could not be reached, if this continues try restarting the app."
-    static let ollamaModelUnavailable = "This model is currently unavailable or has been removed."
     static let generalErrorMessage = "An error occurred. Please try again later."
 
     static let modelNotDownloadedTitle = "Model verification in progress"

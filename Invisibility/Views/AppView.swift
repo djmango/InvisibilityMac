@@ -1,7 +1,6 @@
 import OSLog
 import Sparkle
 import SwiftUI
-import ViewState
 
 struct AppView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "AppView")

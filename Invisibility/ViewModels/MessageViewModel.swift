@@ -7,7 +7,6 @@ import PostHog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
-import ViewState
 import Vision
 
 @Observable
@@ -24,13 +23,8 @@ final class MessageViewModel: ObservableObject {
     /// The list of messages in the chat
     public var messages: [Message] = []
 
-    /// The current view state of the message being sent
-    public var sendViewState: ViewState? = nil
-
     /// Whether the chat is currently generating
-    public var isGenerating: Bool {
-        sendViewState == .loading
-    }
+    public var isGenerating: Bool = false
 
     private init() {
         try? fetch()
@@ -47,8 +41,22 @@ final class MessageViewModel: ObservableObject {
     }
 
     @MainActor
+    func sendFromChat() async {
+        guard !isGenerating else { return }
+        guard chatViewModel.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
+
+        let images = chatViewModel.images.map(\.imageData)
+
+        let message = Message(content: chatViewModel.text, role: .user, images: images)
+        chatViewModel.text = ""
+        chatViewModel.images.removeAll()
+
+        await send(message)
+    }
+
+    @MainActor
     func send(_ message: Message) async {
-        sendViewState = .loading
+        isGenerating = true
         PostHogSDK.shared.capture("send_message")
 
         messages.append(message)
@@ -62,13 +70,16 @@ final class MessageViewModel: ObservableObject {
             await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
             assistantMessage.status = .complete
-            sendViewState = nil
+            DispatchQueue.main.async {
+                self.isGenerating = false
+            }
+            logger.debug("Chat complete")
         }
     }
 
     @MainActor
     func regenerate() async {
-        sendViewState = .loading
+        isGenerating = true
         PostHogSDK.shared.capture("regenerate_message")
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
@@ -100,14 +111,18 @@ final class MessageViewModel: ObservableObject {
         for message in messages {
             modelContext.delete(message)
         }
-        messages.removeAll()
+        DispatchQueue.main.async {
+            self.messages.removeAll()
+        }
     }
 
     func stopGenerating() {
         logger.debug("Stopping generation")
         PostHogSDK.shared.capture("stop_generating")
         chatTask?.cancel()
-        sendViewState = nil
+        DispatchQueue.main.async {
+            self.isGenerating = false
+        }
     }
 
     private func processOutput(output: String) {
@@ -116,8 +131,6 @@ final class MessageViewModel: ObservableObject {
                 if lastMessage.content == nil { lastMessage.content = "" }
                 lastMessage.content?.append(output)
             }
-
-            self.sendViewState = .loading
         }
     }
 }

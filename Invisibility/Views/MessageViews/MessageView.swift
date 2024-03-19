@@ -2,7 +2,6 @@ import OSLog
 import SentrySwiftUI
 import SwiftData
 import SwiftUI
-import ViewCondition
 
 struct MessageView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageView")
@@ -10,7 +9,6 @@ struct MessageView: View {
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool
 
-    @State private var content: String = ""
     @State private var isDragActive: Bool = false
     @State private var offset = CGSize.zero
 
@@ -65,7 +63,7 @@ struct MessageView: View {
                     .padding(.top, 5)
                     .sentryTrace("MessageButtonsView")
 
-                ChatField(text: $content, action: sendAction)
+                ChatField(action: sendAction)
                     .focused($promptFocused)
                     .onTapGesture {
                         promptFocused = true
@@ -105,18 +103,7 @@ struct MessageView: View {
     // MARK: - Actions
 
     private func sendAction() {
-        guard messageViewModel.sendViewState == nil else { return }
-        guard content.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
-
-        let images = chatViewModel.images.map(\.imageData)
-
-        let message = Message(content: content, role: .user, images: images)
-        content = ""
-        chatViewModel.images.removeAll()
-
-        Task {
-            await messageViewModel.send(message)
-        }
+        Task { await messageViewModel.sendFromChat() }
     }
 
     private func handleDrop(providers: [NSItemProvider]) -> Bool {

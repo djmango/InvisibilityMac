@@ -5,7 +5,6 @@ import Splash
 import SwiftData
 import SwiftUI
 import ViewCondition
-import ViewState
 
 struct MessageListItemView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageListItemView")
@@ -17,9 +16,7 @@ struct MessageListItemView: View {
 
     // Message state
     private var isAssistant: Bool { message.role == .assistant }
-    private var isGenerating: Bool {
-        messageViewModel.sendViewState == .loading && (message.content?.isEmpty ?? true)
-    }
+    private var isGenerating: Bool { messageViewModel.isGenerating && (message.content?.isEmpty ?? true) }
 
     init(message: Message) {
         self.message = message

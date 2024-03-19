@@ -36,6 +36,9 @@ final class ChatViewModel: ObservableObject {
     /// The height of the text field.
     public var textHeight: CGFloat = 52
 
+    // The text content of the chat field
+    public var text: String = ""
+
     private init() {}
 
     public func addImage(_ data: Data) {

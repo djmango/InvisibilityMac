@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "38f4f70d07117b9f958a76b1bff278c2f29ffe0e",
-        "version" : "8.21.0"
+        "revision" : "56157a1aea8c49a1050c1845033089bf813ea3c5",
+        "version" : "8.22.2"
       }
     },
     {
@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
-        "revision" : "47d3d90aee3c52b6f61d04ceae426e607df62347",
-        "version" : "2.5.2"
+        "revision" : "0a4caaf7a81eea2cece651ef4b17331fa0634dff",
+        "version" : "2.6.0"
       }
     },
     {
@@ -124,15 +124,6 @@
       "state" : {
         "revision" : "a3d0aaf943271247dfd4870a2a0696693165c884",
         "version" : "1.0.5"
-      }
-    },
-    {
-      "identity" : "viewstate",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kevinhermawan/ViewState.git",
-      "state" : {
-        "revision" : "8e5a5efbbf3fb5a2d2621533a115a9da031214cb",
-        "version" : "1.2.1"
       }
     }
   ],

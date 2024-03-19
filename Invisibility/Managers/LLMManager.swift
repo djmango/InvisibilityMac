@@ -86,11 +86,6 @@ final class LLMManager: ObservableObject {
                     logger.warning("No content in result")
                 }
                 processOutput(content)
-
-                // If the stop flag is set, break the loop
-                // if result.choices.first?.stop ?? false {
-                //     break
-                // }
             }
         } catch {
             logger.error("Error in chat: \(error)")

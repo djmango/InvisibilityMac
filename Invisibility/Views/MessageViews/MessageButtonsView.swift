@@ -94,16 +94,6 @@ struct MessageButtonsView: View {
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
                 .visible(if: messageViewModel.messages.count > 0, removeCompletely: true)
 
-                // Resize
-                MessageButtonItemView(
-                    label: windowManager.resized ? "Shrink" : "Expand",
-                    icon: windowManager.resized ? "arrow.left" : "arrow.right",
-                    whoIsHovering: $whoIsHovering
-                ) {
-                    resizeAction()
-                }
-                .keyboardShortcut("s", modifiers: [.command, .shift])
-
                 // Stop generating
                 MessageButtonItemView(
                     label: "Stop",
@@ -113,6 +103,16 @@ struct MessageButtonsView: View {
                     messageViewModel.stopGenerating()
                 }
                 .visible(if: messageViewModel.isGenerating, removeCompletely: true)
+
+                // Resize
+                MessageButtonItemView(
+                    label: windowManager.resized ? "Shrink" : "Expand",
+                    icon: windowManager.resized ? "arrow.left" : "arrow.right",
+                    whoIsHovering: $whoIsHovering
+                ) {
+                    resizeAction()
+                }
+                .keyboardShortcut("s", modifiers: [.command, .shift])
             }
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)

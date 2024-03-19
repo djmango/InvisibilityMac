@@ -18,7 +18,6 @@ struct ChatField: View {
     @ObservedObject private var messageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel = ChatViewModel.shared
 
-    @Binding private var text: String
     @State private var previousText: String = ""
     @State private var whichImageIsHovering: UUID?
     @State private var lastTextHeight: CGFloat = 0
@@ -28,13 +27,10 @@ struct ChatField: View {
     /// Creates a text field with a text label generated from a localized title string.
     ///
     /// - Parameters:
-    ///   - text: The text to display and edit.
     ///   - action: The action to execute upon text submission.
     public init(
-        text: Binding<String>,
         action: @escaping () -> Void
     ) {
-        _text = text
         self.action = action
     }
 
@@ -57,10 +53,17 @@ struct ChatField: View {
                 .padding(.horizontal, 10)
                 .visible(if: !chatViewModel.images.isEmpty, removeCompletely: true)
 
+            // Invisible button to handle command + enter
+            // Button(action: action) {
+            //     EmptyView()
+            // }
+            // .keyboardShortcut(.return, modifiers: [.command])
+            // .visible(if: false, removeCompletely: true)
+
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .trailing, spacing: 0) {
-                        TextEditor(text: $text)
+                        TextEditor(text: $chatViewModel.text)
                             .scrollContentBackground(.hidden)
                             .scrollIndicatorsFlash(onAppear: false)
                             .scrollIndicators(.never)
@@ -71,11 +74,11 @@ struct ChatField: View {
                                 // Invisible Text view to calculate height
                                 // TODO: optimize this, maybe only have geometry reader under a certain size
                                 GeometryReader { geo in
-                                    Text(text)
+                                    Text(chatViewModel.text)
                                         .hidden() // Make the Text view invisible
                                         .font(.title3) // Match TextEditor font
                                         .padding() // Match TextEditor padding
-                                        .onChange(of: text) {
+                                        .onChange(of: chatViewModel.text) {
                                             handleTextChange(scrollView: proxy)
                                             if geo.size.height != lastTextHeight {
                                                 self.chatViewModel.textHeight = geo.size.height
@@ -105,20 +108,21 @@ struct ChatField: View {
 
     private func handleTextChange(scrollView: ScrollViewProxy) {
         // Check for newlines in the added text
-        let startIndex: String.Index = if previousText.count < text.count {
-            text.index(text.startIndex, offsetBy: previousText.count)
+        let startIndex: String.Index = if previousText.count < chatViewModel.text.count {
+            chatViewModel.text.index(chatViewModel.text.startIndex, offsetBy: previousText.count)
         } else {
-            text.endIndex
+            chatViewModel.text.endIndex
         }
 
-        let addedText = String(text[startIndex...])
+        let addedText = String(chatViewModel.text[startIndex...])
 
         if addedText.contains("\n") {
             // Attempt to detect Shift key
             // We have to make sure its not a paste with a newline too
+            logger.debug("Newline detected")
             if NSApp.currentEvent?.modifierFlags.contains(.shift) == false, NSApp.currentEvent?.modifierFlags.contains(.command) == false {
                 // If Shift is not pressed, and a newline is added, submit
-                text = text.trimmingCharacters(in: .newlines) // Optional: remove the newline
+                chatViewModel.text = chatViewModel.text.trimmingCharacters(in: .newlines) // Optional: remove the newline
                 action()
                 DispatchQueue.main.async {
                     chatViewModel.textHeight = 52 // Reset height
@@ -128,6 +132,6 @@ struct ChatField: View {
             // For some reason this actually works how its supposed to, only scrolling to bottom if we are at bottom, actually keeping the newline in view no matter where we are
             scrollView.scrollTo("bottom", anchor: .bottom)
         }
-        previousText = text // Update previous text state for next change
+        previousText = chatViewModel.text // Update previous text state for next change
     }
 }
