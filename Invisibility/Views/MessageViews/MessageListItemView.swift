@@ -124,18 +124,23 @@ struct MessageListItemView: View {
                     MessageButtonItemView(
                         label: "Regenerate",
                         icon: "arrow.clockwise",
+                        shortcut_icons: ["shift", "r.square"],
                         whoIsHovering: $whoIsHovering
                     ) {
                         regenerateAction()
                     }
                     .visible(if: isRegenerateButtonVisible, removeCompletely: true)
+                    .keyboardShortcut("r", modifiers: [.command, .shift])
+
                     MessageButtonItemView(
                         label: "Copy",
                         icon: isCopied ? "checkmark" : "doc.on.doc",
+                        shortcut_icons: ["shift", "c.square"],
                         whoIsHovering: $whoIsHovering
                     ) {
                         copyAction()
                     }
+                    .keyboardShortcut("c", modifiers: [.command, .shift])
                     .changeEffect(.jump(height: 10), value: isCopied)
                     .visible(if: isCopyButtonVisible, removeCompletely: true)
                 }

@@ -53,13 +53,6 @@ struct ChatField: View {
                 .padding(.horizontal, 10)
                 .visible(if: !chatViewModel.images.isEmpty, removeCompletely: true)
 
-            // Invisible button to handle command + enter
-            // Button(action: action) {
-            //     EmptyView()
-            // }
-            // .keyboardShortcut(.return, modifiers: [.command])
-            // .visible(if: false, removeCompletely: true)
-
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .trailing, spacing: 0) {

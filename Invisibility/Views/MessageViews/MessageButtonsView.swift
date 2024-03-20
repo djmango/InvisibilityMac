@@ -17,6 +17,7 @@ struct MessageButtonsView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var windowManager: WindowManager = WindowManager.shared
     @ObservedObject private var llmManager: LLMManager = LLMManager.shared
+    @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
     @State private var whoIsHovering: String?
 
@@ -28,6 +29,7 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: "Screenshot",
                     icon: "text.viewfinder",
+                    shortcut_icons: ["shift", "1.square"],
                     whoIsHovering: $whoIsHovering
                 ) {
                     Task { await screenshotManager.capture() }
@@ -38,6 +40,7 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: llmManager.model.human_name,
                     icon: "sparkles",
+                    shortcut_icons: ["e.square"],
                     whoIsHovering: $whoIsHovering
                 ) {
                     // Claud-3 Opus -> GPT-4 ->
@@ -47,6 +50,7 @@ struct MessageButtonsView: View {
                         llmManager.model = LLMModels.gpt4
                     }
                 }
+                .keyboardShortcut("e", modifiers: [.command])
 
                 // Settings
                 SettingsLink {
@@ -56,6 +60,27 @@ struct MessageButtonsView: View {
                             .frame(width: 18, height: 18)
                             .foregroundColor(Color("ChatButtonForegroundColor"))
                             .padding(8)
+                        // .visible(if: !shortcutViewModel.modifierFlags.contains(.command), removeCompletely: true)
+
+                        // ForEach([","], id: \.self) { icon in
+                        //     Image(systemName: icon)
+                        //         .resizable()
+                        //         .aspectRatio(contentMode: .fit)
+                        //         .frame(width: 18, height: 18)
+                        //         .foregroundColor(Color("ChatButtonForegroundColor"))
+                        //         .padding(8)
+
+                        // RoundedRectangle(cornerRadius: 16)
+                        //     .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                        //     .overlay(
+                        //         Text(",")
+                        //             .font(.custom("SF Pro", size: 18))
+                        //             .foregroundColor(Color("ChatButtonForegroundColor"))
+                        //             .aspectRatio(contentMode: .fit)
+                        //             .padding(8)
+                        //     )
+                        //     .frame(width: 18, height: 18)
+                        //     .visible(if: shortcutViewModel.modifierFlags.contains(.command), removeCompletely: true)
 
                         Text("Settings")
                             .font(.title3)
@@ -86,11 +111,11 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: "Clear Chat",
                     icon: "rays",
+                    shortcut_icons: ["delete.left"],
                     whoIsHovering: $whoIsHovering
                 ) {
                     messageViewModel.clearChat()
                 }
-                .keyboardShortcut("o", modifiers: [.command, .shift])
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
                 .visible(if: messageViewModel.messages.count > 0, removeCompletely: true)
 
@@ -98,16 +123,19 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: "Stop",
                     icon: "stop.circle.fill",
+                    shortcut_icons: ["p.square"],
                     whoIsHovering: $whoIsHovering
                 ) {
                     messageViewModel.stopGenerating()
                 }
+                .keyboardShortcut("p", modifiers: [.command])
                 .visible(if: messageViewModel.isGenerating, removeCompletely: true)
 
                 // Resize
                 MessageButtonItemView(
                     label: windowManager.resized ? "Shrink" : "Expand",
                     icon: windowManager.resized ? "arrow.left" : "arrow.right",
+                    shortcut_icons: ["shift", "s.square"],
                     whoIsHovering: $whoIsHovering
                 ) {
                     resizeAction()
@@ -123,8 +151,6 @@ struct MessageButtonsView: View {
                     .padding(.horizontal, -10)
                     .padding(.vertical, -5)
             )
-            .padding(.top, 7)
-            .padding(.bottom, 10)
             .focusable(false)
             Spacer()
         }
@@ -132,6 +158,7 @@ struct MessageButtonsView: View {
         .animation(AppConfig.snappy, value: llmManager.model)
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
         .animation(AppConfig.snappy, value: messageViewModel.messages.count)
+        .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
     }
 
     private func openFileAction() {

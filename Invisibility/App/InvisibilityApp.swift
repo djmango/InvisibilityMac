@@ -18,12 +18,6 @@ struct InvisibilityApp: App {
                 .modelContext(SharedModelContainer.shared.mainContext)
         }
         .commands {
-            // CommandGroup(replacing: CommandGroupPlacement.appInfo) {
-            //     Button("About Invisibility") {
-            //         NSApp.orderFrontStandardAboutPanel(nil)
-            //     }
-            //     .keyboardShortcut(",", modifiers: [.command, .shift])
-            // }
             CommandGroup(replacing: CommandGroupPlacement.help) {
                 Button("Invisibility Help") {
                     NSWorkspace.shared.open(URL(string: "https://help.invisibility.so")!)

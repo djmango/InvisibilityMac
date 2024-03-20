@@ -36,8 +36,12 @@ struct MessageView: View {
                                     .sentryTrace("MessageListItemView")
                             }
                         }
-                        .onChange(of: messageViewModel.messages.count) {
-                            scrollToBottom(proxy)
+                        .onChange(of: messageViewModel.isGenerating) {
+                            logger.debug("Is generating: \(messageViewModel.isGenerating)")
+                            if messageViewModel.isGenerating {
+                                scrollToBottom(proxy)
+                                logger.debug("Scrolling to bottom")
+                            }
                         }
                     }
                     .mask(
@@ -58,10 +62,14 @@ struct MessageView: View {
                     .sentryTrace("ScrollView")
                 }
 
+                Spacer()
+
                 // Action Icons
                 MessageButtonsView()
-                    .padding(.top, 5)
                     .sentryTrace("MessageButtonsView")
+                    .frame(maxHeight: 40)
+
+                Spacer()
 
                 ChatField(action: sendAction)
                     .focused($promptFocused)
@@ -132,13 +140,16 @@ struct MessageView: View {
     }
 
     private func scrollToBottom(_ proxy: ScrollViewProxy) {
-        guard messageViewModel.messages.count > 0 else { return }
-        let lastIndex = messageViewModel.messages.count - 1
-        let lastMessage = messageViewModel.messages[lastIndex]
+        guard let lastMessage = messageViewModel.messages.last else {
+            return
+        }
 
         // proxy.scrollTo(lastMessage, anchor: .bottom)
         withAnimation(.easeOut(duration: 0.3)) {
-            proxy.scrollTo(lastMessage, anchor: .bottom)
+            logger.debug("Scrolling to bottom started")
+            // proxy.scrollTo(lastMessage, anchor: .bottom)
+            proxy.scrollTo(lastMessage)
+            logger.debug("Scrolling to bottom finished")
         }
     }
 }

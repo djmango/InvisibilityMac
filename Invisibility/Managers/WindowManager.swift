@@ -16,6 +16,10 @@ class InteractivePanel: NSPanel {
     override var canBecomeKey: Bool {
         true
     }
+
+    override func flagsChanged(with event: NSEvent) {
+        ShortcutViewModel.shared.modifierFlags = event.modifierFlags
+    }
 }
 
 @Observable
