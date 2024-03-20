@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             options.dsn = AppConfig.sentry_dsn
             options.tracesSampleRate = 1.0 // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
             options.profilesSampleRate = 1.0 // see also `profilesSampler` if you need custom sampling logic
+            options.swiftAsyncStacktraces = true
         }
         PostHogSDK.shared.setup(PostHogConfig(apiKey: AppConfig.posthog_api_key))
 

@@ -404,7 +404,7 @@
 				4DE673542B17F46B00A5F9AE /* Sources */,
 				4DE6736A2B17F46B00A5F9AE /* Frameworks */,
 				4DE673722B17F46B00A5F9AE /* Resources */,
-				4D9099BC2BAA545800522DD2 /* ShellScript */,
+				4D5A55DF2BAA68F5002FE205 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -494,7 +494,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		4D9099BC2BAA545800522DD2 /* ShellScript */ = {
+		4D5A55DF2BAA68F5002FE205 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -503,7 +503,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}\n",
 			);
 			outputFileListPaths = (
 			);
@@ -511,7 +511,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if which sentry-cli >/dev/null; then\nexport SENTRY_ORG=invisibility-inc\nexport SENTRY_PROJECT=invisibility-app\nexport SENTRY_AUTH_TOKEN=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\nERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\nif [ ! $? -eq 0 ]; then\necho \"warning: sentry-cli - $ERROR\"\nfi\nelse\necho \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n";
+			shellScript = "if which sentry-cli >/dev/null; then\nexport SENTRY_ORG=invisibility-inc\nexport SENTRY_PROJECT=invisibility-app\nexport SENTRY_AUTH_TOKEN=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\nERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\nif [ ! $? -eq 0 ]; then\necho \"warning: sentry-cli - $ERROR\"\nfi\nelse\necho \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -707,6 +707,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 77;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;

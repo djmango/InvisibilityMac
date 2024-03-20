@@ -1,4 +1,5 @@
 import OSLog
+import Sentry
 import SwiftUI
 
 @main
@@ -6,7 +7,6 @@ struct InvisibilityApp: App {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "InvisibilityApp")
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    // @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
 
     init() {
         SharedModelContainer.shared = SharedModelContainer()

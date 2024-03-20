@@ -23,6 +23,7 @@ class SharedModelContainer {
             modelContainer = try ModelContainer(for: schema, configurations: [modelConfiguration])
             mainContext = modelContainer.mainContext
             mainContext.autosaveEnabled = true
+            print("ModelContainer Initialized")
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
