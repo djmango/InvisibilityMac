@@ -11,6 +11,7 @@ struct MessageListItemView: View {
 
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
     private var message: Message
 
@@ -147,6 +148,7 @@ struct MessageListItemView: View {
             }
             .animation(AppConfig.snappy, value: whoIsHovering)
             .animation(AppConfig.snappy, value: isHovered)
+            .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
             .padding(8)
         }
         .onHover {

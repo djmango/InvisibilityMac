@@ -40,7 +40,6 @@ struct MessageView: View {
                             logger.debug("Is generating: \(messageViewModel.isGenerating)")
                             if messageViewModel.isGenerating {
                                 scrollToBottom(proxy)
-                                logger.debug("Scrolling to bottom")
                             }
                         }
                     }
@@ -147,8 +146,7 @@ struct MessageView: View {
         // proxy.scrollTo(lastMessage, anchor: .bottom)
         withAnimation(.easeOut(duration: 0.3)) {
             logger.debug("Scrolling to bottom started")
-            // proxy.scrollTo(lastMessage, anchor: .bottom)
-            proxy.scrollTo(lastMessage)
+            proxy.scrollTo(lastMessage, anchor: .bottom)
             logger.debug("Scrolling to bottom finished")
         }
     }

@@ -17,8 +17,13 @@ class InteractivePanel: NSPanel {
         true
     }
 
-    override func flagsChanged(with event: NSEvent) {
-        ShortcutViewModel.shared.modifierFlags = event.modifierFlags
+    // override func flagsChanged(with event: NSEvent) {
+    //     ShortcutViewModel.shared.modifierFlags = event.modifierFlags
+    // }
+
+    // Listen for escape
+    override func cancelOperation(_: Any?) {
+        WindowManager.shared.hideWindow()
     }
 }
 
