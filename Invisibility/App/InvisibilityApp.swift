@@ -6,6 +6,8 @@ import SwiftUI
 struct InvisibilityApp: App {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "InvisibilityApp")
 
+    @AppStorage("showMenuBar") private var showMenuBar: Bool = true
+
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
     init() {
@@ -34,9 +36,9 @@ struct InvisibilityApp: App {
             }
         }
         // Main app view is managed in delegate and WindowManager
-        // MenuBarExtra("Invisibility", image: "MenuBarIcon", isInserted: $showMenuBarExtra) {
-        //     MenuBarView()
-        // }
-        // .menuBarExtraStyle(.window)
+        MenuBarExtra("Invisibility", image: "MenuBarIcon", isInserted: $showMenuBar) {
+            MenuBarView()
+        }
+        .menuBarExtraStyle(.menu)
     }
 }

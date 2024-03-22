@@ -13,7 +13,9 @@ struct MessageListItemView: View {
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
-    private var message: Message
+    private let message: Message
+
+    @AppStorage("shortcutHints") private var shortcutHints = true
 
     // Message state
     private var isAssistant: Bool { message.role == .assistant }
@@ -125,25 +127,25 @@ struct MessageListItemView: View {
                     MessageButtonItemView(
                         label: "Regenerate",
                         icon: "arrow.clockwise",
-                        shortcut_icons: ["shift", "r.square"],
+                        shortcut_hint: "⌘ ⇧ R",
                         whoIsHovering: $whoIsHovering
                     ) {
                         regenerateAction()
                     }
-                    .visible(if: isRegenerateButtonVisible, removeCompletely: true)
+                    .visible(if: isRegenerateButtonVisible || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command)), removeCompletely: true)
                     .keyboardShortcut("r", modifiers: [.command, .shift])
 
                     MessageButtonItemView(
                         label: "Copy",
                         icon: isCopied ? "checkmark" : "doc.on.doc",
-                        shortcut_icons: ["shift", "c.square"],
+                        shortcut_hint: "⌘ ⌥ C",
                         whoIsHovering: $whoIsHovering
                     ) {
                         copyAction()
                     }
-                    .keyboardShortcut("c", modifiers: [.command, .shift])
+                    .keyboardShortcut("c", modifiers: [.command, .option])
                     .changeEffect(.jump(height: 10), value: isCopied)
-                    .visible(if: isCopyButtonVisible, removeCompletely: true)
+                    .visible(if: isCopyButtonVisible || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command)), removeCompletely: true)
                 }
             }
             .animation(AppConfig.snappy, value: whoIsHovering)

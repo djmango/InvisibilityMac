@@ -6,7 +6,6 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
-import FluidGradient
 import KeyboardShortcuts
 import LaunchAtLogin
 import OSLog
@@ -16,10 +15,14 @@ struct SettingsView: View {
     private let logger = Logger(subsystem: "so.invisibility.app", category: "SettingsView")
     let bundleVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
 
-    @AppStorage("showMenuBarExtra") private var showMenuBarExtra = true
+    @AppStorage("animateButtons") private var animateButtons = true
     @AppStorage("autoLaunch") private var autoLaunch: Bool = false
+    @AppStorage("betaFeatures") private var betaFeatures = false
     @AppStorage("onboardingViewed") private var onboardingViewed = false
+    @AppStorage("shortcutHints") private var shortcutHints = true
+    @AppStorage("showMenuBar") private var showMenuBar: Bool = true
 
+    @ObservedObject private var llmManager = LLMManager.shared
     @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
     @ObservedObject private var userManager = UserManager.shared
 
@@ -27,7 +30,8 @@ struct SettingsView: View {
 
     var body: some View {
         ZStack {
-            VStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 10) {
+                Spacer()
                 // User profile pic and login/logout button
                 VStack(alignment: .center) {
                     AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
@@ -79,21 +83,9 @@ struct SettingsView: View {
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color("ChatButtonBackgroundColor"))
                         .stroke(Color.white, lineWidth: 1)
-                    // .background(
-                    //     FluidGradient(
-                    //         blobs: [.blue, .teal, .indigo],
-                    //         highlights: [.blue, .teal, .indigo],
-                    //         speed: 0.5,
-                    //         blur: 0
-                    //     )
-                    //     .blur(radius: 70)
-                    //     .background(.quaternary)
-                    //     .clipShape(RoundedRectangle(cornerRadius: 10))
-                    // )
                 )
                 .shadow(radius: colorScheme == .dark ? 2 : 0)
                 .visible(if: userManager.user != nil)
-                .padding(.top, 20)
 
                 Button(action: {
                     UserManager.shared.login()
@@ -101,19 +93,14 @@ struct SettingsView: View {
                     Text("Login")
                 }
                 .buttonStyle(.bordered)
-                .padding(.bottom, 10)
-                .visible(if: userManager.user == nil)
+                .visible(if: userManager.user == nil, removeCompletely: true)
+
+                Spacer()
 
                 Divider()
-                    .padding(.horizontal, 100)
-                    .padding(.bottom, 10)
+                    .padding(.horizontal, 80)
 
-                HStack {
-                    Text("Launch at Login:")
-                    LaunchAtLogin.Toggle()
-                        .labelsHidden()
-                }
-                .padding(.bottom, 10)
+                Spacer()
 
                 HStack {
                     Text("Toggle panel")
@@ -121,15 +108,49 @@ struct SettingsView: View {
                 }
 
                 HStack {
-                    Text("Screenshot:")
+                    Text("Screenshot")
                     KeyboardShortcuts.Recorder(for: .screenshot)
                 }
-                .padding(.bottom, 10)
 
-                Button("Reset Onboarding") {
-                    onboardingViewed = false
-                    OnboardingManager.shared.startOnboarding()
+                LaunchAtLogin.Toggle("Launch at Login")
+                    .toggleStyle(.switch)
+
+                Toggle("Show Menu Bar", isOn: $showMenuBar)
+                    .toggleStyle(.switch)
+
+                Toggle("Beta Features", isOn: $betaFeatures)
+                    .toggleStyle(.switch)
+                    .onChange(of: betaFeatures) {
+                        if betaFeatures {
+                            logger.info("Beta features enabled")
+                        } else {
+                            logger.info("Beta features disabled")
+                            // Reset beta features
+                            animateButtons = true
+                            shortcutHints = false
+                        }
+                    }
+
+                Divider()
+                    .padding(.horizontal, 150)
+                    .visible(if: betaFeatures, removeCompletely: true)
+
+                Toggle("Animate Buttons", isOn: $animateButtons)
+                    .toggleStyle(.switch)
+                    .visible(if: betaFeatures, removeCompletely: true)
+
+                Toggle("Shortcut Hints", isOn: $shortcutHints)
+                    .toggleStyle(.switch)
+                    .visible(if: betaFeatures, removeCompletely: true)
+
+                Picker("", selection: $llmManager.model) {
+                    Text("Claude-3 Opus").tag(LLMModels.claude3_opus)
+                    // Text("Gemini Pro").tag(LLMModels.gemini_pro)
+                    Text("GPT-4").tag(LLMModels.gpt4)
                 }
+                .pickerStyle(.palette)
+                .frame(maxWidth: 200)
+                .visible(if: betaFeatures, removeCompletely: true)
 
                 Spacer()
 
@@ -168,6 +189,11 @@ struct SettingsView: View {
                         }
                 }
 
+                Button("Reset Onboarding") {
+                    onboardingViewed = false
+                    OnboardingManager.shared.startOnboarding()
+                }
+
                 HStack {
                     Button("Feedback") {
                         if let url = URL(string: "mailto:sulaiman@invisibility.so") {
@@ -195,27 +221,33 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.bordered)
                 }
-                .padding(.top, 10)
+
+                Image("MenuBarIcon")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 18, height: 18)
+                    .padding(.bottom, -5)
+                    .onHover { inside in
+                        if inside {
+                            NSCursor.pointingHand.push()
+                        } else {
+                            NSCursor.pop()
+                        }
+                    }
+                    .onTapGesture {
+                        if let url = URL(string: "https://invisibility.so") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
 
                 Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
                     .font(.caption)
                     .foregroundColor(.gray)
-                    .padding(.vertical, 5)
+                    .padding(.bottom, 5)
             }
+            .animation(.easeIn, value: betaFeatures)
         }
-        .frame(minWidth: 500, minHeight: 550)
+        .frame(minWidth: 500, minHeight: 750)
         .focusable(false)
-        .background(
-            // FluidGradient(blobs: [.red, .blue],
-            //               highlights: [.yellow, .orange, .purple],
-            //               speed: 0.3,
-            //               blur: 0.75)
-            //     .background(.quaternary)
-            // LinearGradient(
-            //     gradient: Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]),
-            //     startPoint: .topLeading,
-            //     endPoint: .bottomTrailing
-            // )
-        )
     }
 }

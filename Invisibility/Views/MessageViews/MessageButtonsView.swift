@@ -14,6 +14,10 @@ struct MessageButtonsView: View {
 
     private let screenshotManager = ScreenshotManager.shared
 
+    @AppStorage("animateButtons") private var animateButtons: Bool = true
+    @AppStorage("shortcutHints") private var shortcutHints: Bool = true
+    @AppStorage("betaFeatures") private var betaFeatures: Bool = false
+
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var windowManager: WindowManager = WindowManager.shared
     @ObservedObject private var llmManager: LLMManager = LLMManager.shared
@@ -27,9 +31,10 @@ struct MessageButtonsView: View {
             HStack {
                 // Screenshot
                 MessageButtonItemView(
-                    label: "Screenshot",
+                    // label: "Screenshot",
+                    label: "⌘ ⇧ 1",
                     icon: "text.viewfinder",
-                    shortcut_icons: ["shift", "1.square"],
+                    shortcut_hint: "⌘ ⇧ 1",
                     whoIsHovering: $whoIsHovering
                 ) {
                     Task { await screenshotManager.capture() }
@@ -40,10 +45,10 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: llmManager.model.human_name,
                     icon: "sparkles",
-                    shortcut_icons: ["e.square"],
+                    shortcut_hint: "⌘ E",
                     whoIsHovering: $whoIsHovering
                 ) {
-                    // Claud-3 Opus -> GPT-4 ->
+                    // Claud-3 Opus -> GPT-4
                     if llmManager.model == LLMModels.gpt4 {
                         llmManager.model = LLMModels.claude3_opus
                     } else {
@@ -51,6 +56,7 @@ struct MessageButtonsView: View {
                     }
                 }
                 .keyboardShortcut("e", modifiers: [.command])
+                .visible(if: !betaFeatures, removeCompletely: true)
 
                 // Settings
                 SettingsLink {
@@ -59,35 +65,20 @@ struct MessageButtonsView: View {
                             .resizable()
                             .frame(width: 18, height: 18)
                             .foregroundColor(Color("ChatButtonForegroundColor"))
-                            .padding(8)
-                        // .visible(if: !shortcutViewModel.modifierFlags.contains(.command), removeCompletely: true)
+                            .visible(if: !shortcutViewModel.modifierFlags.contains(.command) || !shortcutHints, removeCompletely: true)
 
-                        // ForEach([","], id: \.self) { icon in
-                        //     Image(systemName: icon)
-                        //         .resizable()
-                        //         .aspectRatio(contentMode: .fit)
-                        //         .frame(width: 18, height: 18)
-                        //         .foregroundColor(Color("ChatButtonForegroundColor"))
-                        //         .padding(8)
-
-                        // RoundedRectangle(cornerRadius: 16)
-                        //     .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-                        //     .overlay(
-                        //         Text(",")
-                        //             .font(.custom("SF Pro", size: 18))
-                        //             .foregroundColor(Color("ChatButtonForegroundColor"))
-                        //             .aspectRatio(contentMode: .fit)
-                        //             .padding(8)
-                        //     )
-                        //     .frame(width: 18, height: 18)
-                        //     .visible(if: shortcutViewModel.modifierFlags.contains(.command), removeCompletely: true)
+                        Text("⌘ ,")
+                            .font(.title3)
+                            .foregroundColor(Color("ChatButtonForegroundColor"))
+                            .visible(if: shortcutViewModel.modifierFlags.contains(.command) && shortcutHints, removeCompletely: true)
 
                         Text("Settings")
                             .font(.title3)
                             .foregroundColor(Color("ChatButtonForegroundColor"))
                             .hide(if: whoIsHovering ?? "" != "Settings", removeCompletely: true)
-                            .padding(.trailing, 8)
+                            .padding(.leading, 8)
                     }
+                    .padding(8)
                     .contentShape(RoundedRectangle(cornerRadius: 100))
                 }
                 .onHover { hovering in
@@ -111,7 +102,7 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: "Clear Chat",
                     icon: "rays",
-                    shortcut_icons: ["delete.left"],
+                    shortcut_hint: "⌘ ⇧ ⌫",
                     whoIsHovering: $whoIsHovering
                 ) {
                     messageViewModel.clearChat()
@@ -123,7 +114,7 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: "Stop",
                     icon: "stop.circle.fill",
-                    shortcut_icons: ["p.square"],
+                    shortcut_hint: "⌘ P",
                     whoIsHovering: $whoIsHovering
                 ) {
                     messageViewModel.stopGenerating()
@@ -135,7 +126,7 @@ struct MessageButtonsView: View {
                 MessageButtonItemView(
                     label: windowManager.resized ? "Shrink" : "Expand",
                     icon: windowManager.resized ? "arrow.left" : "arrow.right",
-                    shortcut_icons: ["shift", "s.square"],
+                    shortcut_hint: "⌘ ⇧ S",
                     whoIsHovering: $whoIsHovering
                 ) {
                     resizeAction()
@@ -159,6 +150,7 @@ struct MessageButtonsView: View {
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
         .animation(AppConfig.snappy, value: messageViewModel.messages.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
+        .animation(AppConfig.snappy, value: betaFeatures)
     }
 
     private func openFileAction() {

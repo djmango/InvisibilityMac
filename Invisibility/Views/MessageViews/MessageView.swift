@@ -24,7 +24,7 @@ struct MessageView: View {
     var body: some View {
         ZStack {
             VStack(alignment: .center, spacing: 0) {
-                ScrollViewReader { proxy in
+                ScrollViewReader { _ in
                     ScrollView {
                         LazyVStack(alignment: .trailing, spacing: 5) {
                             ForEach(messageViewModel.messages.indices, id: \.self) { index in
@@ -36,12 +36,12 @@ struct MessageView: View {
                                     .sentryTrace("MessageListItemView")
                             }
                         }
-                        .onChange(of: messageViewModel.isGenerating) {
-                            logger.debug("Is generating: \(messageViewModel.isGenerating)")
-                            if messageViewModel.isGenerating {
-                                scrollToBottom(proxy)
-                            }
-                        }
+                        // .onChange(of: messageViewModel.isGenerating) {
+                        //     logger.debug("Is generating: \(messageViewModel.isGenerating)")
+                        //     if messageViewModel.isGenerating {
+                        //         scrollToBottom(proxy)
+                        //     }
+                        // }
                     }
                     .mask(
                         LinearGradient(

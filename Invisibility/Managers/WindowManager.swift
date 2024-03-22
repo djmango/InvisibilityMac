@@ -17,9 +17,9 @@ class InteractivePanel: NSPanel {
         true
     }
 
-    // override func flagsChanged(with event: NSEvent) {
-    //     ShortcutViewModel.shared.modifierFlags = event.modifierFlags
-    // }
+    override func flagsChanged(with event: NSEvent) {
+        ShortcutViewModel.shared.modifierFlags = event.modifierFlags
+    }
 
     // Listen for escape
     override func cancelOperation(_: Any?) {
@@ -46,12 +46,15 @@ class WindowManager: ObservableObject {
     private var currentScreen: NSScreen?
 
     /// The width of the panel
-    public var width: CGFloat = WindowManager.defaultWidth
+    private var width: CGFloat = WindowManager.defaultWidth
 
     /// The state of resizing the window
     public var resized: Bool {
         width != WindowManager.defaultWidth
     }
+
+    /// Persist the resized state
+    @ObservationIgnored @AppStorage("resized") private var resizedAppStorage: Bool = false
 
     /// Whether the window is visible
     public var windowIsVisible: Bool {
@@ -139,6 +142,7 @@ class WindowManager: ObservableObject {
         guard let window else { return }
         guard window.isVisible else { return }
         width = width == WindowManager.defaultWidth ? WindowManager.resizeWidth : WindowManager.defaultWidth
+        resizedAppStorage = resized
         positionWindowOnCursorScreen(animate: true)
     }
 
@@ -181,7 +185,7 @@ class WindowManager: ObservableObject {
         currentScreen = screen
 
         // Define window width and the desired positioning
-        let windowWidth: CGFloat = self.width
+        let windowWidth: CGFloat = if resizedAppStorage { WindowManager.resizeWidth } else { WindowManager.defaultWidth }
 
         // Get the menu bar height to adjust the window position
         let menuBarHeight = NSStatusBar.system.thickness

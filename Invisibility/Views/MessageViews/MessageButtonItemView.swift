@@ -13,7 +13,10 @@ struct MessageButtonItemView: View {
     private let action: () -> Void
     private let label: String
     private let icon: String
-    private let shortcut_icons: [String]
+    private let shortcut_hint: String
+
+    @AppStorage("animateButtons") private var animateButtons: Bool = true
+    @AppStorage("shortcutHints") private var shortcutHints: Bool = true
 
     @State private var isPressed: Bool = false
     @State private var isHovering: Bool = false
@@ -22,10 +25,10 @@ struct MessageButtonItemView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
-    init(label: String, icon: String, shortcut_icons: [String], whoIsHovering: Binding<String?>, action: @escaping () -> Void) {
+    init(label: String, icon: String, shortcut_hint: String, whoIsHovering: Binding<String?>, action: @escaping () -> Void) {
         self.label = label
         self.icon = icon
-        self.shortcut_icons = shortcut_icons
+        self.shortcut_hint = shortcut_hint
         self._whoIsHovering = whoIsHovering
         self.action = action
     }
@@ -39,22 +42,18 @@ struct MessageButtonItemView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 18, height: 18)
                         .foregroundColor(Color("ChatButtonForegroundColor"))
-                        .visible(if: !shortcutViewModel.modifierFlags.contains(.command), removeCompletely: true)
+                        .visible(if: !shortcutViewModel.modifierFlags.contains(.command) || !shortcutHints, removeCompletely: true)
 
-                    ForEach(shortcut_icons, id: \.self) { icon in
-                        Image(systemName: icon)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 18, height: 18)
-                            .foregroundColor(Color("ChatButtonForegroundColor"))
-                    }
-                    .visible(if: shortcutViewModel.modifierFlags.contains(.command), removeCompletely: true)
+                    Text(shortcut_hint)
+                        .font(.title3)
+                        .foregroundColor(Color("ChatButtonForegroundColor"))
+                        .visible(if: shortcutViewModel.modifierFlags.contains(.command) && shortcutHints, removeCompletely: true)
                 }
 
                 Text(label)
                     .font(.title3)
                     .foregroundColor(Color("ChatButtonForegroundColor"))
-                    .hide(if: !isHovering, removeCompletely: true)
+                    .visible(if: isHovering && animateButtons, removeCompletely: true)
                     .padding(.leading, 8)
             }
             .padding(8)
@@ -80,10 +79,6 @@ struct MessageButtonItemView: View {
         .animation(AppConfig.snappy, value: isHovering)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .buttonStyle(.plain)
-        // .changeEffect(.glow, value: isHovering, isEnabled: isHovering)
-        // .changeEffect(.jump(height: 10), value: isPressed)
-        // .scaleEffect(isPressed ? 0.9 : 1.0)
-        // .opacity(isPressed ? 0.8 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: isPressed)
     }
 

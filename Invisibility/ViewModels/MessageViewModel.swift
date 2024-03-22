@@ -57,7 +57,7 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func send(_ message: Message) async {
         isGenerating = true
-        PostHogSDK.shared.capture("send_message")
+        PostHogSDK.shared.capture("send_message", properties: ["num_images": message.images?.count ?? 0, "message_length": message.content?.count ?? 0])
 
         messages.append(message)
         modelContext.insert(message)
@@ -80,7 +80,7 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func regenerate() async {
         isGenerating = true
-        PostHogSDK.shared.capture("regenerate_message")
+        PostHogSDK.shared.capture("regenerate_message", properties: ["num_images": messages.last?.images?.count ?? 0, "message_length": messages.last?.content?.count ?? 0])
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
         // So for that, we'll recreate the original send scenario, when the new user message was sent
@@ -107,7 +107,7 @@ final class MessageViewModel: ObservableObject {
 
     func clearChat() {
         logger.debug("Clearing chat")
-        PostHogSDK.shared.capture("clear_chat")
+        PostHogSDK.shared.capture("clear_chat", properties: ["message_count": messages.count])
         for message in messages {
             modelContext.delete(message)
         }
@@ -118,7 +118,7 @@ final class MessageViewModel: ObservableObject {
 
     func stopGenerating() {
         logger.debug("Stopping generation")
-        PostHogSDK.shared.capture("stop_generating")
+        PostHogSDK.shared.capture("stop_generating", properties: ["stopped_message_length": messages.last?.content?.count ?? 0])
         chatTask?.cancel()
         DispatchQueue.main.async {
             self.isGenerating = false

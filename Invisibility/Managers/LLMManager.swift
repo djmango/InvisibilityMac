@@ -11,7 +11,7 @@ import OpenAI
 import OSLog
 import SwiftUI
 
-struct LLMModel: Codable, Equatable {
+struct LLMModel: Codable, Equatable, Hashable {
     let text: String
     let vision: String
     let human_name: String
@@ -19,6 +19,13 @@ struct LLMModel: Codable, Equatable {
     // Equatable
     static func == (lhs: LLMModel, rhs: LLMModel) -> Bool {
         lhs.text == rhs.text && lhs.vision == rhs.vision && lhs.human_name == rhs.human_name
+    }
+
+    // Hashable
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(text)
+        hasher.combine(vision)
+        hasher.combine(human_name)
     }
 }
 
@@ -77,7 +84,7 @@ final class LLMManager: ObservableObject {
         // Default processOutput function, just appends the output to a variable and returns it
         processOutput: @escaping (String) -> Void = { _ in }
     ) async {
-        let chatQuery = await constructChatQuery(messages: messages)
+        let chatQuery = await constructChatQuery(messages: messages.suffix(10).map { $0 })
 
         do {
             for try await result in ai.chatsStream(query: chatQuery) {
@@ -93,20 +100,9 @@ final class LLMManager: ObservableObject {
         }
     }
 
-    // func achat(messages: [Message]) async -> Message {
-    //     let chatQuery = await constructChatQuery(messages: messages)
-
-    //     do {
-    //         let result = try await ai.chats(query: chatQuery)
-    //         return Message(content: result.choices.first?.message.content?.string ?? "")
-    //     } catch {
-    //         logger.error("Error in chat: \(error)")
-    //         AlertManager.shared.doShowAlert(title: "Chat Error", message: "Error in chat: \(error.localizedDescription)")
-    //         return Message(content: "Error in chat: \(error.localizedDescription)")
-    //     }
-    // }
-
     func constructChatQuery(messages: [Message]) async -> ChatQuery {
+        var messages = messages
+
         // If the last message has any images use the vision model, otherwise use the regular model
         let allow_images = messages.last?.images?.count ?? 0 > 0
 
@@ -114,6 +110,16 @@ final class LLMManager: ObservableObject {
             model.vision
         } else {
             model.text
+        }
+
+        // Ensure the first message is always from the user
+        // First check if the 2nd message is from the user, if so pop the first message, otherwise insert a user message at the start
+        if messages.first?.role != .user {
+            if messages.count > 1, messages[1].role == .user {
+                messages.removeFirst()
+            } else {
+                messages.insert(Message(content: "", role: .user), at: 0)
+            }
         }
 
         let chat_messages = messages.compactMap { message in

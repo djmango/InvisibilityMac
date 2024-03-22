@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MenuBarView: View {
-    @ObservedObject private var screenRecorder = ScreenRecorder.shared
     @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
 
     @State private var isUpdateHovered = false
@@ -16,86 +15,40 @@ struct MenuBarView: View {
     @State private var isQuitHovered = false
 
     var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 6) {
-                EventsView()
+        VStack(alignment: .leading, spacing: 6) {
+            Text("Invisibility")
+                .font(.headline)
+                .foregroundColor(Color.primary.opacity(0.5))
 
-                Divider()
-
-                Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
-                    .font(.body)
-                    .foregroundColor(Color.primary.opacity(0.5))
-
-                HStack {
-                    Button("Check for Updates") {
-                        updaterViewModel.updater.checkForUpdates()
-                    }
-                    .disabled(!updaterViewModel.canCheckForUpdates)
-                    .buttonStyle(.plain)
-                    .font(.system(size: 14))
-                    Spacer()
-                }
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(isUpdateHovered ? Color("MenuBarButtonColor") : .clear)
-                        .padding(-4)
-                )
-                .onHover { hovering in
-                    isUpdateHovered = hovering
-                }
-
-                HStack {
-                    SettingsLink {
-                        Text("Settings")
-                    }
-                    .keyboardShortcut(",", modifiers: .command)
-                    .buttonStyle(.plain)
-                    .font(.system(size: 14))
-                    Spacer()
-                    Text("⌘ ,")
-                        .font(.system(size: 12))
-                        .opacity(0.5)
-                }
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(isSettingsHovered ? Color("MenuBarButtonColor") : .clear)
-                        .padding(-4)
-                )
-                .onHover { hovering in
-                    isSettingsHovered = hovering
-                }
-
-                Divider()
-
-                HStack {
-                    Button("Quit") {
-                        NSApplication.shared.terminate(self)
-                    }
-                    .keyboardShortcut("q", modifiers: .command)
-                    .buttonStyle(.plain)
-                    .font(.system(size: 14))
-                    Spacer()
-                    Text("⌘ Q")
-                        .font(.system(size: 12))
-                        .opacity(0.5)
-                }
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .foregroundColor(isQuitHovered ? Color("MenuBarButtonColor") : .clear)
-                        .padding(-4)
-                )
-                .onHover { hovering in
-                    isQuitHovered = hovering
-                }
-
-                Divider()
+            Button("Toggle Panel") {
+                WindowManager.shared.toggleWindow()
             }
-        }
-        .padding(.horizontal, 8)
-        .focusable(false)
-    }
-}
+            .keyboardShortcut("g", modifiers: .command)
 
-#Preview {
-    MenuBarView()
+            Divider()
+
+            Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                .font(.body)
+                .foregroundColor(Color.primary.opacity(0.5))
+
+            Button("Check for Updates") {
+                updaterViewModel.updater.checkForUpdates()
+            }
+            .disabled(!updaterViewModel.canCheckForUpdates)
+
+            SettingsLink(label: {
+                Text("Settings")
+            })
+            .keyboardShortcut(",", modifiers: .command)
+
+            Divider()
+
+            Button("Quit") {
+                NSApplication.shared.terminate(self)
+            }
+            .keyboardShortcut("q", modifiers: .command)
+
+            Divider()
+        }
+    }
 }
