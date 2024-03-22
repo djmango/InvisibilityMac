@@ -34,11 +34,11 @@ struct MessageListItemView: View {
     }
 
     private var isCopyButtonVisible: Bool {
-        isHovered && !isGenerating
+        (isHovered && !isGenerating) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
     }
 
     private var isRegenerateButtonVisible: Bool {
-        isHovered && isLastMessage
+        (isHovered && isLastMessage) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command) && isLastMessage)
     }
 
     private var isLastMessage: Bool {
@@ -132,7 +132,7 @@ struct MessageListItemView: View {
                     ) {
                         regenerateAction()
                     }
-                    .visible(if: isRegenerateButtonVisible || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command)), removeCompletely: true)
+                    .visible(if: isRegenerateButtonVisible, removeCompletely: true)
                     .keyboardShortcut("r", modifiers: [.command, .shift])
 
                     MessageButtonItemView(
@@ -145,7 +145,7 @@ struct MessageListItemView: View {
                     }
                     .keyboardShortcut("c", modifiers: [.command, .option])
                     .changeEffect(.jump(height: 10), value: isCopied)
-                    .visible(if: isCopyButtonVisible || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command)), removeCompletely: true)
+                    .visible(if: isCopyButtonVisible, removeCompletely: true)
                 }
             }
             .animation(AppConfig.snappy, value: whoIsHovering)

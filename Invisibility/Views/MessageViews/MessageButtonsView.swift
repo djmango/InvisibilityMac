@@ -15,8 +15,10 @@ struct MessageButtonsView: View {
     private let screenshotManager = ScreenshotManager.shared
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
-    @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     @AppStorage("betaFeatures") private var betaFeatures: Bool = false
+    @AppStorage("resized") private var resized: Bool = false
+    @AppStorage("shortcutHints") private var shortcutHints: Bool = true
+    @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var windowManager: WindowManager = WindowManager.shared
@@ -75,7 +77,7 @@ struct MessageButtonsView: View {
                         Text("Settings")
                             .font(.title3)
                             .foregroundColor(Color("ChatButtonForegroundColor"))
-                            .hide(if: whoIsHovering ?? "" != "Settings", removeCompletely: true)
+                            .visible(if: whoIsHovering ?? "" == "Settings" && animateButtons, removeCompletely: true)
                             .padding(.leading, 8)
                     }
                     .padding(8)
@@ -124,12 +126,23 @@ struct MessageButtonsView: View {
 
                 // Resize
                 MessageButtonItemView(
-                    label: windowManager.resized ? "Shrink" : "Expand",
-                    icon: windowManager.resized ? "arrow.left" : "arrow.right",
-                    shortcut_hint: "⌘ ⇧ S",
+                    label: resized ? "Shrink" : "Expand",
+                    icon: resized ? "arrow.down.right.and.arrow.up.left" : "arrow.up.backward.and.arrow.down.forward",
+                    shortcut_hint: "⌘ ⇧ B",
                     whoIsHovering: $whoIsHovering
                 ) {
                     resizeAction()
+                }
+                .keyboardShortcut("b", modifiers: [.command, .shift])
+
+                // Switch Sides
+                MessageButtonItemView(
+                    label: sideSwitched ? "Left" : "Right",
+                    icon: sideSwitched ? "arrow.left" : "arrow.right",
+                    shortcut_hint: "⌘ ⇧ S",
+                    whoIsHovering: $whoIsHovering
+                ) {
+                    switchSide()
                 }
                 .keyboardShortcut("s", modifiers: [.command, .shift])
             }
@@ -160,5 +173,10 @@ struct MessageButtonsView: View {
     @MainActor
     private func resizeAction() {
         windowManager.resizeWindow()
+    }
+
+    @MainActor
+    private func switchSide() {
+        windowManager.switchSide()
     }
 }

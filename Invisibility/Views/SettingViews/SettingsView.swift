@@ -118,6 +118,9 @@ struct SettingsView: View {
                 Toggle("Show Menu Bar", isOn: $showMenuBar)
                     .toggleStyle(.switch)
 
+                Toggle("Shortcut Hints", isOn: $shortcutHints)
+                    .toggleStyle(.switch)
+
                 Toggle("Beta Features", isOn: $betaFeatures)
                     .toggleStyle(.switch)
                     .onChange(of: betaFeatures) {
@@ -127,7 +130,6 @@ struct SettingsView: View {
                             logger.info("Beta features disabled")
                             // Reset beta features
                             animateButtons = true
-                            shortcutHints = false
                         }
                     }
 
@@ -136,10 +138,6 @@ struct SettingsView: View {
                     .visible(if: betaFeatures, removeCompletely: true)
 
                 Toggle("Animate Buttons", isOn: $animateButtons)
-                    .toggleStyle(.switch)
-                    .visible(if: betaFeatures, removeCompletely: true)
-
-                Toggle("Shortcut Hints", isOn: $shortcutHints)
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
 

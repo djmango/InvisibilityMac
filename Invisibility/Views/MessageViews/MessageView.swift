@@ -80,7 +80,6 @@ struct MessageView: View {
                     .scrollIndicators(.never)
                     .sentryTrace("ChatField")
             }
-            .padding(.trailing, 40)
             .animation(AppConfig.snappy, value: chatViewModel.textHeight)
             .overlay(
                 Rectangle()

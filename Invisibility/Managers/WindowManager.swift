@@ -33,8 +33,8 @@ class WindowManager: ObservableObject {
 
     static let shared = WindowManager()
 
-    private static let defaultWidth: CGFloat = 440
-    private static let resizeWidth: CGFloat = 840
+    private static let defaultWidth: CGFloat = 400
+    private static let resizeWidth: CGFloat = 800
 
     private var contentView = AppView()
     private var window: NSPanel?
@@ -48,13 +48,9 @@ class WindowManager: ObservableObject {
     /// The width of the panel
     private var width: CGFloat = WindowManager.defaultWidth
 
-    /// The state of resizing the window
-    public var resized: Bool {
-        width != WindowManager.defaultWidth
-    }
-
     /// Persist the resized state
-    @ObservationIgnored @AppStorage("resized") private var resizedAppStorage: Bool = false
+    @ObservationIgnored @AppStorage("resized") private var resized: Bool = false
+    @ObservationIgnored @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
     /// Whether the window is visible
     public var windowIsVisible: Bool {
@@ -142,7 +138,13 @@ class WindowManager: ObservableObject {
         guard let window else { return }
         guard window.isVisible else { return }
         width = width == WindowManager.defaultWidth ? WindowManager.resizeWidth : WindowManager.defaultWidth
-        resizedAppStorage = resized
+        resized = width == WindowManager.resizeWidth
+        positionWindowOnCursorScreen(animate: true)
+    }
+
+    @MainActor
+    public func switchSide() {
+        sideSwitched.toggle()
         positionWindowOnCursorScreen(animate: true)
     }
 
@@ -185,15 +187,21 @@ class WindowManager: ObservableObject {
         currentScreen = screen
 
         // Define window width and the desired positioning
-        let windowWidth: CGFloat = if resizedAppStorage { WindowManager.resizeWidth } else { WindowManager.defaultWidth }
+        let windowWidth: CGFloat = if resized { WindowManager.resizeWidth } else { WindowManager.defaultWidth }
 
         // Get the menu bar height to adjust the window position
         let menuBarHeight = NSStatusBar.system.thickness
 
         let windowHeight: CGFloat = screen.frame.height - menuBarHeight
 
-        // Pin the window to the top left corner of the screen
-        let xPos = screen.frame.origin.x
+        // Determine the horizontal position
+        let xPos: CGFloat = if sideSwitched {
+            // Position the window on the right side of the screen
+            screen.frame.origin.x + screen.frame.width - windowWidth
+        } else {
+            // Position the window on the left side of the screen
+            screen.frame.origin.x
+        }
         let yPos = screen.frame.origin.y
 
         // Create a CGRect that represents the desired window frame
