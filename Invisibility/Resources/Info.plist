@@ -19,6 +19,12 @@
 	<string>Enable accessibility for keyboard shortcuts and screen recording.</string>
 	<key>NSCalendarsFullAccessUsageDescription</key>
 	<string>Enable reading calendar for meeting recording reminders and quick-join.</string>
+	<key>SUAllowsAutomaticUpdates</key>
+	<true/>
+	<key>SUAutomaticallyUpdate</key>
+	<true/>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
 	<key>SUEnableInstallerLauncherService</key>
 	<true/>
 	<key>SUFeedURL</key>

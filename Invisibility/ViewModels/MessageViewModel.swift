@@ -26,6 +26,8 @@ final class MessageViewModel: ObservableObject {
     /// Whether the chat is currently generating
     public var isGenerating: Bool = false
 
+    @ObservationIgnored @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
+
     private init() {
         try? fetch()
     }
@@ -57,7 +59,14 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func send(_ message: Message) async {
         isGenerating = true
-        PostHogSDK.shared.capture("send_message", properties: ["num_images": message.images?.count ?? 0, "message_length": message.content?.count ?? 0])
+        PostHogSDK.shared.capture(
+            "send_message",
+            properties: [
+                "num_images": message.images?.count ?? 0,
+                "message_length": message.content?.count ?? 0,
+                "model": llmModel,
+            ]
+        )
 
         messages.append(message)
         modelContext.insert(message)
@@ -80,7 +89,14 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func regenerate() async {
         isGenerating = true
-        PostHogSDK.shared.capture("regenerate_message", properties: ["num_images": messages.last?.images?.count ?? 0, "message_length": messages.last?.content?.count ?? 0])
+        PostHogSDK.shared.capture(
+            "regenerate_message",
+            properties: [
+                "num_images": messages.last?.images?.count ?? 0,
+                "message_length": messages.last?.content?.count ?? 0,
+                "model": llmModel,
+            ]
+        )
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
         // So for that, we'll recreate the original send scenario, when the new user message was sent

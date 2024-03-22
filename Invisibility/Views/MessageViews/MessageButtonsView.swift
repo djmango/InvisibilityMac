@@ -22,7 +22,6 @@ struct MessageButtonsView: View {
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var windowManager: WindowManager = WindowManager.shared
-    @ObservedObject private var llmManager: LLMManager = LLMManager.shared
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
     @State private var whoIsHovering: String?
@@ -33,8 +32,7 @@ struct MessageButtonsView: View {
             HStack {
                 // Screenshot
                 MessageButtonItemView(
-                    // label: "Screenshot",
-                    label: "⌘ ⇧ 1",
+                    label: "Screenshot",
                     icon: "text.viewfinder",
                     shortcut_hint: "⌘ ⇧ 1",
                     whoIsHovering: $whoIsHovering
@@ -42,23 +40,6 @@ struct MessageButtonsView: View {
                     Task { await screenshotManager.capture() }
                 }
                 .keyboardShortcut("1", modifiers: [.command, .shift])
-
-                // Model picker
-                MessageButtonItemView(
-                    label: llmManager.model.human_name,
-                    icon: "sparkles",
-                    shortcut_hint: "⌘ E",
-                    whoIsHovering: $whoIsHovering
-                ) {
-                    // Claud-3 Opus -> GPT-4
-                    if llmManager.model == LLMModels.gpt4 {
-                        llmManager.model = LLMModels.claude3_opus
-                    } else {
-                        llmManager.model = LLMModels.gpt4
-                    }
-                }
-                .keyboardShortcut("e", modifiers: [.command])
-                .visible(if: !betaFeatures, removeCompletely: true)
 
                 // Settings
                 SettingsLink {
@@ -159,7 +140,6 @@ struct MessageButtonsView: View {
             Spacer()
         }
         .animation(AppConfig.snappy, value: whoIsHovering)
-        .animation(AppConfig.snappy, value: llmManager.model)
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
         .animation(AppConfig.snappy, value: messageViewModel.messages.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)

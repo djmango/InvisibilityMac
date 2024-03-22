@@ -19,6 +19,7 @@ struct SettingsView: View {
     @AppStorage("autoLaunch") private var autoLaunch: Bool = false
     @AppStorage("betaFeatures") private var betaFeatures = false
     @AppStorage("onboardingViewed") private var onboardingViewed = false
+    @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
     @AppStorage("shortcutHints") private var shortcutHints = true
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
 
@@ -112,6 +113,15 @@ struct SettingsView: View {
                     KeyboardShortcuts.Recorder(for: .screenshot)
                 }
 
+                Picker("", selection: $llmModel) {
+                    Text("Claude-3 Opus").tag(LLMModels.claude3_opus.human_name)
+                    Text("Claude-3 Sonnet").tag(LLMModels.claude3_sonnet.human_name)
+                    Text("Claude-3 Haiku").tag(LLMModels.claude3_haiku.human_name)
+                    Text("GPT-4").tag(LLMModels.gpt4.human_name)
+                }
+                .pickerStyle(.menu)
+                .frame(maxWidth: 180)
+
                 LaunchAtLogin.Toggle("Launch at Login")
                     .toggleStyle(.switch)
 
@@ -140,15 +150,6 @@ struct SettingsView: View {
                 Toggle("Animate Buttons", isOn: $animateButtons)
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
-
-                Picker("", selection: $llmManager.model) {
-                    Text("Claude-3 Opus").tag(LLMModels.claude3_opus)
-                    // Text("Gemini Pro").tag(LLMModels.gemini_pro)
-                    Text("GPT-4").tag(LLMModels.gpt4)
-                }
-                .pickerStyle(.palette)
-                .frame(maxWidth: 200)
-                .visible(if: betaFeatures, removeCompletely: true)
 
                 Spacer()
 

@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import OpenAI
 import OSLog
+import PostHog
 import SwiftUI
 
 struct LLMModel: Codable, Equatable, Hashable {
@@ -36,6 +37,18 @@ enum LLMModels {
         human_name: "Claude-3 Opus"
     )
 
+    static let claude3_sonnet = LLMModel(
+        text: "anthropic/claude-3-sonnet:beta",
+        vision: "anthropic/claude-3-sonnet:beta",
+        human_name: "Claude-3 Sonnet"
+    )
+
+    static let claude3_haiku = LLMModel(
+        text: "anthropic/claude-3-haiku:beta",
+        vision: "anthropic/claude-3-haiku:beta",
+        human_name: "Claude-3 Haiku"
+    )
+
     static let gemini_pro = LLMModel(
         text: "google/gemini-pro",
         vision: "google/gemini-pro-vision",
@@ -47,19 +60,32 @@ enum LLMModels {
         vision: "gpt-4-vision-preview",
         human_name: "GPT-4"
     )
+
+    static let human_name_to_model: [String: LLMModel] = [
+        claude3_opus.human_name: claude3_opus,
+        claude3_sonnet.human_name: claude3_sonnet,
+        claude3_haiku.human_name: claude3_haiku,
+        gemini_pro.human_name: gemini_pro,
+        gpt4.human_name: gpt4,
+    ]
 }
 
 @Observable
 final class LLMManager: ObservableObject {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
-
     static let shared = LLMManager()
+
+    private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
 
     private var ai: OpenAI
 
     private let timeoutInterval: TimeInterval = 20
 
-    public var model: LLMModel = LLMModels.claude3_opus
+    // private var model: LLMModel = LLMModels.claude3_opus
+    private var model: LLMModel {
+        LLMModels.human_name_to_model[llmModel] ?? LLMModels.claude3_opus
+    }
+
+    @ObservationIgnored @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
 
     private init() {
         let configuration = OpenAI.Configuration(
@@ -81,7 +107,6 @@ final class LLMManager: ObservableObject {
 
     func chat(
         messages: [Message],
-        // Default processOutput function, just appends the output to a variable and returns it
         processOutput: @escaping (String) -> Void = { _ in }
     ) async {
         let chatQuery = await constructChatQuery(messages: messages.suffix(10).map { $0 })
@@ -96,7 +121,8 @@ final class LLMManager: ObservableObject {
             }
         } catch {
             logger.error("Error in chat: \(error)")
-            AlertManager.shared.doShowAlert(title: "Chat Error", message: "Error in chat: \(error.localizedDescription)")
+            PostHogSDK.shared.capture("chat_error", properties: ["error": error.localizedDescription, "model": model.human_name])
+            AlertManager.shared.doShowAlert(title: "Chat Error", message: "\(error.localizedDescription)")
         }
     }
 
