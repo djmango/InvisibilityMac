@@ -10,7 +10,7 @@ import OSLog
 import SwiftUI
 
 struct MessageButtonsView: View {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageListView")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageListView")
 
     private let screenshotManager = ScreenshotManager.shared
 

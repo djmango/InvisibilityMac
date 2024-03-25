@@ -12,7 +12,7 @@ import Sentry
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "AppDelegate")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AppDelegate")
 
     private var shouldResumeRecording = false
     private var eventMonitor: Any?
@@ -22,9 +22,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_: Notification) {
         SentrySDK.start { options in
             options.dsn = AppConfig.sentry_dsn
-            options.tracesSampleRate = 1.0 // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-            options.profilesSampleRate = 1.0 // see also `profilesSampler` if you need custom sampling logic
+            options.tracesSampleRate = 0.2 // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+            options.profilesSampleRate = 0.2
             options.swiftAsyncStacktraces = true
+            options.enableMetricKit = true
         }
         PostHogSDK.shared.setup(PostHogConfig(apiKey: AppConfig.posthog_api_key))
 

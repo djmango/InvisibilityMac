@@ -20,7 +20,7 @@ extension KeyboardShortcuts.Name {
 final class ShortcutViewModel: ObservableObject {
     static let shared = ShortcutViewModel()
 
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "ShortcutViewModel")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ShortcutViewModel")
 
     public var commandKeyPressed: Bool = false
     public var modifierFlags: NSEvent.ModifierFlags = []

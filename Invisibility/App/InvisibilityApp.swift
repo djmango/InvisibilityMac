@@ -4,7 +4,7 @@ import SwiftUI
 
 @main
 struct InvisibilityApp: App {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "InvisibilityApp")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "InvisibilityApp")
 
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
 

@@ -11,7 +11,7 @@ import Vision
 
 @Observable
 final class MessageViewModel: ObservableObject {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageViewModel")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
 
     static let shared = MessageViewModel()
 

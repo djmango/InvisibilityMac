@@ -20,7 +20,7 @@ struct ChatImageItem: Identifiable, Equatable {
 
 @Observable
 final class ChatViewModel: ObservableObject {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "ChatViewModel")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatViewModel")
 
     static let shared = ChatViewModel()
 

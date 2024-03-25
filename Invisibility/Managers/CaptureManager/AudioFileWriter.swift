@@ -10,7 +10,7 @@ import Foundation
 import OSLog
 
 class AudioFileWriter {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "AudioFileWriter")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AudioFileWriter")
 
     static let invisibilityHomeDir = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".invisibility")
     static let audioDir = invisibilityHomeDir.appendingPathComponent("audio")

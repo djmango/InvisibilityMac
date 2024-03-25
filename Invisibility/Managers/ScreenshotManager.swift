@@ -12,7 +12,7 @@ import SwiftUI
 import Vision
 
 class ScreenshotManager {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "ScreenshotManager")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ScreenshotManager")
 
     static let shared = ScreenshotManager()
 

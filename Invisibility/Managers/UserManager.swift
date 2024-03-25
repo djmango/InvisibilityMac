@@ -40,7 +40,7 @@ struct RefreshTokenResponse: Decodable {
 @Observable
 final class UserManager: ObservableObject {
     static let shared = UserManager()
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "LLMManager")
 
     public var user: User?
     public var isPaid: Bool = false

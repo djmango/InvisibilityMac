@@ -12,7 +12,7 @@ import OSLog
 import SwiftUI
 
 class EventsViewModel: ObservableObject {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "EventsViewModel")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "EventsViewModel")
     private let eventStore = EKEventStore()
 
     @Published var events: [EKEvent] = []

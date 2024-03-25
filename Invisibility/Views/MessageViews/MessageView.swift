@@ -4,7 +4,7 @@ import SwiftData
 import SwiftUI
 
 struct MessageView: View {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageView")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageView")
 
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool

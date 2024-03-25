@@ -11,7 +11,7 @@ import OSLog
 import SwiftUI
 
 struct OnboardingView: View {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "OnboardingView")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "OnboardingView")
     @State private var viewIndex: Int = 0
     @State private var audioPlayer: AVAudioPlayer?
     @State private var fluidSpeed: CGFloat = 0.50

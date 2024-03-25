@@ -3,7 +3,7 @@ import Sparkle
 import SwiftUI
 
 struct AppView: View {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "AppView")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AppView")
 
     @ObservedObject private var alertViewModel = AlertManager.shared
 

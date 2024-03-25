@@ -83,7 +83,7 @@ final class Message: Identifiable, ObservableObject {
     }
 
     @Transient
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "Message")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "Message")
 
     /// The full text of the message, including the audio text if it exists
     @Transient var text: String {

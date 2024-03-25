@@ -29,7 +29,7 @@ class InteractivePanel: NSPanel {
 
 @Observable
 class WindowManager: ObservableObject {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "WindowManager")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "WindowManager")
 
     static let shared = WindowManager()
 

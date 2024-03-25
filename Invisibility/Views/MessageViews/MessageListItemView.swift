@@ -7,7 +7,7 @@ import SwiftUI
 import ViewCondition
 
 struct MessageListItemView: View {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "MessageListItemView")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageListItemView")
 
     @Environment(\.colorScheme) private var colorScheme
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared

@@ -13,7 +13,7 @@ import SwiftUI
 ///
 /// ``ChatField`` extends standard text field capabilities with multiline input and specific behaviors for different platforms.
 struct ChatField: View {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "ChatField")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatField")
 
     @ObservedObject private var messageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel = ChatViewModel.shared

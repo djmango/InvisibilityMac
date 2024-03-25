@@ -12,7 +12,7 @@ import OSLog
 import SwiftUI
 
 struct SettingsView: View {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "SettingsView")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "SettingsView")
     let bundleVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
 
     @AppStorage("animateButtons") private var animateButtons = true

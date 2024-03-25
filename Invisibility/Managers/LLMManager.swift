@@ -74,13 +74,12 @@ enum LLMModels {
 final class LLMManager: ObservableObject {
     static let shared = LLMManager()
 
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "LLMManager")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "LLMManager")
 
     private var ai: OpenAI
 
     private let timeoutInterval: TimeInterval = 20
 
-    // private var model: LLMModel = LLMModels.claude3_opus
     private var model: LLMModel {
         LLMModels.human_name_to_model[llmModel] ?? LLMModels.claude3_opus
     }

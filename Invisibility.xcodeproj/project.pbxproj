@@ -20,6 +20,7 @@
 		4D4DB2472B91384D003B9D53 /* ChatImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4DB2462B91384D003B9D53 /* ChatImage.swift */; };
 		4D4DB2492B913E2E003B9D53 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */; };
 		4D5145762B7D8C4E00A5BA26 /* EventItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5145752B7D8C4E00A5BA26 /* EventItemView.swift */; };
+		4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5328332BB1244A00D25FFF /* SentryLogger.swift */; };
 		4D546F1B2B704F5200A6939F /* AudioFileWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */; };
 		4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */; };
 		4D5819C32B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */; };
@@ -88,6 +89,7 @@
 		4D4DB2462B91384D003B9D53 /* ChatImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatImage.swift; sourceTree = "<group>"; };
 		4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D5145752B7D8C4E00A5BA26 /* EventItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventItemView.swift; sourceTree = "<group>"; };
+		4D5328332BB1244A00D25FFF /* SentryLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryLogger.swift; sourceTree = "<group>"; };
 		4D546F1A2B704F5200A6939F /* AudioFileWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioFileWriter.swift; sourceTree = "<group>"; };
 		4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotManager.swift; sourceTree = "<group>"; };
 		4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCodeSyntaxHighlighter.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				4D5B4BC42B48F3320067C543 /* ImageUtils.swift */,
 				4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */,
 				4DD5E3692B6243D300C35B1C /* AppPrompts.swift */,
+				4D5328332BB1244A00D25FFF /* SentryLogger.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -535,6 +538,7 @@
 				4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
 				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,
+				4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* InvisibilityApp.swift in Sources */,
@@ -690,7 +694,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 82;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -705,7 +709,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.6;
+				MARKETING_VERSION = 2.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -723,7 +727,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 81;
+				CURRENT_PROJECT_VERSION = 82;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -738,7 +742,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.6;
+				MARKETING_VERSION = 2.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

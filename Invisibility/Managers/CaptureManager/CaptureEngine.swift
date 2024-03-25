@@ -15,7 +15,7 @@ import ScreenCaptureKit
 
 /// An object that wraps an instance of `SCStream`, and returns its results as an `AsyncThrowingStream`.
 class CaptureEngine: NSObject, @unchecked Sendable {
-    private let logger = Logger(subsystem: "so.invisibility.app", category: "CaptureEngine")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "CaptureEngine")
 
     private(set) var stream: SCStream?
     private var streamOutput: CaptureEngineStreamOutput?
