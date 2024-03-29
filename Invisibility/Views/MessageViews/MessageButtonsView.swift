@@ -7,6 +7,7 @@
 //
 
 import OSLog
+import PostHog
 import SwiftUI
 
 struct MessageButtonsView: View {
@@ -21,8 +22,8 @@ struct MessageButtonsView: View {
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
-    @ObservedObject private var windowManager: WindowManager = WindowManager.shared
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
+    private var windowManager: WindowManager = WindowManager.shared
 
     @State private var whoIsHovering: String?
 
@@ -54,7 +55,6 @@ struct MessageButtonsView: View {
                             .font(.title3)
                             .foregroundColor(Color("ChatButtonForegroundColor"))
                             .visible(if: shortcutViewModel.modifierFlags.contains(.command) && shortcutHints, removeCompletely: true)
-
                         Text("Settings")
                             .font(.title3)
                             .foregroundColor(Color("ChatButtonForegroundColor"))
@@ -152,6 +152,7 @@ struct MessageButtonsView: View {
 
     @MainActor
     private func resizeAction() {
+        print("Resizing window")
         windowManager.resizeWindow()
     }
 

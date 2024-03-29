@@ -13,7 +13,7 @@ import KeyboardShortcuts
 import OSLog
 import SwiftUI
 
-class OnboardingManager: ObservableObject {
+class OnboardingManager {
     static let shared = OnboardingManager()
 
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "OnboardingManager")

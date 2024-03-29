@@ -16,14 +16,12 @@ extension KeyboardShortcuts.Name {
     static let screenshot = Self("screenshot", default: .init(.one, modifiers: [.command, .shift]))
 }
 
-@Observable
 final class ShortcutViewModel: ObservableObject {
     static let shared = ShortcutViewModel()
 
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ShortcutViewModel")
 
-    public var commandKeyPressed: Bool = false
-    public var modifierFlags: NSEvent.ModifierFlags = []
+    @Published public var modifierFlags: NSEvent.ModifierFlags = []
 
     private init() {}
 }

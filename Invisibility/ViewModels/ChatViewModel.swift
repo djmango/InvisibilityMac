@@ -18,26 +18,25 @@ struct ChatImageItem: Identifiable, Equatable {
     }
 }
 
-@Observable
 final class ChatViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatViewModel")
 
     static let shared = ChatViewModel()
 
     /// A boolean value that indicates whether the text field should be focused.
-    public var shouldFocusTextField: Bool = false
+    @Published public var shouldFocusTextField: Bool = false
 
     /// List of JPEG images to be sent with the message
-    public var images: [ChatImageItem] = []
+    @Published public var images: [ChatImageItem] = []
 
     /// UUID of the currently hovered image
-    public var whoIsHovering: UUID?
+    @Published public var whoIsHovering: UUID?
 
     /// The height of the text field.
-    public var textHeight: CGFloat = 52
+    @Published public var textHeight: CGFloat = 52
 
     // The text content of the chat field
-    public var text: String = ""
+    @Published public var text: String = ""
 
     private init() {}
 

@@ -70,8 +70,7 @@ enum LLMModels {
     ]
 }
 
-@Observable
-final class LLMManager: ObservableObject {
+final class LLMManager {
     static let shared = LLMManager()
 
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "LLMManager")
@@ -84,7 +83,7 @@ final class LLMManager: ObservableObject {
         LLMModels.human_name_to_model[llmModel] ?? LLMModels.claude3_opus
     }
 
-    @ObservationIgnored @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
+    @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
 
     private init() {
         let configuration = OpenAI.Configuration(

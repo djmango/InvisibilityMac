@@ -75,10 +75,10 @@ struct MessageButtonItemView: View {
                 whoIsHovering = nil
             }
         }
+        .buttonStyle(.plain)
         .animation(AppConfig.snappy, value: label)
         .animation(AppConfig.snappy, value: isHovering)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
-        .buttonStyle(.plain)
         .animation(.easeInOut(duration: 0.2), value: isPressed)
     }
 

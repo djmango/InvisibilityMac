@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */; };
-		4D0B52E42B590213008D975D /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E32B590213008D975D /* AlertManager.swift */; };
+		4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E32B590213008D975D /* AlertViewModel.swift */; };
 		4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D116AB42BAAA19C00729BE7 /* ShortcutViewModel.swift */; };
 		4D1773D82B8C1060004C5D13 /* MessageButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1773D72B8C1060004C5D13 /* MessageButtonsView.swift */; };
 		4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D219F912B847B67006FF8E5 /* OpenAI */; };
@@ -79,7 +79,7 @@
 
 /* Begin PBXFileReference section */
 		4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckConnectivity.swift; sourceTree = "<group>"; };
-		4D0B52E32B590213008D975D /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		4D0B52E32B590213008D975D /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		4D116AB42BAAA19C00729BE7 /* ShortcutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutViewModel.swift; sourceTree = "<group>"; };
 		4D1773D72B8C1060004C5D13 /* MessageButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonsView.swift; sourceTree = "<group>"; };
 		4D3B635C2B642A1A004AA7DF /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
@@ -185,7 +185,6 @@
 			children = (
 				4D5819C12B8E9FFC00BF07FF /* SyntaxHighlighter */,
 				4DEEEF042B6B1EF900ECDAC5 /* CaptureManager */,
-				4D0B52E32B590213008D975D /* AlertManager.swift */,
 				4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */,
 				4D3B635C2B642A1A004AA7DF /* LLMManager.swift */,
 				4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */,
@@ -233,6 +232,7 @@
 		4D8E05282B2516DE00B60D0D /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				4D0B52E32B590213008D975D /* AlertViewModel.swift */,
 				4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */,
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 				4D5896DC2B7C67E700484BFA /* EventsViewModel.swift */,
@@ -393,7 +393,6 @@
 				4DE673542B17F46B00A5F9AE /* Sources */,
 				4DE6736A2B17F46B00A5F9AE /* Frameworks */,
 				4DE673722B17F46B00A5F9AE /* Resources */,
-				4D5A55DF2BAA68F5002FE205 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -482,28 +481,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		4D5A55DF2BAA68F5002FE205 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}\n",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "if which sentry-cli >/dev/null; then\nexport SENTRY_ORG=invisibility-inc\nexport SENTRY_PROJECT=invisibility-app\nexport SENTRY_AUTH_TOKEN=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\nERROR=$(sentry-cli debug-files upload --include-sources \"$DWARF_DSYM_FOLDER_PATH\" 2>&1 >/dev/null)\nif [ ! $? -eq 0 ]; then\necho \"warning: sentry-cli - $ERROR\"\nfi\nelse\necho \"warning: sentry-cli not installed, download from https://github.com/getsentry/sentry-cli/releases\"\nfi\n\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		4DE673542B17F46B00A5F9AE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -544,7 +521,7 @@
 				4D8E05512B2516DE00B60D0D /* InvisibilityApp.swift in Sources */,
 				4D5819C32B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift in Sources */,
 				4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */,
-				4D0B52E42B590213008D975D /* AlertManager.swift in Sources */,
+				4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
 				4DD5E36A2B6243D300C35B1C /* AppPrompts.swift in Sources */,
@@ -694,7 +671,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 83;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -709,7 +686,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.7;
+				MARKETING_VERSION = 2.0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -727,7 +704,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 82;
+				CURRENT_PROJECT_VERSION = 83;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -742,7 +719,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.7;
+				MARKETING_VERSION = 2.0.8;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

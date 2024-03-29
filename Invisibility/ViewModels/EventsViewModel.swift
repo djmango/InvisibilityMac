@@ -11,7 +11,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
-class EventsViewModel: ObservableObject {
+final class EventsViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "EventsViewModel")
     private let eventStore = EKEventStore()
 

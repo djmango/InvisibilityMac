@@ -23,7 +23,7 @@ struct SettingsView: View {
     @AppStorage("shortcutHints") private var shortcutHints = true
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
 
-    @ObservedObject private var llmManager = LLMManager.shared
+    private var llmManager = LLMManager.shared
     @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
     @ObservedObject private var userManager = UserManager.shared
 
@@ -188,9 +188,16 @@ struct SettingsView: View {
                         }
                 }
 
-                Button("Reset Onboarding") {
-                    onboardingViewed = false
-                    OnboardingManager.shared.startOnboarding()
+                HStack {
+                    Button("Reset Onboarding") {
+                        onboardingViewed = false
+                        OnboardingManager.shared.startOnboarding()
+                    }
+
+                    Button("Check for Updates") {
+                        updaterViewModel.updater.checkForUpdates()
+                    }
+                    .buttonStyle(.bordered)
                 }
 
                 HStack {
@@ -205,11 +212,6 @@ struct SettingsView: View {
                         if let url = URL(string: "https://github.com/InvisibilityInc/Invisibility/tree/master/LICENSES") {
                             NSWorkspace.shared.open(url)
                         }
-                    }
-                    .buttonStyle(.bordered)
-
-                    Button("Check for Updates") {
-                        updaterViewModel.updater.checkForUpdates()
                     }
                     .buttonStyle(.bordered)
 

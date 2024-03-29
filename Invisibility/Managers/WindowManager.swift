@@ -10,6 +10,7 @@ import Combine
 import Foundation
 import KeyboardShortcuts
 import OSLog
+import PostHog
 import SwiftUI
 
 class InteractivePanel: NSPanel {
@@ -27,8 +28,7 @@ class InteractivePanel: NSPanel {
     }
 }
 
-@Observable
-class WindowManager: ObservableObject {
+class WindowManager {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "WindowManager")
 
     static let shared = WindowManager()
@@ -45,12 +45,9 @@ class WindowManager: ObservableObject {
     /// The current screen the window is on
     private var currentScreen: NSScreen?
 
-    /// The width of the panel
-    private var width: CGFloat = WindowManager.defaultWidth
-
     /// Persist the resized state
-    @ObservationIgnored @AppStorage("resized") private var resized: Bool = false
-    @ObservationIgnored @AppStorage("sideSwitched") private var sideSwitched: Bool = false
+    @AppStorage("resized") private var resized: Bool = false
+    @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
     /// Whether the window is visible
     public var windowIsVisible: Bool {
@@ -119,6 +116,7 @@ class WindowManager: ObservableObject {
             context.duration = animationDuration
             window.animator().alphaValue = 1
         }
+        PostHogSDK.shared.capture("show_window")
     }
 
     @MainActor
@@ -131,21 +129,23 @@ class WindowManager: ObservableObject {
         }, completionHandler: {
             window.orderOut(nil)
         })
+        PostHogSDK.shared.capture("hide_window")
     }
 
     @MainActor
     public func resizeWindow() {
         guard let window else { return }
         guard window.isVisible else { return }
-        width = width == WindowManager.defaultWidth ? WindowManager.resizeWidth : WindowManager.defaultWidth
-        resized = width == WindowManager.resizeWidth
+        resized.toggle()
         positionWindowOnCursorScreen(animate: true)
+        PostHogSDK.shared.capture("resize", properties: ["resized": resized])
     }
 
     @MainActor
     public func switchSide() {
         sideSwitched.toggle()
         positionWindowOnCursorScreen(animate: true)
+        PostHogSDK.shared.capture("switch_side", properties: ["sideSwitched": sideSwitched])
     }
 
     public func setupWindow() -> Bool {
@@ -210,5 +210,7 @@ class WindowManager: ObservableObject {
         // Set the window frame
         window.setFrame(windowRect, display: true, animate: animate)
         window.makeKeyAndOrderFront(nil)
+        window.makeFirstResponder(nil)
+        window.becomeFirstResponder()
     }
 }

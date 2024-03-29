@@ -37,16 +37,15 @@ struct RefreshTokenResponse: Decodable {
     let token: String
 }
 
-@Observable
 final class UserManager: ObservableObject {
     static let shared = UserManager()
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "LLMManager")
 
-    public var user: User?
-    public var isPaid: Bool = false
-    public var confettis: Int = 0
+    @Published public var user: User?
+    @Published public var isPaid: Bool = false
+    @Published public var confettis: Int = 0
 
-    @ObservationIgnored @AppStorage("token") public var token: String? {
+    @AppStorage("token") public var token: String? {
         didSet {
             if token != nil {
                 Task {
@@ -110,7 +109,7 @@ final class UserManager: ObservableObject {
     func fetchUser() async throws -> User? {
         let urlString = AppConfig.invisibility_api_base + "/auth/user"
         guard let jwtToken = self.token else {
-            logger.error("No JWT token")
+            logger.warning("No JWT token")
             return nil
         }
 
@@ -148,7 +147,7 @@ final class UserManager: ObservableObject {
 
     func checkPaymentStatus() async -> Bool {
         guard let jwtToken = self.token else {
-            logger.error("No JWT token")
+            logger.warning("No JWT token")
             logger.info("User is not paid")
             return false
         }
@@ -184,7 +183,7 @@ final class UserManager: ObservableObject {
 
     func pay() {
         guard let user = self.user else {
-            logger.error("No user")
+            logger.error("No user for payment")
             return
         }
 
@@ -209,7 +208,7 @@ final class UserManager: ObservableObject {
 
     func refresh_jwt() async -> Bool {
         guard let jwtToken = self.token else {
-            logger.error("No JWT token")
+            logger.warning("No JWT token to refresh")
             return false
         }
 

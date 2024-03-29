@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import SwiftUI
 
-class AlertManager: ObservableObject {
+final class AlertManager: ObservableObject {
     static let shared = AlertManager()
 
     @Published var showAlert: Bool = false

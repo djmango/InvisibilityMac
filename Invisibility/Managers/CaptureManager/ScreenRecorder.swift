@@ -13,7 +13,7 @@ import ScreenCaptureKit
 import SwiftUI
 
 /// A class that manages screen recording. Primarily audio at the moment.
-class ScreenRecorder: NSObject, ObservableObject {
+final class ScreenRecorder: NSObject, ObservableObject {
     private let logger = Logger()
 
     public static let shared = ScreenRecorder()

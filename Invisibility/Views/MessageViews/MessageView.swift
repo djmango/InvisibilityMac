@@ -10,11 +10,13 @@ struct MessageView: View {
     @FocusState private var promptFocused: Bool
 
     @State private var isDragActive: Bool = false
-    @State private var offset = CGSize.zero
+    @State private var isLockedToBottom: Bool = true
+    @State private var scrollOffset: CGFloat = 0
+    @State private var previousContentSize: CGSize = .zero
 
-    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
-    @ObservedObject var chatViewModel: ChatViewModel = ChatViewModel.shared
-    @ObservedObject var windowManager: WindowManager = WindowManager.shared
+    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
+    private var windowManager: WindowManager = WindowManager.shared
 
     init() {
         isEditorFocused = true
@@ -36,13 +38,45 @@ struct MessageView: View {
                                     .sentryTrace("MessageListItemView")
                             }
                         }
+                        .background(GeometryReader { geometry in
+                            Color.clear
+                                .preference(key: ScrollOffsetPreferenceKey.self, value: geometry.frame(in: .named("scrollView")).origin.y)
+                                .preference(key: ContentSizePreferenceKey.self, value: geometry.size)
+                        })
+                        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
+                            scrollOffset = offset
+                            let prev = isLockedToBottom
+                            isLockedToBottom = scrollOffset >= 0
+                            if prev != isLockedToBottom {
+                                if isLockedToBottom {
+                                    logger.debug("Locked to bottom")
+                                } else {
+                                    logger.debug("Unlocked from bottom")
+                                }
+                            }
+                        }
+                        // .onPreferenceChange(ContentSizePreferenceKey.self) { size in
+                        //     let previousHeight = previousContentSize.height
+                        //     let currentHeight = size.height
+                        //     previousContentSize = size
+                        //     print("Previous height: \(previousHeight)")
+
+                        //     if !isLockedToBottom {
+                        //         let heightDiff = currentHeight - previousHeight
+                        //         scrollOffset += heightDiff
+                        //         print("Scroll offset: \(scrollOffset)")
+                        //         proxy.scrollTo(scrollOffset, anchor: .top)
+                        //     }
+                        // }
                         // .onChange(of: messageViewModel.isGenerating) {
                         //     logger.debug("Is generating: \(messageViewModel.isGenerating)")
                         //     if messageViewModel.isGenerating {
                         //         scrollToBottom(proxy)
+                        //         proxy.
                         //     }
                         // }
                     }
+                    .coordinateSpace(name: "scrollView")
                     .mask(
                         LinearGradient(
                             gradient: Gradient(stops: [
@@ -148,5 +182,21 @@ struct MessageView: View {
             proxy.scrollTo(lastMessage, anchor: .bottom)
             logger.debug("Scrolling to bottom finished")
         }
+    }
+}
+
+private struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = .zero
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value += nextValue()
+    }
+}
+
+private struct ContentSizePreferenceKey: PreferenceKey {
+    static var defaultValue: CGSize = .zero
+
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
     }
 }

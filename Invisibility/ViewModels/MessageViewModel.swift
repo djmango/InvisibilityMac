@@ -9,7 +9,6 @@ import SwiftUI
 import UniformTypeIdentifiers
 import Vision
 
-@Observable
 final class MessageViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
 
@@ -21,12 +20,12 @@ final class MessageViewModel: ObservableObject {
     private var chatTask: Task<Void, Error>?
 
     /// The list of messages in the chat
-    public var messages: [Message] = []
+    @Published public var messages: [Message] = []
 
     /// Whether the chat is currently generating
-    public var isGenerating: Bool = false
+    @Published public var isGenerating: Bool = false
 
-    @ObservationIgnored @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
+    @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
 
     private init() {
         try? fetch()
