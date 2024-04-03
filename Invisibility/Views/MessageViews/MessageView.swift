@@ -1,5 +1,4 @@
 import OSLog
-import ScrollKit
 import SentrySwiftUI
 import SwiftData
 import SwiftUI
@@ -37,14 +36,7 @@ struct MessageView: View {
         ZStack {
             VStack(alignment: .center, spacing: 0) {
                 ScrollViewReader { _ in
-                    ScrollView(
-                        // header: header,
-                        // headerHeight: 200,
-                        // headerMinHeight: 10,
-                        // onScroll: { point, offset in
-                        //     handleOffset((point, offset))
-                        // }
-                    ) {
+                    ScrollView {
                         LazyVStack(alignment: .trailing, spacing: 5) {
                             ForEach(messageViewModel.messages.indices, id: \.self) { index in
                                 let message: Message = messageViewModel.messages[index]

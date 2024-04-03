@@ -85,11 +85,6 @@ final class Message: Identifiable, ObservableObject {
     @Transient
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "Message")
 
-    @Transient
-    public var isLastMessage: Bool {
-        id == MessageViewModel.shared.messages.last?.id
-    }
-
     /// The full text of the message, including the audio text if it exists
     @Transient var text: String {
         let text = content ?? ""

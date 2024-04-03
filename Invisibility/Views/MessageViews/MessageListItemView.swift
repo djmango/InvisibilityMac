@@ -87,31 +87,31 @@ struct MessageListItemView: View {
                 }
                 .visible(if: message.images != nil, removeCompletely: true)
 
-                // Markdown(message.text)
-                //     .textSelection(.enabled)
-                //     .markdownTheme(.docC)
-                //     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                //     .hide(if: isGenerating, removeCompletely: true)
+                Markdown(message.text)
+                    // .textSelection(.enabled)
+                    .markdownTheme(.docC)
+                    .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
+                    .hide(if: isGenerating, removeCompletely: true)
 
                 // Text(message.text)
                 //     .textSelection(.enabled)
 
-                ForEach(message.textBlocks, id: \.content) { block in
-                    switch block.type {
-                    case .string:
-                        Text(block.content)
-                            // .font(.custom("SF Pro Rounded", size: 14))
-                            .textSelection(.enabled)
-                    case .markdown:
-                        Text(block.content)
-                            .textSelection(.enabled)
-                        // Markdown(block.content)
-                        // .textSelection(.enabled)
-                        // .markdownTheme(.docC)
-                        // .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                    }
-                }
-                .hide(if: isGenerating, removeCompletely: true)
+                //     ForEach(message.textBlocks, id: \.content) { block in
+                //         switch block.type {
+                //         case .string:
+                //             Text(block.content)
+                //                 // .font(.custom("SF Pro Rounded", size: 14))
+                //                 .textSelection(.enabled)
+                //         case .markdown:
+                //             Text(block.content)
+                //                 .textSelection(.enabled)
+                //             // Markdown(block.content)
+                //             // .textSelection(.enabled)
+                //             // .markdownTheme(.docC)
+                //             // .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
+                //         }
+                //     }
+                //     .hide(if: isGenerating, removeCompletely: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
@@ -148,12 +148,16 @@ struct MessageListItemView: View {
                 }
             }
             .animation(AppConfig.snappy, value: whoIsHovering)
-            .animation(AppConfig.snappy, value: isHovered)
+            // .animation(AppConfig.snappy, value: isHovered) ?? FOR SOME REASON THIS CAUSES THE FREEZE
             .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
             .padding(8)
         }
         .onHover {
-            isHovered = $0
+            if $0 {
+                isHovered = true
+            } else {
+                isHovered = false
+            }
             isCopied = false
         }
         .overlay(
