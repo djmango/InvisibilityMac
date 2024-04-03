@@ -6,11 +6,14 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import AVFoundation
 import Foundation
 import OSLog
+import ScreenCaptureKit
 import SwiftUI
 import Vision
 
+@MainActor
 class ScreenshotManager {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ScreenshotManager")
 
@@ -35,11 +38,11 @@ class ScreenshotManager {
     private init() {}
 
     public func capture() async {
-        guard await ScreenRecorder.shared.askForScreenRecordingPermission() else { return }
+        guard await askForScreenRecordingPermission() else { return }
 
-        await WindowManager.shared.hideWindow()
+        WindowManager.shared.hideWindow()
         guard let url = captureImageToURL() else { return }
-        await WindowManager.shared.showWindow()
+        WindowManager.shared.showWindow()
         messageViewModel.handleFile(url)
         try? FileManager.default.removeItem(atPath: screenShotFilePath)
     }
@@ -212,5 +215,43 @@ class ScreenshotManager {
             }
         }
         return output
+    }
+
+    var canRecord: Bool {
+        get async {
+            do {
+                // If the app doesn't have screen recording permission, this call generates an exception.
+                try await SCShareableContent.excludingDesktopWindows(true, onScreenWindowsOnly: true)
+                return true
+            } catch {
+                return false
+            }
+        }
+    }
+
+    var canRecordMic: Bool {
+        get async {
+            await withCheckedContinuation { continuation in
+                AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
+                    self?.logger.debug("Audio permission granted: \(granted)")
+                    continuation.resume(returning: granted)
+                }
+            }
+        }
+    }
+
+    func askForScreenRecordingPermission() async -> Bool {
+        guard await canRecord else {
+            if OnboardingManager.shared.onboardingViewed {
+                AlertManager.shared.doShowAlert(title: "Screen Recording Permission Grant", message: "Invisibility has not been granted permission to record the screen. Please enable this permission in System Preferences > Security & Privacy > Screen & System Audio Recording.")
+            }
+            // Open the System Preferences app to the Screen Recording settings.
+            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {
+                NSWorkspace.shared.open(url)
+            }
+            return false
+        }
+        logger.debug("Screen recording permission granted.")
+        return true
     }
 }

@@ -29,9 +29,6 @@ final class ChatViewModel: ObservableObject {
     /// List of JPEG images to be sent with the message
     @Published public var images: [ChatImageItem] = []
 
-    /// UUID of the currently hovered image
-    @Published public var whoIsHovering: UUID?
-
     /// The height of the text field.
     @Published public var textHeight: CGFloat = 52
 
@@ -40,14 +37,17 @@ final class ChatViewModel: ObservableObject {
 
     private init() {}
 
+    @MainActor
     public func addImage(_ data: Data) {
         images.append(ChatImageItem(imageData: data))
     }
 
+    @MainActor
     public func removeImage(id: UUID) {
         images.removeAll { $0.id == id }
     }
 
+    @MainActor
     public func focusTextField() {
         shouldFocusTextField = true
     }

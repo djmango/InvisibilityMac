@@ -1,4 +1,5 @@
 import OSLog
+import ScrollKit
 import SentrySwiftUI
 import SwiftData
 import SwiftUI
@@ -11,8 +12,17 @@ struct MessageView: View {
 
     @State private var isDragActive: Bool = false
     @State private var isLockedToBottom: Bool = true
-    @State private var scrollOffset: CGFloat = 0
-    @State private var previousContentSize: CGSize = .zero
+    @State private var offset = CGPoint.zero
+
+    private func handleOffset(_ scrollOffset: (CGPoint, CGFloat)) {
+        self.offset = scrollOffset.0
+        print("Offset: \(scrollOffset.0)")
+        print("Offsetf: \(scrollOffset.1)")
+    }
+
+    private func header() -> some View {
+        Spacer()
+    }
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
@@ -27,56 +37,24 @@ struct MessageView: View {
         ZStack {
             VStack(alignment: .center, spacing: 0) {
                 ScrollViewReader { _ in
-                    ScrollView {
+                    ScrollView(
+                        // header: header,
+                        // headerHeight: 200,
+                        // headerMinHeight: 10,
+                        // onScroll: { point, offset in
+                        //     handleOffset((point, offset))
+                        // }
+                    ) {
                         LazyVStack(alignment: .trailing, spacing: 5) {
                             ForEach(messageViewModel.messages.indices, id: \.self) { index in
-                                let message: Message = messageViewModel.messages.reversed()[index]
+                                let message: Message = messageViewModel.messages[index]
                                 // Generate the view for the individual message.
                                 MessageListItemView(message: message)
                                     .id(message)
-                                    .rotationEffect(.degrees(180))
                                     .sentryTrace("MessageListItemView")
                             }
                         }
-                        .background(GeometryReader { geometry in
-                            Color.clear
-                                .preference(key: ScrollOffsetPreferenceKey.self, value: geometry.frame(in: .named("scrollView")).origin.y)
-                                .preference(key: ContentSizePreferenceKey.self, value: geometry.size)
-                        })
-                        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                            scrollOffset = offset
-                            let prev = isLockedToBottom
-                            isLockedToBottom = scrollOffset >= 0
-                            if prev != isLockedToBottom {
-                                if isLockedToBottom {
-                                    logger.debug("Locked to bottom")
-                                } else {
-                                    logger.debug("Unlocked from bottom")
-                                }
-                            }
-                        }
-                        // .onPreferenceChange(ContentSizePreferenceKey.self) { size in
-                        //     let previousHeight = previousContentSize.height
-                        //     let currentHeight = size.height
-                        //     previousContentSize = size
-                        //     print("Previous height: \(previousHeight)")
-
-                        //     if !isLockedToBottom {
-                        //         let heightDiff = currentHeight - previousHeight
-                        //         scrollOffset += heightDiff
-                        //         print("Scroll offset: \(scrollOffset)")
-                        //         proxy.scrollTo(scrollOffset, anchor: .top)
-                        //     }
-                        // }
-                        // .onChange(of: messageViewModel.isGenerating) {
-                        //     logger.debug("Is generating: \(messageViewModel.isGenerating)")
-                        //     if messageViewModel.isGenerating {
-                        //         scrollToBottom(proxy)
-                        //         proxy.
-                        //     }
-                        // }
                     }
-                    .coordinateSpace(name: "scrollView")
                     .mask(
                         LinearGradient(
                             gradient: Gradient(stops: [
@@ -89,7 +67,6 @@ struct MessageView: View {
                             endPoint: .bottom
                         )
                     )
-                    .rotationEffect(.degrees(180)) // LOL THIS IS AN AWESOME SOLUTION
                     .scrollContentBackground(.hidden)
                     .scrollIndicators(.never)
                     .sentryTrace("ScrollView")
@@ -182,21 +159,5 @@ struct MessageView: View {
             proxy.scrollTo(lastMessage, anchor: .bottom)
             logger.debug("Scrolling to bottom finished")
         }
-    }
-}
-
-private struct ScrollOffsetPreferenceKey: PreferenceKey {
-    static var defaultValue: CGFloat = .zero
-
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value += nextValue()
-    }
-}
-
-private struct ContentSizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        value = nextValue()
     }
 }

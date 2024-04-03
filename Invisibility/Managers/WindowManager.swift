@@ -19,7 +19,9 @@ class InteractivePanel: NSPanel {
     }
 
     override func flagsChanged(with event: NSEvent) {
-        ShortcutViewModel.shared.modifierFlags = event.modifierFlags
+        DispatchQueue.main.async {
+            ShortcutViewModel.shared.modifierFlags = event.modifierFlags
+        }
     }
 
     // Listen for escape
@@ -28,6 +30,7 @@ class InteractivePanel: NSPanel {
     }
 }
 
+@MainActor
 class WindowManager {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "WindowManager")
 
@@ -75,14 +78,14 @@ class WindowManager {
             if self.windowIsOnScreenWithCursor {
                 self.logger.debug("Toggling window")
                 Task {
-                    await self.toggleWindow()
+                    self.toggleWindow()
                 }
             } else {
                 self.logger.debug("Changing screens")
                 // Just move to the new screen
                 self.positionWindowOnCursorScreen()
                 Task {
-                    await self.showWindow()
+                    self.showWindow()
                 }
             }
         }

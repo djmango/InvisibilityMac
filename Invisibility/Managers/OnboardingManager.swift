@@ -39,6 +39,9 @@ class OnboardingManager {
         onboardingViewed = true
         window?.close()
         WindowManager.shared.showWindow()
+        Task {
+            await ScreenshotManager.shared.askForScreenRecordingPermission()
+        }
     }
 
     @MainActor

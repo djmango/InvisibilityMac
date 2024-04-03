@@ -101,9 +101,6 @@ struct OnboardingExplainerView: View {
             VStack {
                 Spacer()
                 Button(action: {
-                    Task {
-                        await ScreenRecorder.shared.askForScreenRecordingPermission()
-                    }
                     callback()
                 }) {
                     VStack {

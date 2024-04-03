@@ -131,11 +131,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func appDidBecomeActive(notification _: NSNotification) {
         logger.debug("App did become active")
         // If the window is visible and on the screen with the cursor, don't show it again
-        if WindowManager.shared.windowIsVisible, WindowManager.shared.windowIsOnScreenWithCursor {
-            return
-        } else {
-            // Otherwise, show the window on the screen with the cursor
-            Task {
+        Task {
+            if await WindowManager.shared.windowIsVisible, await WindowManager.shared.windowIsOnScreenWithCursor {
+                return
+            } else {
+                // Otherwise, show the window on the screen with the cursor
                 await WindowManager.shared.showWindow()
             }
         }

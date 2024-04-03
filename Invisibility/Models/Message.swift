@@ -85,15 +85,20 @@ final class Message: Identifiable, ObservableObject {
     @Transient
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "Message")
 
+    @Transient
+    public var isLastMessage: Bool {
+        id == MessageViewModel.shared.messages.last?.id
+    }
+
     /// The full text of the message, including the audio text if it exists
     @Transient var text: String {
-        var text = content ?? ""
+        let text = content ?? ""
         // truncate characters
-        let truncNum = 50000
-        if text.count > truncNum {
-            logger.warning("Truncating message to \(truncNum) characters")
-            text = String(text.prefix(truncNum))
-        }
+        // let truncNum = 50000
+        // if text.count > truncNum {
+        //     logger.warning("Truncating message to \(truncNum) characters")
+        //     text = String(text.prefix(truncNum))
+        // }
         return text
     }
 

@@ -10,7 +10,6 @@ struct MessageListItemView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageListItemView")
 
     @Environment(\.colorScheme) private var colorScheme
-    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
     private let message: Message
@@ -19,7 +18,7 @@ struct MessageListItemView: View {
 
     // Message state
     private var isAssistant: Bool { message.role == .assistant }
-    private var isGenerating: Bool { messageViewModel.isGenerating && (message.content?.isEmpty ?? true) }
+    private var isGenerating: Bool { MessageViewModel.shared.isGenerating && (message.content?.isEmpty ?? true) }
 
     init(message: Message) {
         self.message = message
@@ -42,7 +41,7 @@ struct MessageListItemView: View {
     }
 
     private var isLastMessage: Bool {
-        message.id == messageViewModel.messages.last?.id
+        message.id == MessageViewModel.shared.messages.last?.id
     }
 
     var body: some View {
@@ -88,31 +87,31 @@ struct MessageListItemView: View {
                 }
                 .visible(if: message.images != nil, removeCompletely: true)
 
-                Markdown(message.text)
-                    .textSelection(.enabled)
-                    .markdownTheme(.docC)
-                    .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                    .hide(if: isGenerating, removeCompletely: true)
+                // Markdown(message.text)
+                //     .textSelection(.enabled)
+                //     .markdownTheme(.docC)
+                //     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
+                //     .hide(if: isGenerating, removeCompletely: true)
 
                 // Text(message.text)
                 //     .textSelection(.enabled)
 
-                // ForEach(message.textBlocks, id: \.content) { block in
-                //     switch block.type {
-                //     case .string:
-                //         Text(block.content)
-                //             // .font(.custom("SF Pro Rounded", size: 14))
-                //             .textSelection(.enabled)
-                //     case .markdown:
-                //         Text(block.content)
-                //             .textSelection(.enabled)
-                //         // Markdown(block.content)
-                //         // .textSelection(.enabled)
-                //         // .markdownTheme(.docC)
-                //         // .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                //     }
-                // }
-                // .hide(if: isGenerating, removeCompletely: true)
+                ForEach(message.textBlocks, id: \.content) { block in
+                    switch block.type {
+                    case .string:
+                        Text(block.content)
+                            // .font(.custom("SF Pro Rounded", size: 14))
+                            .textSelection(.enabled)
+                    case .markdown:
+                        Text(block.content)
+                            .textSelection(.enabled)
+                        // Markdown(block.content)
+                        // .textSelection(.enabled)
+                        // .markdownTheme(.docC)
+                        // .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
+                    }
+                }
+                .hide(if: isGenerating, removeCompletely: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
@@ -187,12 +186,12 @@ struct MessageListItemView: View {
 
     private func regenerateAction() {
         Task {
-            await messageViewModel.regenerate()
+            await MessageViewModel.shared.regenerate()
         }
     }
 
     private func deleteAction() {
-        messageViewModel.messages.removeAll { $0.id == message.id }
+        MessageViewModel.shared.messages.removeAll { $0.id == message.id }
         let context = SharedModelContainer.shared.mainContext
         context.delete(message)
     }
