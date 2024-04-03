@@ -88,7 +88,7 @@ struct MessageListItemView: View {
                 .visible(if: message.images != nil, removeCompletely: true)
 
                 Markdown(message.text)
-                    // .textSelection(.enabled)
+                    .textSelection(.enabled)
                     .markdownTheme(.docC)
                     .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
                     .hide(if: isGenerating, removeCompletely: true)

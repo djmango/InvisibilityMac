@@ -195,7 +195,10 @@ class WindowManager {
         // Get the menu bar height to adjust the window position
         let menuBarHeight = NSStatusBar.system.thickness
 
-        let windowHeight: CGFloat = screen.frame.height - menuBarHeight
+        let windowHeight: CGFloat = screen.frame.height - menuBarHeight - 15
+        DispatchQueue.main.async {
+            MessageViewModel.shared.windowHeight = windowHeight
+        }
 
         // Determine the horizontal position
         let xPos: CGFloat = if sideSwitched {

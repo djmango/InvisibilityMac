@@ -69,7 +69,6 @@
 		4DF2D8FF2BA683280093CA3E /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8FE2BA683280093CA3E /* PostHog */; };
 		4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF2D9002BA689220093CA3E /* AppConfig.swift */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
-		4DFDDA852BBDCEEB00AC475C /* ScrollKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DFDDA842BBDCEEB00AC475C /* ScrollKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -141,7 +140,6 @@
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
-				4DFDDA852BBDCEEB00AC475C /* ScrollKit in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
 				4D671E782B93FEB6007AE7E2 /* SplashTokenizer in Frameworks */,
@@ -395,7 +393,6 @@
 				4DF2D8F92BA628530093CA3E /* Sentry */,
 				4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */,
 				4DF2D8FE2BA683280093CA3E /* PostHog */,
-				4DFDDA842BBDCEEB00AC475C /* ScrollKit */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -435,7 +432,6 @@
 				4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
 				4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				4DF2D8FD2BA683280093CA3E /* XCRemoteSwiftPackageReference "posthog-ios" */,
-				4DFDDA832BBDCEEB00AC475C /* XCRemoteSwiftPackageReference "ScrollKit" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -847,14 +843,6 @@
 				minimumVersion = 3.2.4;
 			};
 		};
-		4DFDDA832BBDCEEB00AC475C /* XCRemoteSwiftPackageReference "ScrollKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielsaidi/ScrollKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -942,11 +930,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DF2D8FD2BA683280093CA3E /* XCRemoteSwiftPackageReference "posthog-ios" */;
 			productName = PostHog;
-		};
-		4DFDDA842BBDCEEB00AC475C /* ScrollKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DFDDA832BBDCEEB00AC475C /* XCRemoteSwiftPackageReference "ScrollKit" */;
-			productName = ScrollKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

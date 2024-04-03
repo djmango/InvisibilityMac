@@ -12,6 +12,7 @@ struct MessageView: View {
     @State private var isDragActive: Bool = false
     @State private var isLockedToBottom: Bool = true
     @State private var offset = CGPoint.zero
+    @State private var scrollProxy: ScrollViewProxy?
 
     private func handleOffset(_ scrollOffset: (CGPoint, CGFloat)) {
         self.offset = scrollOffset.0
@@ -33,11 +34,16 @@ struct MessageView: View {
     }
 
     var body: some View {
+        let _ = Self._printChanges()
         ZStack {
             VStack(alignment: .center, spacing: 0) {
-                ScrollViewReader { _ in
+                ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(alignment: .trailing, spacing: 5) {
+                            Rectangle()
+                                .frame(height: max(0, messageViewModel.windowHeight - 210))
+                                .hidden()
+
                             ForEach(messageViewModel.messages.indices, id: \.self) { index in
                                 let message: Message = messageViewModel.messages[index]
                                 // Generate the view for the individual message.
@@ -47,6 +53,7 @@ struct MessageView: View {
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .mask(
                         LinearGradient(
                             gradient: Gradient(stops: [
@@ -62,6 +69,13 @@ struct MessageView: View {
                     .scrollContentBackground(.hidden)
                     .scrollIndicators(.never)
                     .sentryTrace("ScrollView")
+                    .onAppear {
+                        scrollProxy = proxy
+                        scrollToBottom()
+                    }
+                    .onChange(of: messageViewModel.messages.count) {
+                        scrollToBottom()
+                    }
                 }
 
                 Spacer()
@@ -140,15 +154,18 @@ struct MessageView: View {
         return true
     }
 
-    private func scrollToBottom(_ proxy: ScrollViewProxy) {
+    private func scrollToBottom() {
         guard let lastMessage = messageViewModel.messages.last else {
+            return
+        }
+        guard let scrollProxy else {
             return
         }
 
         // proxy.scrollTo(lastMessage, anchor: .bottom)
         withAnimation(.easeOut(duration: 0.3)) {
             logger.debug("Scrolling to bottom started")
-            proxy.scrollTo(lastMessage, anchor: .bottom)
+            scrollProxy.scrollTo(lastMessage, anchor: .bottom)
             logger.debug("Scrolling to bottom finished")
         }
     }
