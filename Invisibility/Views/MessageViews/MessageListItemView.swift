@@ -1,7 +1,6 @@
 import CoreGraphics
 import MarkdownWebView
 import OSLog
-import Splash
 import SwiftData
 import SwiftUI
 import ViewCondition
@@ -127,15 +126,6 @@ struct MessageListItemView: View {
         .padding(.horizontal, 10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.bottom, 3)
-    }
-
-    private var theme: Splash.Theme {
-        switch self.colorScheme {
-        case .dark:
-            .sundellsColors(withFont: .init(size: 16))
-        default:
-            .sunset(withFont: .init(size: 16))
-        }
     }
 
     // MARK: - Actions
