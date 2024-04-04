@@ -11,19 +11,7 @@ struct MessageView: View {
     @FocusState private var promptFocused: Bool
 
     @State private var isDragActive: Bool = false
-    @State private var isLockedToBottom: Bool = true
-    @State private var offset = CGPoint.zero
     @State private var scrollProxy: ScrollViewProxy?
-
-    private func handleOffset(_ scrollOffset: (CGPoint, CGFloat)) {
-        self.offset = scrollOffset.0
-        print("Offset: \(scrollOffset.0)")
-        print("Offsetf: \(scrollOffset.1)")
-    }
-
-    private func header() -> some View {
-        Spacer()
-    }
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
@@ -49,12 +37,11 @@ struct MessageView: View {
                                 let message: Message = messageViewModel.messages[index]
                                 // Generate the view for the individual message.
                                 MessageListItemView(message: message)
-                                    .id(message)
+                                    .id(message.id)
                                     .sentryTrace("MessageListItemView")
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .mask(
                         LinearGradient(
                             gradient: Gradient(stops: [
@@ -69,13 +56,14 @@ struct MessageView: View {
                     )
                     .scrollContentBackground(.hidden)
                     .scrollIndicators(.never)
+                    .defaultScrollAnchor(.bottom)
                     .sentryTrace("ScrollView")
                     .onAppear {
                         scrollProxy = proxy
-                        scrollToBottom()
-                    }
-                    .onChange(of: messageViewModel.messages.count) {
-                        scrollToBottom()
+                        // Wait a few seconds for rendering to complete
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            scrollToBottom()
+                        }
                     }
                 }
 
@@ -163,11 +151,6 @@ struct MessageView: View {
             return
         }
 
-        // proxy.scrollTo(lastMessage, anchor: .bottom)
-        withAnimation(.easeOut(duration: 0.3)) {
-            logger.debug("Scrolling to bottom started")
-            scrollProxy.scrollTo(lastMessage, anchor: .bottom)
-            logger.debug("Scrolling to bottom finished")
-        }
+        scrollProxy.scrollTo(lastMessage.id, anchor: .bottom)
     }
 }
