@@ -1,5 +1,5 @@
 import CoreGraphics
-import MarkdownUI
+import MarkdownWebView
 import OSLog
 import Splash
 import SwiftData
@@ -30,10 +30,6 @@ struct MessageListItemView: View {
 
     private var isResizeButtonVisible: Bool {
         isHovered && isAssistant
-    }
-
-    private var isCopyButtonVisible: Bool {
-        (isHovered && !isGenerating) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
     }
 
     private var isRegenerateButtonVisible: Bool {
@@ -87,31 +83,7 @@ struct MessageListItemView: View {
                 }
                 .visible(if: message.images != nil, removeCompletely: true)
 
-                Markdown(message.text)
-                    .textSelection(.enabled)
-                    .markdownTheme(.docC)
-                    .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                    .hide(if: isGenerating, removeCompletely: true)
-
-                // Text(message.text)
-                //     .textSelection(.enabled)
-
-                //     ForEach(message.textBlocks, id: \.content) { block in
-                //         switch block.type {
-                //         case .string:
-                //             Text(block.content)
-                //                 // .font(.custom("SF Pro Rounded", size: 14))
-                //                 .textSelection(.enabled)
-                //         case .markdown:
-                //             Text(block.content)
-                //                 .textSelection(.enabled)
-                //             // Markdown(block.content)
-                //             // .textSelection(.enabled)
-                //             // .markdownTheme(.docC)
-                //             // .markdownCodeSyntaxHighlighter(.splash(theme: self.theme))
-                //         }
-                //     }
-                //     .hide(if: isGenerating, removeCompletely: true)
+                MarkdownWebView(message.text)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
@@ -120,7 +92,7 @@ struct MessageListItemView: View {
             VStack(alignment: .trailing) {
                 Spacer()
 
-                // Regenerate and copy buttons
+                // Regenerate button
                 HStack {
                     Spacer()
                     MessageButtonItemView(
@@ -133,18 +105,6 @@ struct MessageListItemView: View {
                     }
                     .visible(if: isRegenerateButtonVisible, removeCompletely: true)
                     .keyboardShortcut("r", modifiers: [.command, .shift])
-
-                    MessageButtonItemView(
-                        label: "Copy",
-                        icon: isCopied ? "checkmark" : "doc.on.doc",
-                        shortcut_hint: "⌘ ⌥ C",
-                        whoIsHovering: $whoIsHovering
-                    ) {
-                        copyAction()
-                    }
-                    .keyboardShortcut("c", modifiers: [.command, .option])
-                    .changeEffect(.jump(height: 10), value: isCopied)
-                    .visible(if: isCopyButtonVisible, removeCompletely: true)
                 }
             }
             .animation(AppConfig.snappy, value: whoIsHovering)
@@ -180,23 +140,9 @@ struct MessageListItemView: View {
 
     // MARK: - Actions
 
-    private func copyAction() {
-        let pasteBoard = NSPasteboard.general
-        pasteBoard.clearContents()
-        pasteBoard.setString(message.content ?? "", forType: .string)
-
-        isCopied = true
-    }
-
     private func regenerateAction() {
         Task {
             await MessageViewModel.shared.regenerate()
         }
-    }
-
-    private func deleteAction() {
-        MessageViewModel.shared.messages.removeAll { $0.id == message.id }
-        let context = SharedModelContainer.shared.mainContext
-        context.delete(message)
     }
 }

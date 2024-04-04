@@ -21,18 +21,12 @@
 		4D4DB2492B913E2E003B9D53 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */; };
 		4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5328332BB1244A00D25FFF /* SentryLogger.swift */; };
 		4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */; };
-		4D5819C32B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */; };
-		4D5819C52B8EA02300BF07FF /* TextOutputFormat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819C42B8EA02300BF07FF /* TextOutputFormat.swift */; };
 		4D596AA22B5F2B3E00B9E765 /* ChatField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */; };
 		4D5A9EA22B8C65D40018F6E4 /* MessageButtonItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */; };
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D6185692B9A25D300E550D2 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6185682B9A25D300E550D2 /* AVKit.framework */; };
 		4D61856C2B9A262E00E550D2 /* screenshot.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D61856A2B9A25E900E550D2 /* screenshot.mp4 */; };
 		4D61856D2B9A262E00E550D2 /* summon.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D61856B2B9A25E900E550D2 /* summon.mp4 */; };
-		4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E712B93FEB6007AE7E2 /* Splash */; };
-		4D671E742B93FEB6007AE7E2 /* SplashHTMLGen in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E732B93FEB6007AE7E2 /* SplashHTMLGen */; };
-		4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E752B93FEB6007AE7E2 /* SplashMarkdown */; };
-		4D671E782B93FEB6007AE7E2 /* SplashTokenizer in Frameworks */ = {isa = PBXBuildFile; productRef = 4D671E772B93FEB6007AE7E2 /* SplashTokenizer */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
 		4D885C772B96D969009A1F48 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D885C762B96D969009A1F48 /* SettingsView.swift */; };
@@ -60,7 +54,6 @@
 		4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */; };
 		4DD5E36A2B6243D300C35B1C /* AppPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD5E3692B6243D300C35B1C /* AppPrompts.swift */; };
 		4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DDCE8522B50BA0900A22B1E /* Sparkle */; };
-		4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734E2B17F46B00A5F9AE /* MarkdownUI */; };
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
 		4DEA4ADF2B70689B00393858 /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEA4ADE2B70689B00393858 /* MenuBarView.swift */; };
 		4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */; };
@@ -68,6 +61,7 @@
 		4DF2D8FC2BA628530093CA3E /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */; };
 		4DF2D8FF2BA683280093CA3E /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8FE2BA683280093CA3E /* PostHog */; };
 		4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF2D9002BA689220093CA3E /* AppConfig.swift */; };
+		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -84,8 +78,6 @@
 		4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		4D5328332BB1244A00D25FFF /* SentryLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryLogger.swift; sourceTree = "<group>"; };
 		4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotManager.swift; sourceTree = "<group>"; };
-		4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashCodeSyntaxHighlighter.swift; sourceTree = "<group>"; };
-		4D5819C42B8EA02300BF07FF /* TextOutputFormat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextOutputFormat.swift; sourceTree = "<group>"; };
 		4D596A9C2B5F2B3E00B9E765 /* ChatField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatField.swift; sourceTree = "<group>"; };
 		4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonItemView.swift; sourceTree = "<group>"; };
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
@@ -119,7 +111,7 @@
 		4DEA4ADE2B70689B00393858 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
 		4DF2D9002BA689220093CA3E /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
-		4DF46B232BBDF15C00846217 /* swift-markdown-ui */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "swift-markdown-ui"; path = "../../swift-markdown-ui"; sourceTree = "<group>"; };
+		4DF46B332BBE1A1900846217 /* markdown-webview */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "markdown-webview"; path = "../../markdown-webview"; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -132,20 +124,16 @@
 				4DF2D8FC2BA628530093CA3E /* SentrySwiftUI in Frameworks */,
 				4D9354292B99851E00C34A63 /* Alamofire in Frameworks */,
 				4DF2D8FF2BA683280093CA3E /* PostHog in Frameworks */,
-				4D671E722B93FEB6007AE7E2 /* Splash in Frameworks */,
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
-				4D671E762B93FEB6007AE7E2 /* SplashMarkdown in Frameworks */,
-				4D671E742B93FEB6007AE7E2 /* SplashHTMLGen in Frameworks */,
 				4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
-				4DE6736E2B17F46B00A5F9AE /* MarkdownUI in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
-				4D671E782B93FEB6007AE7E2 /* SplashTokenizer in Frameworks */,
 				4DF2D8FA2BA628530093CA3E /* Sentry in Frameworks */,
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
+				4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,7 +160,6 @@
 		4D1FC3502B623147009DA851 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				4D5819C12B8E9FFC00BF07FF /* SyntaxHighlighter */,
 				4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */,
 				4D3B635C2B642A1A004AA7DF /* LLMManager.swift */,
 				4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */,
@@ -180,15 +167,6 @@
 				4D93542A2B99A81400C34A63 /* OnboardingManager.swift */,
 			);
 			path = Managers;
-			sourceTree = "<group>";
-		};
-		4D5819C12B8E9FFC00BF07FF /* SyntaxHighlighter */ = {
-			isa = PBXGroup;
-			children = (
-				4D5819C22B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift */,
-				4D5819C42B8EA02300BF07FF /* TextOutputFormat.swift */,
-			);
-			path = SyntaxHighlighter;
 			sourceTree = "<group>";
 		};
 		4D5896D92B7C67BD00484BFA /* MenuBarViews */ = {
@@ -202,7 +180,7 @@
 		4D8E05272B2516DE00B60D0D /* Invisibility */ = {
 			isa = PBXGroup;
 			children = (
-				4DF46B232BBDF15C00846217 /* swift-markdown-ui */,
+				4DF46B332BBE1A1900846217 /* markdown-webview */,
 				4D1FC3502B623147009DA851 /* Managers */,
 				4D8E05282B2516DE00B60D0D /* ViewModels */,
 				4D8E052E2B2516DE00B60D0D /* App */,
@@ -377,22 +355,18 @@
 			name = Invisibility;
 			packageProductDependencies = (
 				4DE6734C2B17F46B00A5F9AE /* ViewCondition */,
-				4DE6734E2B17F46B00A5F9AE /* MarkdownUI */,
 				4D7AB4232B4CB469007F025B /* Pow */,
 				4DD282DE2B4DF7050041690B /* KeyboardShortcuts */,
 				4DD282E72B4E3C4A0041690B /* LaunchAtLogin */,
 				4DDCE8522B50BA0900A22B1E /* Sparkle */,
 				4D219F912B847B67006FF8E5 /* OpenAI */,
-				4D671E712B93FEB6007AE7E2 /* Splash */,
-				4D671E732B93FEB6007AE7E2 /* SplashHTMLGen */,
-				4D671E752B93FEB6007AE7E2 /* SplashMarkdown */,
-				4D671E772B93FEB6007AE7E2 /* SplashTokenizer */,
 				4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */,
 				4D9354282B99851E00C34A63 /* Alamofire */,
 				4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */,
 				4DF2D8F92BA628530093CA3E /* Sentry */,
 				4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */,
 				4DF2D8FE2BA683280093CA3E /* PostHog */,
+				4DF46B352BBE1A2700846217 /* MarkdownWebView */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -420,18 +394,17 @@
 			mainGroup = 0A4D35782AF541D900846890;
 			packageReferences = (
 				0ACA4D712AF88DB6000DA76F /* XCRemoteSwiftPackageReference "ViewCondition" */,
-				0ACA4D742AF89C27000DA76F /* XCRemoteSwiftPackageReference "swift-markdown-ui" */,
 				0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */,
 				4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				4DD282E62B4E3C4A0041690B /* XCRemoteSwiftPackageReference "LaunchAtLogin-Modern" */,
 				4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */,
-				4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */,
 				4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */,
 				4D9354272B99851E00C34A63 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
 				4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				4DF2D8FD2BA683280093CA3E /* XCRemoteSwiftPackageReference "posthog-ios" */,
+				4DF46B342BBE1A2700846217 /* XCRemoteSwiftPackageReference "markdown-webview" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -477,7 +450,6 @@
 				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */,
 				4D1773D82B8C1060004C5D13 /* MessageButtonsView.swift in Sources */,
-				4D5819C52B8EA02300BF07FF /* TextOutputFormat.swift in Sources */,
 				4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */,
 				4D885C772B96D969009A1F48 /* SettingsView.swift in Sources */,
 				4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */,
@@ -491,7 +463,6 @@
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
 				4D8E05512B2516DE00B60D0D /* InvisibilityApp.swift in Sources */,
-				4D5819C32B8EA00E00BF07FF /* SplashCodeSyntaxHighlighter.swift in Sources */,
 				4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */,
 				4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
@@ -731,14 +702,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		0ACA4D742AF89C27000DA76F /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.3.0;
-			};
-		};
 		0AE024812AFB898300347C18 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sparkle-project/Sparkle";
@@ -761,14 +724,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.1.0;
-			};
-		};
-		4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/JohnSundell/Splash.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.16.0;
 			};
 		};
 		4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */ = {
@@ -819,14 +774,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		4DE6734F2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swift-markdown-ui" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/gonzalezreal/swift-markdown-ui";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.0;
-			};
-		};
 		4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
@@ -843,6 +790,14 @@
 				minimumVersion = 3.2.4;
 			};
 		};
+		4DF46B342BBE1A2700846217 /* XCRemoteSwiftPackageReference "markdown-webview" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/djmango/markdown-webview.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -855,26 +810,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
 			productName = ConfettiSwiftUI;
-		};
-		4D671E712B93FEB6007AE7E2 /* Splash */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */;
-			productName = Splash;
-		};
-		4D671E732B93FEB6007AE7E2 /* SplashHTMLGen */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */;
-			productName = SplashHTMLGen;
-		};
-		4D671E752B93FEB6007AE7E2 /* SplashMarkdown */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */;
-			productName = SplashMarkdown;
-		};
-		4D671E772B93FEB6007AE7E2 /* SplashTokenizer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4D671E702B93FEB6007AE7E2 /* XCRemoteSwiftPackageReference "Splash" */;
-			productName = SplashTokenizer;
 		};
 		4D7AB4232B4CB469007F025B /* Pow */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -911,11 +846,6 @@
 			package = 4DE6734D2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewCondition" */;
 			productName = ViewCondition;
 		};
-		4DE6734E2B17F46B00A5F9AE /* MarkdownUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DE6734F2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "swift-markdown-ui" */;
-			productName = MarkdownUI;
-		};
 		4DF2D8F92BA628530093CA3E /* Sentry */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
@@ -930,6 +860,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DF2D8FD2BA683280093CA3E /* XCRemoteSwiftPackageReference "posthog-ios" */;
 			productName = PostHog;
+		};
+		4DF46B352BBE1A2700846217 /* MarkdownWebView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DF46B342BBE1A2700846217 /* XCRemoteSwiftPackageReference "markdown-webview" */;
+			productName = MarkdownWebView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

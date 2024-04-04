@@ -1,3 +1,4 @@
+import MarkdownWebView
 import OSLog
 import SentrySwiftUI
 import SwiftData

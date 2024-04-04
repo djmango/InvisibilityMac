@@ -44,18 +44,6 @@ enum MessageStatus: String, Codable {
     }
 }
 
-/// Type of text block
-enum TextBlockType {
-    case string
-    case markdown
-}
-
-/// Text block, used for message content optimization
-struct TextBlock {
-    let type: TextBlockType
-    let content: String
-}
-
 @Model
 final class Message: Identifiable, ObservableObject {
     /// Unique identifier for the message
@@ -95,50 +83,6 @@ final class Message: Identifiable, ObservableObject {
         //     text = String(text.prefix(truncNum))
         // }
         return text
-    }
-
-    /// A list of text blocks, used for message content optimization
-    @Transient var textBlocks: [TextBlock] {
-        guard let content else {
-            return []
-        }
-
-        let markdownDelimiter = "```"
-
-        var textBlocks: [TextBlock] = []
-        var currentBlock = ""
-        var isMarkdownBlock = false
-
-        let lines = content.components(separatedBy: .newlines)
-
-        for line in lines {
-            if line.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix(markdownDelimiter) {
-                if isMarkdownBlock {
-                    currentBlock += line + "\n"
-                    let textBlock = TextBlock(type: .markdown, content: currentBlock.trimmingCharacters(in: .newlines))
-                    textBlocks.append(textBlock)
-                    currentBlock = ""
-                    isMarkdownBlock = false
-                } else {
-                    if !currentBlock.isEmpty {
-                        let textBlock = TextBlock(type: .string, content: currentBlock.trimmingCharacters(in: .newlines))
-                        textBlocks.append(textBlock)
-                        currentBlock = ""
-                    }
-                    currentBlock += line + "\n"
-                    isMarkdownBlock = true
-                }
-            } else {
-                currentBlock += line + "\n"
-            }
-        }
-
-        if !currentBlock.isEmpty {
-            let textBlock = TextBlock(type: isMarkdownBlock ? .markdown : .string, content: currentBlock.trimmingCharacters(in: .newlines))
-            textBlocks.append(textBlock)
-        }
-
-        return textBlocks
     }
 }
 

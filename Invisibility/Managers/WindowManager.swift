@@ -140,7 +140,7 @@ class WindowManager {
         guard let window else { return }
         guard window.isVisible else { return }
         resized.toggle()
-        positionWindowOnCursorScreen(animate: true)
+        positionWindowOnCursorScreen(animate: false)
         PostHogSDK.shared.capture("resize", properties: ["resized": resized])
     }
 
