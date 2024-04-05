@@ -1,12 +1,13 @@
 {
+  "originHash" : "92c6e3a6a0ad219b43c65d829e1c9932cac98c5fba936b857368d0b6b6f4d876",
   "pins" : [
     {
       "identity" : "alamofire",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "723fa5a6c65812aec4a0d7cc432ee198883b6e00",
-        "version" : "5.9.0"
+        "revision" : "f455c2975872ccd2d9c81594c658af65716e9b9a",
+        "version" : "5.9.1"
       }
     },
     {
@@ -46,6 +47,15 @@
       }
     },
     {
+      "identity" : "markdown-webview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/djmango/markdown-webview.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "454c0980b4668ad25850eb9817a25bce82325bc2"
+      }
+    },
+    {
       "identity" : "openai",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/djmango/OpenAI.git",
@@ -73,12 +83,21 @@
       }
     },
     {
+      "identity" : "scrollkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/ScrollKit.git",
+      "state" : {
+        "revision" : "7c9530ceda4c9717679d7a483d77753eeb5acccf",
+        "version" : "0.5.0"
+      }
+    },
+    {
       "identity" : "sentry-cocoa",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "56157a1aea8c49a1050c1845033089bf813ea3c5",
-        "version" : "8.22.2"
+        "revision" : "937dce13c2600cc42112c480d04f84899e08e9cc",
+        "version" : "8.23.0"
       }
     },
     {
@@ -86,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
-        "revision" : "47d3d90aee3c52b6f61d04ceae426e607df62347",
-        "version" : "2.5.2"
+        "revision" : "0a4caaf7a81eea2cece651ef4b17331fa0634dff",
+        "version" : "2.6.0"
       }
     },
     {
@@ -100,5 +119,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

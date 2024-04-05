@@ -37,14 +37,16 @@ class ScreenshotManager {
 
     private init() {}
 
+    // @MainActor
     public func capture() async {
         guard await askForScreenRecordingPermission() else { return }
 
-        WindowManager.shared.hideWindow()
-        guard let url = captureImageToURL() else { return }
-        WindowManager.shared.showWindow()
-        messageViewModel.handleFile(url)
-        try? FileManager.default.removeItem(atPath: screenShotFilePath)
+        WindowManager.shared.hideWindow(completion: {
+            guard let url = self.captureImageToURL() else { return }
+            self.messageViewModel.handleFile(url)
+            WindowManager.shared.showWindow()
+            try? FileManager.default.removeItem(atPath: self.screenShotFilePath)
+        })
     }
 
     public func captureTextToClipboard(imagePath: String? = nil) {
@@ -194,7 +196,7 @@ class ScreenshotManager {
         do {
             try handler.perform(requests)
         } catch {
-            print("Error: \(error)")
+            logger.error("Error: \(error)")
         }
     }
 

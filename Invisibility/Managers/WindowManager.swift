@@ -97,7 +97,6 @@ class WindowManager {
         }
     }
 
-    @MainActor
     public func toggleWindow() {
         guard let window else { return }
         if window.isVisible == true {
@@ -107,7 +106,6 @@ class WindowManager {
         }
     }
 
-    @MainActor
     public func showWindow() {
         guard let window else { return }
         guard OnboardingManager.shared.onboardingViewed else { return }
@@ -115,15 +113,15 @@ class WindowManager {
         window.alphaValue = 0
         positionWindowOnCursorScreen()
         ChatViewModel.shared.focusTextField()
-        NSAnimationContext.runAnimationGroup { context in
+        NSAnimationContext.runAnimationGroup({ context in
             context.duration = animationDuration
             window.animator().alphaValue = 1
-        }
-        PostHogSDK.shared.capture("show_window")
+        }, completionHandler: {
+            PostHogSDK.shared.capture("show_window")
+        })
     }
 
-    @MainActor
-    public func hideWindow() {
+    public func hideWindow(completion: (() -> Void)? = nil) {
         guard let window else { return }
         // Animate opacity
         NSAnimationContext.runAnimationGroup({ context in
@@ -131,20 +129,19 @@ class WindowManager {
             window.animator().alphaValue = 0
         }, completionHandler: {
             window.orderOut(nil)
+            PostHogSDK.shared.capture("hide_window")
+            completion?()
         })
-        PostHogSDK.shared.capture("hide_window")
     }
 
-    @MainActor
     public func resizeWindow() {
         guard let window else { return }
         guard window.isVisible else { return }
         resized.toggle()
-        positionWindowOnCursorScreen(animate: false)
+        positionWindowOnCursorScreen(animate: true)
         PostHogSDK.shared.capture("resize", properties: ["resized": resized])
     }
 
-    @MainActor
     public func switchSide() {
         sideSwitched.toggle()
         positionWindowOnCursorScreen(animate: true)

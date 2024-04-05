@@ -17,31 +17,31 @@ struct MessageView: View {
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     private var windowManager: WindowManager = WindowManager.shared
 
+    @AppStorage("resized") private var resized: Bool = false
+
     init() {
         isEditorFocused = true
         promptFocused = true
     }
 
     var body: some View {
-        let _ = Self._printChanges()
+        // let _ = Self._printChanges()
         ZStack {
             VStack(alignment: .center, spacing: 0) {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        LazyVStack(alignment: .trailing, spacing: 5) {
-                            Rectangle()
-                                .frame(height: max(0, messageViewModel.windowHeight - 210))
-                                .hidden()
-
+                        VStack(alignment: .trailing, spacing: 5) {
                             ForEach(messageViewModel.messages.indices, id: \.self) { index in
-                                let message: Message = messageViewModel.messages[index]
+                                let message: Message = messageViewModel.messages.reversed()[index]
                                 // Generate the view for the individual message.
                                 MessageListItemView(message: message)
                                     .id(message.id)
                                     .sentryTrace("MessageListItemView")
+                                    .rotationEffect(.degrees(180))
                             }
                         }
                     }
+                    .rotationEffect(.degrees(180))
                     .mask(
                         LinearGradient(
                             gradient: Gradient(stops: [
@@ -81,12 +81,12 @@ struct MessageView: View {
                     .onTapGesture {
                         promptFocused = true
                     }
-                    .padding(.top, 5)
                     .padding(.bottom, 10)
                     .scrollIndicators(.never)
                     .sentryTrace("ChatField")
             }
             .animation(AppConfig.snappy, value: chatViewModel.textHeight)
+            .animation(AppConfig.snappy, value: resized)
             .overlay(
                 Rectangle()
                     .foregroundColor(Color.gray.opacity(0.2))
@@ -151,6 +151,6 @@ struct MessageView: View {
             return
         }
 
-        scrollProxy.scrollTo(lastMessage.id, anchor: .bottom)
+        scrollProxy.scrollTo(lastMessage.id, anchor: .top)
     }
 }

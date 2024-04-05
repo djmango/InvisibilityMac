@@ -31,6 +31,10 @@ struct MessageListItemView: View {
         isHovered && isAssistant
     }
 
+    private var isCopyButtonVisible: Bool {
+        (isHovered && !isGenerating) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
+    }
+
     private var isRegenerateButtonVisible: Bool {
         (isHovered && isLastMessage) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command) && isLastMessage)
     }
@@ -91,7 +95,7 @@ struct MessageListItemView: View {
             VStack(alignment: .trailing) {
                 Spacer()
 
-                // Regenerate button
+                // Regenerate and copy button
                 HStack {
                     Spacer()
                     MessageButtonItemView(
@@ -104,6 +108,18 @@ struct MessageListItemView: View {
                     }
                     .visible(if: isRegenerateButtonVisible, removeCompletely: true)
                     .keyboardShortcut("r", modifiers: [.command, .shift])
+
+                    MessageButtonItemView(
+                        label: "Copy",
+                        icon: isCopied ? "checkmark" : "doc.on.doc",
+                        shortcut_hint: "⌘ ⌥ C",
+                        whoIsHovering: $whoIsHovering
+                    ) {
+                        copyAction()
+                    }
+                    .keyboardShortcut("c", modifiers: [.command, .option])
+                    .changeEffect(.jump(height: 10), value: isCopied)
+                    .visible(if: isCopyButtonVisible, removeCompletely: true)
                 }
             }
             .animation(AppConfig.snappy, value: whoIsHovering)
@@ -129,6 +145,14 @@ struct MessageListItemView: View {
     }
 
     // MARK: - Actions
+
+    private func copyAction() {
+        let pasteBoard = NSPasteboard.general
+        pasteBoard.clearContents()
+        pasteBoard.setString(message.content ?? "", forType: .string)
+
+        isCopied = true
+    }
 
     private func regenerateAction() {
         Task {

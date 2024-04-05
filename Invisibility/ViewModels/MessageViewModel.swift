@@ -123,15 +123,14 @@ final class MessageViewModel: ObservableObject {
         }
     }
 
+    @MainActor
     func clearChat() {
         logger.debug("Clearing chat")
         PostHogSDK.shared.capture("clear_chat", properties: ["message_count": messages.count])
         for message in messages {
             modelContext.delete(message)
         }
-        DispatchQueue.main.async {
-            self.messages.removeAll()
-        }
+        self.messages.removeAll()
     }
 
     func stopGenerating() {

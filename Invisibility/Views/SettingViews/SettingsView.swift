@@ -10,6 +10,7 @@ import KeyboardShortcuts
 import LaunchAtLogin
 import OSLog
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "SettingsView")
@@ -24,6 +25,10 @@ struct SettingsView: View {
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
 
     private var llmManager = LLMManager.shared
+
+    @State private var showingExporter = false
+    @State private var document: TextDocument = TextDocument(text: "")
+
     @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
     @ObservedObject private var userManager = UserManager.shared
 
@@ -118,6 +123,8 @@ struct SettingsView: View {
                     Text("Claude-3 Sonnet").tag(LLMModels.claude3_sonnet.human_name)
                     Text("Claude-3 Haiku").tag(LLMModels.claude3_haiku.human_name)
                     Text("GPT-4").tag(LLMModels.gpt4.human_name)
+                    Text("Mixtral").tag(LLMModels.perplexity_mixtral.human_name)
+                    Text("Perplexity").tag(LLMModels.perplexity_sonar_online.human_name)
                 }
                 .pickerStyle(.menu)
                 .frame(maxWidth: 180)
@@ -125,7 +132,7 @@ struct SettingsView: View {
                 LaunchAtLogin.Toggle("Launch at Login")
                     .toggleStyle(.switch)
 
-                Toggle("Show Menu Bar", isOn: $showMenuBar)
+                Toggle("Show on Menu Bar", isOn: $showMenuBar)
                     .toggleStyle(.switch)
 
                 Toggle("Shortcut Hints", isOn: $shortcutHints)
@@ -193,9 +200,19 @@ struct SettingsView: View {
                         onboardingViewed = false
                         OnboardingManager.shared.startOnboarding()
                     }
+                    .buttonStyle(.bordered)
 
                     Button("Check for Updates") {
                         updaterViewModel.updater.checkForUpdates()
+                    }
+                    .buttonStyle(.bordered)
+
+                    Button("Export Chat") {
+                        let text = MessageViewModel.shared.messages.map { message in
+                            "\(message.role?.rawValue.capitalized ?? ""): \(message.text)"
+                        }.joined(separator: "\n")
+                        document = TextDocument(text: text)
+                        showingExporter = true
                     }
                     .buttonStyle(.bordered)
                 }
@@ -250,5 +267,37 @@ struct SettingsView: View {
         }
         .frame(minWidth: 500, minHeight: 750)
         .focusable(false)
+        .fileExporter(isPresented: $showingExporter, document: document, contentType: .plainText, defaultFilename: "invisibility.txt") { result in
+            switch result {
+            case let .success(url):
+                logger.info("Saved to \(url)")
+            case let .failure(error):
+                logger.error(error.localizedDescription)
+            }
+        }
+    }
+}
+
+struct TextDocument: FileDocument {
+    static var readableContentTypes: [UTType] { [.plainText] }
+
+    var text: String
+
+    init(text: String) {
+        self.text = text
+    }
+
+    init(configuration: ReadConfiguration) throws {
+        guard let data = configuration.file.regularFileContents,
+              let string = String(data: data, encoding: .utf8)
+        else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
+        text = string
+    }
+
+    func fileWrapper(configuration _: WriteConfiguration) throws -> FileWrapper {
+        let data = text.data(using: .utf8)
+        return .init(regularFileWithContents: data!)
     }
 }
