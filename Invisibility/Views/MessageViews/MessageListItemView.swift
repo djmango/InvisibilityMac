@@ -111,7 +111,7 @@ struct MessageListItemView: View {
 
                     MessageButtonItemView(
                         label: "Copy",
-                        icon: isCopied ? "checkmark" : "doc.on.doc",
+                        icon: isCopied ? "checkmark" : "square.on.square",
                         shortcut_hint: "⌘ ⌥ C",
                         whoIsHovering: $whoIsHovering
                     ) {
@@ -124,6 +124,7 @@ struct MessageListItemView: View {
             }
             .animation(AppConfig.snappy, value: whoIsHovering)
             // .animation(AppConfig.snappy, value: isHovered) ?? FOR SOME REASON THIS CAUSES THE FREEZE
+            .animation(AppConfig.snappy, value: isHovered)
             .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
             .padding(8)
         }
