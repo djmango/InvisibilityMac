@@ -81,6 +81,7 @@ struct MessageView: View {
                     .onTapGesture {
                         promptFocused = true
                     }
+                    .padding(.top, 4)
                     .padding(.bottom, 10)
                     .scrollIndicators(.never)
                     .sentryTrace("ChatField")

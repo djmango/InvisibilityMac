@@ -1,5 +1,5 @@
 {
-  "originHash" : "92c6e3a6a0ad219b43c65d829e1c9932cac98c5fba936b857368d0b6b6f4d876",
+  "originHash" : "70c253e7d5f2aaa47a3ab75c1ac57173253f5a304a853691ce59c6f85fa3e21a",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -52,7 +52,7 @@
       "location" : "https://github.com/djmango/markdown-webview.git",
       "state" : {
         "branch" : "master",
-        "revision" : "454c0980b4668ad25850eb9817a25bce82325bc2"
+        "revision" : "694d725df06bc1e0ce8b5258366393cfd12f7648"
       }
     },
     {
