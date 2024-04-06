@@ -10,8 +10,8 @@ import OSLog
 import PostHog
 import SwiftUI
 
-struct MessageButtonsView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageListView")
+struct ChatButtonsView: View {
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatButtonsView")
 
     private let screenshotManager = ScreenshotManager.shared
 

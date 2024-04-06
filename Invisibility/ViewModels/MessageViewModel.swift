@@ -64,7 +64,7 @@ final class MessageViewModel: ObservableObject {
         PostHogSDK.shared.capture(
             "send_message",
             properties: [
-                "num_images": message.images?.count ?? 0,
+                "num_images": message.images.count,
                 "message_length": message.content?.count ?? 0,
                 "model": llmModel,
             ]
@@ -94,7 +94,7 @@ final class MessageViewModel: ObservableObject {
         PostHogSDK.shared.capture(
             "regenerate_message",
             properties: [
-                "num_images": messages.last?.images?.count ?? 0,
+                "num_images": messages.last?.images.count ?? 0,
                 "message_length": messages.last?.content?.count ?? 0,
                 "model": llmModel,
             ]

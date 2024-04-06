@@ -1,8 +1,6 @@
-import MarkdownWebView
 import OSLog
 import ScrollKit
 import SentrySwiftUI
-import SwiftData
 import SwiftUI
 
 struct MessageView: View {
@@ -19,7 +17,6 @@ struct MessageView: View {
     func handleOffset(_ scrollOffset: CGPoint, visibleHeaderRatio: CGFloat) {
         self.offset = scrollOffset
         self.visibleRatio = visibleHeaderRatio
-        print("Offset: \(scrollOffset), Visible Ratio: \(visibleHeaderRatio)")
     }
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
@@ -45,8 +42,7 @@ struct MessageView: View {
                     onScroll: handleOffset
                 ) {
                     VStack(alignment: .trailing, spacing: 5) {
-                        ForEach(messageViewModel.messages.indices, id: \.self) { index in
-                            let message: Message = messageViewModel.messages[index]
+                        ForEach(messageViewModel.messages) { message in
                             // Generate the view for the individual message.
                             MessageListItemView(message: message)
                                 .id(message.id)
@@ -74,8 +70,8 @@ struct MessageView: View {
                 Spacer()
 
                 // Action Icons
-                MessageButtonsView()
-                    .sentryTrace("MessageButtonsView")
+                ChatButtonsView()
+                    .sentryTrace("ChatButtonsView")
                     .frame(maxHeight: 40)
 
                 Spacer()
@@ -90,6 +86,7 @@ struct MessageView: View {
                     .sentryTrace("ChatField")
             }
             .animation(AppConfig.snappy, value: chatViewModel.textHeight)
+            .animation(AppConfig.snappy, value: chatViewModel.images)
             .animation(AppConfig.snappy, value: resized)
             .overlay(
                 Rectangle()

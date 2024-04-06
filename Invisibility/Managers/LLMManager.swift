@@ -155,7 +155,7 @@ final class LLMManager {
         var messages = messages
 
         // If the last message has any images use the vision model, otherwise use the regular model
-        let allow_images = messages.last?.images?.count ?? 0 > 0 && model.vision != nil
+        let allow_images = messages.last?.images.count ?? 0 > 0 && model.vision != nil
 
         let model_id: String = if allow_images {
             model.vision ?? model.text
