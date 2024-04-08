@@ -9,7 +9,7 @@
 import OSLog
 import SwiftUI
 
-struct ChatImage: View {
+struct ChatImageView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
 
     let imageItem: ChatImageItem

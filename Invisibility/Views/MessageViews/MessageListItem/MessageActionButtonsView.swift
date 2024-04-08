@@ -13,8 +13,9 @@ struct MessageActionButtonsView: View {
     private let message: Message
 
     @State private var whoIsHovering: String?
+    @State private var isCopied: Bool = false
     @Binding private var isHovered: Bool
-    @Binding private var isCopied: Bool
+
     @AppStorage("shortcutHints") private var shortcutHints = true
     @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
@@ -42,21 +43,12 @@ struct MessageActionButtonsView: View {
         message.id == MessageViewModel.shared.messages.last?.id
     }
 
-    let regenerateAction: () -> Void
-    let copyAction: () -> Void
-
     init(
         message: Message,
-        isHovered: Binding<Bool>,
-        isCopied: Binding<Bool>,
-        regenerateAction: @escaping () -> Void,
-        copyAction: @escaping () -> Void
+        isHovered: Binding<Bool>
     ) {
         self.message = message
         self._isHovered = isHovered
-        self._isCopied = isCopied
-        self.regenerateAction = regenerateAction
-        self.copyAction = copyAction
     }
 
     var body: some View {
@@ -94,5 +86,25 @@ struct MessageActionButtonsView: View {
         .animation(AppConfig.snappy, value: isHovered)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .padding(8)
+    }
+
+    // MARK: - Actions
+
+    private func copyAction() {
+        let pasteBoard = NSPasteboard.general
+        pasteBoard.clearContents()
+        pasteBoard.setString(message.content ?? "", forType: .string)
+
+        isCopied = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            isCopied = false
+        }
+    }
+
+    private func regenerateAction() {
+        Task {
+            await MessageViewModel.shared.regenerate()
+        }
     }
 }

@@ -76,7 +76,7 @@ struct MessageView: View {
 
                 Spacer()
 
-                ChatField(action: sendAction)
+                ChatFieldView(action: sendAction)
                     .focused($promptFocused)
                     .onTapGesture {
                         promptFocused = true

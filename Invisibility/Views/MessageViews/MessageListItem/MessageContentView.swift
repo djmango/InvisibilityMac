@@ -9,7 +9,7 @@
 import MarkdownWebView
 import SwiftUI
 
-struct MessageContent: View {
+struct MessageContentView: View {
     private let message: Message
 
     init(message: Message) {
@@ -46,7 +46,7 @@ struct MessageContent: View {
                 .controlSize(.small)
                 .visible(if: isGenerating && isLastMessage, removeCompletely: true)
 
-            MessageImages(images: message.images)
+            MessageImagesView(images: message.images)
                 .visible(if: !message.images.isEmpty, removeCompletely: true)
 
             MarkdownWebView(message.text)

@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct MessageImages: View {
+struct MessageImagesView: View {
     private let images: [Data]
 
     init(images: [Data]) {
