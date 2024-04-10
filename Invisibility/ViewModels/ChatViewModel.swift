@@ -32,9 +32,6 @@ final class ChatViewModel: ObservableObject {
     /// The height of the text field.
     @Published public var textHeight: CGFloat = 52
 
-    // The text content of the chat field
-    @Published public var text: String = ""
-
     private init() {}
 
     @MainActor

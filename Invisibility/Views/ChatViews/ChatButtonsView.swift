@@ -1,5 +1,5 @@
 //
-//  MessageButtonsView.swift
+//  ChatButtonsView.swift
 //  Invisibility
 //
 //  Created by Sulaiman Ghori on 2/25/24.
@@ -21,7 +21,6 @@ struct ChatButtonsView: View {
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
-    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     private var windowManager: WindowManager = WindowManager.shared
 
@@ -88,10 +87,10 @@ struct ChatButtonsView: View {
                     shortcut_hint: "⌘ ⇧ ⌫",
                     whoIsHovering: $whoIsHovering
                 ) {
-                    messageViewModel.clearChat()
+                    MessageViewModel.shared.clearChat()
                 }
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
-                .visible(if: messageViewModel.messages.count > 0, removeCompletely: true)
+                .visible(if: MessageViewModel.shared.messages.count > 0, removeCompletely: true)
 
                 // Stop generating
                 MessageButtonItemView(
@@ -100,10 +99,10 @@ struct ChatButtonsView: View {
                     shortcut_hint: "⌘ P",
                     whoIsHovering: $whoIsHovering
                 ) {
-                    messageViewModel.stopGenerating()
+                    MessageViewModel.shared.stopGenerating()
                 }
                 .keyboardShortcut("p", modifiers: [.command])
-                .visible(if: messageViewModel.isGenerating, removeCompletely: true)
+                .visible(if: MessageViewModel.shared.isGenerating, removeCompletely: true)
 
                 // Resize
                 MessageButtonItemView(
@@ -140,14 +139,14 @@ struct ChatButtonsView: View {
             Spacer()
         }
         .animation(AppConfig.snappy, value: whoIsHovering)
-        .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
-        .animation(AppConfig.snappy, value: messageViewModel.messages.count)
+        .animation(AppConfig.snappy, value: MessageViewModel.shared.isGenerating)
+        .animation(AppConfig.snappy, value: MessageViewModel.shared.messages.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(AppConfig.snappy, value: betaFeatures)
     }
 
     private func openFileAction() {
-        messageViewModel.openFile()
+        MessageViewModel.shared.openFile()
     }
 
     @MainActor

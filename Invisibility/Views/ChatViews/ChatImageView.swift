@@ -1,5 +1,5 @@
 //
-//  ChatImage.swift
+//  ChatImageView.swift
 //  Invisibility
 //
 //  Created by Sulaiman Ghori on 2/29/24.
@@ -15,8 +15,6 @@ struct ChatImageView: View {
     let imageItem: ChatImageItem
     let nsImage: NSImage
     @Binding private var whichImageIsHovering: UUID?
-
-    @ObservedObject private var chatViewModel = ChatViewModel.shared
 
     var isHovering: Bool {
         whichImageIsHovering == imageItem.id
@@ -37,7 +35,6 @@ struct ChatImageView: View {
             .shadow(radius: isHovering ? 4 : 0)
             .padding(.horizontal, 10)
             .onHover { hovering in
-                // logger.debug("Hovering: \(hovering) for \(imageItem.id)")
                 if hovering {
                     whichImageIsHovering = imageItem.id
                 } else {
@@ -48,8 +45,8 @@ struct ChatImageView: View {
                 }
             }
             .onTapGesture {
-                chatViewModel.removeImage(id: imageItem.id)
+                ChatViewModel.shared.removeImage(id: imageItem.id)
             }
-        // .animation(.easeInOut(duration: 0.05), value: isHovering)
+            .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.images)
     }
 }

@@ -37,7 +37,7 @@ struct InvisibilityApp: App {
         }
         // Main app view is managed in delegate and WindowManager
         MenuBarExtra("Invisibility", image: "MenuBarIcon", isInserted: $showMenuBar) {
-            MenuBarView()
+            MenubarView()
         }
         .menuBarExtraStyle(.menu)
     }

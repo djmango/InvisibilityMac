@@ -22,9 +22,6 @@ struct MessageButtonItemView: View {
     @State private var isHovering: Bool = false
     @Binding private var whoIsHovering: String?
 
-    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
-    @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
-
     init(label: String, icon: String, shortcut_hint: String, whoIsHovering: Binding<String?>, action: @escaping () -> Void) {
         self.label = label
         self.icon = icon
@@ -42,12 +39,12 @@ struct MessageButtonItemView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 18, height: 18)
                         .foregroundColor(Color("ChatButtonForegroundColor"))
-                        .visible(if: !shortcutViewModel.modifierFlags.contains(.command) || !shortcutHints, removeCompletely: true)
+                        .visible(if: !ShortcutViewModel.shared.modifierFlags.contains(.command) || !shortcutHints, removeCompletely: true)
 
                     Text(shortcut_hint)
                         .font(.title3)
                         .foregroundColor(Color("ChatButtonForegroundColor"))
-                        .visible(if: shortcutViewModel.modifierFlags.contains(.command) && shortcutHints, removeCompletely: true)
+                        .visible(if: ShortcutViewModel.shared.modifierFlags.contains(.command) && shortcutHints, removeCompletely: true)
                 }
 
                 Text(label)
@@ -78,7 +75,7 @@ struct MessageButtonItemView: View {
         .buttonStyle(.plain)
         .animation(AppConfig.snappy, value: label)
         .animation(AppConfig.snappy, value: isHovering)
-        .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
+        .animation(AppConfig.snappy, value: ShortcutViewModel.shared.modifierFlags)
         .animation(.easeInOut(duration: 0.2), value: isPressed)
     }
 

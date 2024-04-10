@@ -18,13 +18,14 @@ struct MessageActionButtonsView: View {
 
     @AppStorage("shortcutHints") private var shortcutHints = true
     @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
+    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
 
     private var isAssistant: Bool {
         message.role == .assistant
     }
 
     private var isGenerating: Bool {
-        MessageViewModel.shared.isGenerating && (message.content?.isEmpty ?? true)
+        messageViewModel.isGenerating && (message.content?.isEmpty ?? true)
     }
 
     private var isResizeButtonVisible: Bool {
@@ -40,7 +41,7 @@ struct MessageActionButtonsView: View {
     }
 
     private var isLastMessage: Bool {
-        message.id == MessageViewModel.shared.messages.last?.id
+        message.id == messageViewModel.messages.last?.id
     }
 
     init(
@@ -82,10 +83,10 @@ struct MessageActionButtonsView: View {
                 .visible(if: isCopyButtonVisible, removeCompletely: true)
             }
         }
+        .padding(8)
         .animation(AppConfig.snappy, value: whoIsHovering)
         .animation(AppConfig.snappy, value: isHovered)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
-        .padding(8)
     }
 
     // MARK: - Actions
@@ -104,7 +105,7 @@ struct MessageActionButtonsView: View {
 
     private func regenerateAction() {
         Task {
-            await MessageViewModel.shared.regenerate()
+            await messageViewModel.regenerate()
         }
     }
 }

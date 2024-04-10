@@ -9,21 +9,10 @@ import AppKit
 import OSLog
 import SwiftUI
 
-/// A control that displays an editable text interface for chat purposes.
-///
-/// ``ChatField`` extends standard text field capabilities with multiline input and specific behaviors for different platforms.
+/// A view that displays an editable text interface for chat purposes.
 struct ChatFieldView: View {
     @State private var whichImageIsHovering: UUID?
-
-    private var action: () -> Void
-
-    /// Creates a text field with a text label generated from a localized title string.
-    ///
-    /// - Parameters:
-    ///   - action: The action to execute upon text submission.
-    public init(action: @escaping () -> Void) {
-        self.action = action
-    }
+    @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
 
     public var body: some View {
         // Images
@@ -44,7 +33,7 @@ struct ChatFieldView: View {
                 .padding(.horizontal, 10)
                 .visible(if: !ChatViewModel.shared.images.isEmpty, removeCompletely: true)
 
-            ChatEditorView(action: action)
+            ChatEditorView()
         }
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)

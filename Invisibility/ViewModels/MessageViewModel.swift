@@ -15,7 +15,6 @@ final class MessageViewModel: ObservableObject {
     static let shared = MessageViewModel()
 
     private let modelContext = SharedModelContainer.shared.mainContext
-    private let chatViewModel = ChatViewModel.shared
 
     private var chatTask: Task<Void, Error>?
 
@@ -47,13 +46,13 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func sendFromChat() async {
         guard !isGenerating else { return }
-        guard chatViewModel.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
+        guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
-        let images = chatViewModel.images.map(\.imageData)
+        let images = ChatViewModel.shared.images.map(\.imageData)
 
-        let message = Message(content: chatViewModel.text, role: .user, images: images)
-        chatViewModel.text = ""
-        chatViewModel.images.removeAll()
+        let message = Message(content: TextViewModel.shared.text, role: .user, images: images)
+        TextViewModel.shared.text = ""
+        ChatViewModel.shared.images.removeAll()
 
         await send(message)
     }
@@ -179,6 +178,31 @@ extension MessageViewModel {
         }
     }
 
+    func handleDrop(providers: [NSItemProvider]) -> Bool {
+        logger.debug("Handling drop")
+        logger.debug("Providers: \(providers)")
+        for provider in providers {
+            logger.debug("Provider: \(provider.description)")
+            logger.debug("Provider types: \(provider.registeredTypeIdentifiers)")
+            if provider.hasItemConformingToTypeIdentifier("public.file-url") {
+                provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
+                    guard error == nil else {
+                        self.logger.error("Error loading the dropped item: \(error!)")
+                        return
+                    }
+                    if let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) {
+                        // Process the file URL
+                        self.logger.debug("File URL: \(url)")
+                        self.handleFile(url)
+                    }
+                }
+            } else {
+                logger.error("Unsupported item provider type")
+            }
+        }
+        return true
+    }
+
     /// Public function that handles file via a URL regarding a message
     public func handleFile(_ url: URL) {
         PostHogSDK.shared.capture("handle_file")
@@ -217,7 +241,7 @@ extension MessageViewModel {
         }
 
         DispatchQueue.main.async {
-            self.chatViewModel.addImage(standardizedImage)
+            ChatViewModel.shared.addImage(standardizedImage)
         }
     }
 }

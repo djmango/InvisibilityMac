@@ -1,5 +1,5 @@
 //
-//  MessageContent.swift
+//  MessageContentView.swift
 //  Invisibility
 //
 //  Created by Sulaiman Ghori on 4/6/24.

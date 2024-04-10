@@ -124,6 +124,7 @@ struct SettingsView: View {
                     Text("Claude-3 Haiku").tag(LLMModels.claude3_haiku.human_name)
                     Text("GPT-4").tag(LLMModels.gpt4.human_name)
                     Text("Mixtral").tag(LLMModels.perplexity_mixtral.human_name)
+                    Text("Groq-Mixtral").tag(LLMModels.groq_mixtral.human_name)
                     Text("Perplexity").tag(LLMModels.perplexity_sonar_online.human_name)
                 }
                 .pickerStyle(.menu)

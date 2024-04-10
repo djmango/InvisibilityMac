@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MenuBarView: View {
+struct MenubarView: View {
     @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
 
     @State private var isUpdateHovered = false
