@@ -55,7 +55,7 @@ final class Message: Identifiable, ObservableObject {
     /// Role for message sender, system, user, or assistant
     var role: MessageRole?
     /// Optional list of images stored externally to avoid bloating the database
-    @Attribute(.externalStorage) var images: [Data] = []
+    @Attribute(.externalStorage) var images_data: [Data] = []
     /// The status of the message generation and processing
     var status: MessageStatus? = MessageStatus.pending
     /// The progress of the message processing this is generic and can be used for any processing, useful for UI
@@ -67,7 +67,7 @@ final class Message: Identifiable, ObservableObject {
     init(content: String? = nil, role: MessageRole? = nil, images: [Data] = []) {
         self.content = content
         self.role = role
-        self.images = images
+        self.images_data = images
     }
 
     @Transient
@@ -95,9 +95,9 @@ extension Message {
             role = .system
         }
 
-        if allow_images, !images.isEmpty {
+        if allow_images, !images_data.isEmpty {
             // Images, multimodal
-            let imageUrls = images.map { VisionContent.ChatCompletionContentPartImageParam.ImageURL(url: $0, detail: .auto) }
+            let imageUrls = images_data.map { VisionContent.ChatCompletionContentPartImageParam.ImageURL(url: $0, detail: .auto) }
             let imageParams = imageUrls.map { VisionContent.ChatCompletionContentPartImageParam(imageUrl: $0) }
             let visionContent = imageParams.map { VisionContent(chatCompletionContentPartImageParam: $0) }
 

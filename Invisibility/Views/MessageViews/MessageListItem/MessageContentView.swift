@@ -46,8 +46,8 @@ struct MessageContentView: View {
                 .controlSize(.small)
                 .visible(if: isGenerating && isLastMessage, removeCompletely: true)
 
-            MessageImagesView(images: message.images)
-                .visible(if: !message.images.isEmpty, removeCompletely: true)
+            MessageImagesView(images: message.images_data)
+                .visible(if: !message.images_data.isEmpty, removeCompletely: true)
 
             MarkdownWebView(message.text)
         }
