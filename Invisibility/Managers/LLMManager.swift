@@ -56,9 +56,9 @@ enum LLMModels {
     )
 
     static let gpt4 = LLMModel(
-        text: "gpt-4-turbo-preview",
-        vision: "gpt-4-vision-preview",
-        human_name: "GPT-4"
+        text: "gpt-4-turbo",
+        vision: "gpt-4-turbo",
+        human_name: "GPT-4 Turbo"
     )
 
     static let gpt3 = LLMModel(
@@ -85,6 +85,12 @@ enum LLMModels {
         human_name: "Mixtral"
     )
 
+    static let dbrx_together = LLMModel(
+        text: "databricks/dbrx-instruct",
+        vision: nil,
+        human_name: "DBRX (Uncensored)"
+    )
+
     static let human_name_to_model: [String: LLMModel] = [
         claude3_opus.human_name: claude3_opus,
         claude3_sonnet.human_name: claude3_sonnet,
@@ -94,6 +100,7 @@ enum LLMModels {
         groq_mixtral.human_name: groq_mixtral,
         perplexity_sonar_online.human_name: perplexity_sonar_online,
         perplexity_mixtral.human_name: perplexity_mixtral,
+        dbrx_together.human_name: dbrx_together,
     ]
 }
 

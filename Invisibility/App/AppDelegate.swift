@@ -68,7 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             await UserManager.shared.setup()
             let refresh_status = await UserManager.shared.refresh_jwt()
             if !refresh_status {
-                logger.error("Failed to refresh JWT token")
+                logger.warning("Failed to refresh JWT token")
             }
         }
 

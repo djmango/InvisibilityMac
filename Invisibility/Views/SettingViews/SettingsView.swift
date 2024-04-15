@@ -119,13 +119,14 @@ struct SettingsView: View {
                 }
 
                 Picker("", selection: $llmModel) {
-                    Text("Claude-3 Opus").tag(LLMModels.claude3_opus.human_name)
-                    Text("Claude-3 Sonnet").tag(LLMModels.claude3_sonnet.human_name)
-                    Text("Claude-3 Haiku").tag(LLMModels.claude3_haiku.human_name)
-                    Text("GPT-4").tag(LLMModels.gpt4.human_name)
-                    Text("Mixtral").tag(LLMModels.perplexity_mixtral.human_name)
-                    Text("Groq-Mixtral").tag(LLMModels.groq_mixtral.human_name)
-                    Text("Perplexity").tag(LLMModels.perplexity_sonar_online.human_name)
+                    Text(LLMModels.claude3_opus.human_name).tag(LLMModels.claude3_opus.human_name)
+                    Text(LLMModels.claude3_sonnet.human_name).tag(LLMModels.claude3_sonnet.human_name)
+                    Text(LLMModels.claude3_haiku.human_name).tag(LLMModels.claude3_haiku.human_name)
+                    Text(LLMModels.gpt4.human_name).tag(LLMModels.gpt4.human_name)
+                    Text(LLMModels.perplexity_mixtral.human_name).tag(LLMModels.perplexity_mixtral.human_name)
+                    Text(LLMModels.perplexity_sonar_online.human_name).tag(LLMModels.perplexity_sonar_online.human_name)
+                    Text(LLMModels.groq_mixtral.human_name).tag(LLMModels.groq_mixtral.human_name)
+                    Text(LLMModels.dbrx_together.human_name).tag(LLMModels.dbrx_together.human_name)
                 }
                 .pickerStyle(.menu)
                 .frame(maxWidth: 180)
@@ -161,41 +162,6 @@ struct SettingsView: View {
 
                 Spacer()
 
-                HStack(spacing: 0) {
-                    Text("Founded by ")
-                        .font(.headline)
-                    Text("Sulaiman Ghori")
-                        .font(.headline)
-                        .onHover { inside in
-                            if inside {
-                                NSCursor.pointingHand.push()
-                            } else {
-                                NSCursor.pop()
-                            }
-                        }
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/sulaimanghori") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                    Text(" and ")
-                        .font(.headline)
-                    Text("Tye Daniel")
-                        .font(.headline)
-                        .onHover { inside in
-                            if inside {
-                                NSCursor.pointingHand.push()
-                            } else {
-                                NSCursor.pop()
-                            }
-                        }
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/TyeDan") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                }
-
                 HStack {
                     Button("Reset Onboarding") {
                         onboardingViewed = false
@@ -220,7 +186,7 @@ struct SettingsView: View {
 
                 HStack {
                     Button("Feedback") {
-                        if let url = URL(string: "mailto:sulaiman@invisibility.so") {
+                        if let url = URL(string: "mailto:support@invisibility.so") {
                             NSWorkspace.shared.open(url)
                         }
                     }
@@ -258,6 +224,41 @@ struct SettingsView: View {
                             NSWorkspace.shared.open(url)
                         }
                     }
+
+                HStack(spacing: 0) {
+                    Text("Founded by ")
+                        .font(.headline)
+                    Text("Sulaiman Ghori")
+                        .font(.headline)
+                        .onHover { inside in
+                            if inside {
+                                NSCursor.pointingHand.push()
+                            } else {
+                                NSCursor.pop()
+                            }
+                        }
+                        .onTapGesture {
+                            if let url = URL(string: "https://x.com/sulaimanghori") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
+                    Text(" and ")
+                        .font(.headline)
+                    Text("Tye Daniel")
+                        .font(.headline)
+                        .onHover { inside in
+                            if inside {
+                                NSCursor.pointingHand.push()
+                            } else {
+                                NSCursor.pop()
+                            }
+                        }
+                        .onTapGesture {
+                            if let url = URL(string: "https://x.com/TyeDan") {
+                                NSWorkspace.shared.open(url)
+                            }
+                        }
+                }
 
                 Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
                     .font(.caption)

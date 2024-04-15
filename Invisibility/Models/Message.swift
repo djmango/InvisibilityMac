@@ -57,7 +57,7 @@ final class Message: Identifiable, ObservableObject {
     /// Optional list of images stored externally to avoid bloating the database
     @Attribute(.externalStorage) var images_data: [Data] = []
     /// The status of the message generation and processing
-    var status: MessageStatus? = MessageStatus.pending
+    var status: MessageStatus? = MessageStatus.pending // TODO: for chat buttons, instead of subscribing to message view use this plus a query
     /// The progress of the message processing this is generic and can be used for any processing, useful for UI
     var progress: Double = 0.0
 
@@ -76,12 +76,6 @@ final class Message: Identifiable, ObservableObject {
     /// The full text of the message, including the audio text if it exists
     @Transient var text: String {
         let text = content ?? ""
-        // truncate characters
-        // let truncNum = 50000
-        // if text.count > truncNum {
-        //     logger.warning("Truncating message to \(truncNum) characters")
-        //     text = String(text.prefix(truncNum))
-        // }
         return text
     }
 }
