@@ -21,6 +21,8 @@ struct MessageContentView: View {
     private var isLastMessage: Bool { message.id == MessageViewModel.shared.messages.last?.id }
 
     var body: some View {
+        // let _ = Self._printChanges()
+
         VStack(alignment: .leading, spacing: 8) {
             Text(isAssistant ? "Invisibility" : "You")
                 .font(.custom("SF Pro Display", size: 13))

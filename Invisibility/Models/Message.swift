@@ -54,15 +54,15 @@ final class Message: Identifiable, ObservableObject {
     var content: String?
     /// Role for message sender, system, user, or assistant
     var role: MessageRole?
-    /// Optional list of images stored externally to avoid bloating the database
+    /// List of images data stored externally to avoid bloating the database
     @Attribute(.externalStorage) var images_data: [Data] = []
+    /// List of files data stored externally to avoid bloating the database. PDFs, etc.
+    @Attribute(.externalStorage) var files_data: [Data] = []
     /// The status of the message generation and processing
-    var status: MessageStatus? = MessageStatus.pending // TODO: for chat buttons, instead of subscribing to message view use this plus a query
+    // TODO: for chat buttons, instead of subscribing to message view use this plus a query
+    var status: MessageStatus? = MessageStatus.pending
     /// The progress of the message processing this is generic and can be used for any processing, useful for UI
     var progress: Double = 0.0
-
-    /// Summarized chunks, just a list of strings for now, keep it simple
-    var summarizedChunks: [String] = []
 
     init(content: String? = nil, role: MessageRole? = nil, images: [Data] = []) {
         self.content = content

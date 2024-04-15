@@ -48,11 +48,11 @@ final class MessageViewModel: ObservableObject {
         guard !isGenerating else { return }
         guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
-        let images = ChatViewModel.shared.images.map(\.imageData)
+        let images = ChatViewModel.shared.images.map(\.data)
 
         let message = Message(content: TextViewModel.shared.text, role: .user, images: images)
         TextViewModel.shared.text = ""
-        ChatViewModel.shared.images.removeAll()
+        ChatViewModel.shared.removeAll()
 
         await send(message)
     }
@@ -168,7 +168,6 @@ extension MessageViewModel {
 
         // Technically doesn't work for the following types:
         // SVGs: Our image standardization function doesn't support SVGs
-        // PDFs: Just need to add support for them
         // TODO: fix the above issues
 
         openPanel.begin { result in
@@ -213,6 +212,9 @@ extension MessageViewModel {
             if fileType.conforms(to: .image) {
                 logger.debug("Selected file \(url) is an image.")
                 handleImage(url: url)
+            } else if fileType.conforms(to: .pdf) {
+                logger.debug("Selected file \(url) is a PDF.")
+                handlePDF(url: url)
             } else {
                 logger.error("Selected file \(url) is of an unknown type.")
                 AlertManager.shared.doShowAlert(
@@ -243,5 +245,15 @@ extension MessageViewModel {
         DispatchQueue.main.async {
             ChatViewModel.shared.addImage(standardizedImage)
         }
+    }
+
+    private func handlePDF(url: URL) {
+        PostHogSDK.shared.capture("handle_pdf")
+        guard let pdfData = try? Data(contentsOf: url) else {
+            logger.error("Failed to read PDF data from url.")
+            return
+        }
+
+        // Standardize and convert the PDF to a base64 string and store it in the view model
     }
 }

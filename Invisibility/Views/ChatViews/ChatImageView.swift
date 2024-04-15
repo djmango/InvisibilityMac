@@ -12,7 +12,7 @@ import SwiftUI
 struct ChatImageView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
 
-    let imageItem: ChatImageItem
+    let imageItem: ChatDataItem
     let nsImage: NSImage
     @Binding private var whichImageIsHovering: UUID?
 
@@ -20,9 +20,9 @@ struct ChatImageView: View {
         whichImageIsHovering == imageItem.id
     }
 
-    init(imageItem: ChatImageItem, whichImageIsHovering: Binding<UUID?>) {
+    init(imageItem: ChatDataItem, whichImageIsHovering: Binding<UUID?>) {
         self.imageItem = imageItem
-        self.nsImage = NSImage(data: imageItem.imageData) ?? NSImage()
+        self.nsImage = NSImage(data: imageItem.data) ?? NSImage()
         self._whichImageIsHovering = whichImageIsHovering
     }
 
@@ -45,7 +45,7 @@ struct ChatImageView: View {
                 }
             }
             .onTapGesture {
-                ChatViewModel.shared.removeImage(id: imageItem.id)
+                ChatViewModel.shared.removeItem(id: imageItem.id)
             }
             .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.images)
     }

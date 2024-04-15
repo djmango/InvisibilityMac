@@ -9,11 +9,22 @@
 import Foundation
 import OSLog
 
-struct ChatImageItem: Identifiable, Equatable {
-    let id = UUID()
-    let imageData: Data
+enum DataType: String {
+    case pdf
+    case image
+}
 
-    static func == (lhs: ChatImageItem, rhs: ChatImageItem) -> Bool {
+struct ChatDataItem: Identifiable, Equatable {
+    let id = UUID()
+    let data: Data
+    let dataType: DataType
+
+    init(data: Data, dataType: DataType) {
+        self.data = data
+        self.dataType = dataType
+    }
+
+    static func == (lhs: ChatDataItem, rhs: ChatDataItem) -> Bool {
         lhs.id == rhs.id
     }
 }
@@ -26,8 +37,12 @@ final class ChatViewModel: ObservableObject {
     /// A boolean value that indicates whether the text field should be focused.
     @Published public var shouldFocusTextField: Bool = false
 
-    /// List of JPEG images to be sent with the message
-    @Published public var images: [ChatImageItem] = []
+    /// List of JPEG images and files to be sent with the message
+    @Published public var files: [ChatDataItem] = []
+
+    public var images: [ChatDataItem] {
+        files.filter { $0.dataType == .image }
+    }
 
     /// The height of the text field.
     @Published public var textHeight: CGFloat = 52
@@ -36,12 +51,21 @@ final class ChatViewModel: ObservableObject {
 
     @MainActor
     public func addImage(_ data: Data) {
-        images.append(ChatImageItem(imageData: data))
+        files.append(ChatDataItem(data: data, dataType: .image))
+    }
+
+    public func addPDF(_ data: Data) {
+        files.append(ChatDataItem(data: data, dataType: .pdf))
     }
 
     @MainActor
-    public func removeImage(id: UUID) {
-        images.removeAll { $0.id == id }
+    public func removeItem(id: UUID) {
+        files.removeAll { $0.id == id }
+    }
+
+    @MainActor
+    public func removeAll() {
+        files.removeAll()
     }
 
     @MainActor
