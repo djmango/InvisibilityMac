@@ -1,13 +1,11 @@
-import Cocoa
-import Combine
 import CoreGraphics
 import Foundation
 import OSLog
+import PDFKit
 import PostHog
 import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
-import Vision
 
 final class MessageViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
@@ -49,8 +47,9 @@ final class MessageViewModel: ObservableObject {
         guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
         let images = ChatViewModel.shared.images.map(\.data)
+        let pdfs = ChatViewModel.shared.pdfs.map(\.data)
 
-        let message = Message(content: TextViewModel.shared.text, role: .user, images: images)
+        let message = Message(content: TextViewModel.shared.text, role: .user, images: images, pdfs: pdfs)
         TextViewModel.shared.text = ""
         ChatViewModel.shared.removeAll()
 
@@ -58,12 +57,13 @@ final class MessageViewModel: ObservableObject {
     }
 
     @MainActor
-    func send(_ message: Message) async {
+    private func send(_ message: Message) async {
         isGenerating = true
         PostHogSDK.shared.capture(
             "send_message",
             properties: [
                 "num_images": message.images_data.count,
+                "num_pdfs": message.pdfs_data.count,
                 "message_length": message.content?.count ?? 0,
                 "model": llmModel,
             ]
@@ -94,6 +94,7 @@ final class MessageViewModel: ObservableObject {
             "regenerate_message",
             properties: [
                 "num_images": messages.last?.images_data.count ?? 0,
+                "num_pdfs": messages.last?.pdfs_data.count ?? 0,
                 "message_length": messages.last?.content?.count ?? 0,
                 "model": llmModel,
             ]
@@ -249,11 +250,18 @@ extension MessageViewModel {
 
     private func handlePDF(url: URL) {
         PostHogSDK.shared.capture("handle_pdf")
-        guard let pdfData = try? Data(contentsOf: url) else {
+        guard let pdf = PDFDocument(url: url) else {
             logger.error("Failed to read PDF data from url.")
             return
         }
 
-        // Standardize and convert the PDF to a base64 string and store it in the view model
+        guard let data = pdf.dataRepresentation() else {
+            logger.error("Failed to get data representation from PDF.")
+            return
+        }
+
+        DispatchQueue.main.async {
+            ChatViewModel.shared.addPDF(data)
+        }
     }
 }

@@ -44,6 +44,10 @@ final class ChatViewModel: ObservableObject {
         files.filter { $0.dataType == .image }
     }
 
+    public var pdfs: [ChatDataItem] {
+        files.filter { $0.dataType == .pdf }
+    }
+
     /// The height of the text field.
     @Published public var textHeight: CGFloat = 52
 
@@ -54,6 +58,7 @@ final class ChatViewModel: ObservableObject {
         files.append(ChatDataItem(data: data, dataType: .image))
     }
 
+    @MainActor
     public func addPDF(_ data: Data) {
         files.append(ChatDataItem(data: data, dataType: .pdf))
     }

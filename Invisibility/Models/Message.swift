@@ -1,6 +1,7 @@
 import Foundation
 import OpenAI
 import OSLog
+import PDFKit
 import SwiftData
 import SwiftUI
 
@@ -56,18 +57,19 @@ final class Message: Identifiable, ObservableObject {
     var role: MessageRole?
     /// List of images data stored externally to avoid bloating the database
     @Attribute(.externalStorage) var images_data: [Data] = []
-    /// List of files data stored externally to avoid bloating the database. PDFs, etc.
-    @Attribute(.externalStorage) var files_data: [Data] = []
+    /// List of PDF data stored externally to avoid bloating the database
+    @Attribute(.externalStorage) var pdfs_data: [Data] = []
     /// The status of the message generation and processing
     // TODO: for chat buttons, instead of subscribing to message view use this plus a query
     var status: MessageStatus? = MessageStatus.pending
     /// The progress of the message processing this is generic and can be used for any processing, useful for UI
     var progress: Double = 0.0
 
-    init(content: String? = nil, role: MessageRole? = nil, images: [Data] = []) {
+    init(content: String? = nil, role: MessageRole? = nil, images: [Data] = [], pdfs: [Data] = []) {
         self.content = content
         self.role = role
         self.images_data = images
+        self.pdfs_data = pdfs
     }
 
     @Transient
@@ -89,21 +91,39 @@ extension Message {
             role = .system
         }
 
+        var complete_text: String = self.text
+
+        // Insert PDF attributedString if available
+        for pdf_data in pdfs_data {
+            if let pdf = PDFDocument(data: pdf_data) {
+                let pageCount = pdf.pageCount
+                let documentContent = NSMutableAttributedString()
+
+                for i in 0 ..< pageCount {
+                    guard let page = pdf.page(at: i) else { continue }
+                    guard let pageContent = page.attributedString else { continue }
+                    documentContent.append(pageContent)
+                }
+
+                complete_text += documentContent.string
+            }
+        }
+
         if allow_images, !images_data.isEmpty {
             // Images, multimodal
             let imageUrls = images_data.map { VisionContent.ChatCompletionContentPartImageParam.ImageURL(url: $0, detail: .auto) }
             let imageParams = imageUrls.map { VisionContent.ChatCompletionContentPartImageParam(imageUrl: $0) }
             let visionContent = imageParams.map { VisionContent(chatCompletionContentPartImageParam: $0) }
 
-            let textParam = VisionContent.ChatCompletionContentPartTextParam(text: self.text)
-            let textVisionContent = VisionContent(chatCompletionContentPartTextParam: textParam)
+            let textParam = VisionContent.ChatCompletionContentPartTextParam(text: complete_text)
+            let textVisionContent = [VisionContent(chatCompletionContentPartTextParam: textParam)]
 
-            let content = [textVisionContent] + visionContent
+            let content = textVisionContent + visionContent
 
             return ChatQuery.ChatCompletionMessageParam(role: role, content: content)
         } else {
             // Pure text
-            return ChatQuery.ChatCompletionMessageParam(role: role, content: text)
+            return ChatQuery.ChatCompletionMessageParam(role: role, content: complete_text)
         }
     }
 }
