@@ -49,11 +49,11 @@ struct MessageView: View {
                 Rectangle()
                     .foregroundColor(Color.gray.opacity(0.2))
                     .opacity(isDragActive ? 1 : 0)
+                    .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
+                        MessageViewModel.shared.handleDrop(providers: providers)
+                    }
             )
             .border(isDragActive ? Color.blue : Color.clear, width: 5)
-            .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
-                MessageViewModel.shared.handleDrop(providers: providers)
-            }
             .onAppear {
                 promptFocused = true
             }

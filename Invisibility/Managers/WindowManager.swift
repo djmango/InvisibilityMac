@@ -76,12 +76,10 @@ class WindowManager {
         KeyboardShortcuts.onKeyUp(for: .summon) {
             // If we are just changing screens, don't toggle the window
             if self.windowIsOnScreenWithCursor {
-                self.logger.debug("Toggling window")
                 Task {
                     self.toggleWindow()
                 }
             } else {
-                self.logger.debug("Changing screens")
                 // Just move to the new screen
                 self.positionWindowOnCursorScreen()
                 Task {

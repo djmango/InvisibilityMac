@@ -37,15 +37,15 @@ final class ChatViewModel: ObservableObject {
     /// A boolean value that indicates whether the text field should be focused.
     @Published public var shouldFocusTextField: Bool = false
 
-    /// List of JPEG images and files to be sent with the message
-    @Published public var files: [ChatDataItem] = []
+    /// List of JPEG images and items to be sent with the message
+    @Published public var items: [ChatDataItem] = []
 
     public var images: [ChatDataItem] {
-        files.filter { $0.dataType == .image }
+        items.filter { $0.dataType == .image }
     }
 
     public var pdfs: [ChatDataItem] {
-        files.filter { $0.dataType == .pdf }
+        items.filter { $0.dataType == .pdf }
     }
 
     /// The height of the text field.
@@ -55,22 +55,23 @@ final class ChatViewModel: ObservableObject {
 
     @MainActor
     public func addImage(_ data: Data) {
-        files.append(ChatDataItem(data: data, dataType: .image))
+        items.append(ChatDataItem(data: data, dataType: .image))
     }
 
     @MainActor
     public func addPDF(_ data: Data) {
-        files.append(ChatDataItem(data: data, dataType: .pdf))
+        items.append(ChatDataItem(data: data, dataType: .pdf))
+        logger.debug("Chat items: \(items)")
     }
 
     @MainActor
     public func removeItem(id: UUID) {
-        files.removeAll { $0.id == id }
+        items.removeAll { $0.id == id }
     }
 
     @MainActor
     public func removeAll() {
-        files.removeAll()
+        items.removeAll()
     }
 
     @MainActor

@@ -32,32 +32,32 @@ struct LLMModel: Codable, Equatable, Hashable {
 
 enum LLMModels {
     static let claude3_opus = LLMModel(
-        text: "anthropic/claude-3-opus:beta",
-        vision: "anthropic/claude-3-opus:beta",
+        text: "claude-3-opus-20240229",
+        vision: "claude-3-opus-20240229",
         human_name: "Claude-3 Opus"
     )
 
     static let claude3_sonnet = LLMModel(
-        text: "anthropic/claude-3-sonnet:beta",
-        vision: "anthropic/claude-3-sonnet:beta",
+        text: "claude-3-sonnet-20240229",
+        vision: "claude-3-sonnet-20240229",
         human_name: "Claude-3 Sonnet"
     )
 
     static let claude3_haiku = LLMModel(
-        text: "anthropic/claude-3-haiku:beta",
-        vision: "anthropic/claude-3-haiku:beta",
+        text: "claude-3-haiku-20240307",
+        vision: "claude-3-haiku-20240307",
         human_name: "Claude-3 Haiku"
     )
 
     static let gemini_pro = LLMModel(
-        text: "google/gemini-pro",
-        vision: "google/gemini-pro-vision",
-        human_name: "Gemini Pro"
+        text: "openrouter/google/gemini-pro-1.5",
+        vision: "openrouter/google/gemini-pro-1.5",
+        human_name: "Gemini Pro 1.5"
     )
 
     static let gpt4 = LLMModel(
-        text: "gpt-4-turbo",
-        vision: "gpt-4-turbo",
+        text: "gpt-4-turbo-2024-04-09",
+        vision: "gpt-4-turbo-2024-04-09",
         human_name: "GPT-4 Turbo"
     )
 
@@ -86,7 +86,7 @@ enum LLMModels {
     )
 
     static let dbrx_together = LLMModel(
-        text: "databricks/dbrx-instruct",
+        text: "openrouter/databricks/dbrx-instruct",
         vision: nil,
         human_name: "DBRX (Uncensored)"
     )

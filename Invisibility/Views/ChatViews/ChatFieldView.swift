@@ -11,27 +11,33 @@ import SwiftUI
 
 /// A view that displays an editable text interface for chat purposes.
 struct ChatFieldView: View {
-    @State private var whichImageIsHovering: UUID?
+    @State private var whoIsHovering: UUID?
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
 
     public var body: some View {
-        // Images
+        // let _ = Self._printChanges()
+
+        // Items: Images, and PDFs
         VStack {
             HStack {
                 ForEach(ChatViewModel.shared.images) { imageItem in
-                    ChatImageView(imageItem: imageItem, whichImageIsHovering: $whichImageIsHovering)
+                    ChatImageView(imageItem: imageItem, whoIsHovering: $whoIsHovering)
+                }
+
+                ForEach(ChatViewModel.shared.pdfs) { pdfItem in
+                    ChatPDFView(pdfItem: pdfItem, whoIsHovering: $whoIsHovering)
                 }
 
                 Spacer()
             }
             .padding(.horizontal, 10)
             .padding(.top, 10)
-            .visible(if: !ChatViewModel.shared.images.isEmpty, removeCompletely: true)
+            .visible(if: !ChatViewModel.shared.items.isEmpty, removeCompletely: true)
 
             Divider()
                 .background(Color(nsColor: .separatorColor))
                 .padding(.horizontal, 10)
-                .visible(if: !ChatViewModel.shared.images.isEmpty, removeCompletely: true)
+                .visible(if: !ChatViewModel.shared.items.isEmpty, removeCompletely: true)
 
             ChatEditorView()
         }
@@ -43,6 +49,6 @@ struct ChatFieldView: View {
                 .stroke(Color(nsColor: .separatorColor))
         )
         .padding(.horizontal, 10)
-        .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.images)
+        .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
     }
 }

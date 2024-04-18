@@ -48,8 +48,15 @@ struct MessageContentView: View {
                 .controlSize(.small)
                 .visible(if: isGenerating && isLastMessage, removeCompletely: true)
 
-            MessageImagesView(images: message.images_data)
-                .visible(if: !message.images_data.isEmpty, removeCompletely: true)
+            HStack {
+                MessageImagesView(images: message.images_data)
+                    .visible(if: !message.images_data.isEmpty, removeCompletely: true)
+
+                // MessagePDFsView(items: message.pdfs_data)
+                //     .visible(if: !message.pdfs_data.isEmpty, removeCompletely: true)
+            }
+            // .visible(if: !message.images_data.isEmpty || !message.pdfs_data.isEmpty, removeCompletely: true)
+            .visible(if: !message.images_data.isEmpty, removeCompletely: true)
 
             MarkdownWebView(message.text)
         }

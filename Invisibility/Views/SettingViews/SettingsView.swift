@@ -123,6 +123,7 @@ struct SettingsView: View {
                     Text(LLMModels.claude3_sonnet.human_name).tag(LLMModels.claude3_sonnet.human_name)
                     Text(LLMModels.claude3_haiku.human_name).tag(LLMModels.claude3_haiku.human_name)
                     Text(LLMModels.gpt4.human_name).tag(LLMModels.gpt4.human_name)
+                    Text(LLMModels.gemini_pro.human_name).tag(LLMModels.gemini_pro.human_name)
                     Text(LLMModels.perplexity_mixtral.human_name).tag(LLMModels.perplexity_mixtral.human_name)
                     Text(LLMModels.perplexity_sonar_online.human_name).tag(LLMModels.perplexity_sonar_online.human_name)
                     Text(LLMModels.groq_mixtral.human_name).tag(LLMModels.groq_mixtral.human_name)

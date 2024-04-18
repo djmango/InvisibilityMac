@@ -1,52 +1,48 @@
 //
-//  ChatImageView.swift
+//  ChatPDFView.swift
 //  Invisibility
 //
-//  Created by Sulaiman Ghori on 2/29/24.
+//  Created by Sulaiman Ghori on 4/16/24.
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
-import OSLog
 import SwiftUI
 
-struct ChatImageView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
+struct ChatPDFView: View {
+    let item: ChatDataItem
 
-    let imageItem: ChatDataItem
-    let nsImage: NSImage
     @Binding private var whoIsHovering: UUID?
 
     var isHovering: Bool {
-        whoIsHovering == imageItem.id
+        whoIsHovering == item.id
     }
 
-    init(imageItem: ChatDataItem, whoIsHovering: Binding<UUID?>) {
-        self.imageItem = imageItem
-        self.nsImage = NSImage(data: imageItem.data) ?? NSImage()
+    init(pdfItem: ChatDataItem, whoIsHovering: Binding<UUID?>) {
+        self.item = pdfItem
         self._whoIsHovering = whoIsHovering
     }
 
     var body: some View {
-        Image(nsImage: nsImage)
+        Image("PDFIcon")
             .resizable()
             .aspectRatio(contentMode: .fill)
             .frame(width: 150, height: 150)
-            .clipShape(RoundedRectangle(cornerRadius: 16))
             .shadow(radius: isHovering ? 4 : 0)
             .padding(.horizontal, 10)
             .onHover { hovering in
                 if hovering {
-                    whoIsHovering = imageItem.id
+                    whoIsHovering = item.id
                 } else {
                     // First check if we still have command over var, ensuring someone else hasn't changed it
-                    if whoIsHovering == imageItem.id {
+                    if whoIsHovering == item.id {
                         whoIsHovering = nil
                     }
                 }
             }
             .onTapGesture {
-                ChatViewModel.shared.removeItem(id: imageItem.id)
+                print("Removing PDF")
+                ChatViewModel.shared.removeItem(id: item.id)
             }
-            .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.images)
+            .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
     }
 }

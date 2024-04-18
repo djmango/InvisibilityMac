@@ -63,7 +63,7 @@ final class MessageViewModel: ObservableObject {
             "send_message",
             properties: [
                 "num_images": message.images_data.count,
-                "num_pdfs": message.pdfs_data.count,
+                // "num_pdfs": message.pdfs_data.count,
                 "message_length": message.content?.count ?? 0,
                 "model": llmModel,
             ]
@@ -94,7 +94,7 @@ final class MessageViewModel: ObservableObject {
             "regenerate_message",
             properties: [
                 "num_images": messages.last?.images_data.count ?? 0,
-                "num_pdfs": messages.last?.pdfs_data.count ?? 0,
+                // "num_pdfs": messages.last?.pdfs_data.count ?? 0,
                 "message_length": messages.last?.content?.count ?? 0,
                 "model": llmModel,
             ]
@@ -105,20 +105,20 @@ final class MessageViewModel: ObservableObject {
         // We'll delete it the last two messages, the user message and the assistant message we want to regenerate
         // This assumes chat structure is always user -> assistant -> user
 
-        if messages.count < 2 { return }
+        if messages.count < 2 {
+            logger.error("Not enough messages to regenerate")
+            return
+        }
+
         // Remove the assistant message we are regenerating from class and ModelContext
         if let assistantMessage = messages.popLast() {
             modelContext.delete(assistantMessage)
-            do {
-                try modelContext.save()
-            } catch {
-                // Handle the error, such as logging or showing an alert to the user
-                logger.error("Error saving context after deletion: \(error)")
-            }
+            logger.debug("Deleted assistant message \(assistantMessage.text)")
         }
 
         // Removes the user message and presents a fresh send scenario
         if let userMessage = messages.popLast() {
+            logger.debug("Regenerating user message \(userMessage.text)")
             await send(userMessage)
         }
     }
@@ -179,11 +179,11 @@ extension MessageViewModel {
     }
 
     func handleDrop(providers: [NSItemProvider]) -> Bool {
-        logger.debug("Handling drop")
-        logger.debug("Providers: \(providers)")
+        // logger.debug("Handling drop")
+        // logger.debug("Providers: \(providers)")
         for provider in providers {
-            logger.debug("Provider: \(provider.description)")
-            logger.debug("Provider types: \(provider.registeredTypeIdentifiers)")
+            // logger.debug("Provider: \(provider.description)")
+            // logger.debug("Provider types: \(provider.registeredTypeIdentifiers)")
             if provider.hasItemConformingToTypeIdentifier("public.file-url") {
                 provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
                     guard error == nil else {
@@ -192,7 +192,7 @@ extension MessageViewModel {
                     }
                     if let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) {
                         // Process the file URL
-                        self.logger.debug("File URL: \(url)")
+                        // self.logger.debug("File URL: \(url)")
                         self.handleFile(url)
                     }
                 }

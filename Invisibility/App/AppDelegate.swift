@@ -120,11 +120,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldHandleReopen(_: NSApplication, hasVisibleWindows _: Bool) -> Bool {
         // If the window is visible and on the screen with the cursor, don't show it again
         if WindowManager.shared.windowIsVisible, WindowManager.shared.windowIsOnScreenWithCursor {
+            logger.debug("Window is visible and on screen with cursor, not showing again")
             return true
         }
 
         // Otherwise, show the window on the screen with the cursor
         WindowManager.shared.showWindow()
+        logger.debug("Window is not visible or not on screen with cursor, showing again")
         return false
     }
 
