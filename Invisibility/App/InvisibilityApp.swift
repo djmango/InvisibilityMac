@@ -15,10 +15,11 @@ struct InvisibilityApp: App {
     }
 
     var body: some Scene {
-        Settings {
-            SettingsView()
-                .modelContext(SharedModelContainer.shared.mainContext)
+        // Main app view is managed in delegate and WindowManager
+        MenuBarExtra("Invisibility", image: "MenuBarIcon", isInserted: $showMenuBar) {
+            MenubarView()
         }
+        .menuBarExtraStyle(.menu)
         .commands {
             CommandGroup(replacing: CommandGroupPlacement.help) {
                 Button("Invisibility Help") {
@@ -35,10 +36,5 @@ struct InvisibilityApp: App {
                 .keyboardShortcut(.return, modifiers: [.command])
             }
         }
-        // Main app view is managed in delegate and WindowManager
-        MenuBarExtra("Invisibility", image: "MenuBarIcon", isInserted: $showMenuBar) {
-            MenubarView()
-        }
-        .menuBarExtraStyle(.menu)
     }
 }

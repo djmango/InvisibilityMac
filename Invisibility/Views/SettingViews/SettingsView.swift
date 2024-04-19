@@ -32,15 +32,30 @@ struct SettingsView: View {
     @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
     @ObservedObject private var userManager = UserManager.shared
 
+    @State private var user: User?
+    @State private var isPaid = false
+
+    init() {
+        Task { [self] in
+            user = await userManager.getUser()
+            isPaid = await userManager.isPaid
+        }
+    }
+
     @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         ZStack {
+            RoundedRectangle(cornerRadius: 10)
+                .fill(Color("ChatBackgroundColor"))
+                .shadow(radius: 5)
+            // .frame(width: .infinity, height: .infinity)
+
             VStack(alignment: .center, spacing: 10) {
                 Spacer()
                 // User profile pic and login/logout button
                 VStack(alignment: .center) {
-                    AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
+                    AsyncImage(url: URL(string: user?.profilePictureUrl ?? "")) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -54,30 +69,30 @@ struct SettingsView: View {
                             .clipShape(Circle())
                             .overlay(Circle().stroke(Color.white, lineWidth: 2))
                     }
-                    .visible(if: userManager.user?.profilePictureUrl != nil)
+                    .visible(if: user?.profilePictureUrl != nil)
 
-                    Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
+                    Text("\(user?.firstName ?? "") \(user?.lastName ?? "")")
                         .font(.title3)
-                        .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
+                        .visible(if: user?.firstName != nil || user?.lastName != nil)
 
-                    Text(userManager.user?.email ?? "")
+                    Text(user?.email ?? "")
                         .font(.caption)
                         .padding(.bottom, 15)
 
                     Text("Invisibility Plus")
                         .font(.caption)
                         .italic()
-                        .visible(if: userManager.isPaid)
+                        .visible(if: isPaid)
 
                     Button(action: {
-                        UserManager.shared.manage()
+                        Task { await UserManager.shared.manage() }
                     }) {
                         Text("Manage")
                     }
                     .buttonStyle(.bordered)
 
                     Button(action: {
-                        UserManager.shared.logout()
+                        Task { await UserManager.shared.logout() }
                     }) {
                         Text("Logout")
                     }
@@ -91,15 +106,15 @@ struct SettingsView: View {
                         .stroke(Color.white, lineWidth: 1)
                 )
                 .shadow(radius: colorScheme == .dark ? 2 : 0)
-                .visible(if: userManager.user != nil)
+                .visible(if: user != nil)
 
                 Button(action: {
-                    UserManager.shared.login()
+                    Task { await UserManager.shared.login() }
                 }) {
                     Text("Login")
                 }
                 .buttonStyle(.bordered)
-                .visible(if: userManager.user == nil, removeCompletely: true)
+                .visible(if: user == nil, removeCompletely: true)
 
                 Spacer()
 
@@ -267,8 +282,10 @@ struct SettingsView: View {
                     .padding(.bottom, 5)
             }
             .animation(.easeIn, value: betaFeatures)
+
+            Spacer()
         }
-        .frame(minWidth: 500, minHeight: 750)
+        // .frame(minWidth: 500, minHeight: 750)
         .focusable(false)
         .fileExporter(isPresented: $showingExporter, document: document, contentType: .plainText, defaultFilename: "invisibility.txt") { result in
             switch result {

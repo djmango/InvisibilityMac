@@ -50,18 +50,13 @@ final class ChatViewModel: ObservableObject {
 
     /// The height of the text field.
     @Published public var textHeight: CGFloat = 52
+    @Published public var lastTextHeight: CGFloat = 0
 
     private init() {}
 
     @MainActor
     public func addImage(_ data: Data) {
         items.append(ChatDataItem(data: data, dataType: .image))
-    }
-
-    @MainActor
-    public func addPDF(_ data: Data) {
-        items.append(ChatDataItem(data: data, dataType: .pdf))
-        logger.debug("Chat items: \(items)")
     }
 
     @MainActor

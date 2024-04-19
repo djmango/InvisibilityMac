@@ -17,9 +17,12 @@ struct OnboardingAccountView: View {
         self.callback = callback
     }
 
+    @State private var user: User?
+    @State private var isPaid = false
+
     var body: some View {
         VStack(alignment: .center) {
-            AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
+            AsyncImage(url: URL(string: user?.profilePictureUrl ?? "")) { image in
                 image
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -33,14 +36,14 @@ struct OnboardingAccountView: View {
                     .clipShape(Circle())
                     .overlay(Circle().stroke(Color.white, lineWidth: 2))
             }
-            .visible(if: userManager.user?.profilePictureUrl != nil)
+            .visible(if: user?.profilePictureUrl != nil)
 
-            Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
+            Text("\(user?.firstName ?? "") \(user?.lastName ?? "")")
                 .font(.title3)
                 .foregroundColor(.white)
-                .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
+                .visible(if: user?.firstName != nil || user?.lastName != nil)
 
-            Text(userManager.user?.email ?? "")
+            Text(user?.email ?? "")
                 .font(.caption)
                 .foregroundColor(.white)
                 .padding(.bottom, 15)
@@ -49,16 +52,16 @@ struct OnboardingAccountView: View {
                 .font(.caption)
                 .italic()
                 .foregroundColor(.white)
-                .visible(if: userManager.isPaid)
+                .visible(if: isPaid)
 
             Button(action: {
-                if userManager.isPaid {
+                if isPaid {
                     callback()
                 } else {
                     Task {
-                        await userManager.checkPaymentStatus()
+                        _ = await UserManager.shared.checkPaymentStatus()
+                        await UserManager.shared.pay()
                     }
-                    userManager.pay()
                 }
             }) {
                 VStack {
@@ -100,7 +103,7 @@ struct OnboardingAccountView: View {
                 .font(.caption)
                 .italic()
                 .foregroundColor(.white)
-                .visible(if: !userManager.isPaid && userManager.user != nil)
+                .visible(if: !isPaid && user != nil)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 15)
@@ -113,7 +116,7 @@ struct OnboardingAccountView: View {
                 .stroke(Color.white, lineWidth: 1)
         )
         .shadow(radius: 2)
-        .visible(if: userManager.user != nil)
+        .visible(if: user != nil)
         .padding(.top, 20)
         .confettiCannon(counter: $userManager.confettis)
 

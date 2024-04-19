@@ -17,6 +17,7 @@
 		4D2428D52BC6070500BE444C /* TextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428D42BC6070500BE444C /* TextViewModel.swift */; };
 		4D2428D92BCF39CA00BE444C /* ChatPDFView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428D82BCF39CA00BE444C /* ChatPDFView.swift */; };
 		4D2428DB2BCF42FE00BE444C /* MessagePDFsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */; };
+		4D2428DD2BD1FB8700BE444C /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428DC2BD1FB8700BE444C /* SettingsViewModel.swift */; };
 		4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3B635C2B642A1A004AA7DF /* LLMManager.swift */; };
 		4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */; };
 		4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */; };
@@ -84,6 +85,7 @@
 		4D2428D42BC6070500BE444C /* TextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewModel.swift; sourceTree = "<group>"; };
 		4D2428D82BCF39CA00BE444C /* ChatPDFView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPDFView.swift; sourceTree = "<group>"; };
 		4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePDFsView.swift; sourceTree = "<group>"; };
+		4D2428DC2BD1FB8700BE444C /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		4D3B635C2B642A1A004AA7DF /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
 		4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = invis_launch.mp3; sourceTree = "<group>"; };
 		4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractedSubjects.swift"; sourceTree = "<group>"; };
@@ -219,6 +221,7 @@
 				4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */,
 				4D116AB42BAAA19C00729BE7 /* ShortcutViewModel.swift */,
 				4D2428D42BC6070500BE444C /* TextViewModel.swift */,
+				4D2428DC2BD1FB8700BE444C /* SettingsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */,
+				4D2428DD2BD1FB8700BE444C /* SettingsViewModel.swift in Sources */,
 				4D5A9EA22B8C65D40018F6E4 /* MessageButtonItemView.swift in Sources */,
 				4D2428DB2BCF42FE00BE444C /* MessagePDFsView.swift in Sources */,
 				4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */,
@@ -654,7 +658,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 99;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -688,7 +692,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 99;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;

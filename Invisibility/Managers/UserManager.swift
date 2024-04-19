@@ -99,7 +99,7 @@ final class UserManager: ObservableObject {
             return self.user
         }
         if let user = try? await fetchUser() {
-            DispatchQueue.main.async {
+            await MainActor.run {
                 self.user = user
             }
             return user
@@ -252,8 +252,6 @@ final class UserManager: ObservableObject {
 
     func logout() {
         self.token = nil
-        DispatchQueue.main.async {
-            self.user = nil
-        }
+        self.user = nil
     }
 }

@@ -43,43 +43,17 @@ struct ChatButtonsView: View {
                 .keyboardShortcut("1", modifiers: [.command, .shift])
 
                 // Settings
-                SettingsLink {
-                    HStack(spacing: 0) {
-                        Image(systemName: "gearshape")
-                            .resizable()
-                            .frame(width: 18, height: 18)
-                            .foregroundColor(Color("ChatButtonForegroundColor"))
-                            .visible(if: !shortcutViewModel.modifierFlags.contains(.command) || !shortcutHints, removeCompletely: true)
-
-                        Text("⌘ ,")
-                            .font(.title3)
-                            .foregroundColor(Color("ChatButtonForegroundColor"))
-                            .visible(if: shortcutViewModel.modifierFlags.contains(.command) && shortcutHints, removeCompletely: true)
-                        Text("Settings")
-                            .font(.title3)
-                            .foregroundColor(Color("ChatButtonForegroundColor"))
-                            .visible(if: whoIsHovering ?? "" == "Settings" && animateButtons, removeCompletely: true)
-                            .padding(.leading, 8)
-                    }
-                    .padding(8)
-                    .contentShape(RoundedRectangle(cornerRadius: 100))
-                }
-                .onHover { hovering in
-                    if hovering {
-                        whoIsHovering = "Settings"
-                    } else {
-                        whoIsHovering = nil
+                MessageButtonItemView(
+                    label: "Settings",
+                    icon: "gearshape",
+                    shortcut_hint: "⌘ ,",
+                    whoIsHovering: $whoIsHovering
+                ) {
+                    DispatchQueue.main.async {
+                        SettingsViewModel.shared.showSettings.toggle()
                     }
                 }
-                .background(
-                    RoundedRectangle(cornerRadius: 100)
-                        .fill(Color("ChatButtonBackgroundColor"))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 100)
-                        .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-                )
-                .buttonStyle(.plain)
+                .keyboardShortcut(",", modifiers: [.command])
 
                 // Clear Chat
                 MessageButtonItemView(
@@ -100,6 +74,7 @@ struct ChatButtonsView: View {
                     shortcut_hint: "⌘ P",
                     whoIsHovering: $whoIsHovering
                 ) {
+                    logger.info("Stop generating")
                     messageViewModel.stopGenerating()
                 }
                 .keyboardShortcut("p", modifiers: [.command])

@@ -37,7 +37,10 @@ final class MessageViewModel: ObservableObject {
             sortBy: [sortDescriptor]
         )
 
-        messages = try modelContext.fetch(fetchDescriptor)
+        let fetched = try modelContext.fetch(fetchDescriptor)
+        DispatchQueue.main.async {
+            self.messages = fetched
+        }
         logger.debug("Fetched \(self.messages.count) messages")
     }
 
@@ -47,10 +50,9 @@ final class MessageViewModel: ObservableObject {
         guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
         let images = ChatViewModel.shared.images.map(\.data)
-        let pdfs = ChatViewModel.shared.pdfs.map(\.data)
 
-        let message = Message(content: TextViewModel.shared.text, role: .user, images: images, pdfs: pdfs)
-        TextViewModel.shared.text = ""
+        let message = Message(content: TextViewModel.shared.text, role: .user, images: images)
+        TextViewModel.shared.clearText()
         ChatViewModel.shared.removeAll()
 
         await send(message)
@@ -63,7 +65,6 @@ final class MessageViewModel: ObservableObject {
             "send_message",
             properties: [
                 "num_images": message.images_data.count,
-                // "num_pdfs": message.pdfs_data.count,
                 "message_length": message.content?.count ?? 0,
                 "model": llmModel,
             ]
@@ -80,7 +81,7 @@ final class MessageViewModel: ObservableObject {
             await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
             assistantMessage.status = .complete
-            DispatchQueue.main.async {
+            await MainActor.run {
                 self.isGenerating = false
             }
             logger.debug("Chat complete")
@@ -94,7 +95,6 @@ final class MessageViewModel: ObservableObject {
             "regenerate_message",
             properties: [
                 "num_images": messages.last?.images_data.count ?? 0,
-                // "num_pdfs": messages.last?.pdfs_data.count ?? 0,
                 "message_length": messages.last?.content?.count ?? 0,
                 "model": llmModel,
             ]
@@ -216,6 +216,9 @@ extension MessageViewModel {
             } else if fileType.conforms(to: .pdf) {
                 logger.debug("Selected file \(url) is a PDF.")
                 handlePDF(url: url)
+            } else if fileType.conforms(to: .text) {
+                logger.debug("Selected file \(url) is a text file.")
+                handleText(url: url)
             } else {
                 logger.error("Selected file \(url) is of an unknown type.")
                 AlertManager.shared.doShowAlert(
@@ -260,8 +263,41 @@ extension MessageViewModel {
             return
         }
 
+        var complete_text = ""
+
+        // Insert PDF attributedString if available
+        if let pdf = PDFDocument(url: url) {
+            let pageCount = pdf.pageCount
+            let documentContent = NSMutableAttributedString()
+
+            for i in 0 ..< pageCount {
+                guard let page = pdf.page(at: i) else { continue }
+                guard let pageContent = page.attributedString else { continue }
+                documentContent.append(pageContent)
+            }
+
+            complete_text += documentContent.string
+        }
+
         DispatchQueue.main.async {
-            ChatViewModel.shared.addPDF(data)
+            TextViewModel.shared.text += complete_text.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+    }
+
+    private func handleText(url: URL) {
+        PostHogSDK.shared.capture("handle_text")
+        guard let data = try? Data(contentsOf: url) else {
+            logger.error("Failed to read text data from url.")
+            return
+        }
+
+        guard let text = String(data: data, encoding: .utf8) else {
+            logger.error("Failed to convert text data to string.")
+            return
+        }
+
+        DispatchQueue.main.async {
+            TextViewModel.shared.text += text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 }

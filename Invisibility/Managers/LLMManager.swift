@@ -113,6 +113,8 @@ final class LLMManager {
 
     private let timeoutInterval: TimeInterval = 30
 
+    @AppStorage("token") private var token: String?
+
     private var model: LLMModel {
         LLMModels.human_name_to_model[llmModel] ?? LLMModels.claude3_opus
     }
@@ -120,8 +122,9 @@ final class LLMManager {
     @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
 
     private init() {
+        @AppStorage("token") var token: String?
         let configuration = OpenAI.Configuration(
-            token: UserManager.shared.token ?? "",
+            token: token ?? "",
             host: AppConfig.invisibility_api_base + "/oai",
             timeoutInterval: timeoutInterval
         )
@@ -130,7 +133,7 @@ final class LLMManager {
 
     func setup() {
         let configuration = OpenAI.Configuration(
-            token: UserManager.shared.token ?? "",
+            token: token ?? "",
             host: AppConfig.invisibility_api_base + "/oai",
             timeoutInterval: timeoutInterval
         )
