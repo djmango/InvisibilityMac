@@ -6,7 +6,6 @@ struct AppView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AppView")
 
     @ObservedObject private var alertViewModel = AlertManager.shared
-    @ObservedObject private var settingsViewModel = SettingsViewModel.shared
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
@@ -16,11 +15,6 @@ struct AppView: View {
                 guard let url = urls.first else { return }
                 MessageViewModel.shared.handleFile(url)
             }
-            .overlay(
-                SettingsView()
-                    .visible(if: settingsViewModel.showSettings)
-                // .allowsHitTesting(!onboardingViewed)
-            )
             // .handlesExternalEvents(matching: ["openURL:", "openFile:"])
             // .handlesExternalEvents(preferring: Set(arrayLiteral: "master"), allowing: Set(arrayLiteral: "*"))
             .modelContainer(SharedModelContainer.shared.modelContainer)

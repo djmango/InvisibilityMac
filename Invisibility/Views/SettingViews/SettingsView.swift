@@ -29,70 +29,67 @@ struct SettingsView: View {
     @State private var showingExporter = false
     @State private var document: TextDocument = TextDocument(text: "")
 
-    @ObservedObject private var updaterViewModel = UpdaterViewModel.shared
     @ObservedObject private var userManager = UserManager.shared
+    private var updaterViewModel = UpdaterViewModel.shared
 
-    @State private var user: User?
-    @State private var isPaid = false
-
-    init() {
-        Task { [self] in
-            user = await userManager.getUser()
-            isPaid = await userManager.isPaid
-        }
-    }
-
-    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color("ChatBackgroundColor"))
-                .shadow(radius: 5)
-            // .frame(width: .infinity, height: .infinity)
+            VisualEffectBlur(material: .menu, blendingMode: .withinWindow, cornerRadius: 16)
+
+            Image("InvisibilityLogo")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 100, height: 100)
+                .padding(.top, 10)
 
             VStack(alignment: .center, spacing: 10) {
                 Spacer()
                 // User profile pic and login/logout button
                 VStack(alignment: .center) {
-                    AsyncImage(url: URL(string: user?.profilePictureUrl ?? "")) { image in
+                    AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
                         image
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 50)
                             .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            // .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            .overlay(Circle().stroke(colorScheme == .dark ? Color.white : Color.black, lineWidth: 2))
                             .padding(10)
                     } placeholder: {
                         ProgressView()
                             .frame(width: 50, height: 50)
                             .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            // .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                            .overlay(Circle().stroke(Color(colorScheme == .dark ? .white : .black), lineWidth: 1))
+                            // .stroke(Color(nsColor: .separatorColor))
+                            .padding(10)
                     }
-                    .visible(if: user?.profilePictureUrl != nil)
+                    .visible(if: userManager.user?.profilePictureUrl != nil)
 
-                    Text("\(user?.firstName ?? "") \(user?.lastName ?? "")")
+                    Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
                         .font(.title3)
-                        .visible(if: user?.firstName != nil || user?.lastName != nil)
+                        .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
 
-                    Text(user?.email ?? "")
+                    Text(userManager.user?.email ?? "")
                         .font(.caption)
                         .padding(.bottom, 15)
 
                     Text("Invisibility Plus")
                         .font(.caption)
                         .italic()
-                        .visible(if: isPaid)
+                        .visible(if: userManager.isPaid)
 
                     Button(action: {
-                        Task { await UserManager.shared.manage() }
+                        UserManager.shared.manage()
                     }) {
                         Text("Manage")
                     }
                     .buttonStyle(.bordered)
 
                     Button(action: {
-                        Task { await UserManager.shared.logout() }
+                        UserManager.shared.logout()
                     }) {
                         Text("Logout")
                     }
@@ -103,18 +100,18 @@ struct SettingsView: View {
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color("ChatButtonBackgroundColor"))
-                        .stroke(Color.white, lineWidth: 1)
+                        .stroke(colorScheme == .dark ? Color.white : Color.black, lineWidth: 1)
                 )
                 .shadow(radius: colorScheme == .dark ? 2 : 0)
-                .visible(if: user != nil)
+                .visible(if: userManager.user != nil)
 
                 Button(action: {
-                    Task { await UserManager.shared.login() }
+                    UserManager.shared.login()
                 }) {
                     Text("Login")
                 }
                 .buttonStyle(.bordered)
-                .visible(if: user == nil, removeCompletely: true)
+                .visible(if: userManager.user == nil, removeCompletely: true)
 
                 Spacer()
 
@@ -185,11 +182,6 @@ struct SettingsView: View {
                     }
                     .buttonStyle(.bordered)
 
-                    Button("Check for Updates") {
-                        updaterViewModel.updater.checkForUpdates()
-                    }
-                    .buttonStyle(.bordered)
-
                     Button("Export Chat") {
                         let text = MessageViewModel.shared.messages.map { message in
                             "\(message.role?.rawValue.capitalized ?? ""): \(message.text)"
@@ -201,26 +193,33 @@ struct SettingsView: View {
                 }
 
                 HStack {
+                    Button("Check for Updates") {
+                        updaterViewModel.updater.checkForUpdates()
+                    }
+                    .buttonStyle(.bordered)
+
                     Button("Feedback") {
-                        if let url = URL(string: "mailto:support@invisibility.so") {
+                        if let url = URL(string: "mailto:support@i.inc") {
                             NSWorkspace.shared.open(url)
                         }
                     }
                     .buttonStyle(.bordered)
+                }
 
+                HStack {
                     Button("Acknowledgments") {
                         if let url = URL(string: "https://github.com/InvisibilityInc/Invisibility/tree/master/LICENSES") {
                             NSWorkspace.shared.open(url)
                         }
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.link)
 
                     Button("Privacy") {
-                        if let url = URL(string: "https://invisibility.so/privacy") {
+                        if let url = URL(string: "https://i.inc/privacy") {
                             NSWorkspace.shared.open(url)
                         }
                     }
-                    .buttonStyle(.bordered)
+                    .buttonStyle(.link)
                 }
 
                 Image("MenuBarIcon")
@@ -285,7 +284,14 @@ struct SettingsView: View {
 
             Spacer()
         }
-        // .frame(minWidth: 500, minHeight: 750)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(nsColor: .separatorColor))
+        )
+        .frame(maxWidth: 600, maxHeight: .infinity)
+        .padding(.vertical, 20)
+        .padding(.horizontal, 30)
+        .shadow(radius: colorScheme == .dark ? 5 : 0)
         .focusable(false)
         .fileExporter(isPresented: $showingExporter, document: document, contentType: .plainText, defaultFilename: "invisibility.txt") { result in
             switch result {

@@ -196,14 +196,14 @@ final class UserManager: ObservableObject {
 
     func login() {
         // Open the login page in the default browser
-        if let url = URL(string: "https://authkit.invisibility.so/") {
+        if let url = URL(string: AppConfig.invisibility_api_base + "/auth/login") {
             NSWorkspace.shared.open(url)
         }
     }
 
     func signup() {
         // Open the signup page in the default browser
-        if let url = URL(string: "https://authkit.invisibility.so/sign-up") {
+        if let url = URL(string: AppConfig.invisibility_api_base + "/auth/signup") {
             NSWorkspace.shared.open(url)
         }
     }
@@ -252,6 +252,8 @@ final class UserManager: ObservableObject {
 
     func logout() {
         self.token = nil
-        self.user = nil
+        DispatchQueue.main.async {
+            self.user = nil
+        }
     }
 }

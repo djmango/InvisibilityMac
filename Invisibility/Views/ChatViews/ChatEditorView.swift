@@ -19,6 +19,10 @@ struct ChatEditorView: View {
         ScrollView {
             LazyVStack(alignment: .trailing, spacing: 0) {
                 TextEditor(text: $textViewModel.text)
+                    // .pasteDestination(for: URL.self) { urls in
+                    //     guard let url = urls.first else { return }
+                    //     MessageViewModel.shared.handleFile(url)
+                    // }
                     .scrollContentBackground(.hidden)
                     .scrollIndicatorsFlash(onAppear: false)
                     .scrollIndicators(.never)

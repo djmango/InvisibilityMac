@@ -8,6 +8,7 @@ struct MessageView: View {
     @State private var isDragActive: Bool = false
 
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
+    @ObservedObject private var settingsViewModel = SettingsViewModel.shared
 
     @AppStorage("resized") private var resized: Bool = false
 
@@ -20,8 +21,13 @@ struct MessageView: View {
         let _ = Self._printChanges()
         ZStack {
             VStack(alignment: .center, spacing: 0) {
-                MessageScrollView()
-                    .sentryTrace("ScrollView")
+                ZStack {
+                    MessageScrollView()
+                        .sentryTrace("ScrollView")
+
+                    SettingsView()
+                        .visible(if: settingsViewModel.showSettings, removeCompletely: true)
+                }
 
                 Spacer()
 
