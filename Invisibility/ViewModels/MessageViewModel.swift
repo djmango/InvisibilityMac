@@ -20,7 +20,11 @@ final class MessageViewModel: ObservableObject {
     @Published public var messages: [Message] = []
 
     /// Whether the chat is currently generating
-    @Published public var isGenerating: Bool = false
+    @Published public var isGenerating: Bool = false {
+        didSet {
+            logger.debug("Generating: \(isGenerating)")
+        }
+    }
 
     /// The height of the chat window
     @Published public var windowHeight: CGFloat = 0
@@ -46,7 +50,8 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func sendFromChat() async {
-        guard !isGenerating else { return }
+        // Stop the chat from generating if it is
+        if isGenerating { stopGenerating() }
         guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
 
         let images = ChatViewModel.shared.images.map(\.data)
@@ -61,7 +66,7 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     private func send(_ message: Message) async {
         isGenerating = true
-        PostHogSDK.shared.capture(
+        defer { PostHogSDK.shared.capture(
             "send_message",
             properties: [
                 "num_images": message.images_data.count,
@@ -69,6 +74,7 @@ final class MessageViewModel: ObservableObject {
                 "model": llmModel,
             ]
         )
+        }
 
         messages.append(message)
         modelContext.insert(message)
@@ -78,11 +84,15 @@ final class MessageViewModel: ObservableObject {
         modelContext.insert(assistantMessage)
 
         chatTask = Task {
+            let lastMessageId = messages.last?.id
             await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
 
             assistantMessage.status = .complete
             await MainActor.run {
-                self.isGenerating = false
+                if let lastMessageId, messages.last?.id == lastMessageId {
+                    // Only update isGenerating if the last message is the chat we are responsible for
+                    self.isGenerating = false
+                }
             }
             logger.debug("Chat complete")
         }
@@ -91,7 +101,7 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func regenerate() async {
         isGenerating = true
-        PostHogSDK.shared.capture(
+        defer { PostHogSDK.shared.capture(
             "regenerate_message",
             properties: [
                 "num_images": messages.last?.images_data.count ?? 0,
@@ -99,6 +109,7 @@ final class MessageViewModel: ObservableObject {
                 "model": llmModel,
             ]
         )
+        }
 
         // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
         // So for that, we'll recreate the original send scenario, when the new user message was sent
@@ -126,20 +137,27 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func clearChat() {
         logger.debug("Clearing chat")
-        PostHogSDK.shared.capture("clear_chat", properties: ["message_count": messages.count])
+        defer { PostHogSDK.shared.capture(
+            "clear_chat",
+            properties: ["message_count": messages.count]
+        ) }
         for message in messages {
             modelContext.delete(message)
         }
         self.messages.removeAll()
     }
 
+    @MainActor
     func stopGenerating() {
         logger.debug("Stopping generation")
-        PostHogSDK.shared.capture("stop_generating", properties: ["stopped_message_length": messages.last?.content?.count ?? 0])
-        chatTask?.cancel()
-        DispatchQueue.main.async {
-            self.isGenerating = false
+        defer {
+            PostHogSDK.shared.capture(
+                "stop_generating",
+                properties: ["stopped_message_length": messages.last?.content?.count ?? 0]
+            )
         }
+        isGenerating = false
+        chatTask?.cancel()
     }
 
     private func processOutput(output: String) {
@@ -156,7 +174,6 @@ final class MessageViewModel: ObservableObject {
 extension MessageViewModel {
     /// Public function that can be called to begin the file open process
     func openFile() {
-        PostHogSDK.shared.capture("open_file")
         let openPanel = NSOpenPanel()
         openPanel.allowsMultipleSelection = false
         openPanel.canChooseFiles = true
@@ -176,6 +193,8 @@ extension MessageViewModel {
                 self.handleFile(url)
             }
         }
+
+        PostHogSDK.shared.capture("open_file")
     }
 
     func handleDrop(providers: [NSItemProvider]) -> Bool {
@@ -205,7 +224,9 @@ extension MessageViewModel {
 
     /// Public function that handles file via a URL regarding a message
     public func handleFile(_ url: URL) {
-        PostHogSDK.shared.capture("handle_file")
+        defer {
+            PostHogSDK.shared.capture("handle_file")
+        }
         // First determine if we are dealing with an image or audio file
         logger.debug("Selected file \(url)")
         if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
@@ -230,7 +251,7 @@ extension MessageViewModel {
     }
 
     private func handleImage(url: URL) {
-        PostHogSDK.shared.capture("handle_image")
+        defer { PostHogSDK.shared.capture("handle_image") }
         guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
             logger.error("Failed to create image source from url.")
             return
@@ -252,7 +273,7 @@ extension MessageViewModel {
     }
 
     private func handlePDF(url: URL) {
-        PostHogSDK.shared.capture("handle_pdf")
+        defer { PostHogSDK.shared.capture("handle_pdf") }
         guard let pdf = PDFDocument(url: url) else {
             logger.error("Failed to read PDF data from url.")
             return
@@ -285,7 +306,7 @@ extension MessageViewModel {
     }
 
     private func handleText(url: URL) {
-        PostHogSDK.shared.capture("handle_text")
+        defer { PostHogSDK.shared.capture("handle_text") }
         guard let data = try? Data(contentsOf: url) else {
             logger.error("Failed to read text data from url.")
             return

@@ -48,9 +48,7 @@ final class TextViewModel: ObservableObject {
     private init() {}
 
     func clearText() {
-        // DispatchQueue.main.async {
         self.text = ""
-        // }
     }
 
     /// Function to be called every time the text changes

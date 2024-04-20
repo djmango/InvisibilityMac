@@ -38,12 +38,6 @@ struct SettingsView: View {
         ZStack {
             VisualEffectBlur(material: .menu, blendingMode: .withinWindow, cornerRadius: 16)
 
-            Image("InvisibilityLogo")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
-                .padding(.top, 10)
-
             VStack(alignment: .center, spacing: 10) {
                 Spacer()
                 // User profile pic and login/logout button

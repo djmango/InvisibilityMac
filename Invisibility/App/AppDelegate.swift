@@ -96,13 +96,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // Example: Check the scheme and handle the URL
             if url.scheme == "invisibility", let components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
                 // Perform actions based on the URL components, such as extracting a token
-                if let tokenReceived = components.queryItems?.first(where: { $0.name == "token" })?.value {
+                if let token = components.queryItems?.first(where: { $0.name == "token" })?.value {
+                    logger.debug("Received JWT Token: \(token)")
                     // Handle the authentication with the received token
-                    @AppStorage("token") var token: String?
-                    token = tokenReceived
+                    UserManager.shared.token = token
                 } else if url == URL(string: "invisibility://paid") {
-                    // UserManager.shared.isPaid = true
-                    Task { await UserManager.shared.checkPaymentStatus() }
+                    UserManager.shared.isPaid = true
                 } else {
                     logger.error("No token found in URL")
                     logger.debug("URL: \(url)")
