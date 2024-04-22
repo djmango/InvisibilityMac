@@ -7,7 +7,6 @@
 //
 
 import OSLog
-import PostHog
 import SwiftUI
 
 struct ChatButtonsView: View {
@@ -54,6 +53,9 @@ struct ChatButtonsView: View {
                     }
                 }
                 .keyboardShortcut(",", modifiers: [.command])
+
+                // Models
+                ChatModelPicker(whoIsHovering: $whoIsHovering)
 
                 // Clear Chat
                 MessageButtonItemView(

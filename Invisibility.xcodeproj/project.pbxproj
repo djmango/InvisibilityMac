@@ -19,6 +19,7 @@
 		4D2428DB2BCF42FE00BE444C /* MessagePDFsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */; };
 		4D2428DD2BD1FB8700BE444C /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428DC2BD1FB8700BE444C /* SettingsViewModel.swift */; };
 		4D2428E22BD5D8C100BE444C /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 4D2428E12BD5D8C100BE444C /* CompactSlider */; };
+		4D2428E52BD5EC2E00BE444C /* ChatModelPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428E42BD5EC2E00BE444C /* ChatModelPicker.swift */; };
 		4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3B635C2B642A1A004AA7DF /* LLMManager.swift */; };
 		4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */; };
 		4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */; };
@@ -49,7 +50,7 @@
 		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
 		4D911BAD2BC1DD480034B1A8 /* MessageImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */; };
 		4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */; };
-		4D911BB22BC1E1E70034B1A8 /* MessageActionButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BB12BC1E1E70034B1A8 /* MessageActionButtonsView.swift */; };
+		4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */; };
 		4D9354292B99851E00C34A63 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4D9354282B99851E00C34A63 /* Alamofire */; };
 		4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D93542A2B99A81400C34A63 /* OnboardingManager.swift */; };
 		4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */; };
@@ -87,6 +88,7 @@
 		4D2428D82BCF39CA00BE444C /* ChatPDFView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPDFView.swift; sourceTree = "<group>"; };
 		4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagePDFsView.swift; sourceTree = "<group>"; };
 		4D2428DC2BD1FB8700BE444C /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		4D2428E42BD5EC2E00BE444C /* ChatModelPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModelPicker.swift; sourceTree = "<group>"; };
 		4D3B635C2B642A1A004AA7DF /* LLMManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMManager.swift; sourceTree = "<group>"; };
 		4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = invis_launch.mp3; sourceTree = "<group>"; };
 		4D451C2D2B835F9900DCEF48 /* String+extractedSubjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+extractedSubjects.swift"; sourceTree = "<group>"; };
@@ -116,7 +118,7 @@
 		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageImagesView.swift; sourceTree = "<group>"; };
 		4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContentView.swift; sourceTree = "<group>"; };
-		4D911BB12BC1E1E70034B1A8 /* MessageActionButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageActionButtonsView.swift; sourceTree = "<group>"; };
+		4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonsView.swift; sourceTree = "<group>"; };
 		4D93542A2B99A81400C34A63 /* OnboardingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingManager.swift; sourceTree = "<group>"; };
 		4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4DA893AF2B54C45300560DAD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -188,6 +190,13 @@
 				4D93542A2B99A81400C34A63 /* OnboardingManager.swift */,
 			);
 			path = Managers;
+			sourceTree = "<group>";
+		};
+		4D2428E32BD5EBF600BE444C /* ButtonViews */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ButtonViews;
 			sourceTree = "<group>";
 		};
 		4D5896D92B7C67BD00484BFA /* MenubarViews */ = {
@@ -293,6 +302,7 @@
 		4D8E053E2B2516DE00B60D0D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4D2428E32BD5EBF600BE444C /* ButtonViews */,
 				4D8E05442B2516DE00B60D0D /* AppView.swift */,
 				4DF195012B91B46E0017365F /* Effects */,
 				4D5896D92B7C67BD00484BFA /* MenubarViews */,
@@ -307,10 +317,11 @@
 		4D8E053F2B2516DE00B60D0D /* ChatViews */ = {
 			isa = PBXGroup;
 			children = (
+				4D2428E42BD5EC2E00BE444C /* ChatModelPicker.swift */,
 				4D596A9C2B5F2B3E00B9E765 /* ChatFieldView.swift */,
+				4D1773D72B8C1060004C5D13 /* ChatButtonsView.swift */,
 				4D4DB2462B91384D003B9D53 /* ChatImageView.swift */,
 				4D2428D02BC4A39300BE444C /* ChatEditorView.swift */,
-				4D1773D72B8C1060004C5D13 /* ChatButtonsView.swift */,
 				4D2428D82BCF39CA00BE444C /* ChatPDFView.swift */,
 			);
 			path = ChatViews;
@@ -331,8 +342,8 @@
 				4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */,
 				4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */,
 				4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */,
+				4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */,
 				4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */,
-				4D911BB12BC1E1E70034B1A8 /* MessageActionButtonsView.swift */,
 				4D2428D22BC6031100BE444C /* MessageScrollView.swift */,
 				4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */,
 			);
@@ -484,7 +495,7 @@
 				4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
-				4D911BB22BC1E1E70034B1A8 /* MessageActionButtonsView.swift in Sources */,
+				4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */,
 				4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */,
 				4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */,
 				4D2428D92BCF39CA00BE444C /* ChatPDFView.swift in Sources */,
@@ -521,6 +532,7 @@
 				4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */,
 				4D2428D12BC4A39300BE444C /* ChatEditorView.swift in Sources */,
 				4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */,
+				4D2428E52BD5EC2E00BE444C /* ChatModelPicker.swift in Sources */,
 				4DEA4ADF2B70689B00393858 /* MenubarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -662,7 +674,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -677,7 +689,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.15;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -696,7 +708,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 100;
+				CURRENT_PROJECT_VERSION = 101;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -711,7 +723,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.15;
+				MARKETING_VERSION = 2.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
