@@ -40,7 +40,7 @@ struct MessageScrollView: View {
 
                 // Toggle showing all messages
                 MessageButtonItemView(
-                    label: showAllMessages ? "Collapse" : "Show All",
+                    label: showAllMessages ? "Collapse" : "Show +\(messageViewModel.messages.count - 10)",
                     icon: showAllMessages ? "chevron.down" : "chevron.up",
                     shortcut_hint: "⌘ + ⇧ + I",
                     whoIsHovering: $whoIsHovering,
@@ -79,5 +79,6 @@ struct MessageScrollView: View {
         .scrollContentBackground(.hidden)
         .scrollIndicators(.never)
         .defaultScrollAnchor(.bottom)
+        .animation(AppConfig.snappy, value: displayedMessages)
     }
 }

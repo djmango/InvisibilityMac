@@ -48,16 +48,13 @@ struct SettingsView: View {
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 50, height: 50)
                             .clipShape(Circle())
-                            // .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                            .overlay(Circle().stroke(colorScheme == .dark ? Color.white : Color.black, lineWidth: 2))
+                            .overlay(Circle().stroke(colorScheme == .dark ? .white : .black, lineWidth: 2))
                             .padding(10)
                     } placeholder: {
                         ProgressView()
                             .frame(width: 50, height: 50)
                             .clipShape(Circle())
-                            // .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                            .overlay(Circle().stroke(Color(colorScheme == .dark ? .white : .black), lineWidth: 1))
-                            // .stroke(Color(nsColor: .separatorColor))
+                            .overlay(Circle().stroke(Color(colorScheme == .dark ? .white : .black), lineWidth: 2))
                             .padding(10)
                     }
                     .visible(if: userManager.user?.profilePictureUrl != nil)
@@ -94,7 +91,7 @@ struct SettingsView: View {
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(Color("ChatButtonBackgroundColor"))
-                        .stroke(colorScheme == .dark ? Color.white : Color.black, lineWidth: 1)
+                        .stroke(colorScheme == .dark ? .white : .black, lineWidth: 0.5)
                 )
                 .shadow(radius: colorScheme == .dark ? 2 : 0)
                 .visible(if: userManager.user != nil)
@@ -280,7 +277,7 @@ struct SettingsView: View {
         }
         .overlay(
             RoundedRectangle(cornerRadius: 16)
-                .stroke(Color(nsColor: .separatorColor))
+                .stroke(Color(nsColor: .separatorColor), lineWidth: 0.5)
         )
         .frame(maxWidth: 600, maxHeight: .infinity)
         .padding(.vertical, 20)

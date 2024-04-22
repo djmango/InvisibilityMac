@@ -18,6 +18,7 @@
 		4D2428D92BCF39CA00BE444C /* ChatPDFView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428D82BCF39CA00BE444C /* ChatPDFView.swift */; };
 		4D2428DB2BCF42FE00BE444C /* MessagePDFsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */; };
 		4D2428DD2BD1FB8700BE444C /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D2428DC2BD1FB8700BE444C /* SettingsViewModel.swift */; };
+		4D2428E22BD5D8C100BE444C /* CompactSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 4D2428E12BD5D8C100BE444C /* CompactSlider */; };
 		4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D3B635C2B642A1A004AA7DF /* LLMManager.swift */; };
 		4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */; };
 		4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */; };
@@ -145,6 +146,7 @@
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
 				4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
+				4D2428E22BD5D8C100BE444C /* CompactSlider in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DF46B392BBF96D700846217 /* ScrollKit in Frameworks */,
@@ -403,6 +405,7 @@
 				4DF2D8FE2BA683280093CA3E /* PostHog */,
 				4DF46B352BBE1A2700846217 /* MarkdownWebView */,
 				4DF46B382BBF96D700846217 /* ScrollKit */,
+				4D2428E12BD5D8C100BE444C /* CompactSlider */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -442,6 +445,7 @@
 				4DF2D8FD2BA683280093CA3E /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				4DF46B342BBE1A2700846217 /* XCRemoteSwiftPackageReference "markdown-webview" */,
 				4DF46B372BBF96D700846217 /* XCRemoteSwiftPackageReference "ScrollKit" */,
+				4D2428E02BD5D8C100BE444C /* XCRemoteSwiftPackageReference "CompactSlider" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -658,7 +662,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 99;
+				CURRENT_PROJECT_VERSION = 100;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -673,7 +677,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.14;
+				MARKETING_VERSION = 2.0.15;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -692,7 +696,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 99;
+				CURRENT_PROJECT_VERSION = 100;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -707,7 +711,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.0.14;
+				MARKETING_VERSION = 2.0.15;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -762,6 +766,14 @@
 			requirement = {
 				branch = master;
 				kind = branch;
+			};
+		};
+		4D2428E02BD5D8C100BE444C /* XCRemoteSwiftPackageReference "CompactSlider" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/buh/CompactSlider.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.5;
 			};
 		};
 		4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */ = {
@@ -859,6 +871,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D219F902B847B67006FF8E5 /* XCRemoteSwiftPackageReference "OpenAI" */;
 			productName = OpenAI;
+		};
+		4D2428E12BD5D8C100BE444C /* CompactSlider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D2428E02BD5D8C100BE444C /* XCRemoteSwiftPackageReference "CompactSlider" */;
+			productName = CompactSlider;
 		};
 		4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
