@@ -29,7 +29,8 @@ final class MessageViewModel: ObservableObject {
     /// The height of the chat window
     @Published public var windowHeight: CGFloat = 0
 
-    @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
+    // @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
+    @AppStorage("llmModelName") private var llmModel = LLMModels.claude3Opus.model.human_name
 
     private init() {
         try? fetch()

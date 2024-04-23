@@ -25,6 +25,16 @@ struct MessageView: View {
                     MessageScrollView()
                         .sentryTrace("ScrollView")
 
+                    Rectangle()
+                        .foregroundColor(Color.white.opacity(0.0001))
+                        .onTapGesture {
+                            // Dismiss settings when tapping on the chat in the background
+                            if settingsViewModel.showSettings {
+                                settingsViewModel.showSettings = false
+                            }
+                        }
+                        .visible(if: settingsViewModel.showSettings, removeCompletely: true)
+
                     SettingsView()
                         .visible(if: settingsViewModel.showSettings, removeCompletely: true)
                 }
@@ -58,6 +68,8 @@ struct MessageView: View {
                     .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
                         MessageViewModel.shared.handleDrop(providers: providers)
                     }
+                    // This is critical to make the reorderable model list work
+                    .hide(if: SettingsViewModel.shared.showSettings, removeCompletely: true)
             )
             .border(isDragActive ? Color.blue : Color.clear, width: 5)
             .onAppear {

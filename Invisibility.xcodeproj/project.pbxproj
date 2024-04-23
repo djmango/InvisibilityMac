@@ -60,6 +60,8 @@
 		4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */; };
 		4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
+		4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */; };
+		4DC8B35D2BD735DA00FE5EC8 /* SwiftUIReorderableForEach in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC8B35C2BD735DA00FE5EC8 /* SwiftUIReorderableForEach */; };
 		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
 		4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282E72B4E3C4A0041690B /* LaunchAtLogin */; };
 		4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */; };
@@ -126,6 +128,7 @@
 		4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingExplainerView.swift; sourceTree = "<group>"; };
 		4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingAccountView.swift; sourceTree = "<group>"; };
 		4DC610ED2B57369B00255358 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
+		4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModelListView.swift; sourceTree = "<group>"; };
 		4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidUrl.swift"; sourceTree = "<group>"; };
 		4DD5E3692B6243D300C35B1C /* AppPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPrompts.swift; sourceTree = "<group>"; };
 		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -146,6 +149,7 @@
 				4D9354292B99851E00C34A63 /* Alamofire in Frameworks */,
 				4DF2D8FF2BA683280093CA3E /* PostHog in Frameworks */,
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
+				4DC8B35D2BD735DA00FE5EC8 /* SwiftUIReorderableForEach in Frameworks */,
 				4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
 				4D2428E22BD5D8C100BE444C /* CompactSlider in Frameworks */,
@@ -365,6 +369,7 @@
 			isa = PBXGroup;
 			children = (
 				4D885C762B96D969009A1F48 /* SettingsView.swift */,
+				4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */,
 			);
 			path = SettingViews;
 			sourceTree = "<group>";
@@ -417,6 +422,7 @@
 				4DF46B352BBE1A2700846217 /* MarkdownWebView */,
 				4DF46B382BBF96D700846217 /* ScrollKit */,
 				4D2428E12BD5D8C100BE444C /* CompactSlider */,
+				4DC8B35C2BD735DA00FE5EC8 /* SwiftUIReorderableForEach */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -457,6 +463,7 @@
 				4DF46B342BBE1A2700846217 /* XCRemoteSwiftPackageReference "markdown-webview" */,
 				4DF46B372BBF96D700846217 /* XCRemoteSwiftPackageReference "ScrollKit" */,
 				4D2428E02BD5D8C100BE444C /* XCRemoteSwiftPackageReference "CompactSlider" */,
+				4DC8B35B2BD735DA00FE5EC8 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -514,6 +521,7 @@
 				4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */,
 				4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */,
+				4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */,
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
 				4D2428D52BC6070500BE444C /* TextViewModel.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
@@ -820,6 +828,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		4DC8B35B2BD735DA00FE5EC8 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/globulus/swiftui-reorderable-foreach.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		4DD282DD2B4DF7050041690B /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
@@ -908,6 +924,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */;
 			productName = FluidGradient;
+		};
+		4DC8B35C2BD735DA00FE5EC8 /* SwiftUIReorderableForEach */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DC8B35B2BD735DA00FE5EC8 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */;
+			productName = SwiftUIReorderableForEach;
 		};
 		4DD282DE2B4DF7050041690B /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;

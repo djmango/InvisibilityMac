@@ -9,36 +9,9 @@
 import CompactSlider
 import SwiftUI
 
-enum SliderValue: String, CaseIterable {
-    case george, lenny, rabbit
-
-    var value: Double {
-        switch self {
-        case .george:
-            0.0
-        case .lenny:
-            1.0
-        case .rabbit:
-            2.0
-        }
-    }
-
-    init(value: Double) {
-        switch value {
-        case 0.0:
-            self = .george
-        case 1.0:
-            self = .lenny
-        default:
-            self = .rabbit
-        }
-    }
-}
-
 struct ChatModelPicker: View {
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
-    @State private var selectedValue: SliderValue = .lenny
     @State private var sliderState: CompactSliderState = .zero
     @State private var isHovering: Bool = false
     @Binding var whoIsHovering: String?
@@ -66,30 +39,29 @@ struct ChatModelPicker: View {
             }
 
             CompactSlider(value: Binding(
-                get: { selectedValue.value },
-                set: { selectedValue = SliderValue(value: $0) }
-            ), in: 0 ... 2, step: 1, state: $sliderState) {}
+                get: { Float(LLMManager.shared.modelIndex) },
+                set: { LLMManager.shared.setModel(index: Int($0)) }
+            ), in: 0 ... 5, step: 1, state: $sliderState) {}
                 .overlay(
-                    Text(selectedValue.rawValue.capitalized)
+                    Text(LLMManager.shared.model.human_name)
                         .foregroundColor(.white)
                         .padding(6)
                         .background(
                             Capsule().fill(Color.blue)
                         )
                         .offset(x: sliderState.dragLocationX.lower)
-                        // .offset(x: sliderState.dragLocationX.lower)
                         .allowsHitTesting(false)
                 )
                 .visible(if: isHovering, removeCompletely: true)
         }
         .padding(8)
-        .contentShape(RoundedRectangle(cornerRadius: 100))
+        .contentShape(RoundedRectangle(cornerRadius: 21))
         .background(
-            RoundedRectangle(cornerRadius: 100)
+            RoundedRectangle(cornerRadius: 21)
                 .fill(Color("ChatButtonBackgroundColor"))
         )
         .overlay(
-            RoundedRectangle(cornerRadius: 100)
+            RoundedRectangle(cornerRadius: 21)
                 .stroke(Color(NSColor.separatorColor), lineWidth: 1)
         )
         .onHover { hovering in

@@ -6,7 +6,6 @@ struct AppView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AppView")
 
     @ObservedObject private var alertViewModel = AlertManager.shared
-
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
     var body: some View {

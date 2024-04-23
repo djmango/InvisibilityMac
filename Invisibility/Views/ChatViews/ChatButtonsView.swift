@@ -26,6 +26,10 @@ struct ChatButtonsView: View {
 
     @State private var whoIsHovering: String?
 
+    private var isDisplayingModelPicker: Bool {
+        whoIsHovering == "Models"
+    }
+
     var body: some View {
         HStack {
             Spacer()
@@ -40,6 +44,7 @@ struct ChatButtonsView: View {
                     Task { await screenshotManager.capture() }
                 }
                 .keyboardShortcut("1", modifiers: [.command, .shift])
+                .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
                 // Settings
                 MessageButtonItemView(
@@ -53,6 +58,7 @@ struct ChatButtonsView: View {
                     }
                 }
                 .keyboardShortcut(",", modifiers: [.command])
+                .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
                 // Models
                 ChatModelPicker(whoIsHovering: $whoIsHovering)
@@ -67,7 +73,8 @@ struct ChatButtonsView: View {
                     messageViewModel.clearChat()
                 }
                 .keyboardShortcut(.delete, modifiers: [.command, .shift])
-                .visible(if: messageViewModel.messages.count > 0, removeCompletely: true)
+                .hide(if: messageViewModel.messages.count == 0, removeCompletely: true)
+                .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
                 // Stop generating
                 MessageButtonItemView(
@@ -81,6 +88,7 @@ struct ChatButtonsView: View {
                 }
                 .keyboardShortcut("p", modifiers: [.command])
                 .visible(if: messageViewModel.isGenerating, removeCompletely: true)
+                .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
                 // Resize
                 MessageButtonItemView(
@@ -92,6 +100,7 @@ struct ChatButtonsView: View {
                     resizeAction()
                 }
                 .keyboardShortcut("b", modifiers: [.command, .shift])
+                .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
                 // Switch Sides
                 MessageButtonItemView(
@@ -103,6 +112,7 @@ struct ChatButtonsView: View {
                     switchSide()
                 }
                 .keyboardShortcut("s", modifiers: [.command, .shift])
+                .hide(if: isDisplayingModelPicker, removeCompletely: true)
             }
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
@@ -121,6 +131,7 @@ struct ChatButtonsView: View {
         .animation(AppConfig.snappy, value: messageViewModel.messages.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(AppConfig.snappy, value: betaFeatures)
+        .frame(maxWidth: 380)
     }
 
     private func openFileAction() {

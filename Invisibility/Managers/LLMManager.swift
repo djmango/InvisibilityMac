@@ -30,78 +30,83 @@ struct LLMModel: Codable, Equatable, Hashable {
     }
 }
 
-enum LLMModels {
-    static let claude3_opus = LLMModel(
-        text: "claude-3-opus-20240229",
-        vision: "claude-3-opus-20240229",
-        human_name: "Claude-3 Opus"
-    )
+enum LLMModels: CaseIterable {
+    case claude3Opus
+    case claude3Sonnet
+    case claude3Haiku
+    case geminiPro
+    case gpt4
+    case groqMixtral
+    case perplexitySonarOnline
+    case perplexityMixtral
+    case dbrxTogether
 
-    static let claude3_sonnet = LLMModel(
-        text: "claude-3-sonnet-20240229",
-        vision: "claude-3-sonnet-20240229",
-        human_name: "Claude-3 Sonnet"
-    )
+    var model: LLMModel {
+        switch self {
+        case .claude3Opus:
+            LLMModel(
+                text: "claude-3-opus-20240229",
+                vision: "claude-3-opus-20240229",
+                human_name: "Claude-3 Opus"
+            )
+        case .claude3Sonnet:
+            LLMModel(
+                text: "claude-3-sonnet-20240229",
+                vision: "claude-3-sonnet-20240229",
+                human_name: "Claude-3 Sonnet"
+            )
+        case .claude3Haiku:
+            LLMModel(
+                text: "claude-3-haiku-20240307",
+                vision: "claude-3-haiku-20240307",
+                human_name: "Claude-3 Haiku"
+            )
+        case .geminiPro:
+            LLMModel(
+                text: "openrouter/google/gemini-pro-1.5",
+                vision: "openrouter/google/gemini-pro-1.5",
+                human_name: "Gemini Pro 1.5"
+            )
+        case .gpt4:
+            LLMModel(
+                text: "gpt-4-turbo-2024-04-09",
+                vision: "gpt-4-turbo-2024-04-09",
+                human_name: "GPT-4 Turbo"
+            )
+        case .groqMixtral:
+            LLMModel(
+                text: "groq/mixtral-8x7b-32768",
+                vision: nil,
+                human_name: "Groq-Mixtral"
+            )
+        case .perplexitySonarOnline:
+            LLMModel(
+                text: "perplexity/sonar-medium-online",
+                vision: nil,
+                human_name: "Perplexity"
+            )
+        case .perplexityMixtral:
+            LLMModel(
+                text: "perplexity/mixtral-8x7b-instruct",
+                vision: nil,
+                human_name: "Mixtral"
+            )
+        case .dbrxTogether:
+            LLMModel(
+                text: "openrouter/databricks/dbrx-instruct",
+                vision: nil,
+                human_name: "DBRX (Uncensored)"
+            )
+        }
+    }
 
-    static let claude3_haiku = LLMModel(
-        text: "claude-3-haiku-20240307",
-        vision: "claude-3-haiku-20240307",
-        human_name: "Claude-3 Haiku"
-    )
+    static var allModels: [LLMModel] {
+        allCases.map(\.model)
+    }
 
-    static let gemini_pro = LLMModel(
-        text: "openrouter/google/gemini-pro-1.5",
-        vision: "openrouter/google/gemini-pro-1.5",
-        human_name: "Gemini Pro 1.5"
-    )
-
-    static let gpt4 = LLMModel(
-        text: "gpt-4-turbo-2024-04-09",
-        vision: "gpt-4-turbo-2024-04-09",
-        human_name: "GPT-4 Turbo"
-    )
-
-    static let gpt3 = LLMModel(
-        text: "gpt-3.5-turbo",
-        vision: nil,
-        human_name: "GPT-3.5"
-    )
-
-    static let groq_mixtral = LLMModel(
-        text: "groq/mixtral-8x7b-32768",
-        vision: nil,
-        human_name: "Groq-Mixtral"
-    )
-
-    static let perplexity_sonar_online = LLMModel(
-        text: "perplexity/sonar-medium-online",
-        vision: nil,
-        human_name: "Perplexity"
-    )
-
-    static let perplexity_mixtral = LLMModel(
-        text: "perplexity/mixtral-8x7b-instruct",
-        vision: nil,
-        human_name: "Mixtral"
-    )
-
-    static let dbrx_together = LLMModel(
-        text: "openrouter/databricks/dbrx-instruct",
-        vision: nil,
-        human_name: "DBRX (Uncensored)"
-    )
-
-    static let human_name_to_model: [String: LLMModel] = [
-        claude3_opus.human_name: claude3_opus,
-        claude3_sonnet.human_name: claude3_sonnet,
-        claude3_haiku.human_name: claude3_haiku,
-        gemini_pro.human_name: gemini_pro,
-        gpt4.human_name: gpt4,
-        groq_mixtral.human_name: groq_mixtral,
-        perplexity_sonar_online.human_name: perplexity_sonar_online,
-        perplexity_mixtral.human_name: perplexity_mixtral,
-        dbrx_together.human_name: dbrx_together,
-    ]
+    static var humanNameToModel: [String: LLMModel] {
+        Dictionary(uniqueKeysWithValues: allCases.map { ($0.model.human_name, $0.model) })
+    }
 }
 
 final class LLMManager {
@@ -115,11 +120,19 @@ final class LLMManager {
 
     @AppStorage("token") private var token: String?
 
-    private var model: LLMModel {
-        LLMModels.human_name_to_model[llmModel] ?? LLMModels.claude3_opus
+    public var model: LLMModel {
+        LLMModels.humanNameToModel[llmModel] ?? LLMModels.claude3Opus.model
     }
 
-    @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
+    public var modelIndex: Int {
+        LLMModels.allModels.firstIndex(of: model) ?? 0
+    }
+
+    public func setModel(index: Int) {
+        llmModel = LLMModels.allModels[index].human_name
+    }
+
+    @AppStorage("llmModelName") private var llmModel = LLMModels.claude3Opus.model.human_name
 
     private init() {
         @AppStorage("token") var token: String?
