@@ -30,7 +30,7 @@ struct LLMModel: Codable, Equatable, Hashable {
     }
 }
 
-enum LLMModels: CaseIterable {
+enum LLMModelRepository: CaseIterable {
     case claude3Opus
     case claude3Sonnet
     case claude3Haiku
@@ -39,14 +39,13 @@ enum LLMModels: CaseIterable {
     case groqMixtral
     case perplexitySonarOnline
     case perplexityMixtral
-    case dbrxTogether
 
     var model: LLMModel {
         switch self {
         case .claude3Opus:
             LLMModel(
-                text: "claude-3-opus-20240229",
-                vision: "claude-3-opus-20240229",
+                text: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
+                vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
                 human_name: "Claude-3 Opus"
             )
         case .claude3Sonnet:
@@ -91,17 +90,21 @@ enum LLMModels: CaseIterable {
                 vision: nil,
                 human_name: "Mixtral"
             )
-        case .dbrxTogether:
-            LLMModel(
-                text: "openrouter/databricks/dbrx-instruct",
-                vision: nil,
-                human_name: "DBRX (Uncensored)"
-            )
         }
     }
 
     static var allModels: [LLMModel] {
         allCases.map(\.model)
+    }
+
+    static var enabledModels: [LLMModel] {
+        var enabledModels: [LLMModel] = []
+        for model in allCases {
+            if UserDefaults.standard.bool(forKey: "llmEnabled_\(model.model.human_name)") {
+                enabledModels.append(model.model)
+            }
+        }
+        return enabledModels
     }
 
     static var humanNameToModel: [String: LLMModel] {
@@ -121,18 +124,18 @@ final class LLMManager {
     @AppStorage("token") private var token: String?
 
     public var model: LLMModel {
-        LLMModels.humanNameToModel[llmModel] ?? LLMModels.claude3Opus.model
+        LLMModelRepository.humanNameToModel[llmModel] ?? LLMModelRepository.claude3Opus.model
     }
 
     public var modelIndex: Int {
-        LLMModels.allModels.firstIndex(of: model) ?? 0
+        LLMModelRepository.allModels.firstIndex(of: model) ?? 0
     }
 
     public func setModel(index: Int) {
-        llmModel = LLMModels.allModels[index].human_name
+        llmModel = LLMModelRepository.allModels[index].human_name
     }
 
-    @AppStorage("llmModelName") private var llmModel = LLMModels.claude3Opus.model.human_name
+    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
 
     private init() {
         @AppStorage("token") var token: String?
@@ -155,9 +158,15 @@ final class LLMManager {
 
     func chat(
         messages: [Message],
-        processOutput: @escaping (String) -> Void = { _ in }
+        processOutput: @escaping (String, Message) -> Void
     ) async {
-        let chatQuery = await constructChatQuery(messages: messages.suffix(10).map { $0 })
+        guard let assistantMessage = messages.last else {
+            logger.error("No messages in chat query")
+            return
+        }
+
+        // Drop last to avoid sending the empty assistant message to the LLM
+        let chatQuery = await constructChatQuery(messages: messages.dropLast().suffix(10).map { $0 })
 
         do {
             for try await result in ai.chatsStream(query: chatQuery) {
@@ -165,7 +174,7 @@ final class LLMManager {
                 if content.isEmpty {
                     logger.warning("No content in result")
                 }
-                processOutput(content)
+                processOutput(content, assistantMessage)
             }
         } catch {
             logger.error("Error in chat: \(error)")

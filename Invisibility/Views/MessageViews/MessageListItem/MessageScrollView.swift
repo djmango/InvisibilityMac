@@ -14,23 +14,22 @@ struct MessageScrollView: View {
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
     @State private var offset = CGPoint.zero
-    // @State private var visibleRatio = CGFloat.zero
-    @State private var showAllMessages = false
+    @State private var visibleRatio = CGFloat.zero
     @State private var whoIsHovering: String?
     @State var scrollProxy: ScrollViewProxy?
 
+    @State var numMessagesDisplayed = 10
     private var displayedMessages: [Message] {
-        if showAllMessages {
-            return messageViewModel.messages
-        } else {
-            let lastTenMessages = messageViewModel.messages.suffix(10)
-            return Array(lastTenMessages)
-        }
+        messageViewModel.messages.suffix(numMessagesDisplayed)
     }
 
-    func handleOffset(_ scrollOffset: CGPoint, visibleHeaderRatio _: CGFloat) {
+    private var showingAllMessages: Bool {
+        numMessagesDisplayed >= messageViewModel.messages.count
+    }
+
+    func handleOffset(_ scrollOffset: CGPoint, visibleHeaderRatio: CGFloat) {
         self.offset = scrollOffset
-        // self.visibleRatio = visibleHeaderRatio
+        self.visibleRatio = visibleHeaderRatio
     }
 
     var body: some View {
@@ -38,18 +37,35 @@ struct MessageScrollView: View {
         ScrollViewReader { proxy in
             ScrollViewWithStickyHeader(
                 header: {
+                    // TODO: Refactor this into its own view
                     Rectangle().hidden()
 
-                    // Toggle showing all messages
-                    MessageButtonItemView(
-                        label: showAllMessages ? "Collapse" : "Show +\(messageViewModel.messages.count - 10)",
-                        icon: showAllMessages ? "chevron.down" : "chevron.up",
-                        shortcut_hint: "⌘ + ⇧ + I",
-                        whoIsHovering: $whoIsHovering,
-                        action: { showAllMessages.toggle() }
-                    )
-                    .visible(if: messageViewModel.messages.count > 10)
-                    .keyboardShortcut("i", modifiers: [.command, .shift])
+                    HStack {
+                        // Collapse and expand buttons
+                        MessageButtonItemView(
+                            label: "Collapse",
+                            icon: "chevron.down",
+                            shortcut_hint: "⌘ + ⇧ + U",
+                            whoIsHovering: $whoIsHovering,
+                            action: { numMessagesDisplayed = 10 }
+                        )
+                        .visible(if: numMessagesDisplayed > 10, removeCompletely: true)
+                        .keyboardShortcut("u", modifiers: [.command, .shift])
+
+                        MessageButtonItemView(
+                            label: "Show +\(min(messageViewModel.messages.count - numMessagesDisplayed, 10))",
+                            icon: "chevron.up",
+                            shortcut_hint: "⌘ + ⇧ + I",
+                            whoIsHovering: $whoIsHovering,
+                            action: {
+                                numMessagesDisplayed = min(messageViewModel.messages.count, numMessagesDisplayed + 10)
+                            }
+                        )
+                        .visible(if: messageViewModel.messages.count > 10 && !showingAllMessages, removeCompletely: true)
+                        .keyboardShortcut("i", modifiers: [.command, .shift])
+                    }
+                    .animation(AppConfig.snappy, value: whoIsHovering)
+                    .animation(AppConfig.snappy, value: numMessagesDisplayed)
                 },
                 // These magic numbers are not perfect, esp the 7 but it works ok for now
                 headerHeight: messageViewModel.messages.count > 7 ? 50 : max(10, messageViewModel.windowHeight - 205),
@@ -63,7 +79,15 @@ struct MessageScrollView: View {
                             .id(message.id)
                             .sentryTrace("MessageListItemView")
                     }
+                    Rectangle()
+                        .hidden()
+                        .frame(height: 1)
+                        .id("bottom")
+                        .onAppear {
+                            print("Bottom appeared")
+                        }
                 }
+                // .scrollTargetLayout()
             }
             .mask(
                 LinearGradient(
@@ -77,16 +101,20 @@ struct MessageScrollView: View {
                     endPoint: .bottom
                 )
             )
+            // .scrollTargetBehavior(.viewAligned)
             .scrollContentBackground(.hidden)
             .scrollIndicators(.never)
             .defaultScrollAnchor(.bottom)
-            .animation(AppConfig.snappy, value: displayedMessages)
+            .animation(AppConfig.snappy, value: numMessagesDisplayed)
             .onAppear {
                 scrollProxy = proxy
             }
-            .onReceive(messageViewModel.$messages) { _ in
-                if let scrollProxy {
-                    scrollProxy.scrollTo(messageViewModel.messages.last?.id, anchor: .bottom)
+            .onChange(of: messageViewModel.isGenerating) {
+                if let scrollProxy, messageViewModel.isGenerating == true {
+                    // Only scroll if we are far away from the bottom
+                    // TODO: implement a "scroll lock" where we determine if we are away from the bottom and then force the scroll
+                    // scrollProxy.scrollTo(messageViewModel.messages.last?.id, anchor: .bottom)
+                    // scrollProxy.scrollTo("bottom", anchor: .bottom)
                 }
             }
         }

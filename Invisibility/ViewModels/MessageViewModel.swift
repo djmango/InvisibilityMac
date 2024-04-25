@@ -30,7 +30,7 @@ final class MessageViewModel: ObservableObject {
     @Published public var windowHeight: CGFloat = 0
 
     // @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
-    @AppStorage("llmModelName") private var llmModel = LLMModels.claude3Opus.model.human_name
+    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
 
     private init() {
         try? fetch()
@@ -76,17 +76,15 @@ final class MessageViewModel: ObservableObject {
             ]
         )
         }
-
-        messages.append(message)
-        modelContext.insert(message)
-
         let assistantMessage = Message(content: nil, role: .assistant)
-        messages.append(assistantMessage)
+
+        messages.append(contentsOf: [message, assistantMessage])
+        modelContext.insert(message)
         modelContext.insert(assistantMessage)
 
         chatTask = Task {
             let lastMessageId = messages.last?.id
-            await LLMManager.shared.chat(messages: messages.dropLast(), processOutput: processOutput)
+            await LLMManager.shared.chat(messages: messages, processOutput: processOutput)
 
             assistantMessage.status = .complete
             await MainActor.run {
@@ -161,12 +159,16 @@ final class MessageViewModel: ObservableObject {
         chatTask?.cancel()
     }
 
-    private func processOutput(output: String) {
+    private func processOutput(output: String, message: Message) {
+        // DispatchQueue.main.async {
+        //     if !self.messages.isEmpty, let lastMessage = self.messages.last {
+        //         if lastMessage.content == nil { lastMessage.content = "" }
+        //         lastMessage.content?.append(output)
+        //     }
+        // }
         DispatchQueue.main.async {
-            if !self.messages.isEmpty, let lastMessage = self.messages.last {
-                if lastMessage.content == nil { lastMessage.content = "" }
-                lastMessage.content?.append(output)
-            }
+            if message.content == nil { message.content = "" }
+            message.content?.append(output)
         }
     }
 }

@@ -12,23 +12,56 @@ import SwiftUIReorderableForEach
 import UniformTypeIdentifiers
 
 struct SettingsModelListView: View {
-    @AppStorage("llmModelName") private var llmModel = LLMModels.claude3Opus.model.human_name
+    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
 
-    @State var models: [LLMModels] = []
+    @State var models: [LLMModel] = []
     @State var allowReordering = true
 
     init() {
-        _models = State(initialValue: LLMModels.allCases)
+        _models = State(initialValue: LLMModelRepository.allModels)
     }
 
     var body: some View {
-        VStack {
-            ReorderableForEach($models, allowReordering: $allowReordering) { model, _ in
-                Text(model.model.human_name)
+        ScrollView {
+            VStack(alignment: .leading) {
+                ReorderableForEach($models, allowReordering: $allowReordering) { model, _ in
+                    @AppStorage("llmEnabled_\(model.human_name)") var enabled = false
+                    HStack {
+                        // Three dashes to indicate reordering
+                        Image(systemName: "line.horizontal.3")
+                            .foregroundColor(.gray)
+                            .padding(.trailing, 5)
+
+                        Text(model.human_name)
+
+                        Spacer()
+
+                        Toggle("", isOn: Binding(get: {
+                            enabled
+                        }, set: { newValue in
+                            enabled = newValue
+                        }))
+                        .toggleStyle(.switch)
+                    }
                     .id(model)
+                    .onHover { hovering in
+                        if hovering {
+                            NSCursor.pointingHand.push()
+                        }
+                    }
+                }
+                // To allow other drag and drops throughout the app
+                .hide(if: !SettingsViewModel.shared.showSettings, removeCompletely: true)
             }
-            // To allow other drag and drops throughout the app
-            .hide(if: !SettingsViewModel.shared.showSettings, removeCompletely: true)
+            .padding()
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    // .fill(Color.gray.opacity(0.1))
+                    .foregroundColor(Color("ChatButtonBackgroundColor"))
+                    // .fill(Color("ChatButtonBackgroundColor"))
+                    .shadow(radius: 2)
+            )
+            .padding()
         }
     }
 }

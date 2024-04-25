@@ -119,15 +119,6 @@ struct SettingsView: View {
                         KeyboardShortcuts.Recorder(for: .screenshot)
                     }
 
-                    // Picker("", selection: $llmModel) {
-                    //     ForEach(LLMModels.allCases, id: \.self) { model in
-                    //         Text(model.model.human_name).tag(model.model.human_name)
-                    //     }
-                    // }
-                    // .pickerStyle(.menu)
-                    // .frame(maxWidth: 180)
-                    SettingsModelListView()
-
                     LaunchAtLogin.Toggle("Launch at Login")
                         .toggleStyle(.switch)
 
@@ -156,6 +147,8 @@ struct SettingsView: View {
                     Toggle("Animate Buttons", isOn: $animateButtons)
                         .toggleStyle(.switch)
                         .visible(if: betaFeatures, removeCompletely: true)
+
+                    SettingsModelListView()
 
                     Spacer()
 

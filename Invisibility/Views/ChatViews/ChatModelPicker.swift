@@ -53,6 +53,7 @@ struct ChatModelPicker: View {
                         .allowsHitTesting(false)
                 )
                 .visible(if: isHovering, removeCompletely: true)
+            // Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]) :
         }
         .padding(8)
         .contentShape(RoundedRectangle(cornerRadius: 21))
