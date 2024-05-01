@@ -6,6 +6,7 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import CachedAsyncImage
 import KeyboardShortcuts
 import LaunchAtLogin
 import OSLog
@@ -40,7 +41,7 @@ struct SettingsView: View {
                     Spacer()
                     // User profile pic and login/logout button
                     VStack(alignment: .center) {
-                        AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
+                        CachedAsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
                             image
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -89,9 +90,9 @@ struct SettingsView: View {
                     .background(
                         RoundedRectangle(cornerRadius: 16)
                             .fill(Color("ChatButtonBackgroundColor"))
-                            .stroke(colorScheme == .dark ? .white : .black, lineWidth: 0.5)
+                            // .stroke(Color(nsColor: .separatorColor), lineWidth: 0.5)
+                            .shadow(radius: 2)
                     )
-                    .shadow(radius: colorScheme == .dark ? 2 : 0)
                     .visible(if: userManager.user != nil)
 
                     Button(action: {
@@ -152,35 +153,42 @@ struct SettingsView: View {
 
                     Spacer()
 
-                    HStack {
-                        Button("Reset Onboarding") {
-                            onboardingViewed = false
-                            OnboardingManager.shared.startOnboarding()
-                        }
-                        .buttonStyle(.bordered)
+                    Divider()
+                        .padding(.horizontal, 80)
 
-                        Button("Export Chat") {
-                            let text = MessageViewModel.shared.messages.map { message in
-                                "\(message.role?.rawValue.capitalized ?? ""): \(message.text)"
-                            }.joined(separator: "\n")
-                            document = TextDocument(text: text)
-                            showingExporter = true
-                        }
-                        .buttonStyle(.bordered)
-                    }
+                    Spacer()
 
-                    HStack {
-                        Button("Check for Updates") {
-                            updaterViewModel.updater.checkForUpdates()
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button("Feedback") {
-                            if let url = URL(string: "mailto:support@i.inc") {
-                                NSWorkspace.shared.open(url)
+                    Grid {
+                        GridRow {
+                            Button("Reset Onboarding") {
+                                onboardingViewed = false
+                                OnboardingManager.shared.startOnboarding()
                             }
+                            .buttonStyle(.bordered)
+
+                            Button("Export Chat") {
+                                let text = MessageViewModel.shared.messages.map { message in
+                                    "\(message.role?.rawValue.capitalized ?? ""): \(message.text)"
+                                }.joined(separator: "\n")
+                                document = TextDocument(text: text)
+                                showingExporter = true
+                            }
+                            .buttonStyle(.bordered)
                         }
-                        .buttonStyle(.bordered)
+
+                        GridRow {
+                            Button("Check for Updates") {
+                                updaterViewModel.updater.checkForUpdates()
+                            }
+                            .buttonStyle(.bordered)
+
+                            Button("Feedback") {
+                                if let url = URL(string: "mailto:support@i.inc") {
+                                    NSWorkspace.shared.open(url)
+                                }
+                            }
+                            .buttonStyle(.bordered)
+                        }
                     }
 
                     HStack {
@@ -265,11 +273,16 @@ struct SettingsView: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color(nsColor: .separatorColor), lineWidth: 0.5)
         )
-        .frame(maxWidth: 600, maxHeight: .infinity)
+        .frame(maxWidth: 400)
         .padding(.vertical, 20)
         .padding(.horizontal, 30)
         .shadow(radius: colorScheme == .dark ? 5 : 0)
-        .fileExporter(isPresented: $showingExporter, document: document, contentType: .plainText, defaultFilename: "invisibility.txt") { result in
+        .fileExporter(
+            isPresented: $showingExporter,
+            document: document,
+            contentType: .plainText,
+            defaultFilename: "invisibility.txt"
+        ) { result in
             switch result {
             case let .success(url):
                 logger.info("Saved to \(url)")

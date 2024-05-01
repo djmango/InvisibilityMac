@@ -23,8 +23,8 @@ struct SettingsModelListView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading) {
-                ReorderableForEach($models, allowReordering: $allowReordering) { model, _ in
+            VStack(alignment: .leading, spacing: 0) {
+                ReorderableForEach($models, allowReordering: $allowReordering) { model, draggging in
                     @AppStorage("llmEnabled_\(model.human_name)") var enabled = false
                     HStack {
                         // Three dashes to indicate reordering
@@ -33,6 +33,7 @@ struct SettingsModelListView: View {
                             .padding(.trailing, 5)
 
                         Text(model.human_name)
+                            .textSelection(.disabled)
 
                         Spacer()
 
@@ -43,25 +44,25 @@ struct SettingsModelListView: View {
                         }))
                         .toggleStyle(.switch)
                     }
+                    .padding(.vertical, 4)
+                    .background(
+                        Rectangle()
+                            .foregroundColor(Color.white.opacity(0.001))
+                    )
+                    .opacity(draggging ? 0 : 1)
                     .id(model)
-                    .onHover { hovering in
-                        if hovering {
-                            NSCursor.pointingHand.push()
-                        }
-                    }
                 }
-                // To allow other drag and drops throughout the app
-                .hide(if: !SettingsViewModel.shared.showSettings, removeCompletely: true)
             }
-            .padding()
+            // To allow other drag and drops throughout the app
+            .hide(if: !SettingsViewModel.shared.showSettings, removeCompletely: true)
+            .padding(20)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    // .fill(Color.gray.opacity(0.1))
                     .foregroundColor(Color("ChatButtonBackgroundColor"))
-                    // .fill(Color("ChatButtonBackgroundColor"))
                     .shadow(radius: 2)
             )
-            .padding()
+            .padding(.horizontal)
+            .padding(.vertical, 5)
         }
     }
 }

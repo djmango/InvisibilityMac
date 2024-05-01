@@ -19,6 +19,7 @@ struct MessageContentView: View {
     private var isAssistant: Bool { message.role == .assistant }
     private var isGenerating: Bool { MessageViewModel.shared.isGenerating && (message.content?.isEmpty ?? true) }
     private var isLastMessage: Bool { message.id == MessageViewModel.shared.messages.last?.id }
+    private var showLoading: Bool { isGenerating && isLastMessage }
 
     var body: some View {
         // let _ = Self._printChanges()
@@ -47,6 +48,15 @@ struct MessageContentView: View {
             ProgressView()
                 .controlSize(.small)
                 .visible(if: isGenerating && isLastMessage, removeCompletely: true)
+            // HStack {
+            //     Spacer()
+            //     MessageLoaderView()
+            //     Spacer()
+            // }
+            // .frame(maxWidth: .infinity)
+            // .shadow(radius: 3)
+            // .padding(.vertical, -20)
+            // .visible(if: showLoading, removeCompletely: true)
 
             HStack {
                 MessageImagesView(images: message.images_data)

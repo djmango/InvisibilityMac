@@ -56,7 +56,15 @@ final class TextViewModel: ObservableObject {
     private func textDidChange() {
         let differences = getCharDifferences(previousText, text)
 
-        if differences.last == "\n" {
+        // Detect pastes
+        // if differences.count > 1 {
+        //     // If paste, scroll to bottom. Not perfect, because one could paste in the middle but oh well its okay TODO: fix
+        //     DispatchQueue.main.async {
+        //         ChatViewModel.shared.shouldScrollToBottom = true
+        //     }
+        // }
+
+        if differences.last == "\n", differences.count == 1 {
             // Attempt to detect Shift key
             // We have to make sure its not a paste with a newline too
             if NSApp.currentEvent?.modifierFlags.contains(.shift) == false, NSApp.currentEvent?.modifierFlags.contains(.command) == false {

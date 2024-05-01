@@ -12,7 +12,7 @@ import OSLog
 import PostHog
 import SwiftUI
 
-struct LLMModel: Codable, Equatable, Hashable {
+struct LLMModel: Codable, Equatable, Hashable, Identifiable {
     let text: String
     let vision: String?
     let human_name: String
@@ -28,15 +28,19 @@ struct LLMModel: Codable, Equatable, Hashable {
         hasher.combine(vision)
         hasher.combine(human_name)
     }
+
+    // Identifiable
+    var id: String {
+        human_name
+    }
 }
 
 enum LLMModelRepository: CaseIterable {
     case claude3Opus
-    case claude3Sonnet
     case claude3Haiku
+    case llama3_70b
     case geminiPro
     case gpt4
-    case groqMixtral
     case perplexitySonarOnline
     case perplexityMixtral
 
@@ -48,17 +52,17 @@ enum LLMModelRepository: CaseIterable {
                 vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
                 human_name: "Claude-3 Opus"
             )
-        case .claude3Sonnet:
-            LLMModel(
-                text: "claude-3-sonnet-20240229",
-                vision: "claude-3-sonnet-20240229",
-                human_name: "Claude-3 Sonnet"
-            )
         case .claude3Haiku:
             LLMModel(
                 text: "claude-3-haiku-20240307",
                 vision: "claude-3-haiku-20240307",
                 human_name: "Claude-3 Haiku"
+            )
+        case .llama3_70b:
+            LLMModel(
+                text: "groq/llama3-70b-8192",
+                vision: nil,
+                human_name: "Llama-3 70B"
             )
         case .geminiPro:
             LLMModel(
@@ -71,12 +75,6 @@ enum LLMModelRepository: CaseIterable {
                 text: "gpt-4-turbo-2024-04-09",
                 vision: "gpt-4-turbo-2024-04-09",
                 human_name: "GPT-4 Turbo"
-            )
-        case .groqMixtral:
-            LLMModel(
-                text: "groq/mixtral-8x7b-32768",
-                vision: nil,
-                human_name: "Groq-Mixtral"
             )
         case .perplexitySonarOnline:
             LLMModel(

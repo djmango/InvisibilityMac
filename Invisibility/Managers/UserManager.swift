@@ -57,6 +57,7 @@ final class UserManager: ObservableObject {
 
     private init() {}
 
+    @MainActor
     func setup() async {
         if await userIsLoggedIn() {
             self.confettis = 1
@@ -223,19 +224,17 @@ final class UserManager: ObservableObject {
                     switch response.result {
                     case let .success(refreshTokenResponse):
                         if response.response?.statusCode == 200 {
-                            DispatchQueue.main.async {
-                                Task {
-                                    // Set the new token from the response
-                                    let oldToken = self.token
-                                    self.token = refreshTokenResponse.token
-                                    if await self.userIsLoggedIn() {
-                                        self.logger.info("Token refreshed")
-                                        continuation.resume(returning: true)
-                                    } else {
-                                        self.token = oldToken
-                                        self.logger.error("Error refreshing token, invalid token")
-                                        continuation.resume(returning: false)
-                                    }
+                            // Set the new token from the response
+                            Task {
+                                let oldToken = self.token
+                                self.token = refreshTokenResponse.token
+                                if await self.userIsLoggedIn() {
+                                    self.logger.info("Token refreshed")
+                                    continuation.resume(returning: true)
+                                } else {
+                                    self.token = oldToken
+                                    self.logger.error("Error refreshing token, invalid token")
+                                    continuation.resume(returning: false)
                                 }
                             }
                         } else {

@@ -87,7 +87,7 @@ struct MessageScrollView: View {
                             print("Bottom appeared")
                         }
                 }
-                // .scrollTargetLayout()
+                .background(Rectangle().fill(Color.white.opacity(0.001)))
             }
             .mask(
                 LinearGradient(
@@ -101,8 +101,7 @@ struct MessageScrollView: View {
                     endPoint: .bottom
                 )
             )
-            // .scrollTargetBehavior(.viewAligned)
-            .scrollContentBackground(.hidden)
+            // .scrollContentBackground(.hidden)
             .scrollIndicators(.never)
             .defaultScrollAnchor(.bottom)
             .animation(AppConfig.snappy, value: numMessagesDisplayed)
@@ -114,7 +113,7 @@ struct MessageScrollView: View {
                     // Only scroll if we are far away from the bottom
                     // TODO: implement a "scroll lock" where we determine if we are away from the bottom and then force the scroll
                     // scrollProxy.scrollTo(messageViewModel.messages.last?.id, anchor: .bottom)
-                    // scrollProxy.scrollTo("bottom", anchor: .bottom)
+                    scrollProxy.scrollTo("bottom", anchor: .bottom)
                 }
             }
         }

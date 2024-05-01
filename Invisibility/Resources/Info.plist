@@ -31,5 +31,7 @@
 	<string>https://invisibilityinc.github.io/Invisibility/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>VIOnOTxkP22wB4X2fWs7AkXLD8W5eClUQ7pH0uqD9Cg=</string>
+	<key>SUScheduledCheckInterval</key>
+	<integer>3600</integer>
 </dict>
 </plist>
