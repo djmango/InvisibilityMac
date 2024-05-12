@@ -1,5 +1,5 @@
 {
-  "originHash" : "1c0635417410f8b763148e6f43892689530c3b8274e4bfd9fc55a1311695e438",
+  "originHash" : "92dfeb3acd01005c3fbdd90cfc30468fc81d12a534559333ede550a2c667ca47",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -61,7 +61,7 @@
       "location" : "https://github.com/djmango/markdown-webview.git",
       "state" : {
         "branch" : "master",
-        "revision" : "4045fd4b687cbcae1a96da08414796f87a89466e"
+        "revision" : "ad29d42775cb5ea6fb5608b3b6b4fd7e9bfb72a3"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "ef4fec9dfb8dd5027b09a4a5c9362feafd118e1a",
-        "version" : "8.24.0"
+        "revision" : "0da9c56283b8aada5ef05b16b6cbd6c2790872c4",
+        "version" : "8.25.2"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sparkle-project/Sparkle",
       "state" : {
-        "revision" : "0a4caaf7a81eea2cece651ef4b17331fa0634dff",
-        "version" : "2.6.0"
+        "revision" : "41847a58cdef7506b257591fcca6f9495df591d4",
+        "version" : "2.6.2"
       }
     },
     {

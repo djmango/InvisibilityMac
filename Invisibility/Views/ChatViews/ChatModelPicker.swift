@@ -16,6 +16,8 @@ struct ChatModelPicker: View {
     @State private var isHovering: Bool = false
     @Binding var whoIsHovering: String?
 
+    let enabledModelsCount = LLMManager.shared.enabledModels.count
+
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
 
     init(whoIsHovering: Binding<String?>) {
@@ -38,32 +40,39 @@ struct ChatModelPicker: View {
                     .visible(if: ShortcutViewModel.shared.modifierFlags.contains(.command) && shortcutHints && !isHovering, removeCompletely: true)
             }
 
+            // Add padding on each side so the slider never goes to either edge
             CompactSlider(value: Binding(
                 get: { Float(LLMManager.shared.modelIndex) },
                 set: { LLMManager.shared.setModel(index: Int($0)) }
-            ), in: 0 ... 5, step: 1, state: $sliderState) {}
+            ), in: 0 ... (Float(enabledModelsCount) - 1), step: 1, state: $sliderState) {}
+                // ), in: ClosedRange(LLMManager.shared.enabledModels.startIndex ... LLMManager.shared.enabledModels.endIndex), step: 1, state: $sliderState) {}
+                .compactSliderStyle(CustomCompactSliderStyle())
                 .overlay(
                     Text(LLMManager.shared.model.human_name)
                         .foregroundColor(.white)
-                        .padding(6)
-                        .background(
-                            Capsule().fill(Color.blue)
-                        )
-                        .offset(x: sliderState.dragLocationX.lower)
+                        .padding(8)
+                        .frame(width: 110)
+                        .fixedSize(horizontal: true, vertical: false)
+                        .multilineTextAlignment(.center)
+                        .background(Capsule().fill(.accent))
+                        // .offset(x: sliderState.dragLocationX.lower)
+                        .offset(x: min(max(-130, sliderState.dragLocationX.lower), 130))
                         .allowsHitTesting(false)
                 )
                 .visible(if: isHovering, removeCompletely: true)
-            // Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]) :
         }
-        .padding(8)
+        .padding(6)
+        // .padding(.horizontal, isHovering ? 40 : 0)
         .contentShape(RoundedRectangle(cornerRadius: 21))
         .background(
             RoundedRectangle(cornerRadius: 21)
                 .fill(Color("ChatButtonBackgroundColor"))
+                .visible(if: !isHovering, removeCompletely: true)
         )
         .overlay(
             RoundedRectangle(cornerRadius: 21)
                 .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                .visible(if: !isHovering, removeCompletely: true)
         )
         .onHover { hovering in
             isHovering = hovering
@@ -75,5 +84,35 @@ struct ChatModelPicker: View {
         }
         .animation(AppConfig.snappy, value: whoIsHovering)
         .animation(AppConfig.snappy, value: ShortcutViewModel.shared.modifierFlags)
+    }
+}
+
+struct CustomCompactSliderStyle: CompactSliderStyle {
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            // .foregroundColor(
+            //     configuration.isHovering || configuration.isDragging ? .orange : .black
+            // )
+            // .accentColor(.orange)
+            // Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]) :
+            .compactSliderSecondaryAppearance(
+                // progressShapeStyle: Color.clear,
+                progressShapeStyle: LinearGradient(
+                    colors: [Color("InvisGrad1"), Color("InvisGrad2")],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                ),
+                // focusedProgressShapeStyle: Color.clear,
+                focusedProgressShapeStyle: LinearGradient(
+                    colors: [Color("InvisGrad1"), Color("InvisGrad2")],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                ),
+                // handleColor: .accent,
+                handleColor: Color("ChatButtonForegroundColor"),
+                scaleColor: Color("ChatButtonForegroundColor"),
+                secondaryScaleColor: Color("ChatButtonForegroundColor")
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 21))
     }
 }

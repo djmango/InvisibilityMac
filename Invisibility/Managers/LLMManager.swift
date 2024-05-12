@@ -129,6 +129,18 @@ final class LLMManager {
         LLMModelRepository.allModels.firstIndex(of: model) ?? 0
     }
 
+    public var enabledModels: [LLMModel] {
+        // ReorderableForEach($models, allowReordering: $allowReordering) { model, draggging in
+        //     @AppStorage("llmEnabled_\(model.human_name)") var enabled = false
+        var enabledModels: [LLMModel] = []
+        for model in LLMModelRepository.allModels {
+            if UserDefaults.standard.bool(forKey: "llmEnabled_\(model.human_name)") {
+                enabledModels.append(model)
+            }
+        }
+        return enabledModels
+    }
+
     public func setModel(index: Int) {
         llmModel = LLMModelRepository.allModels[index].human_name
     }

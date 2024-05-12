@@ -18,5 +18,6 @@ enum AppConfig {
     static let posthog_api_key = "phc_aVzM8zKxuKj8BzbIDO7ByvmSH90WwB1vCZ1zPCZw9Y3"
 
     static let invisibility_api_base = "https://cloak.i.inc"
+    // static let invisibility_api_base = "https://cloak.invisibility.so"
     // static let invisibility_api_base = "http://localhost:8000"
 }
