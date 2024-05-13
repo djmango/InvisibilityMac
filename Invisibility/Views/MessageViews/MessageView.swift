@@ -6,11 +6,14 @@ struct MessageView: View {
     @FocusState private var promptFocused: Bool
 
     @State private var isDragActive: Bool = false
+    @State private var xOffset: CGFloat = -1000
 
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject private var settingsViewModel = SettingsViewModel.shared
+    @ObservedObject private var screenRecorder = ScreenRecorder.shared
 
     @AppStorage("resized") private var resized: Bool = false
+    @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
     init() {
         isEditorFocused = true
@@ -40,6 +43,9 @@ struct MessageView: View {
 
             Spacer()
 
+            CaptureView()
+                .visible(if: screenRecorder.isRunning, removeCompletely: true)
+
             // Action Icons
             ChatButtonsView()
                 .sentryTrace("ChatButtonsView")
@@ -60,6 +66,7 @@ struct MessageView: View {
         .animation(AppConfig.snappy, value: chatViewModel.textHeight)
         .animation(AppConfig.snappy, value: chatViewModel.images)
         .animation(AppConfig.snappy, value: resized)
+        .animation(AppConfig.snappy, value: screenRecorder.isRunning)
         .overlay(
             Rectangle()
                 .foregroundColor(Color.gray.opacity(0.2))
@@ -83,7 +90,19 @@ struct MessageView: View {
                 chatViewModel.shouldFocusTextField = false
             }
         }
+        .offset(x: xOffset, y: 0)
+        .onAppear {
+            // If side is switched, invert the offset
+            if sideSwitched {
+                xOffset = 1000
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                withAnimation(.easeIn(duration: 0.3)) {
+                    xOffset = 0
+                }
+            }
+        }
         .sentryTrace("MessageView")
-        .whatsNewSheet()
+        // .whatsNewSheet()
     }
 }

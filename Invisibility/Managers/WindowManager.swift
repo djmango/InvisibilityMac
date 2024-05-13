@@ -98,6 +98,11 @@ class WindowManager {
             Task { await ScreenshotManager.shared.capture() }
             self.positionWindowOnCursorScreen()
         }
+
+        KeyboardShortcuts.onKeyUp(for: .record) {
+            self.logger.debug("Toggling recording")
+            ScreenRecorder.shared.toggleRecording()
+        }
     }
 
     public func toggleWindow() {

@@ -62,13 +62,13 @@ struct MessageActionButtonsView: View {
                 MessageButtonItemView(
                     label: "Regenerate",
                     icon: "arrow.clockwise",
-                    shortcut_hint: "⌘ R",
+                    shortcut_hint: "⌘ ⇧ R",
                     whoIsHovering: $whoIsHovering
                 ) {
                     regenerateAction()
                 }
                 .visible(if: isRegenerateButtonVisible, removeCompletely: true)
-                .keyboardShortcut("r", modifiers: [.command])
+                .keyboardShortcut("r", modifiers: [.command, .shift])
 
                 MessageButtonItemView(
                     label: "Copy",

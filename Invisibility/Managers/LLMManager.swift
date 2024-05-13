@@ -38,9 +38,9 @@ struct LLMModel: Codable, Equatable, Hashable, Identifiable {
 enum LLMModelRepository: CaseIterable {
     case gpt4o
     case claude3Opus
-    case claude3Haiku
     case llama3_70b
     case geminiPro
+    case claude3Haiku
     case gpt4
     case perplexitySonarOnline
     case perplexityMixtral
@@ -49,8 +49,8 @@ enum LLMModelRepository: CaseIterable {
         switch self {
         case .gpt4o:
             LLMModel(
-                text: "openrouter/openai/gpt-4o",
-                vision: "openrouter/openai/gpt-4o",
+                text: "gpt-4o",
+                vision: "gpt-4o",
                 human_name: "GPT-4o"
             )
         case .claude3Opus:
@@ -58,12 +58,6 @@ enum LLMModelRepository: CaseIterable {
                 text: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
                 vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
                 human_name: "Claude-3 Opus"
-            )
-        case .claude3Haiku:
-            LLMModel(
-                text: "claude-3-haiku-20240307",
-                vision: "claude-3-haiku-20240307",
-                human_name: "Claude-3 Haiku"
             )
         case .llama3_70b:
             LLMModel(
@@ -76,6 +70,12 @@ enum LLMModelRepository: CaseIterable {
                 text: "openrouter/google/gemini-pro-1.5",
                 vision: "openrouter/google/gemini-pro-1.5",
                 human_name: "Gemini Pro 1.5"
+            )
+        case .claude3Haiku:
+            LLMModel(
+                text: "claude-3-haiku-20240307",
+                vision: "claude-3-haiku-20240307",
+                human_name: "Claude-3 Haiku"
             )
         case .gpt4:
             LLMModel(
@@ -129,7 +129,7 @@ final class LLMManager {
     @AppStorage("token") private var token: String?
 
     public var model: LLMModel {
-        LLMModelRepository.humanNameToModel[llmModel] ?? LLMModelRepository.claude3Opus.model
+        LLMModelRepository.humanNameToModel[llmModel] ?? LLMModelRepository.gpt4o.model
     }
 
     /// The index of the model in the allModels array

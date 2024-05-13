@@ -14,6 +14,7 @@ import OSLog
 extension KeyboardShortcuts.Name {
     static let summon = Self("summon", default: .init(.g, modifiers: [.command]))
     static let screenshot = Self("screenshot", default: .init(.one, modifiers: [.command, .shift]))
+    static let record = Self("record", default: .init(.two, modifiers: [.command, .shift]))
 }
 
 final class ShortcutViewModel: ObservableObject {

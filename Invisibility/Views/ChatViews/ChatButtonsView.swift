@@ -22,6 +22,7 @@ struct ChatButtonsView: View {
 
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
     private var windowManager: WindowManager = WindowManager.shared
 
     @State private var whoIsHovering: String?
@@ -45,6 +46,18 @@ struct ChatButtonsView: View {
                 }
                 .keyboardShortcut("1", modifiers: [.command, .shift])
                 .hide(if: isDisplayingModelPicker, removeCompletely: true)
+
+                // Record
+                MessageButtonItemView(
+                    label: screenRecorder.isRunning ? "Recording" : "Record",
+                    icon: "record.circle",
+                    shortcut_hint: "⌘ ⇧ 2",
+                    whoIsHovering: $whoIsHovering,
+                    iconColor: screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor")
+                ) {
+                    screenRecorder.toggleRecording()
+                }
+                .keyboardShortcut("2", modifiers: [.command, .shift])
 
                 // Settings
                 MessageButtonItemView(
@@ -131,7 +144,7 @@ struct ChatButtonsView: View {
         .animation(AppConfig.snappy, value: messageViewModel.messages.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(AppConfig.snappy, value: betaFeatures)
-        .frame(maxWidth: 380)
+        .frame(maxWidth: resized ? 500 : 380)
     }
 
     private func openFileAction() {

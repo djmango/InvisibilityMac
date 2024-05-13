@@ -34,27 +34,27 @@ struct AppView: View {
             // .handlesExternalEvents(matching: ["openURL:", "openFile:"])
             // .handlesExternalEvents(preferring: Set(arrayLiteral: "master"), allowing: Set(arrayLiteral: "*"))
             .modelContainer(SharedModelContainer.shared.modelContainer)
-            // .alert(isPresented: $alertViewModel.showAlert) {
-            //     Alert(
-            //         title: Text(alertViewModel.alertTitle),
-            //         message: Text(alertViewModel.alertMessage),
-            //         dismissButton: .default(Text(alertViewModel.alertDismissText))
-            //     )
-            // }
-            // .sheet( whatsNew: self.$whatsNew)
-            .environment(
-                \.whatsNew,
-                WhatsNewEnvironment(
-                    // Specify in which way the presented WhatsNew Versions are stored.
-                    // In default the `UserDefaultsWhatsNewVersionStore` is used.
-                    // versionStore: UserDefaultsWhatsNewVersionStore(),
-                    versionStore: InMemoryWhatsNewVersionStore(),
-                    // Pass a `WhatsNewCollectionProvider` or an array of WhatsNew instances
-                    // whatsNewCollection: InvisibilityWhatsNew()
-                    whatsNewCollection: self
-                )
-            )
-            .whatsNewSheet()
+        // .alert(isPresented: $alertViewModel.showAlert) {
+        //     Alert(
+        //         title: Text(alertViewModel.alertTitle),
+        //         message: Text(alertViewModel.alertMessage),
+        //         dismissButton: .default(Text(alertViewModel.alertDismissText))
+        //     )
+        // }
+        // .sheet( whatsNew: self.$whatsNew)
+        // .environment(
+        //     \.whatsNew,
+        //     WhatsNewEnvironment(
+        //         // Specify in which way the presented WhatsNew Versions are stored.
+        //         // In default the `UserDefaultsWhatsNewVersionStore` is used.
+        //         // versionStore: UserDefaultsWhatsNewVersionStore(),
+        //         versionStore: InMemoryWhatsNewVersionStore(),
+        //         // Pass a `WhatsNewCollectionProvider` or an array of WhatsNew instances
+        //         // whatsNewCollection: InvisibilityWhatsNew()
+        //         whatsNewCollection: self
+        //     )
+        // )
+        // .whatsNewSheet()
     }
 }
 

@@ -12,7 +12,9 @@ import SwiftUI
 struct MessageScrollView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
+    @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
 
+    @State private var opacity: Double = 0.0
     @State private var offset = CGPoint.zero
     @State private var visibleRatio = CGFloat.zero
     @State private var whoIsHovering: String?
@@ -83,9 +85,6 @@ struct MessageScrollView: View {
                         .hidden()
                         .frame(height: 1)
                         .id("bottom")
-                        .onAppear {
-                            print("Bottom appeared")
-                        }
                 }
                 .background(Rectangle().fill(Color.white.opacity(0.001)))
             }
@@ -101,7 +100,6 @@ struct MessageScrollView: View {
                     endPoint: .bottom
                 )
             )
-            // .scrollContentBackground(.hidden)
             .scrollIndicators(.never)
             .defaultScrollAnchor(.bottom)
             .animation(AppConfig.snappy, value: numMessagesDisplayed)
@@ -113,7 +111,20 @@ struct MessageScrollView: View {
                     // Only scroll if we are far away from the bottom
                     // TODO: implement a "scroll lock" where we determine if we are away from the bottom and then force the scroll
                     // scrollProxy.scrollTo(messageViewModel.messages.last?.id, anchor: .bottom)
-                    scrollProxy.scrollTo("bottom", anchor: .bottom)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation(AppConfig.easeIn) {
+                            scrollProxy.scrollTo("bottom", anchor: .bottom)
+                        }
+                    }
+                }
+            }
+            .onChange(of: screenRecorder.isRunning) {
+                if let scrollProxy, screenRecorder.isRunning == true {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation(AppConfig.easeIn) {
+                            scrollProxy.scrollTo("bottom", anchor: .bottom)
+                        }
+                    }
                 }
             }
         }

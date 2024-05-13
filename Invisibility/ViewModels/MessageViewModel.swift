@@ -53,9 +53,9 @@ final class MessageViewModel: ObservableObject {
     func sendFromChat() async {
         // Stop the chat from generating if it is
         if isGenerating { stopGenerating() }
-        guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 else { return }
-
         let images = ChatViewModel.shared.images.map(\.data)
+        // Allow empty messages if there is a least 1 image
+        guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 || images.count > 0 else { return }
 
         let message = Message(content: TextViewModel.shared.text, role: .user, images: images)
         TextViewModel.shared.clearText()
