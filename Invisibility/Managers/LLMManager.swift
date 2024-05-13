@@ -36,6 +36,7 @@ struct LLMModel: Codable, Equatable, Hashable, Identifiable {
 }
 
 enum LLMModelRepository: CaseIterable {
+    case gpt4o
     case claude3Opus
     case claude3Haiku
     case llama3_70b
@@ -46,6 +47,12 @@ enum LLMModelRepository: CaseIterable {
 
     var model: LLMModel {
         switch self {
+        case .gpt4o:
+            LLMModel(
+                text: "openrouter/openai/gpt-4o",
+                vision: "openrouter/openai/gpt-4o",
+                human_name: "GPT-4o"
+            )
         case .claude3Opus:
             LLMModel(
                 text: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
@@ -125,13 +132,18 @@ final class LLMManager {
         LLMModelRepository.humanNameToModel[llmModel] ?? LLMModelRepository.claude3Opus.model
     }
 
+    /// The index of the model in the allModels array
     public var modelIndex: Int {
         LLMModelRepository.allModels.firstIndex(of: model) ?? 0
     }
 
+    /// The index of the model in the enabledModels array
+    public var enabledModelIndex: Int {
+        LLMModelRepository.enabledModels.firstIndex(of: model) ?? 0
+    }
+
+    /// All enabled models via UserDefaults
     public var enabledModels: [LLMModel] {
-        // ReorderableForEach($models, allowReordering: $allowReordering) { model, draggging in
-        //     @AppStorage("llmEnabled_\(model.human_name)") var enabled = false
         var enabledModels: [LLMModel] = []
         for model in LLMModelRepository.allModels {
             if UserDefaults.standard.bool(forKey: "llmEnabled_\(model.human_name)") {
@@ -141,8 +153,9 @@ final class LLMManager {
         return enabledModels
     }
 
+    /// Set the model to the given index in the enabled models
     public func setModel(index: Int) {
-        llmModel = LLMModelRepository.allModels[index].human_name
+        llmModel = LLMModelRepository.enabledModels[index].human_name
     }
 
     @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name

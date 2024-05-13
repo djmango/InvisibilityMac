@@ -14,7 +14,15 @@ import UniformTypeIdentifiers
 struct SettingsModelListView: View {
     @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
 
-    @State var models: [LLMModel] = []
+    @State var models: [LLMModel] = [] {
+        didSet {
+            // Print the index of all the models
+            for (index, model) in models.enumerated() {
+                print("Model at index \(index): \(model)")
+            }
+        }
+    }
+
     @State var allowReordering = true
 
     init() {

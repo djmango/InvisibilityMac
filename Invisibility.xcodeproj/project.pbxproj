@@ -60,6 +60,7 @@
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
 		4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */; };
 		4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */; };
+		4DB0619A2BF1E1A9007CF7DD /* WhatsNewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB061992BF1E1A9007CF7DD /* WhatsNewKit */; };
 		4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
 		4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */; };
@@ -165,6 +166,7 @@
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
 				4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */,
+				4DB0619A2BF1E1A9007CF7DD /* WhatsNewKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -429,6 +431,7 @@
 				4D2428E12BD5D8C100BE444C /* CompactSlider */,
 				4DC8B35C2BD735DA00FE5EC8 /* SwiftUIReorderableForEach */,
 				4D37F2C92BDAD5B400F2FC93 /* CachedAsyncImage */,
+				4DB061992BF1E1A9007CF7DD /* WhatsNewKit */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -471,6 +474,7 @@
 				4D2428E02BD5D8C100BE444C /* XCRemoteSwiftPackageReference "CompactSlider" */,
 				4DC8B35B2BD735DA00FE5EC8 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */,
 				4D37F2C82BDAD5B400F2FC93 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
+				4DB061982BF1E1A9007CF7DD /* XCRemoteSwiftPackageReference "WhatsNewKit" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -690,7 +694,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -724,7 +728,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 101;
+				CURRENT_PROJECT_VERSION = 102;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -836,6 +840,14 @@
 				minimumVersion = 5.9.0;
 			};
 		};
+		4DB061982BF1E1A9007CF7DD /* XCRemoteSwiftPackageReference "WhatsNewKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/djmango/WhatsNewKit.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Cindori/FluidGradient.git";
@@ -940,6 +952,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D9354272B99851E00C34A63 /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		4DB061992BF1E1A9007CF7DD /* WhatsNewKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DB061982BF1E1A9007CF7DD /* XCRemoteSwiftPackageReference "WhatsNewKit" */;
+			productName = WhatsNewKit;
 		};
 		4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */ = {
 			isa = XCSwiftPackageProductDependency;

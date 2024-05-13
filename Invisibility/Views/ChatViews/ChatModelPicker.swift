@@ -42,10 +42,9 @@ struct ChatModelPicker: View {
 
             // Add padding on each side so the slider never goes to either edge
             CompactSlider(value: Binding(
-                get: { Float(LLMManager.shared.modelIndex) },
+                get: { Float(LLMManager.shared.enabledModelIndex) },
                 set: { LLMManager.shared.setModel(index: Int($0)) }
             ), in: 0 ... (Float(enabledModelsCount) - 1), step: 1, state: $sliderState) {}
-                // ), in: ClosedRange(LLMManager.shared.enabledModels.startIndex ... LLMManager.shared.enabledModels.endIndex), step: 1, state: $sliderState) {}
                 .compactSliderStyle(CustomCompactSliderStyle())
                 .overlay(
                     Text(LLMManager.shared.model.human_name)
@@ -54,6 +53,8 @@ struct ChatModelPicker: View {
                         .frame(width: 110)
                         .fixedSize(horizontal: true, vertical: false)
                         .multilineTextAlignment(.center)
+                        .lineLimit(2)
+                        .truncationMode(.middle)
                         .background(Capsule().fill(.accent))
                         // .offset(x: sliderState.dragLocationX.lower)
                         .offset(x: min(max(-130, sliderState.dragLocationX.lower), 130))

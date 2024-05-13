@@ -61,7 +61,7 @@ struct ChatButtonsView: View {
                 .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
                 // Models
-                ChatModelPicker(whoIsHovering: $whoIsHovering)
+                // ChatModelPicker(whoIsHovering: $whoIsHovering)
 
                 // Clear Chat
                 MessageButtonItemView(

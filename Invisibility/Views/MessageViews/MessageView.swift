@@ -84,5 +84,6 @@ struct MessageView: View {
             }
         }
         .sentryTrace("MessageView")
+        .whatsNewSheet()
     }
 }

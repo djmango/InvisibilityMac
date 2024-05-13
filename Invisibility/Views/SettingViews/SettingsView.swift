@@ -23,6 +23,7 @@ struct SettingsView: View {
     @AppStorage("onboardingViewed") private var onboardingViewed = false
     @AppStorage("shortcutHints") private var shortcutHints = true
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
+    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
 
     @State private var showingExporter = false
     @State private var document: TextDocument = TextDocument(text: "")
@@ -149,7 +150,13 @@ struct SettingsView: View {
                         .toggleStyle(.switch)
                         .visible(if: betaFeatures, removeCompletely: true)
 
-                    SettingsModelListView()
+                    Picker("", selection: $llmModel) {
+                        ForEach(LLMModelRepository.allModels, id: \.self) { model in
+                            Text(model.human_name).tag(model.human_name)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .frame(maxWidth: 180)
 
                     Spacer()
 
@@ -190,6 +197,8 @@ struct SettingsView: View {
                             .buttonStyle(.bordered)
                         }
                     }
+
+                    Spacer()
 
                     HStack {
                         Button("Acknowledgments") {
