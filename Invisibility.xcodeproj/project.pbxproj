@@ -63,9 +63,6 @@
 		4DB0619A2BF1E1A9007CF7DD /* WhatsNewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB061992BF1E1A9007CF7DD /* WhatsNewKit */; };
 		4DB061A12BF2AFF4007CF7DD /* AudioLevelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB0619B2BF2AFF4007CF7DD /* AudioLevelsView.swift */; };
 		4DB061A22BF2AFF4007CF7DD /* CapturePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB0619C2BF2AFF4007CF7DD /* CapturePreview.swift */; };
-		4DB061A32BF2AFF4007CF7DD /* ConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB0619D2BF2AFF4007CF7DD /* ConfigurationView.swift */; };
-		4DB061A42BF2AFF4007CF7DD /* MaterialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB0619E2BF2AFF4007CF7DD /* MaterialView.swift */; };
-		4DB061A52BF2AFF4007CF7DD /* PickerSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB0619F2BF2AFF4007CF7DD /* PickerSettingsView.swift */; };
 		4DB061A72BF2AFFF007CF7DD /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061A62BF2AFFF007CF7DD /* CaptureView.swift */; };
 		4DB061A92BF2B011007CF7DD /* PowerMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061A82BF2B011007CF7DD /* PowerMeter.swift */; };
 		4DB061AD2BF2B031007CF7DD /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061AC2BF2B031007CF7DD /* ScreenRecorder.swift */; };
@@ -73,6 +70,7 @@
 		4DB061B12BF2B5F7007CF7DD /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B02BF2B5F7007CF7DD /* AudioPlayer.swift */; };
 		4DB061B32BF2B6B5007CF7DD /* Synth.aif in Resources */ = {isa = PBXBuildFile; fileRef = 4DB061B22BF2B616007CF7DD /* Synth.aif */; };
 		4DB061B52BF2B82D007CF7DD /* CaptureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */; };
+		4DB061B82BF2F9BE007CF7DD /* Drops in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB061B72BF2F9BE007CF7DD /* Drops */; };
 		4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
 		4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */; };
@@ -145,9 +143,6 @@
 		4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingAccountView.swift; sourceTree = "<group>"; };
 		4DB0619B2BF2AFF4007CF7DD /* AudioLevelsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioLevelsView.swift; sourceTree = "<group>"; };
 		4DB0619C2BF2AFF4007CF7DD /* CapturePreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapturePreview.swift; sourceTree = "<group>"; };
-		4DB0619D2BF2AFF4007CF7DD /* ConfigurationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfigurationView.swift; sourceTree = "<group>"; };
-		4DB0619E2BF2AFF4007CF7DD /* MaterialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaterialView.swift; sourceTree = "<group>"; };
-		4DB0619F2BF2AFF4007CF7DD /* PickerSettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PickerSettingsView.swift; sourceTree = "<group>"; };
 		4DB061A62BF2AFFF007CF7DD /* CaptureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
 		4DB061A82BF2B011007CF7DD /* PowerMeter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PowerMeter.swift; sourceTree = "<group>"; };
 		4DB061AC2BF2B031007CF7DD /* ScreenRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
@@ -181,6 +176,7 @@
 				4DC8B35D2BD735DA00FE5EC8 /* SwiftUIReorderableForEach in Frameworks */,
 				4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
+				4DB061B82BF2F9BE007CF7DD /* Drops in Frameworks */,
 				4D2428E22BD5D8C100BE444C /* CompactSlider in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
@@ -409,9 +405,6 @@
 				4DB061A62BF2AFFF007CF7DD /* CaptureView.swift */,
 				4DB0619B2BF2AFF4007CF7DD /* AudioLevelsView.swift */,
 				4DB0619C2BF2AFF4007CF7DD /* CapturePreview.swift */,
-				4DB0619D2BF2AFF4007CF7DD /* ConfigurationView.swift */,
-				4DB0619E2BF2AFF4007CF7DD /* MaterialView.swift */,
-				4DB0619F2BF2AFF4007CF7DD /* PickerSettingsView.swift */,
 			);
 			path = CaptureViews;
 			sourceTree = "<group>";
@@ -476,6 +469,7 @@
 				4DC8B35C2BD735DA00FE5EC8 /* SwiftUIReorderableForEach */,
 				4D37F2C92BDAD5B400F2FC93 /* CachedAsyncImage */,
 				4DB061992BF1E1A9007CF7DD /* WhatsNewKit */,
+				4DB061B72BF2F9BE007CF7DD /* Drops */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -519,6 +513,7 @@
 				4DC8B35B2BD735DA00FE5EC8 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */,
 				4D37F2C82BDAD5B400F2FC93 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				4DB061982BF1E1A9007CF7DD /* XCRemoteSwiftPackageReference "WhatsNewKit" */,
+				4DB061B62BF2F9BE007CF7DD /* XCRemoteSwiftPackageReference "Drops" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -583,15 +578,12 @@
 				4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */,
 				4D4DB2492B913E2E003B9D53 /* ChatViewModel.swift in Sources */,
 				4D451C2E2B835F9900DCEF48 /* String+extractedSubjects.swift in Sources */,
-				4DB061A52BF2AFF4007CF7DD /* PickerSettingsView.swift in Sources */,
 				4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */,
-				4DB061A32BF2AFF4007CF7DD /* ConfigurationView.swift in Sources */,
 				4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */,
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
 				4D2428D52BC6070500BE444C /* TextViewModel.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
-				4DB061A42BF2AFF4007CF7DD /* MaterialView.swift in Sources */,
 				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,
 				4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
@@ -904,6 +896,14 @@
 				kind = branch;
 			};
 		};
+		4DB061B62BF2F9BE007CF7DD /* XCRemoteSwiftPackageReference "Drops" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/omaralbeik/Drops.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.0;
+			};
+		};
 		4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Cindori/FluidGradient.git";
@@ -1013,6 +1013,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DB061982BF1E1A9007CF7DD /* XCRemoteSwiftPackageReference "WhatsNewKit" */;
 			productName = WhatsNewKit;
+		};
+		4DB061B72BF2F9BE007CF7DD /* Drops */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4DB061B62BF2F9BE007CF7DD /* XCRemoteSwiftPackageReference "Drops" */;
+			productName = Drops;
 		};
 		4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -53,9 +53,10 @@ class ScreenRecorder: NSObject,
         didSet { updateEngine() }
     }
 
-    @Published var isAppExcluded = true {
-        didSet { updateEngine() }
-    }
+    let isAppExcluded = true
+    // {
+    //     didSet { updateEngine() }
+    // }
 
     // MARK: - SCContentSharingPicker Properties
 
@@ -71,9 +72,10 @@ class ScreenRecorder: NSObject,
         didSet { updatePickerConfiguration() }
     }
 
-    @Published var allowsRepicking = true {
-        didSet { updatePickerConfiguration() }
-    }
+    let allowsRepicking = true
+    // {
+    //     didSet { updatePickerConfiguration() }
+    // }
 
     @Published var allowedPickingModes = SCContentSharingPickerMode() {
         didSet { updatePickerConfiguration() }
@@ -87,11 +89,11 @@ class ScreenRecorder: NSObject,
 
     private let screenRecorderPicker = SCContentSharingPicker.shared
     private var availableApps = [SCRunningApplication]()
-    @Published private(set) var availableDisplays = [SCDisplay]()
-    @Published private(set) var availableWindows = [SCWindow]()
+    private(set) var availableDisplays = [SCDisplay]()
+    private(set) var availableWindows = [SCWindow]()
     @Published private(set) var pickerUpdate: Bool = false // Update the running stream immediately with picker selection
     private var pickerContentFilter: SCContentFilter?
-    private var shouldUsePickerFilter = false
+    private var shouldUsePickerFilter = true
     /// - Tag: TogglePicker
     @Published var isPickerActive = false {
         didSet {
@@ -194,6 +196,7 @@ class ScreenRecorder: NSObject,
             // Update the running state.
             isRunning = true
             setPickerUpdate(false)
+            isPickerActive = true
             // Start the stream and await new video frames.
             for try await frame in captureEngine.startCapture(configuration: config, filter: filter) {
                 capturePreview.updateFrame(frame)
@@ -215,6 +218,7 @@ class ScreenRecorder: NSObject,
         await captureEngine.stopCapture()
         stopAudioMetering()
         isRunning = false
+        isPickerActive = false
     }
 
     private func startAudioMetering() {

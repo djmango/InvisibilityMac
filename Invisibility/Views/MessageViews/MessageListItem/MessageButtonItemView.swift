@@ -13,7 +13,7 @@ struct MessageButtonItemView: View {
     private let action: () -> Void
     private let label: String
     private let icon: String
-    private let shortcut_hint: String
+    private let shortcut_hint: String?
     private let iconColor: Color
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
@@ -26,7 +26,7 @@ struct MessageButtonItemView: View {
 
     init(label: String,
          icon: String,
-         shortcut_hint: String,
+         shortcut_hint: String?,
          whoIsHovering: Binding<String?>,
          iconColor: Color = Color("ChatButtonForegroundColor"),
          action: @escaping () -> Void)
@@ -49,19 +49,21 @@ struct MessageButtonItemView: View {
                         .frame(width: 18, height: 18)
                         .foregroundColor(iconColor)
                         .visible(
-                            if: !ShortcutViewModel.shared.modifierFlags.contains(.command) || !shortcutHints,
+                            if: !ShortcutViewModel.shared.modifierFlags.contains(.command) || !shortcutHints || shortcut_hint == nil,
                             removeCompletely: true
                         )
 
-                    Text(shortcut_hint)
-                        .font(.title3)
-                        .foregroundColor(Color("ChatButtonForegroundColor"))
-                        .visible(
-                            if: ShortcutViewModel.shared.modifierFlags.contains(.command) && shortcutHints,
-                            removeCompletely: true
-                        )
-                        .truncationMode(.head)
-                        .kerning(resized ? 0 : -1)
+                    if let shortcut_hint {
+                        Text(shortcut_hint)
+                            .font(.title3)
+                            .foregroundColor(Color("ChatButtonForegroundColor"))
+                            .visible(
+                                if: ShortcutViewModel.shared.modifierFlags.contains(.command) && shortcutHints,
+                                removeCompletely: true
+                            )
+                            .truncationMode(.head)
+                            .kerning(resized ? 0 : -1)
+                    }
                 }
 
                 Text(label)

@@ -47,9 +47,9 @@ struct ChatButtonsView: View {
                 .keyboardShortcut("1", modifiers: [.command, .shift])
                 .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
-                // Record
+                // Video
                 MessageButtonItemView(
-                    label: screenRecorder.isRunning ? "Recording" : "Record",
+                    label: screenRecorder.isRunning ? "Disable Video" : "Enable Video",
                     icon: "record.circle",
                     shortcut_hint: "⌘ ⇧ 2",
                     whoIsHovering: $whoIsHovering,
