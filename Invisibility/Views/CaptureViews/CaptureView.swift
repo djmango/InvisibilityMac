@@ -17,6 +17,12 @@ struct CaptureView: View {
     @State private var isHovering: Bool = false
     @State private var minimized: Bool = false
 
+    @AppStorage("sideSwitched") private var sideSwitched: Bool = false
+
+    var xOffset: CGFloat {
+        sideSwitched ? -15 : 15
+    }
+
     var body: some View {
         screenRecorder.capturePreview
             .aspectRatio(screenRecorder.contentSize, contentMode: .fit)
@@ -31,21 +37,10 @@ struct CaptureView: View {
                     .stroke(Color(NSColor.separatorColor), lineWidth: 1)
             )
             .overlay(
-                MessageButtonItemView(
-                    label: "Open Picker",
-                    icon: "rectangle.inset.filled.and.person.filled",
-                    shortcut_hint: nil,
-                    whoIsHovering: $whoIsHovering
-                ) {
-                    screenRecorder.presentPicker()
-                }
-                .visible(if: isHovering, removeCompletely: true)
-                .animation(.easeInOut(duration: 0.2), value: isHovering)
-            )
-            .overlay(
-                HStack {
-                    Spacer()
-                    VStack {
+                VStack {
+                    HStack {
+                        Spacer()
+                            .visible(if: !sideSwitched, removeCompletely: true)
                         MessageButtonItemView(
                             label: "Minimize",
                             icon: "minus",
@@ -54,12 +49,33 @@ struct CaptureView: View {
                         ) {
                             minimized.toggle()
                         }
-                        .visible(if: isHovering, removeCompletely: true)
-                        .animation(.easeInOut(duration: 0.2), value: isHovering)
-                        .offset(x: 15, y: -15)
+                        .offset(x: xOffset, y: -15)
+
                         Spacer()
+                            .visible(if: sideSwitched, removeCompletely: true)
                     }
+
+                    HStack {
+                        Spacer()
+                            .visible(if: !sideSwitched, removeCompletely: true)
+
+                        MessageButtonItemView(
+                            label: "Open Picker",
+                            icon: "rectangle.inset.filled.and.person.filled",
+                            shortcut_hint: nil,
+                            whoIsHovering: $whoIsHovering
+                        ) {
+                            screenRecorder.presentPicker()
+                        }
+                        .offset(x: xOffset, y: -15)
+
+                        Spacer()
+                            .visible(if: sideSwitched, removeCompletely: true)
+                    }
+
+                    Spacer()
                 }
+                .visible(if: isHovering, removeCompletely: true)
             )
             .padding(10)
             .frame(maxWidth: 350)
@@ -74,6 +90,8 @@ struct CaptureView: View {
                 }
             }
             .visible(if: !minimized, removeCompletely: true)
+            .animation(.easeInOut(duration: 0.2), value: whoIsHovering)
+            .animation(.easeInOut(duration: 0.2), value: isHovering)
             .animation(.easeInOut(duration: 0.2), value: minimized)
     }
 }

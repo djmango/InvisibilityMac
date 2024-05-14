@@ -33,6 +33,29 @@ struct User: Decodable {
     }
 }
 
+struct UserInvite: Decodable {
+    var email: String
+    var code: String
+    var createdAt: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case email
+        case code
+        case createdAt = "created_at"
+    }
+}
+
+// Extension for decoding a date in the custom ISO8601 format with nanoseconds
+extension DateFormatter {
+    static let extendedISO8601: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSX"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return formatter
+    }()
+}
+
 struct RefreshTokenResponse: Decodable {
     let token: String
 }
@@ -44,6 +67,7 @@ final class UserManager: ObservableObject {
     @Published public var user: User?
     @Published public var isPaid: Bool = false
     @Published public var confettis: Int = 0
+    @Published public var inviteCount: Int = 0
 
     @AppStorage("token") public var token: String? {
         didSet {
@@ -76,6 +100,7 @@ final class UserManager: ObservableObject {
             }
         }
         LLMManager.shared.setup()
+        getInviteCount()
     }
 
     func userIsLoggedIn() async -> Bool {
@@ -130,22 +155,22 @@ final class UserManager: ObservableObject {
                     }
                 }
         }
+    }
 
-        func customDecoder() -> JSONDecoder {
-            let decoder = JSONDecoder()
+    func customDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
 
-            // Define a custom DateFormatter
-            let iso8601Formatter = DateFormatter()
-            iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-            iso8601Formatter.calendar = Calendar(identifier: .iso8601)
-            iso8601Formatter.timeZone = TimeZone(secondsFromGMT: 0)
-            iso8601Formatter.locale = Locale(identifier: "en_US_POSIX")
+        // Define a custom DateFormatter
+        let iso8601Formatter = DateFormatter()
+        iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+        iso8601Formatter.calendar = Calendar(identifier: .iso8601)
+        iso8601Formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        iso8601Formatter.locale = Locale(identifier: "en_US_POSIX")
 
-            // Set up the decoder with the custom date decoding strategy
-            decoder.dateDecodingStrategy = .formatted(iso8601Formatter)
+        // Set up the decoder with the custom date decoding strategy
+        decoder.dateDecodingStrategy = .formatted(iso8601Formatter)
 
-            return decoder
-        }
+        return decoder
     }
 
     func checkPaymentStatus() async -> Bool {
@@ -176,6 +201,31 @@ final class UserManager: ObservableObject {
                     }
                 }
         }
+    }
+
+    func getInviteCount() {
+        // Unwrap the user.firstName safely
+        guard let firstName = user?.firstName else {
+            logger.warning("User's first name is not available")
+            return
+        }
+
+        let url = AppConfig.invisibility_api_base + "/pay/list_invites?code=" + firstName.lowercased()
+
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .formatted(DateFormatter.extendedISO8601)
+
+        AF.request(url, method: .get)
+            .validate()
+            .responseDecodable(of: [UserInvite].self, decoder: decoder) { response in
+                switch response.result {
+                case let .success(userInvites):
+                    self.inviteCount = userInvites.count
+                    self.logger.info("Fetched \(userInvites.count) invites")
+                case .failure:
+                    self.logger.error("Error fetching invites")
+                }
+            }
     }
 
     func manage() {

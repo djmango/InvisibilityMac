@@ -57,6 +57,8 @@ final class ChatViewModel: ObservableObject {
     @Published public var textHeight: CGFloat = 52
     @Published public var lastTextHeight: CGFloat = 0
 
+    @Published public var shouldScrollToBottom: Bool = false
+
     private init() {}
 
     @MainActor

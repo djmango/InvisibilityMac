@@ -15,19 +15,8 @@ struct ChatEditorView: View {
     static let minTextHeight: CGFloat = 52
     static let maxTextHeight: CGFloat = 500
 
-    @State private var scrollPosition: String? {
-        didSet {
-            print("scrollPosition: \(scrollPosition ?? "nil")")
-            if scrollPosition == "bottom" {
-                DispatchQueue.main.async {
-                    chatViewModel.textHeight = ChatEditorView.minTextHeight
-                }
-            }
-        }
-    }
-
     var body: some View {
-        ScrollViewReader { _ in
+        ScrollViewReader { scrollProxy in
             ScrollView {
                 LazyVStack(alignment: .trailing, spacing: 0) {
                     TextEditor(text: $textViewModel.text)
@@ -75,9 +64,16 @@ struct ChatEditorView: View {
                         )
                 }
             }
-            .scrollPosition(id: $scrollPosition, anchor: .bottom)
             .frame(height: max(ChatEditorView.minTextHeight, min(chatViewModel.textHeight, ChatEditorView.maxTextHeight)))
             .defaultScrollAnchor(.bottom)
+            .onChange(of: chatViewModel.shouldScrollToBottom) {
+                if chatViewModel.shouldScrollToBottom {
+                    withAnimation(AppConfig.easeIn) {
+                        scrollProxy.scrollTo("textEditor", anchor: .bottom)
+                        chatViewModel.shouldScrollToBottom = false
+                    }
+                }
+            }
         }
     }
 }

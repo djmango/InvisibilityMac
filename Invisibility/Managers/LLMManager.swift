@@ -38,9 +38,9 @@ struct LLMModel: Codable, Equatable, Hashable, Identifiable {
 enum LLMModelRepository: CaseIterable {
     case gpt4o
     case claude3Opus
+    case claude3Haiku
     case llama3_70b
     case geminiPro
-    case claude3Haiku
     case gpt4
     case perplexitySonarOnline
     case perplexityMixtral
@@ -59,6 +59,12 @@ enum LLMModelRepository: CaseIterable {
                 vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
                 human_name: "Claude-3 Opus"
             )
+        case .claude3Haiku:
+            LLMModel(
+                text: "claude-3-haiku-20240307",
+                vision: "claude-3-haiku-20240307",
+                human_name: "Claude-3 Haiku"
+            )
         case .llama3_70b:
             LLMModel(
                 text: "groq/llama3-70b-8192",
@@ -70,12 +76,6 @@ enum LLMModelRepository: CaseIterable {
                 text: "openrouter/google/gemini-pro-1.5",
                 vision: "openrouter/google/gemini-pro-1.5",
                 human_name: "Gemini Pro 1.5"
-            )
-        case .claude3Haiku:
-            LLMModel(
-                text: "claude-3-haiku-20240307",
-                vision: "claude-3-haiku-20240307",
-                human_name: "Claude-3 Haiku"
             )
         case .gpt4:
             LLMModel(
