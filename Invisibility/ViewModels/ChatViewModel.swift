@@ -18,10 +18,12 @@ struct ChatDataItem: Identifiable, Equatable {
     let id = UUID()
     let data: Data
     let dataType: DataType
+    let hide: Bool
 
-    init(data: Data, dataType: DataType) {
+    init(data: Data, dataType: DataType, hide: Bool = false) {
         self.data = data
         self.dataType = dataType
+        self.hide = hide
     }
 
     static func == (lhs: ChatDataItem, rhs: ChatDataItem) -> Bool {
@@ -58,8 +60,8 @@ final class ChatViewModel: ObservableObject {
     private init() {}
 
     @MainActor
-    public func addImage(_ data: Data) {
-        items.append(ChatDataItem(data: data, dataType: .image))
+    public func addImage(_ data: Data, hide: Bool = false) {
+        items.append(ChatDataItem(data: data, dataType: .image, hide: hide))
     }
 
     @MainActor

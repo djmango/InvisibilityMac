@@ -1,14 +1,14 @@
 /*
-See the LICENSE.txt file for this sample’s licensing information.
+ See the LICENSE.txt file for this sample’s licensing information.
 
-Abstract:
-An object that captures a stream of captured sample buffers containing screen and audio content.
-*/
-import Foundation
+ Abstract:
+ An object that captures a stream of captured sample buffers containing screen and audio content.
+ */
 import AVFAudio
-import ScreenCaptureKit
-import OSLog
 import Combine
+import Foundation
+import OSLog
+import ScreenCaptureKit
 
 /// A structure that contains the video data to render.
 struct CapturedFrame {
@@ -23,33 +23,39 @@ struct CapturedFrame {
 
 /// An object that wraps an instance of `SCStream`, and returns its results as an `AsyncThrowingStream`.
 class CaptureEngine: NSObject, @unchecked Sendable {
-    
     private let logger = Logger()
 
     private(set) var stream: SCStream?
     private var streamOutput: CaptureEngineStreamOutput?
     private let videoSampleBufferQueue = DispatchQueue(label: "com.example.apple-samplecode.VideoSampleBufferQueue")
     private let audioSampleBufferQueue = DispatchQueue(label: "com.example.apple-samplecode.AudioSampleBufferQueue")
-    
+
     // Performs average and peak power calculations on the audio samples.
     private let powerMeter = PowerMeter()
     var audioLevels: AudioLevels { powerMeter.levels }
-    
+
     // Store the the startCapture continuation, so that you can cancel it when you call stopCapture().
     private var continuation: AsyncThrowingStream<CapturedFrame, Error>.Continuation?
-    
+
+    // Store the latest captured frame.
+    private var latestFrame: CapturedFrame = .invalid
+
     /// - Tag: StartCapture
     func startCapture(configuration: SCStreamConfiguration, filter: SCContentFilter) -> AsyncThrowingStream<CapturedFrame, Error> {
         AsyncThrowingStream<CapturedFrame, Error> { continuation in
             // The stream output object. Avoid reassigning it to a new object every time startCapture is called.
             let streamOutput = CaptureEngineStreamOutput(continuation: continuation)
             self.streamOutput = streamOutput
-            streamOutput.capturedFrameHandler = { continuation.yield($0) }
+            // streamOutput.capturedFrameHandler = { continuation.yield($0) }
+            streamOutput.capturedFrameHandler = { [weak self] frame in
+                self?.latestFrame = frame // Store the latest frame
+                continuation.yield(frame)
+            }
             streamOutput.pcmBufferHandler = { self.powerMeter.process(buffer: $0) }
 
             do {
                 stream = SCStream(filter: filter, configuration: configuration, delegate: streamOutput)
-                
+
                 // Add a stream output to capture screen content.
                 try stream?.addStreamOutput(streamOutput, type: .screen, sampleHandlerQueue: videoSampleBufferQueue)
                 try stream?.addStreamOutput(streamOutput, type: .audio, sampleHandlerQueue: audioSampleBufferQueue)
@@ -59,7 +65,7 @@ class CaptureEngine: NSObject, @unchecked Sendable {
             }
         }
     }
-    
+
     func stopCapture() async {
         do {
             try await stream?.stopCapture()
@@ -69,7 +75,7 @@ class CaptureEngine: NSObject, @unchecked Sendable {
         }
         powerMeter.processSilence()
     }
-    
+
     /// - Tag: UpdateStreamConfiguration
     func update(configuration: SCStreamConfiguration, filter: SCContentFilter) async {
         do {
@@ -79,27 +85,29 @@ class CaptureEngine: NSObject, @unchecked Sendable {
             logger.error("Failed to update the stream session: \(String(describing: error))")
         }
     }
+
+    func getCurrentFrame() -> CapturedFrame {
+        latestFrame
+    }
 }
 
 /// A class that handles output from an SCStream, and handles stream errors.
 private class CaptureEngineStreamOutput: NSObject, SCStreamOutput, SCStreamDelegate {
-    
     var pcmBufferHandler: ((AVAudioPCMBuffer) -> Void)?
     var capturedFrameHandler: ((CapturedFrame) -> Void)?
-    
+
     // Store the  startCapture continuation, so you can cancel it if an error occurs.
     private var continuation: AsyncThrowingStream<CapturedFrame, Error>.Continuation?
-    
+
     init(continuation: AsyncThrowingStream<CapturedFrame, Error>.Continuation?) {
         self.continuation = continuation
     }
-    
+
     /// - Tag: DidOutputSampleBuffer
-    func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of outputType: SCStreamOutputType) {
-        
+    func stream(_: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of outputType: SCStreamOutputType) {
         // Return early if the sample buffer is invalid.
         guard sampleBuffer.isValid else { return }
-        
+
         // Determine which type of data the sample buffer contains.
         switch outputType {
         case .screen:
@@ -113,33 +121,32 @@ private class CaptureEngineStreamOutput: NSObject, SCStreamOutput, SCStreamDeleg
             fatalError("Encountered unknown stream output type: \(outputType)")
         }
     }
-    
+
     /// Create a `CapturedFrame` for the video sample buffer.
     private func createFrame(for sampleBuffer: CMSampleBuffer) -> CapturedFrame? {
-        
         // Retrieve the array of metadata attachments from the sample buffer.
         guard let attachmentsArray = CMSampleBufferGetSampleAttachmentsArray(sampleBuffer,
                                                                              createIfNecessary: false) as? [[SCStreamFrameInfo: Any]],
-              let attachments = attachmentsArray.first else { return nil }
-        
+            let attachments = attachmentsArray.first else { return nil }
+
         // Validate the status of the frame. If it isn't `.complete`, return nil.
         guard let statusRawValue = attachments[SCStreamFrameInfo.status] as? Int,
               let status = SCFrameStatus(rawValue: statusRawValue),
               status == .complete else { return nil }
-        
+
         // Get the pixel buffer that contains the image data.
         guard let pixelBuffer = sampleBuffer.imageBuffer else { return nil }
-        
+
         // Get the backing IOSurface.
         guard let surfaceRef = CVPixelBufferGetIOSurface(pixelBuffer)?.takeUnretainedValue() else { return nil }
         let surface = unsafeBitCast(surfaceRef, to: IOSurface.self)
-        
+
         // Retrieve the content rectangle, scale, and scale factor.
         guard let contentRectDict = attachments[.contentRect],
               let contentRect = CGRect(dictionaryRepresentation: contentRectDict as! CFDictionary),
               let contentScale = attachments[.contentScale] as? CGFloat,
               let scaleFactor = attachments[.scaleFactor] as? CGFloat else { return nil }
-        
+
         // Create a new frame with the relevant data.
         let frame = CapturedFrame(surface: surface,
                                   contentRect: contentRect,
@@ -147,10 +154,10 @@ private class CaptureEngineStreamOutput: NSObject, SCStreamOutput, SCStreamDeleg
                                   scaleFactor: scaleFactor)
         return frame
     }
-    
+
     private func handleAudio(for buffer: CMSampleBuffer) -> Void? {
         // Create an AVAudioPCMBuffer from an audio sample buffer.
-        try? buffer.withAudioBufferList { audioBufferList, blockBuffer in
+        try? buffer.withAudioBufferList { audioBufferList, _ in
             guard let description = buffer.formatDescription?.audioStreamBasicDescription,
                   let format = AVAudioFormat(standardFormatWithSampleRate: description.mSampleRate, channels: description.mChannelsPerFrame),
                   let samples = AVAudioPCMBuffer(pcmFormat: format, bufferListNoCopy: audioBufferList.unsafePointer)
@@ -158,8 +165,8 @@ private class CaptureEngineStreamOutput: NSObject, SCStreamOutput, SCStreamDeleg
             pcmBufferHandler?(samples)
         }
     }
-    
-    func stream(_ stream: SCStream, didStopWithError error: Error) {
+
+    func stream(_: SCStream, didStopWithError error: Error) {
         continuation?.finish(throwing: error)
     }
 }

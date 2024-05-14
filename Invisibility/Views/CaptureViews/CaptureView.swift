@@ -15,6 +15,7 @@ struct CaptureView: View {
     // State object might be better here
     @State private var whoIsHovering: String?
     @State private var isHovering: Bool = false
+    @State private var minimized: Bool = false
 
     var body: some View {
         screenRecorder.capturePreview
@@ -41,6 +42,25 @@ struct CaptureView: View {
                 .visible(if: isHovering, removeCompletely: true)
                 .animation(.easeInOut(duration: 0.2), value: isHovering)
             )
+            .overlay(
+                HStack {
+                    Spacer()
+                    VStack {
+                        MessageButtonItemView(
+                            label: "Minimize",
+                            icon: "minus",
+                            shortcut_hint: nil,
+                            whoIsHovering: $whoIsHovering
+                        ) {
+                            minimized.toggle()
+                        }
+                        .visible(if: isHovering, removeCompletely: true)
+                        .animation(.easeInOut(duration: 0.2), value: isHovering)
+                        .offset(x: 15, y: -15)
+                        Spacer()
+                    }
+                }
+            )
             .padding(10)
             .frame(maxWidth: 350)
             .onHover { hovering in
@@ -53,5 +73,7 @@ struct CaptureView: View {
                     }
                 }
             }
+            .visible(if: !minimized, removeCompletely: true)
+            .animation(.easeInOut(duration: 0.2), value: minimized)
     }
 }

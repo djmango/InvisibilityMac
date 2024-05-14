@@ -53,11 +53,32 @@ final class MessageViewModel: ObservableObject {
     func sendFromChat() async {
         // Stop the chat from generating if it is
         if isGenerating { stopGenerating() }
+
+        // If we are streaming video, add the current frame to the images
+        if ScreenRecorder.shared.isRunning {
+            if let image = ScreenRecorder.shared.getCurrentFrameAsCGImage(),
+               let standardizedImage = standardizeImage(image)
+            {
+                ChatViewModel.shared.addImage(standardizedImage, hide: true)
+                logger.info("Added current frame to images")
+            } else {
+                logger.error("Failed to standardize image.")
+            }
+        }
+
         let images = ChatViewModel.shared.images.map(\.data)
+
         // Allow empty messages if there is a least 1 image
         guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 || images.count > 0 else { return }
 
-        let message = Message(content: TextViewModel.shared.text, role: .user, images: images)
+        // Get indices of images that are marked as hidden
+        let hidden_images = ChatViewModel.shared.images.enumerated().filter { _, image in
+            image.hide
+        }.map { index, _ in
+            index
+        }
+
+        let message = Message(content: TextViewModel.shared.text, role: .user, images: images, hidden_images: hidden_images)
         TextViewModel.shared.clearText()
         ChatViewModel.shared.removeAll()
 

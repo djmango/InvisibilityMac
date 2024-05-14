@@ -57,16 +57,19 @@ final class Message: Identifiable, ObservableObject {
     var role: MessageRole?
     /// List of images data stored externally to avoid bloating the database
     @Attribute(.externalStorage) var images_data: [Data] = []
+    /// Optional list of image indexes that should be hidden from the user
+    var hidden_images: [Int]? = nil
     /// The status of the message generation and processing
     // TODO: for chat buttons, instead of subscribing to message view use this plus a query
     var status: MessageStatus? = MessageStatus.pending
     /// The progress of the message processing this is generic and can be used for any processing, useful for UI
     var progress: Double = 0.0
 
-    init(content: String? = nil, role: MessageRole? = nil, images: [Data] = []) {
+    init(content: String? = nil, role: MessageRole? = nil, images: [Data] = [], hidden_images: [Int]? = nil) {
         self.content = content
         self.role = role
         self.images_data = images
+        self.hidden_images = hidden_images
     }
 
     @Transient
@@ -76,6 +79,18 @@ final class Message: Identifiable, ObservableObject {
     @Transient var text: String {
         let text = content ?? ""
         return text
+    }
+
+    /// Transient function to get non-hidden images
+    @Transient
+    var nonHiddenImages: [Data] {
+        // Unwrap hidden_images and filter out hidden indexes
+        let hiddenIndexes = hidden_images ?? []
+        return images_data.enumerated().filter { index, _ in
+            !hiddenIndexes.contains(index)
+        }.map { _, data in
+            data
+        }
     }
 }
 
@@ -88,7 +103,7 @@ extension Message {
             role = .system
         }
 
-        var complete_text: String = self.text
+        let complete_text: String = self.text
 
         if allow_images, !images_data.isEmpty {
             // Images, multimodal

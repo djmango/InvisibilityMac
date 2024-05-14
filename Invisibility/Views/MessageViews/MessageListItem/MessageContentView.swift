@@ -68,7 +68,7 @@ struct MessageContentView: View {
             // .visible(if: showLoading, removeCompletely: true)
 
             HStack {
-                MessageImagesView(images: message.images_data)
+                MessageImagesView(images: message.nonHiddenImages)
                     .visible(if: !message.images_data.isEmpty, removeCompletely: true)
 
                 // MessagePDFsView(items: message.pdfs_data)

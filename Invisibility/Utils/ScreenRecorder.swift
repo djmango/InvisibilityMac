@@ -402,6 +402,51 @@ class ScreenRecorder: NSObject,
             // Remove this app's window from the list.
             .filter { $0.owningApplication?.bundleIdentifier != Bundle.main.bundleIdentifier }
     }
+
+    func getCurrentFrameAsCGImage() -> CGImage? {
+        let frame = captureEngine.getCurrentFrame()
+        guard let surface = frame.surface else { return nil }
+
+        var pixelBuffer: CVPixelBuffer?
+        var pixelBufferAttributes: [NSObject: AnyObject] = [:]
+        pixelBufferAttributes[kCVPixelBufferIOSurfacePropertiesKey] = [:] as NSDictionary
+
+        var unmanagedPixelBuffer: Unmanaged<CVPixelBuffer>?
+        let status = CVPixelBufferCreateWithIOSurface(kCFAllocatorDefault, surface, pixelBufferAttributes as CFDictionary, &unmanagedPixelBuffer)
+        pixelBuffer = unmanagedPixelBuffer?.takeRetainedValue()
+
+        guard status == kCVReturnSuccess, let buffer = pixelBuffer else {
+            return nil
+        }
+
+        let ciImage = CIImage(cvPixelBuffer: buffer)
+        let context = CIContext()
+        return context.createCGImage(ciImage, from: ciImage.extent)
+    }
+
+    func getCurrentFrameAsURL() -> URL? {
+        // Get the current frame as CGImage
+        guard let cgImage = getCurrentFrameAsCGImage() else { return nil }
+
+        // Create NSBitmapImageRep from CGImage
+        let bitmapRep = NSBitmapImageRep(cgImage: cgImage)
+
+        // Convert to image data (e.g., PNG)
+        guard let imageData = bitmapRep.representation(using: .png, properties: [:]) else { return nil }
+
+        // Create temporary file URL
+        let tempDirectoryURL = FileManager.default.temporaryDirectory
+        let fileURL = tempDirectoryURL.appendingPathComponent("captured_frame.png")
+
+        do {
+            // Write image data to file
+            try imageData.write(to: fileURL)
+            return fileURL
+        } catch {
+            logger.error("Error writing image data to file: \(error)")
+            return nil
+        }
+    }
 }
 
 extension SCWindow {

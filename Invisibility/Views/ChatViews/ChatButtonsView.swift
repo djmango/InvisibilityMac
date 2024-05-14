@@ -49,11 +49,11 @@ struct ChatButtonsView: View {
 
                 // Video
                 MessageButtonItemView(
-                    label: screenRecorder.isRunning ? "Disable Video" : "Enable Video",
-                    icon: "record.circle",
+                    label: screenRecorder.isRunning ? "Stop Sidekick" : "Start Sidekick",
+                    icon: "shared.with.you",
                     shortcut_hint: "⌘ ⇧ 2",
                     whoIsHovering: $whoIsHovering,
-                    iconColor: screenRecorder.isRunning ? .red : Color("ChatButtonForegroundColor")
+                    iconColor: screenRecorder.isRunning ? .purple : Color("ChatButtonForegroundColor")
                 ) {
                     screenRecorder.toggleRecording()
                 }

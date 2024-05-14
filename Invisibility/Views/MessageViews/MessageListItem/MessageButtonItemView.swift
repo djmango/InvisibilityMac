@@ -46,7 +46,7 @@ struct MessageButtonItemView: View {
                     Image(systemName: icon)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 18, height: 18)
+                        .frame(width: 20, height: 20)
                         .foregroundColor(iconColor)
                         .visible(
                             if: !ShortcutViewModel.shared.modifierFlags.contains(.command) || !shortcutHints || shortcut_hint == nil,
