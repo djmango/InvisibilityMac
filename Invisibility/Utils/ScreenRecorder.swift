@@ -7,6 +7,7 @@
 import Combine
 import Foundation
 import OSLog
+import PostHog
 import ScreenCaptureKit
 import SwiftUI
 
@@ -176,6 +177,7 @@ class ScreenRecorder: NSObject,
 
     /// Starts capturing screen content.
     func start() async {
+        defer { PostHogSDK.shared.capture("start_recording") }
         // Exit early if already running.
         guard !isRunning else { return }
 
@@ -214,6 +216,7 @@ class ScreenRecorder: NSObject,
 
     /// Stops capturing screen content.
     func stop() async {
+        defer { PostHogSDK.shared.capture("stop_recording") }
         guard isRunning else { return }
         await captureEngine.stopCapture()
         stopAudioMetering()

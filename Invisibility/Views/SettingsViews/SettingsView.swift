@@ -6,7 +6,6 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
-import CachedAsyncImage
 import KeyboardShortcuts
 import LaunchAtLogin
 import OSLog
@@ -41,60 +40,8 @@ struct SettingsView: View {
                 VStack(alignment: .center, spacing: 10) {
                     Spacer()
                     // User profile pic and login/logout button
-                    VStack(alignment: .center) {
-                        CachedAsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(colorScheme == .dark ? .white : .black, lineWidth: 2))
-                                .padding(10)
-                        } placeholder: {
-                            ProgressView()
-                                .frame(width: 50, height: 50)
-                                .clipShape(Circle())
-                                .overlay(Circle().stroke(Color(colorScheme == .dark ? .white : .black), lineWidth: 2))
-                                .padding(10)
-                        }
-                        .visible(if: userManager.user?.profilePictureUrl != nil)
-
-                        Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
-                            .font(.title3)
-                            .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
-
-                        Text(userManager.user?.email ?? "")
-                            .font(.caption)
-                            .padding(.bottom, 15)
-
-                        Text("Invisibility Plus")
-                            .font(.caption)
-                            .italic()
-                            .visible(if: userManager.isPaid)
-
-                        Button(action: {
-                            UserManager.shared.manage()
-                        }) {
-                            Text("Manage")
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button(action: {
-                            UserManager.shared.logout()
-                        }) {
-                            Text("Logout")
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 15)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(Color("ChatButtonBackgroundColor"))
-                            // .stroke(Color(nsColor: .separatorColor), lineWidth: 0.5)
-                            .shadow(radius: 2)
-                    )
-                    .visible(if: userManager.user != nil)
+                    SettingsUserCardView()
+                        .visible(if: userManager.user != nil)
 
                     Button(action: {
                         UserManager.shared.login()
@@ -134,9 +81,7 @@ struct SettingsView: View {
                         .toggleStyle(.switch)
                         .onChange(of: betaFeatures) {
                             if betaFeatures {
-                                logger.info("Beta features enabled")
                             } else {
-                                logger.info("Beta features disabled")
                                 // Reset beta features
                                 animateButtons = true
                             }

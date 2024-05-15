@@ -29,8 +29,8 @@ final class MessageViewModel: ObservableObject {
     /// The height of the chat window
     @Published public var windowHeight: CGFloat = 0
 
-    // @AppStorage("llmModel") private var llmModel = LLMModels.claude3_opus.human_name
     @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
+    @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
 
     private init() {
         try? fetch()
@@ -53,6 +53,15 @@ final class MessageViewModel: ObservableObject {
     func sendFromChat() async {
         // Stop the chat from generating if it is
         if isGenerating { stopGenerating() }
+
+        // If the user has exceeded the daily message limit, don't send the message and pop up an alert
+        if !UserManager.shared.canSendMessages {
+            AlertManager.shared.doShowAlert(
+                title: "Daily message limit reached",
+                message: "You have reached your daily message limit. Invite friends to unlock more messages."
+            )
+            return
+        }
 
         // If we are streaming video, add the current frame to the images
         if ScreenRecorder.shared.isRunning {
@@ -83,6 +92,7 @@ final class MessageViewModel: ObservableObject {
         ChatViewModel.shared.removeAll()
 
         await send(message)
+        numMessagesSentToday += 1
     }
 
     @MainActor

@@ -62,7 +62,7 @@ struct RefreshTokenResponse: Decodable {
 
 final class UserManager: ObservableObject {
     static let shared = UserManager()
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "LLMManager")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "UserManager")
 
     @Published public var user: User?
     @Published public var isPaid: Bool = false
@@ -79,10 +79,44 @@ final class UserManager: ObservableObject {
         }
     }
 
+    @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
+    @AppStorage("lastResetDate") public var lastResetDate: String = ""
+
+    var inviteLink: String {
+        "https://invite.i.inc/\(user?.firstName?.lowercased() ?? "")"
+    }
+
+    /// per day free 10 messages + 20 per invite also per day
+    var numMessagesAllowed: Int {
+        10 + (20 * inviteCount)
+    }
+
+    var numMessagesLeft: Int {
+        resetMessagesIfNeeded()
+        return 0
+        // return max(0, numMessagesAllowed - numMessagesSentToday)
+    }
+
+    var canSendMessages: Bool {
+        numMessagesLeft > 0 || isPaid
+    }
+
     private init() {}
+
+    private func resetMessagesIfNeeded() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let today = dateFormatter.string(from: Date())
+
+        if lastResetDate != today {
+            numMessagesSentToday = 0
+            lastResetDate = today
+        }
+    }
 
     @MainActor
     func setup() async {
+        resetMessagesIfNeeded()
         if await userIsLoggedIn() {
             self.confettis = 1
             if let user {
@@ -96,7 +130,7 @@ final class UserManager: ObservableObject {
                 self.confettis = 2
 
             } else {
-                self.pay()
+                self.isPaid = false
             }
         }
         LLMManager.shared.setup()
@@ -220,7 +254,9 @@ final class UserManager: ObservableObject {
             .responseDecodable(of: [UserInvite].self, decoder: decoder) { response in
                 switch response.result {
                 case let .success(userInvites):
-                    self.inviteCount = userInvites.count
+                    DispatchQueue.main.async {
+                        self.inviteCount = userInvites.count
+                    }
                     self.logger.info("Fetched \(userInvites.count) invites")
                 case .failure:
                     self.logger.error("Error fetching invites")
@@ -242,6 +278,7 @@ final class UserManager: ObservableObject {
 
         if let url = URL(string: AppConfig.invisibility_api_base + "/pay/checkout?email=\(user.email)") {
             NSWorkspace.shared.open(url)
+            Task { await WindowManager.shared.hideWindow() }
         }
     }
 

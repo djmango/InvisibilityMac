@@ -19,48 +19,9 @@ struct OnboardingAccountView: View {
 
     var body: some View {
         VStack(alignment: .center) {
-            AsyncImage(url: URL(string: userManager.user?.profilePictureUrl ?? "")) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                    .padding(10)
-            } placeholder: {
-                ProgressView()
-                    .frame(width: 50, height: 50)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
-            }
-            .visible(if: userManager.user?.profilePictureUrl != nil)
+            SettingsUserCardView()
 
-            Text("\(userManager.user?.firstName ?? "") \(userManager.user?.lastName ?? "")")
-                .font(.title3)
-                .foregroundColor(.white)
-                .visible(if: userManager.user?.firstName != nil || userManager.user?.lastName != nil)
-
-            Text(userManager.user?.email ?? "")
-                .font(.caption)
-                .foregroundColor(.white)
-                .padding(.bottom, 15)
-
-            Text("Invisibility Plus")
-                .font(.caption)
-                .italic()
-                .foregroundColor(.white)
-                .visible(if: userManager.isPaid)
-
-            Button(action: {
-                if userManager.isPaid {
-                    callback()
-                } else {
-                    Task {
-                        await userManager.checkPaymentStatus()
-                    }
-                    userManager.pay()
-                }
-            }) {
+            Button(action: callback) {
                 VStack {
                     Image(systemName: "arrowshape.right.fill")
                         .resizable()
@@ -95,12 +56,6 @@ struct OnboardingAccountView: View {
                 }
             }
             .padding(.bottom, 10)
-
-            Text("Subscription required")
-                .font(.caption)
-                .italic()
-                .foregroundColor(.white)
-                .visible(if: !userManager.isPaid && userManager.user != nil)
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 15)

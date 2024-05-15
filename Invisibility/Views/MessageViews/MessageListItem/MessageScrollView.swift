@@ -13,6 +13,7 @@ struct MessageScrollView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
+    @ObservedObject private var userManager = UserManager.shared
 
     @State private var opacity: Double = 0.0
     @State private var offset = CGPoint.zero
@@ -81,7 +82,15 @@ struct MessageScrollView: View {
                             .id(message.id)
                             .sentryTrace("MessageListItemView")
                     }
+
+                    FreeTierCardView()
+                        .visible(if: !userManager.canSendMessages, removeCompletely: true)
+
+                    CaptureView()
+                        .visible(if: screenRecorder.isRunning, removeCompletely: true)
+
                     Rectangle()
+
                         .hidden()
                         .frame(height: 1)
                         .id("bottom")

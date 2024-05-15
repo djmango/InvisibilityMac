@@ -43,10 +43,6 @@ struct MessageView: View {
 
             Spacer()
 
-            CaptureView()
-                .visible(if: screenRecorder.isRunning, removeCompletely: true)
-                .padding(.top, -15)
-
             // Action Icons
             ChatButtonsView()
                 .sentryTrace("ChatButtonsView")

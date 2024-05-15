@@ -47,7 +47,9 @@ struct CaptureView: View {
                             shortcut_hint: nil,
                             whoIsHovering: $whoIsHovering
                         ) {
-                            minimized.toggle()
+                            withAnimation(AppConfig.snappy) {
+                                minimized.toggle()
+                            }
                         }
                         .offset(x: xOffset, y: -15)
 
@@ -77,8 +79,7 @@ struct CaptureView: View {
                 }
                 .visible(if: isHovering, removeCompletely: true)
             )
-            .padding(10)
-            .frame(maxWidth: 350)
+            // .padding(10)
             .onHover { hovering in
                 isHovering = hovering
             }
@@ -92,6 +93,8 @@ struct CaptureView: View {
             .visible(if: !minimized, removeCompletely: true)
             .animation(.easeInOut(duration: 0.2), value: whoIsHovering)
             .animation(.easeInOut(duration: 0.2), value: isHovering)
-            .animation(.easeInOut(duration: 0.2), value: minimized)
+            .padding(.horizontal, 10)
+            .frame(maxWidth: .infinity)
+            .padding(.bottom, 3)
     }
 }

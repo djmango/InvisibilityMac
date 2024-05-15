@@ -57,7 +57,7 @@ final class TextViewModel: ObservableObject {
         let differences = getCharDifferences(previousText, text)
 
         // Detect pastes
-        if differences.count > 100 {
+        if differences.count > 20 {
             // If paste, scroll to bottom. Not perfect, because one could paste in the middle but oh well its okay TODO: fix
             DispatchQueue.main.async {
                 ChatViewModel.shared.shouldScrollToBottom = true

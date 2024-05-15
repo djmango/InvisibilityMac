@@ -71,6 +71,9 @@
 		4DB061B32BF2B6B5007CF7DD /* Synth.aif in Resources */ = {isa = PBXBuildFile; fileRef = 4DB061B22BF2B616007CF7DD /* Synth.aif */; };
 		4DB061B52BF2B82D007CF7DD /* CaptureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */; };
 		4DB061B82BF2F9BE007CF7DD /* Drops in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB061B72BF2F9BE007CF7DD /* Drops */; };
+		4DB061BA2BF3FD4C007CF7DD /* SettingsUserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */; };
+		4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */; };
+		4DB061BE2BF4A028007CF7DD /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061BD2BF4A028007CF7DD /* QRView.swift */; };
 		4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
 		4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */; };
@@ -150,6 +153,9 @@
 		4DB061B02BF2B5F7007CF7DD /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
 		4DB061B22BF2B616007CF7DD /* Synth.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = Synth.aif; sourceTree = "<group>"; };
 		4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureViewModel.swift; sourceTree = "<group>"; };
+		4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserCardView.swift; sourceTree = "<group>"; };
+		4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeTierCardView.swift; sourceTree = "<group>"; };
+		4DB061BD2BF4A028007CF7DD /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
 		4DC610ED2B57369B00255358 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
 		4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModelListView.swift; sourceTree = "<group>"; };
 		4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidUrl.swift"; sourceTree = "<group>"; };
@@ -220,13 +226,6 @@
 				4D93542A2B99A81400C34A63 /* OnboardingManager.swift */,
 			);
 			path = Managers;
-			sourceTree = "<group>";
-		};
-		4D2428E32BD5EBF600BE444C /* ButtonViews */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ButtonViews;
 			sourceTree = "<group>";
 		};
 		4D5896D92B7C67BD00484BFA /* MenubarViews */ = {
@@ -338,12 +337,11 @@
 		4D8E053E2B2516DE00B60D0D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				4D2428E32BD5EBF600BE444C /* ButtonViews */,
 				4D8E05442B2516DE00B60D0D /* AppView.swift */,
 				4DF195012B91B46E0017365F /* Effects */,
 				4D5896D92B7C67BD00484BFA /* MenubarViews */,
 				4DA893AE2B54C44200560DAD /* OnboardingViews */,
-				4DD282DA2B4DEF6E0041690B /* SettingViews */,
+				4DD282DA2B4DEF6E0041690B /* SettingsViews */,
 				4D8E053F2B2516DE00B60D0D /* ChatViews */,
 				4DB061A02BF2AFF4007CF7DD /* CaptureViews */,
 				4D8E05492B2516DE00B60D0D /* MessageViews */,
@@ -409,13 +407,16 @@
 			path = CaptureViews;
 			sourceTree = "<group>";
 		};
-		4DD282DA2B4DEF6E0041690B /* SettingViews */ = {
+		4DD282DA2B4DEF6E0041690B /* SettingsViews */ = {
 			isa = PBXGroup;
 			children = (
 				4D885C762B96D969009A1F48 /* SettingsView.swift */,
 				4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */,
+				4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */,
+				4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */,
+				4DB061BD2BF4A028007CF7DD /* QRView.swift */,
 			);
-			path = SettingViews;
+			path = SettingsViews;
 			sourceTree = "<group>";
 		};
 		4DDCE8512B50BA0900A22B1E /* Frameworks */ = {
@@ -555,10 +556,13 @@
 				4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
+				4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */,
 				4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */,
 				4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */,
+				4DB061BE2BF4A028007CF7DD /* QRView.swift in Sources */,
 				4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */,
 				4D2428D92BCF39CA00BE444C /* ChatPDFView.swift in Sources */,
+				4DB061BA2BF3FD4C007CF7DD /* SettingsUserCardView.swift in Sources */,
 				4DB061A92BF2B011007CF7DD /* PowerMeter.swift in Sources */,
 				4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */,
 				4DB061B12BF2B5F7007CF7DD /* AudioPlayer.swift in Sources */,
@@ -742,7 +746,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -757,7 +761,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.1.1;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -776,7 +780,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 103;
+				CURRENT_PROJECT_VERSION = 106;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -791,7 +795,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.1.1;
+				MARKETING_VERSION = 2.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
