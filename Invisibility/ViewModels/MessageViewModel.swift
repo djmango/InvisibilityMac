@@ -56,9 +56,8 @@ final class MessageViewModel: ObservableObject {
 
         // If the user has exceeded the daily message limit, don't send the message and pop up an alert
         if !UserManager.shared.canSendMessages {
-            AlertManager.shared.doShowAlert(
-                title: "Daily message limit reached",
-                message: "You have reached your daily message limit. Invite friends to unlock more messages."
+            ToastViewModel.shared.showToast(
+                title: "Daily message limit reached"
             )
             return
         }
@@ -276,9 +275,8 @@ extension MessageViewModel {
                 handleText(url: url)
             } else {
                 logger.error("Selected file \(url) is of an unknown type.")
-                AlertManager.shared.doShowAlert(
-                    title: "Unknown file type",
-                    message: "The selected file \(url) is of an unknown type."
+                ToastViewModel.shared.showToast(
+                    title: "Unknown file type"
                 )
             }
         }

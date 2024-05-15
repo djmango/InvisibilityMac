@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */; };
-		4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E32B590213008D975D /* AlertViewModel.swift */; };
 		4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D116AB42BAAA19C00729BE7 /* ShortcutViewModel.swift */; };
 		4D1773D82B8C1060004C5D13 /* ChatButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1773D72B8C1060004C5D13 /* ChatButtonsView.swift */; };
 		4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D219F912B847B67006FF8E5 /* OpenAI */; };
@@ -36,7 +35,6 @@
 		4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B4BC42B48F3320067C543 /* ImageUtils.swift */; };
 		4D6185692B9A25D300E550D2 /* AVKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D6185682B9A25D300E550D2 /* AVKit.framework */; };
 		4D61856C2B9A262E00E550D2 /* screenshot.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D61856A2B9A25E900E550D2 /* screenshot.mp4 */; };
-		4D61856D2B9A262E00E550D2 /* summon.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4D61856B2B9A25E900E550D2 /* summon.mp4 */; };
 		4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */; };
 		4D7AB4242B4CB469007F025B /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = 4D7AB4232B4CB469007F025B /* Pow */; };
 		4D885C772B96D969009A1F48 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D885C762B96D969009A1F48 /* SettingsView.swift */; };
@@ -70,10 +68,12 @@
 		4DB061B12BF2B5F7007CF7DD /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B02BF2B5F7007CF7DD /* AudioPlayer.swift */; };
 		4DB061B32BF2B6B5007CF7DD /* Synth.aif in Resources */ = {isa = PBXBuildFile; fileRef = 4DB061B22BF2B616007CF7DD /* Synth.aif */; };
 		4DB061B52BF2B82D007CF7DD /* CaptureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */; };
-		4DB061B82BF2F9BE007CF7DD /* Drops in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB061B72BF2F9BE007CF7DD /* Drops */; };
 		4DB061BA2BF3FD4C007CF7DD /* SettingsUserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */; };
 		4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */; };
 		4DB061BE2BF4A028007CF7DD /* QRView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061BD2BF4A028007CF7DD /* QRView.swift */; };
+		4DB061C02BF4A9D2007CF7DD /* ToastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */; };
+		4DB061C32BF4ACC2007CF7DD /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB061C22BF4ACC2007CF7DD /* SimpleToast */; };
+		4DB061C52BF4B3A0007CF7DD /* shortcuts.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DB061C42BF4B3A0007CF7DD /* shortcuts.mp4 */; };
 		4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */; };
 		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
 		4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */; };
@@ -97,7 +97,6 @@
 
 /* Begin PBXFileReference section */
 		4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckConnectivity.swift; sourceTree = "<group>"; };
-		4D0B52E32B590213008D975D /* AlertViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertViewModel.swift; sourceTree = "<group>"; };
 		4D116AB42BAAA19C00729BE7 /* ShortcutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutViewModel.swift; sourceTree = "<group>"; };
 		4D1773D72B8C1060004C5D13 /* ChatButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatButtonsView.swift; sourceTree = "<group>"; };
 		4D2428D02BC4A39300BE444C /* ChatEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatEditorView.swift; sourceTree = "<group>"; };
@@ -121,7 +120,6 @@
 		4D5B4BC42B48F3320067C543 /* ImageUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		4D6185682B9A25D300E550D2 /* AVKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVKit.framework; path = System/Library/Frameworks/AVKit.framework; sourceTree = SDKROOT; };
 		4D61856A2B9A25E900E550D2 /* screenshot.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = screenshot.mp4; sourceTree = "<group>"; };
-		4D61856B2B9A25E900E550D2 /* summon.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = summon.mp4; sourceTree = "<group>"; };
 		4D7454EC2B44CFD500ABBB3A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D885C762B96D969009A1F48 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4D885C7B2B96E53E009A1F48 /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
@@ -156,6 +154,8 @@
 		4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserCardView.swift; sourceTree = "<group>"; };
 		4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeTierCardView.swift; sourceTree = "<group>"; };
 		4DB061BD2BF4A028007CF7DD /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
+		4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModel.swift; sourceTree = "<group>"; };
+		4DB061C42BF4B3A0007CF7DD /* shortcuts.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = shortcuts.mp4; sourceTree = "<group>"; };
 		4DC610ED2B57369B00255358 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
 		4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModelListView.swift; sourceTree = "<group>"; };
 		4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidUrl.swift"; sourceTree = "<group>"; };
@@ -177,12 +177,12 @@
 				4DF2D8FC2BA628530093CA3E /* SentrySwiftUI in Frameworks */,
 				4D9354292B99851E00C34A63 /* Alamofire in Frameworks */,
 				4D37F2CA2BDAD5B400F2FC93 /* CachedAsyncImage in Frameworks */,
+				4DB061C32BF4ACC2007CF7DD /* SimpleToast in Frameworks */,
 				4DF2D8FF2BA683280093CA3E /* PostHog in Frameworks */,
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
 				4DC8B35D2BD735DA00FE5EC8 /* SwiftUIReorderableForEach in Frameworks */,
 				4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
-				4DB061B82BF2F9BE007CF7DD /* Drops in Frameworks */,
 				4D2428E22BD5D8C100BE444C /* CompactSlider in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
@@ -255,7 +255,6 @@
 		4D8E05282B2516DE00B60D0D /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				4D0B52E32B590213008D975D /* AlertViewModel.swift */,
 				4D8E052B2B2516DE00B60D0D /* MessageViewModel.swift */,
 				4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */,
 				4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */,
@@ -263,6 +262,7 @@
 				4D2428D42BC6070500BE444C /* TextViewModel.swift */,
 				4D2428DC2BD1FB8700BE444C /* SettingsViewModel.swift */,
 				4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */,
+				4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -282,7 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				4D61856A2B9A25E900E550D2 /* screenshot.mp4 */,
-				4D61856B2B9A25E900E550D2 /* summon.mp4 */,
+				4DB061C42BF4B3A0007CF7DD /* shortcuts.mp4 */,
 				4DB061B22BF2B616007CF7DD /* Synth.aif */,
 				4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */,
 				4DDCE84F2B509F9800A22B1E /* Info.plist */,
@@ -470,7 +470,7 @@
 				4DC8B35C2BD735DA00FE5EC8 /* SwiftUIReorderableForEach */,
 				4D37F2C92BDAD5B400F2FC93 /* CachedAsyncImage */,
 				4DB061992BF1E1A9007CF7DD /* WhatsNewKit */,
-				4DB061B72BF2F9BE007CF7DD /* Drops */,
+				4DB061C22BF4ACC2007CF7DD /* SimpleToast */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -514,7 +514,7 @@
 				4DC8B35B2BD735DA00FE5EC8 /* XCRemoteSwiftPackageReference "swiftui-reorderable-foreach" */,
 				4D37F2C82BDAD5B400F2FC93 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				4DB061982BF1E1A9007CF7DD /* XCRemoteSwiftPackageReference "WhatsNewKit" */,
-				4DB061B62BF2F9BE007CF7DD /* XCRemoteSwiftPackageReference "Drops" */,
+				4DB061C12BF4ACC2007CF7DD /* XCRemoteSwiftPackageReference "SimpleToast" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -530,9 +530,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DB061C52BF4B3A0007CF7DD /* shortcuts.mp4 in Resources */,
 				4DB061B32BF2B6B5007CF7DD /* Synth.aif in Resources */,
 				4D61856C2B9A262E00E550D2 /* screenshot.mp4 in Resources */,
-				4D61856D2B9A262E00E550D2 /* summon.mp4 in Resources */,
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
 				4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */,
 				4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */,
@@ -549,6 +549,7 @@
 				4D7454ED2B44CFD500ABBB3A /* AppDelegate.swift in Sources */,
 				4DB061A72BF2AFFF007CF7DD /* CaptureView.swift in Sources */,
 				4D2428DD2BD1FB8700BE444C /* SettingsViewModel.swift in Sources */,
+				4DB061C02BF4A9D2007CF7DD /* ToastViewModel.swift in Sources */,
 				4DB061AF2BF2B038007CF7DD /* CaptureEngine.swift in Sources */,
 				4D5A9EA22B8C65D40018F6E4 /* MessageButtonItemView.swift in Sources */,
 				4D2428DB2BCF42FE00BE444C /* MessagePDFsView.swift in Sources */,
@@ -596,7 +597,6 @@
 				4D8E05512B2516DE00B60D0D /* InvisibilityApp.swift in Sources */,
 				4DB061A22BF2AFF4007CF7DD /* CapturePreview.swift in Sources */,
 				4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */,
-				4D0B52E42B590213008D975D /* AlertViewModel.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
 				4DD5E36A2B6243D300C35B1C /* AppPrompts.swift in Sources */,
@@ -900,12 +900,12 @@
 				kind = branch;
 			};
 		};
-		4DB061B62BF2F9BE007CF7DD /* XCRemoteSwiftPackageReference "Drops" */ = {
+		4DB061C12BF4ACC2007CF7DD /* XCRemoteSwiftPackageReference "SimpleToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/omaralbeik/Drops.git";
+			repositoryURL = "https://github.com/sanzaru/SimpleToast.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.7.0;
+				minimumVersion = 0.8.1;
 			};
 		};
 		4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */ = {
@@ -1018,10 +1018,10 @@
 			package = 4DB061982BF1E1A9007CF7DD /* XCRemoteSwiftPackageReference "WhatsNewKit" */;
 			productName = WhatsNewKit;
 		};
-		4DB061B72BF2F9BE007CF7DD /* Drops */ = {
+		4DB061C22BF4ACC2007CF7DD /* SimpleToast */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4DB061B62BF2F9BE007CF7DD /* XCRemoteSwiftPackageReference "Drops" */;
-			productName = Drops;
+			package = 4DB061C12BF4ACC2007CF7DD /* XCRemoteSwiftPackageReference "SimpleToast" */;
+			productName = SimpleToast;
 		};
 		4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */ = {
 			isa = XCSwiftPackageProductDependency;

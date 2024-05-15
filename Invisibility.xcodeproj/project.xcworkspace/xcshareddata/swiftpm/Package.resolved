@@ -1,5 +1,5 @@
 {
-  "originHash" : "bab2ee671b6a6cec580ba24221946849d708318aa8eb491ec2f788de091e9a72",
+  "originHash" : "67ba278b584d8960089043674a18bd7766113d62c157c4af58353f69243e30a7",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -26,15 +26,6 @@
       "state" : {
         "revision" : "f45961f97bbae6fff6e2e64546fea0189425ad92",
         "version" : "1.1.0"
-      }
-    },
-    {
-      "identity" : "drops",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/omaralbeik/Drops.git",
-      "state" : {
-        "revision" : "a183ee6f79f21c940092a19c2cba756555422371",
-        "version" : "1.7.0"
       }
     },
     {
@@ -116,6 +107,15 @@
       "state" : {
         "revision" : "0da9c56283b8aada5ef05b16b6cbd6c2790872c4",
         "version" : "8.25.2"
+      }
+    },
+    {
+      "identity" : "simpletoast",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sanzaru/SimpleToast.git",
+      "state" : {
+        "revision" : "8dbc2e7c33cda25c0b2efafd59716cb9820c83eb",
+        "version" : "0.8.1"
       }
     },
     {

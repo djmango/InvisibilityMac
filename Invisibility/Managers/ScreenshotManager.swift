@@ -245,7 +245,7 @@ class ScreenshotManager {
     func askForScreenRecordingPermission() async -> Bool {
         guard await canRecord else {
             if OnboardingManager.shared.onboardingViewed {
-                AlertManager.shared.doShowAlert(title: "Screen Recording Permission Grant", message: "Invisibility has not been granted permission to record the screen. Please enable this permission in System Preferences > Security & Privacy > Screen & System Audio Recording.")
+                ToastViewModel.shared.showToast(title: "Please grant Screen Recording permission")
             }
             // Open the System Preferences app to the Screen Recording settings.
             if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture") {

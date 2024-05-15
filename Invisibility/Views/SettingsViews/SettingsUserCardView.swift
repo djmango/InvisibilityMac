@@ -116,7 +116,7 @@ struct SettingsUserCardView: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color("ChatButtonBackgroundColor"))
-                .shadow(radius: 2)
+                .stroke(Color(nsColor: .separatorColor))
         )
         .visible(if: userManager.user != nil)
     }

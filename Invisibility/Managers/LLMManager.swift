@@ -202,7 +202,7 @@ final class LLMManager {
         } catch {
             logger.error("Error in chat: \(error)")
             PostHogSDK.shared.capture("chat_error", properties: ["error": error.localizedDescription, "model": model.human_name])
-            AlertManager.shared.doShowAlert(title: "Chat Error", message: "\(error.localizedDescription)")
+            ToastViewModel.shared.showToast(title: "Chat Error: \(error.localizedDescription)")
         }
     }
 

@@ -75,7 +75,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let windowSuccess = WindowManager.shared.setupWindow()
         guard windowSuccess else {
             logger.error("Failed to set up window")
-            AlertManager.shared.doShowAlert(title: "Error", message: "Failed to set up window")
             return
         }
         logger.debug("Window set up successfully")

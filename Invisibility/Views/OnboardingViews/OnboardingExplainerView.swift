@@ -12,7 +12,7 @@ import SwiftUI
 struct OnboardingExplainerView: View {
     private var callback: () -> Void
 
-    let summonPlayer = AVPlayer(url: Bundle.main.url(forResource: "summon", withExtension: "mp4")!)
+    let summonPlayer = AVPlayer(url: Bundle.main.url(forResource: "shortcuts", withExtension: "mp4")!)
     let screenshotPlayer = AVPlayer(url: Bundle.main.url(forResource: "screenshot", withExtension: "mp4")!)
 
     init(callback: @escaping () -> Void = {}) {
@@ -43,7 +43,7 @@ struct OnboardingExplainerView: View {
                                 .stroke(Color.white, lineWidth: 2)
                         )
                         .shadow(radius: 10)
-                        .frame(width: 285, height: 240)
+                        .frame(width: 425, height: 240)
                         .padding()
 
                     Text("Toggle panel")

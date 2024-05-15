@@ -28,13 +28,6 @@ struct FreeTierCardView: View {
 
             VStack(spacing: 15) {
                 Spacer()
-                // Image
-                // Image(systemName: "app.gift.fill")
-                //     .resizable()
-                //     .frame(width: 70, height: 70)
-                //     .background(Color.blue)
-                //     .cornerRadius(16)
-                // .padding(.top, 40)
 
                 Text("Invite friends to Invisibility 💙")
                     .font(.title3)
@@ -46,12 +39,10 @@ struct FreeTierCardView: View {
 
                 // Link is invite.i.inc/firstName
                 Button(action: {
-                    // Open the invite link
                     if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
                         NSWorkspace.shared.open(url)
                     }
                 }) {
-                    // Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
                     Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
                         .font(.title2)
                 }
@@ -69,12 +60,10 @@ struct FreeTierCardView: View {
                     .font(.callout)
                     .foregroundColor(.gray)
 
-                // Giant OR
                 Text("Or")
                     .font(.title3)
                     .fontWeight(.bold)
 
-                // Upgrade
                 Button(action: {
                     UserManager.shared.pay()
                 }) {
