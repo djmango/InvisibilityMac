@@ -93,8 +93,7 @@ final class UserManager: ObservableObject {
 
     var numMessagesLeft: Int {
         resetMessagesIfNeeded()
-        return 0
-        // return max(0, numMessagesAllowed - numMessagesSentToday)
+        return max(0, numMessagesAllowed - numMessagesSentToday)
     }
 
     var canSendMessages: Bool {
