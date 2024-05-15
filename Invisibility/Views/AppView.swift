@@ -1,4 +1,3 @@
-import Drops
 import OSLog
 import Sparkle
 import SwiftUI
