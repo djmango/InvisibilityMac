@@ -58,15 +58,15 @@ struct MessageActionButtonsView: View {
 
     var body: some View {
         VStack(alignment: .trailing) {
-            Button(action: {
-                messageViewModel.deleteMessage(id: message.id)
-            }) {
-                Image(systemName: "xmark")
-                    .font(.system(size: 12))
-            }
-            .buttonStyle(.plain)
-            .visible(if: isDeleteButtonVisible)
-            .padding(2)
+            // Button(action: {
+            //     messageViewModel.deleteMessage(id: message.id)
+            // }) {
+            //     Image(systemName: "xmark")
+            //         .font(.system(size: 12))
+            // }
+            // .buttonStyle(.plain)
+            // .visible(if: isDeleteButtonVisible)
+            // .padding(2)
 
             Spacer()
 
