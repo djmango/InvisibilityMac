@@ -84,7 +84,7 @@ struct MessageScrollView: View {
                     }
 
                     FreeTierCardView()
-                        .visible(if: !userManager.canSendMessages, removeCompletely: true)
+                        .visible(if: !userManager.canSendMessages && userManager.user != nil, removeCompletely: true)
 
                     CaptureView()
                         .visible(if: screenRecorder.isRunning, removeCompletely: true)
@@ -112,6 +112,7 @@ struct MessageScrollView: View {
             .scrollIndicators(.never)
             .defaultScrollAnchor(.bottom)
             .animation(AppConfig.snappy, value: numMessagesDisplayed)
+            .animation(AppConfig.snappy, value: userManager.canSendMessages)
             .onAppear {
                 scrollProxy = proxy
             }

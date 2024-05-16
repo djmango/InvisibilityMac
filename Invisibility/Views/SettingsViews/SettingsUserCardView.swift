@@ -15,6 +15,14 @@ struct SettingsUserCardView: View {
     @Environment(\.colorScheme) var colorScheme
     @State private var isHoveringUserDetails = false
 
+    var friendsInvitedText: String {
+        if userManager.inviteCount == 0 {
+            "No friends invited yet :("
+        } else {
+            "\(userManager.inviteCount) friend" + (userManager.inviteCount > 1 ? "s invited!" : " invited!")
+        }
+    }
+
     var body: some View {
         VStack(alignment: .center) {
             Group {
@@ -78,7 +86,7 @@ struct SettingsUserCardView: View {
             }
             .buttonStyle(.link)
 
-            Text("\(userManager.inviteCount) friends invited")
+            Text(friendsInvitedText)
                 .font(.caption)
                 .padding(.bottom, 10)
 
