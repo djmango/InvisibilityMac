@@ -37,6 +37,7 @@ struct OnboardingAccountView: View {
                 )
                 .contentShape(RoundedRectangle(cornerRadius: 12))
             }
+            .disabled(userManager.user == nil)
             .buttonStyle(.plain)
             .keyboardShortcut(.defaultAction)
             .transition(

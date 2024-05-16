@@ -30,10 +30,6 @@ class CaptureEngine: NSObject, @unchecked Sendable {
     private let videoSampleBufferQueue = DispatchQueue(label: "com.example.apple-samplecode.VideoSampleBufferQueue")
     private let audioSampleBufferQueue = DispatchQueue(label: "com.example.apple-samplecode.AudioSampleBufferQueue")
 
-    // Performs average and peak power calculations on the audio samples.
-    private let powerMeter = PowerMeter()
-    var audioLevels: AudioLevels { powerMeter.levels }
-
     // Store the the startCapture continuation, so that you can cancel it when you call stopCapture().
     private var continuation: AsyncThrowingStream<CapturedFrame, Error>.Continuation?
 
@@ -51,7 +47,7 @@ class CaptureEngine: NSObject, @unchecked Sendable {
                 self?.latestFrame = frame // Store the latest frame
                 continuation.yield(frame)
             }
-            streamOutput.pcmBufferHandler = { self.powerMeter.process(buffer: $0) }
+            // streamOutput.pcmBufferHandler = { self.powerMeter.process(buffer: $0) }
 
             do {
                 stream = SCStream(filter: filter, configuration: configuration, delegate: streamOutput)
@@ -73,7 +69,6 @@ class CaptureEngine: NSObject, @unchecked Sendable {
         } catch {
             continuation?.finish(throwing: error)
         }
-        powerMeter.processSilence()
     }
 
     /// - Tag: UpdateStreamConfiguration

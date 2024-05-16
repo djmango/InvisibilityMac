@@ -11,7 +11,7 @@ import SwiftUI
 
 struct MessageButtonItemView: View {
     private let action: () -> Void
-    private let label: String
+    private let label: String?
     private let icon: String
     private let shortcut_hint: String?
     private let iconColor: Color
@@ -24,7 +24,7 @@ struct MessageButtonItemView: View {
     @State private var isHovering: Bool = false
     @Binding private var whoIsHovering: String?
 
-    init(label: String,
+    init(label: String?,
          icon: String,
          shortcut_hint: String?,
          whoIsHovering: Binding<String?>,
@@ -65,12 +65,13 @@ struct MessageButtonItemView: View {
                             .kerning(resized ? 0 : -1)
                     }
                 }
-
-                Text(label)
-                    .font(.title3)
-                    .foregroundColor(Color("ChatButtonForegroundColor"))
-                    .visible(if: isHovering && animateButtons && !ShortcutViewModel.shared.modifierFlags.contains(.command), removeCompletely: true)
-                    .padding(.leading, 8)
+                if let label {
+                    Text(label)
+                        .font(.title3)
+                        .foregroundColor(Color("ChatButtonForegroundColor"))
+                        .visible(if: isHovering && animateButtons && !ShortcutViewModel.shared.modifierFlags.contains(.command), removeCompletely: true)
+                        .padding(.leading, 8)
+                }
             }
             .padding(8)
             .contentShape(RoundedRectangle(cornerRadius: 100))

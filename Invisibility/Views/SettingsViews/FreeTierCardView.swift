@@ -67,7 +67,7 @@ struct FreeTierCardView: View {
                 Button(action: {
                     UserManager.shared.pay()
                 }) {
-                    Text("Upgrade")
+                    Text("Get Free Trial")
                         .font(.system(size: 25, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.vertical, 8)

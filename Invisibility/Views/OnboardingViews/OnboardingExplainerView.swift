@@ -141,7 +141,7 @@ struct OnboardingExplainerView: View {
             }
         }
         .onAppear {
-            KeyboardShortcuts.setShortcut(.init(.g, modifiers: [.command]), for: .summon)
+            KeyboardShortcuts.setShortcut(.init(.space, modifiers: [.option]), for: .summon)
             KeyboardShortcuts.setShortcut(.init(.one, modifiers: [.command, .shift]), for: .screenshot)
         }
     }

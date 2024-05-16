@@ -28,6 +28,8 @@ final class ToastViewModel: ObservableObject {
     ) {
         self.title = title
         self.icon = icon
-        showToast = true
+        DispatchQueue.main.async {
+            self.showToast = true
+        }
     }
 }

@@ -12,7 +12,7 @@ import SwiftUIReorderableForEach
 import UniformTypeIdentifiers
 
 struct SettingsModelListView: View {
-    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
+    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.gpt4o.model.human_name
 
     @State var models: [LLMModel] = [] {
         didSet {

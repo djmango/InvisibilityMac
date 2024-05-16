@@ -158,7 +158,7 @@ final class LLMManager {
         llmModel = LLMModelRepository.enabledModels[index].human_name
     }
 
-    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
+    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.gpt4o.model.human_name
 
     private init() {
         @AppStorage("token") var token: String?
@@ -192,12 +192,19 @@ final class LLMManager {
         let chatQuery = await constructChatQuery(messages: messages.dropLast().suffix(10).map { $0 })
 
         do {
+            var receivedData: Bool = false
             for try await result in ai.chatsStream(query: chatQuery) {
+                if !receivedData { receivedData = true }
                 let content = result.choices.first?.delta.content ?? ""
                 if content.isEmpty {
                     logger.warning("No content in result")
                 }
                 processOutput(content, assistantMessage)
+            }
+            if !receivedData {
+                logger.error("No data received from chat")
+                PostHogSDK.shared.capture("chat_error", properties: ["error": "No data received from chat", "model": model.human_name])
+                ToastViewModel.shared.showToast(title: "No data received from model. Please try again.")
             }
         } catch {
             logger.error("Error in chat: \(error)")

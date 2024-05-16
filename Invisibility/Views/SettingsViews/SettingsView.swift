@@ -22,7 +22,9 @@ struct SettingsView: View {
     @AppStorage("onboardingViewed") private var onboardingViewed = false
     @AppStorage("shortcutHints") private var shortcutHints = true
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
-    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
+    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.gpt4o.model.human_name
+
+    // TODO: func to reset to default settings
 
     @State private var showingExporter = false
     @State private var document: TextDocument = TextDocument(text: "")

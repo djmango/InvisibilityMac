@@ -20,7 +20,7 @@ struct CaptureView: View {
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
     var xOffset: CGFloat {
-        sideSwitched ? -15 : 15
+        sideSwitched ? -8 : 8
     }
 
     var body: some View {
@@ -51,7 +51,7 @@ struct CaptureView: View {
                                 minimized.toggle()
                             }
                         }
-                        .offset(x: xOffset, y: -15)
+                        .offset(x: xOffset, y: -8)
 
                         Spacer()
                             .visible(if: sideSwitched, removeCompletely: true)
@@ -69,7 +69,7 @@ struct CaptureView: View {
                         ) {
                             screenRecorder.presentPicker()
                         }
-                        .offset(x: xOffset, y: -15)
+                        .offset(x: xOffset, y: -8)
 
                         Spacer()
                             .visible(if: sideSwitched, removeCompletely: true)
@@ -79,16 +79,8 @@ struct CaptureView: View {
                 }
                 .visible(if: isHovering, removeCompletely: true)
             )
-            // .padding(10)
             .onHover { hovering in
                 isHovering = hovering
-            }
-            .onAppear {
-                Task {
-                    if await !screenRecorder.canRecord {
-                        screenRecorder.isUnauthorized = true
-                    }
-                }
             }
             .visible(if: !minimized, removeCompletely: true)
             .animation(.easeInOut(duration: 0.2), value: whoIsHovering)

@@ -11,11 +11,6 @@ import PostHog
 import ScreenCaptureKit
 import SwiftUI
 
-/// A provider of audio levels from the captured samples.
-class AudioLevelsProvider: ObservableObject {
-    @Published var audioLevels = AudioLevels.zero
-}
-
 @MainActor
 class ScreenRecorder: NSObject,
     ObservableObject,
@@ -38,7 +33,6 @@ class ScreenRecorder: NSObject,
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ScreenRecorder")
 
     @Published var isRunning = false
-    @Published var isUnauthorized = false
 
     // MARK: - Video Properties
 
@@ -116,16 +110,10 @@ class ScreenRecorder: NSObject,
     @Published var isAudioCaptureEnabled = false {
         didSet {
             updateEngine()
-            if isAudioCaptureEnabled {
-                startAudioMetering()
-            } else {
-                stopAudioMetering()
-            }
         }
     }
 
     @Published var isAppAudioExcluded = false { didSet { updateEngine() } }
-    @Published private(set) var audioLevelsProvider = AudioLevelsProvider()
     // A value that specifies how often to retrieve calculated audio levels.
     private let audioLevelRefreshRate: TimeInterval = 0.1
     private var audioMeterCancellable: AnyCancellable?
@@ -180,16 +168,15 @@ class ScreenRecorder: NSObject,
         defer { PostHogSDK.shared.capture("start_recording") }
         // Exit early if already running.
         guard !isRunning else { return }
+        guard await canRecord else {
+            _ = await ScreenshotManager.shared.askForScreenRecordingPermission()
+            return
+        }
 
         if !isSetup {
             // Starting polling for available screen content.
             await monitorAvailableContent()
             isSetup = true
-        }
-
-        // If the user enables audio capture, start monitoring the audio stream.
-        if isAudioCaptureEnabled {
-            startAudioMetering()
         }
 
         do {
@@ -219,21 +206,8 @@ class ScreenRecorder: NSObject,
         defer { PostHogSDK.shared.capture("stop_recording") }
         guard isRunning else { return }
         await captureEngine.stopCapture()
-        stopAudioMetering()
         isRunning = false
         isPickerActive = false
-    }
-
-    private func startAudioMetering() {
-        audioMeterCancellable = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect().sink { [weak self] _ in
-            guard let self else { return }
-            self.audioLevelsProvider.audioLevels = self.captureEngine.audioLevels
-        }
-    }
-
-    private func stopAudioMetering() {
-        audioMeterCancellable?.cancel()
-        audioLevelsProvider.audioLevels = AudioLevels.zero
     }
 
     /// - Tag: UpdateCaptureConfig

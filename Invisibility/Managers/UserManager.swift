@@ -275,6 +275,12 @@ final class UserManager: ObservableObject {
             return
         }
 
+        defer {
+            PostHogSDK.shared.capture(
+                "send_message", properties: ["email": user.email, "num_messages_left": numMessagesLeft]
+            )
+        }
+
         if let url = URL(string: AppConfig.invisibility_api_base + "/pay/checkout?email=\(user.email)") {
             NSWorkspace.shared.open(url)
             Task { await WindowManager.shared.hideWindow() }

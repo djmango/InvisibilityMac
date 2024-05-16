@@ -59,14 +59,10 @@
 		4DA893B42B54CA5600560DAD /* OnboardingExplainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */; };
 		4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */; };
 		4DB0619A2BF1E1A9007CF7DD /* WhatsNewKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB061992BF1E1A9007CF7DD /* WhatsNewKit */; };
-		4DB061A12BF2AFF4007CF7DD /* AudioLevelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB0619B2BF2AFF4007CF7DD /* AudioLevelsView.swift */; };
 		4DB061A22BF2AFF4007CF7DD /* CapturePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB0619C2BF2AFF4007CF7DD /* CapturePreview.swift */; };
 		4DB061A72BF2AFFF007CF7DD /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061A62BF2AFFF007CF7DD /* CaptureView.swift */; };
-		4DB061A92BF2B011007CF7DD /* PowerMeter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061A82BF2B011007CF7DD /* PowerMeter.swift */; };
 		4DB061AD2BF2B031007CF7DD /* ScreenRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061AC2BF2B031007CF7DD /* ScreenRecorder.swift */; };
 		4DB061AF2BF2B038007CF7DD /* CaptureEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061AE2BF2B038007CF7DD /* CaptureEngine.swift */; };
-		4DB061B12BF2B5F7007CF7DD /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B02BF2B5F7007CF7DD /* AudioPlayer.swift */; };
-		4DB061B32BF2B6B5007CF7DD /* Synth.aif in Resources */ = {isa = PBXBuildFile; fileRef = 4DB061B22BF2B616007CF7DD /* Synth.aif */; };
 		4DB061B52BF2B82D007CF7DD /* CaptureViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */; };
 		4DB061BA2BF3FD4C007CF7DD /* SettingsUserCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */; };
 		4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */; };
@@ -142,14 +138,10 @@
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
 		4DA893B32B54CA5600560DAD /* OnboardingExplainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingExplainerView.swift; sourceTree = "<group>"; };
 		4DA893B52B54CA6100560DAD /* OnboardingAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingAccountView.swift; sourceTree = "<group>"; };
-		4DB0619B2BF2AFF4007CF7DD /* AudioLevelsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioLevelsView.swift; sourceTree = "<group>"; };
 		4DB0619C2BF2AFF4007CF7DD /* CapturePreview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CapturePreview.swift; sourceTree = "<group>"; };
 		4DB061A62BF2AFFF007CF7DD /* CaptureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
-		4DB061A82BF2B011007CF7DD /* PowerMeter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PowerMeter.swift; sourceTree = "<group>"; };
 		4DB061AC2BF2B031007CF7DD /* ScreenRecorder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenRecorder.swift; sourceTree = "<group>"; };
 		4DB061AE2BF2B038007CF7DD /* CaptureEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureEngine.swift; sourceTree = "<group>"; };
-		4DB061B02BF2B5F7007CF7DD /* AudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
-		4DB061B22BF2B616007CF7DD /* Synth.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = Synth.aif; sourceTree = "<group>"; };
 		4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureViewModel.swift; sourceTree = "<group>"; };
 		4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUserCardView.swift; sourceTree = "<group>"; };
 		4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeTierCardView.swift; sourceTree = "<group>"; };
@@ -283,7 +275,6 @@
 			children = (
 				4D61856A2B9A25E900E550D2 /* screenshot.mp4 */,
 				4DB061C42BF4B3A0007CF7DD /* shortcuts.mp4 */,
-				4DB061B22BF2B616007CF7DD /* Synth.aif */,
 				4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */,
 				4DDCE84F2B509F9800A22B1E /* Info.plist */,
 				4D8E05312B2516DE00B60D0D /* Invisibility.entitlements */,
@@ -295,10 +286,8 @@
 		4D8E05342B2516DE00B60D0D /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				4DB061B02BF2B5F7007CF7DD /* AudioPlayer.swift */,
 				4DB061AE2BF2B038007CF7DD /* CaptureEngine.swift */,
 				4DB061AC2BF2B031007CF7DD /* ScreenRecorder.swift */,
-				4DB061A82BF2B011007CF7DD /* PowerMeter.swift */,
 				4D5B4BC42B48F3320067C543 /* ImageUtils.swift */,
 				4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */,
 				4DD5E3692B6243D300C35B1C /* AppPrompts.swift */,
@@ -401,7 +390,6 @@
 			isa = PBXGroup;
 			children = (
 				4DB061A62BF2AFFF007CF7DD /* CaptureView.swift */,
-				4DB0619B2BF2AFF4007CF7DD /* AudioLevelsView.swift */,
 				4DB0619C2BF2AFF4007CF7DD /* CapturePreview.swift */,
 			);
 			path = CaptureViews;
@@ -531,7 +519,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DB061C52BF4B3A0007CF7DD /* shortcuts.mp4 in Resources */,
-				4DB061B32BF2B6B5007CF7DD /* Synth.aif in Resources */,
 				4D61856C2B9A262E00E550D2 /* screenshot.mp4 in Resources */,
 				4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */,
 				4D3BA0D52B99D472007020D2 /* invis_launch.mp3 in Resources */,
@@ -564,13 +551,10 @@
 				4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */,
 				4D2428D92BCF39CA00BE444C /* ChatPDFView.swift in Sources */,
 				4DB061BA2BF3FD4C007CF7DD /* SettingsUserCardView.swift in Sources */,
-				4DB061A92BF2B011007CF7DD /* PowerMeter.swift in Sources */,
 				4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */,
-				4DB061B12BF2B5F7007CF7DD /* AudioPlayer.swift in Sources */,
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
 				4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */,
 				4D37F2C72BDACA9900F2FC93 /* MessageLoaderView.swift in Sources */,
-				4DB061A12BF2AFF4007CF7DD /* AudioLevelsView.swift in Sources */,
 				4DB061B52BF2B82D007CF7DD /* CaptureViewModel.swift in Sources */,
 				4DB061AD2BF2B031007CF7DD /* ScreenRecorder.swift in Sources */,
 				4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */,
@@ -746,7 +730,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -761,7 +745,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -780,7 +764,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -795,7 +779,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.1.3;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

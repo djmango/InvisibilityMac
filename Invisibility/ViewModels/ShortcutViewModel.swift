@@ -12,7 +12,8 @@ import KeyboardShortcuts
 import OSLog
 
 extension KeyboardShortcuts.Name {
-    static let summon = Self("summon", default: .init(.option, modifiers: [.command]))
+    // NOTE: default keybindings are overwritten during onboarding
+    static let summon = Self("summon", default: .init(.space, modifiers: [.option]))
     static let screenshot = Self("screenshot", default: .init(.one, modifiers: [.command, .shift]))
     static let record = Self("record", default: .init(.two, modifiers: [.command, .shift]))
 }

@@ -29,7 +29,6 @@ final class MessageViewModel: ObservableObject {
     /// The height of the chat window
     @Published public var windowHeight: CGFloat = 0
 
-    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.claude3Opus.model.human_name
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
 
     private init() {
@@ -102,7 +101,7 @@ final class MessageViewModel: ObservableObject {
             properties: [
                 "num_images": message.images_data.count,
                 "message_length": message.content?.count ?? 0,
-                "model": llmModel,
+                "model": LLMManager.shared.model.human_name,
             ]
         )
         }
@@ -135,7 +134,7 @@ final class MessageViewModel: ObservableObject {
             properties: [
                 "num_images": messages.last?.images_data.count ?? 0,
                 "message_length": messages.last?.content?.count ?? 0,
-                "model": llmModel,
+                "model": LLMManager.shared.model.human_name,
             ]
         )
         }
@@ -153,19 +152,26 @@ final class MessageViewModel: ObservableObject {
         // Remove the assistant message we are regenerating from class and ModelContext
         if let assistantMessage = messages.popLast() {
             modelContext.delete(assistantMessage)
-            logger.debug("Deleted assistant message \(assistantMessage.text)")
         }
 
         // Removes the user message and presents a fresh send scenario
         if let userMessage = messages.popLast() {
-            logger.debug("Regenerating user message \(userMessage.text)")
             await send(userMessage)
         }
     }
 
     @MainActor
+    func deleteMessage(id: UUID) {
+        if let index = messages.firstIndex(where: { $0.id == id }) {
+            modelContext.delete(messages[index])
+            _ = withAnimation {
+                messages.remove(at: index)
+            }
+        }
+    }
+
+    @MainActor
     func clearChat() {
-        logger.debug("Clearing chat")
         defer { PostHogSDK.shared.capture(
             "clear_chat",
             properties: ["message_count": messages.count]
@@ -190,12 +196,6 @@ final class MessageViewModel: ObservableObject {
     }
 
     private func processOutput(output: String, message: Message) {
-        // DispatchQueue.main.async {
-        //     if !self.messages.isEmpty, let lastMessage = self.messages.last {
-        //         if lastMessage.content == nil { lastMessage.content = "" }
-        //         lastMessage.content?.append(output)
-        //     }
-        // }
         DispatchQueue.main.async {
             if message.content == nil { message.content = "" }
             message.content?.append(output)
