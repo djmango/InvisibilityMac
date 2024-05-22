@@ -85,7 +85,7 @@ enum LLMModelRepository: CaseIterable {
             )
         case .perplexitySonarOnline:
             LLMModel(
-                text: "perplexity/sonar-medium-online",
+                text: "openrouter/perplexity/llama-3-sonar-large-32k-online",
                 vision: nil,
                 human_name: "Perplexity"
             )

@@ -1,5 +1,5 @@
 {
-  "originHash" : "67ba278b584d8960089043674a18bd7766113d62c157c4af58353f69243e30a7",
+  "originHash" : "ec4e17a51d696d8b5f39ae73317463db22048fc2fbfad33ea883544e7d5cc4eb",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -61,7 +61,7 @@
       "location" : "https://github.com/djmango/markdown-webview.git",
       "state" : {
         "branch" : "master",
-        "revision" : "ad29d42775cb5ea6fb5608b3b6b4fd7e9bfb72a3"
+        "revision" : "7475aa35dc580fbde8f09e8f1943d0498cb7d3be"
       }
     },
     {
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PostHog/posthog-ios.git",
       "state" : {
-        "revision" : "d127599034e08f12f340e5e2da13090a894d55d6",
-        "version" : "3.2.4"
+        "revision" : "8b2508444962d67aa5f8770074f32d493383dafd",
+        "version" : "3.2.5"
       }
     },
     {
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/EmergeTools/Pow.git",
       "state" : {
-        "revision" : "cc014eba4b65f689cadc281ad925de5607f2adc9",
-        "version" : "1.0.3"
+        "revision" : "f0d0f3e72d42beaf2b01f1cb798e1b55902814eb",
+        "version" : "1.0.4"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "0da9c56283b8aada5ef05b16b6cbd6c2790872c4",
-        "version" : "8.25.2"
+        "revision" : "7fc7ca43967e2980d8691a8e017c118a84133aac",
+        "version" : "8.26.0"
       }
     },
     {
