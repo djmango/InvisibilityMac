@@ -36,7 +36,7 @@ struct MessageScrollView: View {
     }
 
     var body: some View {
-        let _ = Self._printChanges()
+        // let _ = Self._printChanges()
         ScrollViewReader { proxy in
             ScrollViewWithStickyHeader(
                 header: {

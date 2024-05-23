@@ -21,7 +21,7 @@ struct MessageView: View {
     }
 
     var body: some View {
-        let _ = Self._printChanges()
+        // let _ = Self._printChanges()
         VStack(alignment: .center, spacing: 0) {
             ZStack {
                 MessageScrollView()

@@ -10,7 +10,7 @@ import MarkdownWebView
 import SwiftUI
 
 struct MessageContentView: View {
-    private var message: Message
+    @ObservedObject private var message: Message
 
     private var message_content: Binding<String> {
         Binding {

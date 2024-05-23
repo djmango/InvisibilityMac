@@ -2,7 +2,6 @@ import Foundation
 import OpenAI
 import OSLog
 import PDFKit
-import SwiftData
 import SwiftUI
 
 // Alias for ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent(images: images)
@@ -13,6 +12,19 @@ enum MessageRole: String, Codable {
     case system
     case user
     case assistant
+
+    static func fromString(_ rawValue: String) -> MessageRole {
+        switch rawValue {
+        case "user":
+            .user
+        case "system":
+            .system
+        case "assistant":
+            .assistant
+        default:
+            .user
+        }
+    }
 }
 
 /// Status for message generation and processing
@@ -45,25 +57,19 @@ enum MessageStatus: String, Codable {
     }
 }
 
-@Model
 final class Message: Identifiable, ObservableObject {
     /// Unique identifier for the message
-    @Attribute(.unique) var id: UUID = UUID()
+    var id: UUID = UUID()
     /// Datetime the message was created
     var createdAt: Date = Date.now
     /// Message textual content
-    var content: String?
+    @Published var content: String?
     /// Role for message sender, system, user, or assistant
     var role: MessageRole?
     /// List of images data stored externally to avoid bloating the database
-    @Attribute(.externalStorage) var images_data: [Data] = []
+    @Published var images_data: [Data] = []
     /// Optional list of image indexes that should be hidden from the user
-    var hidden_images: [Int]? = nil
-    /// The status of the message generation and processing
-    // TODO: for chat buttons, instead of subscribing to message view use this plus a query
-    var status: MessageStatus? = MessageStatus.pending
-    /// The progress of the message processing this is generic and can be used for any processing, useful for UI
-    var progress: Double = 0.0
+    @Published var hidden_images: [Int]? = nil
 
     init(content: String? = nil, role: MessageRole? = nil, images: [Data] = [], hidden_images: [Int]? = nil) {
         self.content = content
@@ -72,17 +78,15 @@ final class Message: Identifiable, ObservableObject {
         self.hidden_images = hidden_images
     }
 
-    @Transient
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "Message")
 
     /// The full text of the message, including the audio text if it exists
-    @Transient var text: String {
+    var text: String {
         let text = content ?? ""
         return text
     }
 
     /// Transient function to get non-hidden images
-    @Transient
     var nonHiddenImages: [Data] {
         // Unwrap hidden_images and filter out hidden indexes
         let hiddenIndexes = hidden_images ?? []
@@ -121,6 +125,29 @@ extension Message {
             // Pure text
             return ChatQuery.ChatCompletionMessageParam(role: role, content: complete_text)
         }
+    }
+
+    static func fromAPI(_ message: APIMessage, files: [APIFile]) -> Message {
+        let role = MessageRole.fromString(message.role)
+
+        var imagesData: [Data] = []
+
+        // Handling files as URLs or base64 data URLs
+        for file in files {
+            if let fileURL = file.url {
+                if let url = URL(string: fileURL), url.scheme == "http" || url.scheme == "https" {
+                    // Handle real URLs and download the data
+                    if let imageData = try? Data(contentsOf: url) {
+                        imagesData.append(imageData)
+                    }
+                } else if let base64Data = Data(base64Encoded: fileURL) {
+                    // Handle base64-encoded data URLs
+                    imagesData.append(base64Data)
+                }
+            }
+        }
+
+        return Message(content: message.text, role: role, images: imagesData)
     }
 }
 

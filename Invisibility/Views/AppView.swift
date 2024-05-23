@@ -33,7 +33,6 @@ struct AppView: View {
             }
             // .handlesExternalEvents(matching: ["openURL:", "openFile:"])
             // .handlesExternalEvents(preferring: Set(arrayLiteral: "master"), allowing: Set(arrayLiteral: "*"))
-            .modelContainer(SharedModelContainer.shared.modelContainer)
             .simpleToast(isPresented: $toastViewModel.showToast, options: toastViewModel.toastOptions) {
                 HStack {
                     Image(systemName: toastViewModel.icon)

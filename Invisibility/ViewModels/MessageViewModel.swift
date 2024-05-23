@@ -3,16 +3,66 @@ import Foundation
 import OSLog
 import PDFKit
 import PostHog
-import SwiftData
 import SwiftUI
 import UniformTypeIdentifiers
+
+// Define a struct for Chat
+struct APIChat: Codable {
+    let id: UUID
+    let user_id: String
+    let name: String
+    let created_at: Date
+    let updated_at: Date
+}
+
+// Define a struct for Message
+struct APIMessage: Codable {
+    let id: UUID
+    let chat_id: UUID
+    let user_id: String
+    let text: String
+    let role: String
+    let created_at: Date
+    let updated_at: Date
+}
+
+/// Filetype representation, ensures lowercase coding keys
+enum Filetype: String, Codable, Equatable, CustomStringConvertible {
+    case jpeg
+    case pdf
+    case mp4
+    case mp3
+
+    /// Conforms to `CustomStringConvertible` for debugging output.
+    var description: String {
+        self.rawValue
+    }
+}
+
+/// File representation with necessary properties and codable conformance
+struct APIFile: Codable, Equatable {
+    let id: UUID
+    let chat_id: UUID
+    let user_id: String
+    let message_id: UUID
+    let filetype: Filetype
+    let show_to_user: Bool
+    let url: String?
+    let created_at: Date
+    let updated_at: Date
+}
+
+// Define a struct for the response
+struct APIChatsAndMessagesResponse: Codable {
+    let chats: [APIChat]
+    let messages: [APIMessage]
+    let files: [APIFile]
+}
 
 final class MessageViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
 
     static let shared = MessageViewModel()
-
-    private let modelContext = SharedModelContainer.shared.mainContext
 
     private var chatTask: Task<Void, Error>?
 
@@ -30,22 +80,56 @@ final class MessageViewModel: ObservableObject {
     @Published public var windowHeight: CGFloat = 0
 
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
+    @AppStorage("token") private var token: String?
 
     private init() {
         try? fetch()
     }
 
-    func fetch() throws {
-        let sortDescriptor = SortDescriptor(\Message.createdAt)
-        let fetchDescriptor = FetchDescriptor<Message>(
-            sortBy: [sortDescriptor]
-        )
-
-        let fetched = try modelContext.fetch(fetchDescriptor)
-        DispatchQueue.main.async {
-            self.messages = fetched
+    func fetchChatsAndMessages() async throws -> APIChatsAndMessagesResponse {
+        guard let url = URL(string: "https://cloak.i.inc/sync/all") else {
+            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
-        logger.debug("Fetched \(self.messages.count) messages")
+        guard let token else {
+            logger.warning("No token for fetch")
+            throw NSError(domain: "NoToken", code: -1, userInfo: nil)
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+
+        // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
+
+        let decoder = iso8601Decoder()
+
+        let response = try decoder.decode(APIChatsAndMessagesResponse.self, from: data)
+
+        return response
+    }
+
+    func updateMessages() async {}
+
+    func fetch() throws {
+        Task {
+            do {
+                let fetched = try await fetchChatsAndMessages()
+                // Sort by created_at
+                let mapped_messages = fetched.messages.sorted(by: { $0.created_at < $1.created_at }).map { message in
+                    Message.fromAPI(message, files: fetched.files.filter { $0.message_id == message.id })
+                }
+                logger.debug("Fetched messages: \(mapped_messages.count)")
+                DispatchQueue.main.async {
+                    withAnimation {
+                        self.messages = mapped_messages
+                    }
+                }
+            } catch {
+                logger.warning("Error fetching data: \(error)")
+            }
+        }
     }
 
     @MainActor
@@ -108,14 +192,11 @@ final class MessageViewModel: ObservableObject {
         let assistantMessage = Message(content: nil, role: .assistant)
 
         messages.append(contentsOf: [message, assistantMessage])
-        modelContext.insert(message)
-        modelContext.insert(assistantMessage)
 
         chatTask = Task {
             let lastMessageId = messages.last?.id
             await LLMManager.shared.chat(messages: messages, processOutput: processOutput)
 
-            assistantMessage.status = .complete
             await MainActor.run {
                 if let lastMessageId, messages.last?.id == lastMessageId {
                     // Only update isGenerating if the last message is the chat we are responsible for
@@ -149,10 +230,8 @@ final class MessageViewModel: ObservableObject {
             return
         }
 
-        // Remove the assistant message we are regenerating from class and ModelContext
-        if let assistantMessage = messages.popLast() {
-            modelContext.delete(assistantMessage)
-        }
+        // Remove the assistant message we are regenerating from class
+        messages.removeLast()
 
         // Removes the user message and presents a fresh send scenario
         if let userMessage = messages.popLast() {
@@ -163,7 +242,6 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func deleteMessage(id: UUID) {
         if let index = messages.firstIndex(where: { $0.id == id }) {
-            modelContext.delete(messages[index])
             _ = withAnimation {
                 messages.remove(at: index)
             }
@@ -176,9 +254,6 @@ final class MessageViewModel: ObservableObject {
             "clear_chat",
             properties: ["message_count": messages.count]
         ) }
-        for message in messages {
-            modelContext.delete(message)
-        }
         self.messages.removeAll()
     }
 

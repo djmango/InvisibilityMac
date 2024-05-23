@@ -10,9 +10,7 @@ struct InvisibilityApp: App {
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-    init() {
-        SharedModelContainer.shared = SharedModelContainer()
-    }
+    init() {}
 
     var body: some Scene {
         // Main app view is managed in delegate and WindowManager

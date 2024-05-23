@@ -177,7 +177,7 @@ final class UserManager: ObservableObject {
         return try await withCheckedThrowingContinuation { continuation in
             AF.request(urlString, method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
                 .validate()
-                .responseDecodable(of: User.self, decoder: customDecoder()) { response in
+                .responseDecodable(of: User.self, decoder: iso8601Decoder()) { response in
                     switch response.result {
                     case let .success(user):
                         self.logger.debug("Fetched user: \(user.email)")
@@ -188,22 +188,6 @@ final class UserManager: ObservableObject {
                     }
                 }
         }
-    }
-
-    func customDecoder() -> JSONDecoder {
-        let decoder = JSONDecoder()
-
-        // Define a custom DateFormatter
-        let iso8601Formatter = DateFormatter()
-        iso8601Formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        iso8601Formatter.calendar = Calendar(identifier: .iso8601)
-        iso8601Formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        iso8601Formatter.locale = Locale(identifier: "en_US_POSIX")
-
-        // Set up the decoder with the custom date decoding strategy
-        decoder.dateDecodingStrategy = .formatted(iso8601Formatter)
-
-        return decoder
     }
 
     func checkPaymentStatus() async -> Bool {

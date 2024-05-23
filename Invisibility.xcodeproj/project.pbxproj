@@ -53,6 +53,7 @@
 		4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */; };
 		4D9354292B99851E00C34A63 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4D9354282B99851E00C34A63 /* Alamofire */; };
 		4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D93542A2B99A81400C34A63 /* OnboardingManager.swift */; };
+		4D9ADB792BFEE05400A1EFC7 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */; };
 		4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */; };
 		4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893AF2B54C45300560DAD /* OnboardingView.swift */; };
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
@@ -71,7 +72,6 @@
 		4DB061C32BF4ACC2007CF7DD /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = 4DB061C22BF4ACC2007CF7DD /* SimpleToast */; };
 		4DB061C52BF4B3A0007CF7DD /* shortcuts.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 4DB061C42BF4B3A0007CF7DD /* shortcuts.mp4 */; };
 		4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */; };
-		4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC610ED2B57369B00255358 /* SharedModelContainer.swift */; };
 		4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */; };
 		4DC8B35D2BD735DA00FE5EC8 /* SwiftUIReorderableForEach in Frameworks */ = {isa = PBXBuildFile; productRef = 4DC8B35C2BD735DA00FE5EC8 /* SwiftUIReorderableForEach */; };
 		4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 4DD282DE2B4DF7050041690B /* KeyboardShortcuts */; };
@@ -133,6 +133,8 @@
 		4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContentView.swift; sourceTree = "<group>"; };
 		4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonsView.swift; sourceTree = "<group>"; };
 		4D93542A2B99A81400C34A63 /* OnboardingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingManager.swift; sourceTree = "<group>"; };
+		4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
+		4D9ADB7A2BFFD8F200A1EFC7 /* OpenAI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenAI; path = ../OpenAI; sourceTree = "<group>"; };
 		4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4DA893AF2B54C45300560DAD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
@@ -148,7 +150,6 @@
 		4DB061BD2BF4A028007CF7DD /* QRView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRView.swift; sourceTree = "<group>"; };
 		4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastViewModel.swift; sourceTree = "<group>"; };
 		4DB061C42BF4B3A0007CF7DD /* shortcuts.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = shortcuts.mp4; sourceTree = "<group>"; };
-		4DC610ED2B57369B00255358 /* SharedModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedModelContainer.swift; sourceTree = "<group>"; };
 		4DC8B3592BD7332700FE5EC8 /* SettingsModelListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModelListView.swift; sourceTree = "<group>"; };
 		4DD3A4AA2B7D7C1100E0AB94 /* String+isValidUrl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+isValidUrl.swift"; sourceTree = "<group>"; };
 		4DD5E3692B6243D300C35B1C /* AppPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppPrompts.swift; sourceTree = "<group>"; };
@@ -194,6 +195,7 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
+				4D9ADB7A2BFFD8F200A1EFC7 /* OpenAI */,
 				4D8E05272B2516DE00B60D0D /* Invisibility */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
@@ -292,6 +294,7 @@
 				4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */,
 				4DD5E3692B6243D300C35B1C /* AppPrompts.swift */,
 				4D5328332BB1244A00D25FFF /* SentryLogger.swift */,
+				4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -300,7 +303,6 @@
 			isa = PBXGroup;
 			children = (
 				4D8E05382B2516DE00B60D0D /* Message.swift */,
-				4DC610ED2B57369B00255358 /* SharedModelContainer.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -551,7 +553,6 @@
 				4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */,
 				4D2428D92BCF39CA00BE444C /* ChatPDFView.swift in Sources */,
 				4DB061BA2BF3FD4C007CF7DD /* SettingsUserCardView.swift in Sources */,
-				4DC610EE2B57369B00255358 /* SharedModelContainer.swift in Sources */,
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
 				4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */,
 				4D37F2C72BDACA9900F2FC93 /* MessageLoaderView.swift in Sources */,
@@ -589,6 +590,7 @@
 				4D2428D12BC4A39300BE444C /* ChatEditorView.swift in Sources */,
 				4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */,
 				4D2428E52BD5EC2E00BE444C /* ChatModelPicker.swift in Sources */,
+				4D9ADB792BFEE05400A1EFC7 /* Decoder.swift in Sources */,
 				4DEA4ADF2B70689B00393858 /* MenubarView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -745,7 +747,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.1.6;
+				MARKETING_VERSION = 2.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -779,7 +781,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 2.1.6;
+				MARKETING_VERSION = 2.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
