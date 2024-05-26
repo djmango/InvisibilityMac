@@ -22,12 +22,13 @@ struct APIMessage: Codable {
     let user_id: String
     let text: String
     let role: String
+    let regenerated: Bool
     let created_at: Date
     let updated_at: Date
 }
 
 /// Filetype representation, ensures lowercase coding keys
-enum Filetype: String, Codable, Equatable, CustomStringConvertible {
+enum APIFiletype: String, Codable, Equatable, CustomStringConvertible {
     case jpeg
     case pdf
     case mp4
@@ -45,7 +46,7 @@ struct APIFile: Codable, Equatable {
     let chat_id: UUID
     let user_id: String
     let message_id: UUID
-    let filetype: Filetype
+    let filetype: APIFiletype
     let show_to_user: Bool
     let url: String?
     let created_at: Date
@@ -68,6 +69,10 @@ final class MessageViewModel: ObservableObject {
 
     /// The list of messages in the chat
     @Published public var messages: [Message] = []
+    @Published public var chat: APIChat?
+    public var api_chats: [APIChat] = []
+    public var api_messages: [APIMessage] = []
+    public var api_files: [APIFile] = []
 
     /// Whether the chat is currently generating
     @Published public var isGenerating: Bool = false {
@@ -87,7 +92,7 @@ final class MessageViewModel: ObservableObject {
     }
 
     func fetchChatsAndMessages() async throws -> APIChatsAndMessagesResponse {
-        guard let url = URL(string: "https://cloak.i.inc/sync/all") else {
+        guard let url = URL(string: AppConfig.invisibility_api_base + "/sync/all") else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
         guard let token else {
@@ -110,18 +115,21 @@ final class MessageViewModel: ObservableObject {
         return response
     }
 
-    func updateMessages() async {}
-
     func fetch() throws {
         Task {
             do {
                 let fetched = try await fetchChatsAndMessages()
-                // Sort by created_at
-                let mapped_messages = fetched.messages.sorted(by: { $0.created_at < $1.created_at }).map { message in
+                self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
+                self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
+                self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
+
+                let mapped_messages = self.api_messages.map { message in
                     Message.fromAPI(message, files: fetched.files.filter { $0.message_id == message.id })
                 }
                 logger.debug("Fetched messages: \(mapped_messages.count)")
+
                 DispatchQueue.main.async {
+                    self.chat = self.api_chats.last
                     withAnimation {
                         self.messages = mapped_messages
                     }
@@ -178,7 +186,7 @@ final class MessageViewModel: ObservableObject {
     }
 
     @MainActor
-    private func send(_ message: Message) async {
+    private func send(_ message: Message, regenerate_from_message_id: UUID? = nil) async {
         isGenerating = true
         defer { PostHogSDK.shared.capture(
             "send_message",
@@ -195,7 +203,11 @@ final class MessageViewModel: ObservableObject {
 
         chatTask = Task {
             let lastMessageId = messages.last?.id
-            await LLMManager.shared.chat(messages: messages, processOutput: processOutput)
+            await LLMManager.shared.chat(
+                messages: messages,
+                processOutput: processOutput,
+                regenerate_from_message_id: regenerate_from_message_id
+            )
 
             await MainActor.run {
                 if let lastMessageId, messages.last?.id == lastMessageId {
@@ -235,7 +247,12 @@ final class MessageViewModel: ObservableObject {
 
         // Removes the user message and presents a fresh send scenario
         if let userMessage = messages.popLast() {
-            await send(userMessage)
+            // New uuid4 for the user message
+            let regenerate_from_message_id = userMessage.id
+            print(regenerate_from_message_id)
+            userMessage.id = UUID()
+            print(userMessage.id)
+            await send(userMessage, regenerate_from_message_id: regenerate_from_message_id)
         }
     }
 

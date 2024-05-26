@@ -10,7 +10,7 @@ struct MessageListItemView: View {
     @State private var isHovered: Bool = false
 
     var body: some View {
-        let _ = Self._printChanges()
+        // let _ = Self._printChanges()
         ZStack {
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
 

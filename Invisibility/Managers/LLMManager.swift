@@ -38,12 +38,9 @@ struct LLMModel: Codable, Equatable, Hashable, Identifiable {
 enum LLMModelRepository: CaseIterable {
     case gpt4o
     case claude3Opus
-    case claude3Haiku
     case llama3_70b
     case geminiPro
-    case gpt4
     case perplexitySonarOnline
-    case perplexityMixtral
 
     var model: LLMModel {
         switch self {
@@ -59,12 +56,6 @@ enum LLMModelRepository: CaseIterable {
                 vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
                 human_name: "Claude-3 Opus"
             )
-        case .claude3Haiku:
-            LLMModel(
-                text: "claude-3-haiku-20240307",
-                vision: "claude-3-haiku-20240307",
-                human_name: "Claude-3 Haiku"
-            )
         case .llama3_70b:
             LLMModel(
                 text: "groq/llama3-70b-8192",
@@ -77,23 +68,11 @@ enum LLMModelRepository: CaseIterable {
                 vision: "openrouter/google/gemini-pro-1.5",
                 human_name: "Gemini Pro 1.5"
             )
-        case .gpt4:
-            LLMModel(
-                text: "gpt-4-turbo-2024-04-09",
-                vision: "gpt-4-turbo-2024-04-09",
-                human_name: "GPT-4 Turbo"
-            )
         case .perplexitySonarOnline:
             LLMModel(
                 text: "openrouter/perplexity/llama-3-sonar-large-32k-online",
                 vision: nil,
                 human_name: "Perplexity"
-            )
-        case .perplexityMixtral:
-            LLMModel(
-                text: "perplexity/mixtral-8x7b-instruct",
-                vision: nil,
-                human_name: "Mixtral"
             )
         }
     }
@@ -181,7 +160,8 @@ final class LLMManager {
 
     func chat(
         messages: [Message],
-        processOutput: @escaping (String, Message) -> Void
+        processOutput: @escaping (String, Message) -> Void,
+        regenerate_from_message_id: UUID? = nil
     ) async {
         guard let assistantMessage = messages.last else {
             logger.error("No messages in chat query")
@@ -189,7 +169,10 @@ final class LLMManager {
         }
 
         // Drop last to avoid sending the empty assistant message to the LLM
-        let chatQuery = await constructChatQuery(messages: messages.dropLast().suffix(10).map { $0 })
+        let chatQuery = await constructChatQuery(
+            messages: messages.dropLast().suffix(10).map { $0 },
+            regenerate_from_message_id: regenerate_from_message_id
+        )
 
         do {
             var receivedData: Bool = false
@@ -213,7 +196,7 @@ final class LLMManager {
         }
     }
 
-    func constructChatQuery(messages: [Message]) async -> ChatQuery {
+    func constructChatQuery(messages: [Message], regenerate_from_message_id: UUID? = nil) async -> ChatQuery {
         var messages = messages
 
         // If the last message has any images use the vision model, otherwise use the regular model
@@ -239,7 +222,30 @@ final class LLMManager {
             message.toChat(allow_images: allow_images)
         }
 
-        // If the last message has any images use the vision model, otherwise use the regular model
-        return ChatQuery(messages: chat_messages, model: model_id)
+        var chat_query = ChatQuery(messages: chat_messages, model: model_id)
+
+        if let chat = MessageViewModel.shared.chat, let last_message = messages.last {
+            var show_files_to_user: [Bool] = Array(repeating: true, count: last_message.images_data.count)
+
+            // Iterate through the hidden images' indexes and mark the corresponding values as false
+            if let hidden_images = last_message.hidden_images {
+                for index in hidden_images {
+                    if index < show_files_to_user.count {
+                        show_files_to_user[index] = false
+                    }
+                }
+            }
+            print(last_message.id)
+
+            chat_query.invisibility = ChatQuery.InvisibilityMetadata(
+                chat_id: chat.id,
+                user_message_id: last_message.id,
+                // assistant_message_id: last_message.id,
+                show_files_to_user: show_files_to_user,
+                regenerate_from_message_id: regenerate_from_message_id
+            )
+        }
+
+        return chat_query
     }
 }

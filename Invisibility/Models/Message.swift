@@ -27,58 +27,35 @@ enum MessageRole: String, Codable {
     }
 }
 
-/// Status for message generation and processing
-enum MessageStatus: String, Codable {
-    case pending
-    case chat_generation
-    case audio_generation
-    case chunk_summary_generation
-    case email_generation
-    case complete
-    case error
-
-    var description: String {
-        switch self {
-        case .pending:
-            "Pending"
-        case .chat_generation:
-            "Chatting"
-        case .audio_generation:
-            "Transcribing Audio"
-        case .chunk_summary_generation:
-            "Summarizing"
-        case .email_generation:
-            "Drafting Email"
-        case .complete:
-            "Complete"
-        case .error:
-            "Error"
-        }
-    }
-}
-
 final class Message: Identifiable, ObservableObject {
     /// Unique identifier for the message
-    var id: UUID = UUID()
+    var id: UUID
     /// Datetime the message was created
-    var createdAt: Date = Date.now
+    var created_at: Date
     /// Message textual content
     @Published var content: String?
     /// Role for message sender, system, user, or assistant
     var role: MessageRole?
     /// List of images data stored externally to avoid bloating the database
-    @Published var images_data: [Data] = []
+    var images_data: [Data]
     /// Optional list of image indexes that should be hidden from the user
-    @Published var hidden_images: [Int]? = nil
+    var hidden_images: [Int]?
 
-    init(content: String? = nil, role: MessageRole? = nil, images: [Data] = [], hidden_images: [Int]? = nil) {
+    init(
+        id: UUID = UUID(),
+        created_at: Date = Date.now,
+        content: String? = nil,
+        role: MessageRole? = nil,
+        images: [Data] = [],
+        hidden_images: [Int]? = nil
+    ) {
+        self.id = id
+        self.created_at = created_at
         self.content = content
         self.role = role
         self.images_data = images
         self.hidden_images = hidden_images
     }
-
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "Message")
 
     /// The full text of the message, including the audio text if it exists
     var text: String {
@@ -131,23 +108,40 @@ extension Message {
         let role = MessageRole.fromString(message.role)
 
         var imagesData: [Data] = []
+        var hiddenImageIndexes: [Int] = []
 
         // Handling files as URLs or base64 data URLs
-        for file in files {
+        for (index, file) in files.enumerated() {
             if let fileURL = file.url {
                 if let url = URL(string: fileURL), url.scheme == "http" || url.scheme == "https" {
                     // Handle real URLs and download the data
                     if let imageData = try? Data(contentsOf: url) {
                         imagesData.append(imageData)
                     }
-                } else if let base64Data = Data(base64Encoded: fileURL) {
-                    // Handle base64-encoded data URLs
-                    imagesData.append(base64Data)
+                } else {
+                    // Handle base64-encoded data URLs by stripping the prefix
+                    if let base64Range = fileURL.range(of: "base64,") {
+                        let base64String = String(fileURL[base64Range.upperBound...])
+                        if let base64Data = Data(base64Encoded: base64String) {
+                            if file.show_to_user == false {
+                                // Hide the image from the user
+                                hiddenImageIndexes.append(index)
+                            }
+                            imagesData.append(base64Data)
+                        }
+                    }
                 }
             }
         }
 
-        return Message(content: message.text, role: role, images: imagesData)
+        return Message(
+            id: message.id,
+            created_at: message.created_at,
+            content: message.text,
+            role: role,
+            images: imagesData,
+            hidden_images: hiddenImageIndexes
+        )
     }
 }
 

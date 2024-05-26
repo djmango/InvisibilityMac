@@ -134,7 +134,7 @@
 		4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonsView.swift; sourceTree = "<group>"; };
 		4D93542A2B99A81400C34A63 /* OnboardingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingManager.swift; sourceTree = "<group>"; };
 		4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
-		4D9ADB7A2BFFD8F200A1EFC7 /* OpenAI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenAI; path = ../OpenAI; sourceTree = "<group>"; };
+		4D9ADB7B2C001E1500A1EFC7 /* OpenAI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenAI; path = ../OpenAI; sourceTree = "<group>"; };
 		4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4DA893AF2B54C45300560DAD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
-				4D9ADB7A2BFFD8F200A1EFC7 /* OpenAI */,
+				4D9ADB7B2C001E1500A1EFC7 /* OpenAI */,
 				4D8E05272B2516DE00B60D0D /* Invisibility */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
