@@ -249,9 +249,7 @@ final class MessageViewModel: ObservableObject {
         if let userMessage = messages.popLast() {
             // New uuid4 for the user message
             let regenerate_from_message_id = userMessage.id
-            print(regenerate_from_message_id)
             userMessage.id = UUID()
-            print(userMessage.id)
             await send(userMessage, regenerate_from_message_id: regenerate_from_message_id)
         }
     }

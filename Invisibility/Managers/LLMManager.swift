@@ -235,12 +235,10 @@ final class LLMManager {
                     }
                 }
             }
-            print(last_message.id)
 
             chat_query.invisibility = ChatQuery.InvisibilityMetadata(
                 chat_id: chat.id,
                 user_message_id: last_message.id,
-                // assistant_message_id: last_message.id,
                 show_files_to_user: show_files_to_user,
                 regenerate_from_message_id: regenerate_from_message_id
             )
