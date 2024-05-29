@@ -1,64 +1,8 @@
 import CoreGraphics
 import Foundation
 import OSLog
-import PDFKit
 import PostHog
 import SwiftUI
-import UniformTypeIdentifiers
-
-// Define a struct for Chat
-struct APIChat: Codable {
-    let id: UUID
-    let user_id: String
-    let name: String
-    let created_at: Date
-    let updated_at: Date
-}
-
-// Define a struct for Message
-struct APIMessage: Codable {
-    let id: UUID
-    let chat_id: UUID
-    let user_id: String
-    let text: String
-    let role: String
-    let regenerated: Bool
-    let created_at: Date
-    let updated_at: Date
-}
-
-/// Filetype representation, ensures lowercase coding keys
-enum APIFiletype: String, Codable, Equatable, CustomStringConvertible {
-    case jpeg
-    case pdf
-    case mp4
-    case mp3
-
-    /// Conforms to `CustomStringConvertible` for debugging output.
-    var description: String {
-        self.rawValue
-    }
-}
-
-/// File representation with necessary properties and codable conformance
-struct APIFile: Codable, Equatable {
-    let id: UUID
-    let chat_id: UUID
-    let user_id: String
-    let message_id: UUID
-    let filetype: APIFiletype
-    let show_to_user: Bool
-    let url: String?
-    let created_at: Date
-    let updated_at: Date
-}
-
-// Define a struct for the response
-struct APIChatsAndMessagesResponse: Codable {
-    let chats: [APIChat]
-    let messages: [APIMessage]
-    let files: [APIFile]
-}
 
 final class MessageViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
@@ -67,52 +11,19 @@ final class MessageViewModel: ObservableObject {
 
     private var chatTask: Task<Void, Error>?
 
-    /// The list of messages in the chat
     @Published public var messages: [Message] = []
     @Published public var chat: APIChat?
-    public var api_chats: [APIChat] = []
+    @Published public var api_chats: [APIChat] = []
     public var api_messages: [APIMessage] = []
     public var api_files: [APIFile] = []
-
-    /// Whether the chat is currently generating
-    @Published public var isGenerating: Bool = false {
-        didSet {
-            logger.debug("Generating: \(isGenerating)")
-        }
-    }
-
-    /// The height of the chat window
     @Published public var windowHeight: CGFloat = 0
+    @Published public var isGenerating: Bool = false
 
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
     @AppStorage("token") private var token: String?
 
     private init() {
         try? fetch()
-    }
-
-    func fetchChatsAndMessages() async throws -> APIChatsAndMessagesResponse {
-        guard let url = URL(string: AppConfig.invisibility_api_base + "/sync/all") else {
-            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
-        }
-        guard let token else {
-            logger.warning("No token for fetch")
-            throw NSError(domain: "NoToken", code: -1, userInfo: nil)
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-        let (data, _) = try await URLSession.shared.data(for: request)
-
-        // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
-
-        let decoder = iso8601Decoder()
-
-        let response = try decoder.decode(APIChatsAndMessagesResponse.self, from: data)
-
-        return response
     }
 
     func fetch() throws {
@@ -140,12 +51,37 @@ final class MessageViewModel: ObservableObject {
         }
     }
 
+    func fetchChatsAndMessages() async throws -> APIChatsAndMessagesResponse {
+        guard let url = URL(string: AppConfig.invisibility_api_base + "/sync/all") else {
+            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
+        }
+        guard let token else {
+            logger.warning("No token for fetch")
+            throw NSError(domain: "NoToken", code: -1, userInfo: nil)
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        let (data, _) = try await URLSession.shared.data(for: request)
+
+        // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
+
+        let decoder = iso8601Decoder()
+
+        let response = try decoder.decode(APIChatsAndMessagesResponse.self, from: data)
+
+        return response
+    }
+
     @MainActor
     func sendFromChat() async {
         // Stop the chat from generating if it is
         if isGenerating { stopGenerating() }
 
         // If the user has exceeded the daily message limit, don't send the message and pop up an alert
+        print(UserManager.shared.numMessagesLeft)
         if !UserManager.shared.canSendMessages {
             ToastViewModel.shared.showToast(
                 title: "Daily message limit reached"
@@ -264,12 +200,32 @@ final class MessageViewModel: ObservableObject {
     }
 
     @MainActor
-    func clearChat() {
-        defer { PostHogSDK.shared.capture(
-            "clear_chat",
-            properties: ["message_count": messages.count]
-        ) }
+    func newChat() {
+        defer { PostHogSDK.shared.capture("new_chat") }
+        guard let user = UserManager.shared.user else {
+            logger.error("User not found")
+            return
+        }
+
+        chat = APIChat(
+            id: UUID(),
+            user_id: user.id,
+            name: "New Chat",
+            created_at: Date(),
+            updated_at: Date()
+        )
+
         self.messages.removeAll()
+    }
+
+    @MainActor
+    func switchChat(_ chat: APIChat) {
+        defer { PostHogSDK.shared.capture("switch_chat") }
+        self.chat = chat
+        self.messages.removeAll()
+        self.api_messages.filter { $0.chat_id == chat.id }.forEach { message in
+            self.messages.append(Message.fromAPI(message, files: self.api_files.filter { $0.message_id == message.id }))
+        }
     }
 
     @MainActor
@@ -289,158 +245,6 @@ final class MessageViewModel: ObservableObject {
         DispatchQueue.main.async {
             if message.content == nil { message.content = "" }
             message.content?.append(output)
-        }
-    }
-}
-
-// @MARK File Handler
-extension MessageViewModel {
-    /// Public function that can be called to begin the file open process
-    func openFile() {
-        let openPanel = NSOpenPanel()
-        openPanel.allowsMultipleSelection = false
-        openPanel.canChooseFiles = true
-        openPanel.canChooseDirectories = false
-
-        // Define allowed content types using UTType
-        openPanel.allowedContentTypes = [
-            UTType.image,
-        ]
-
-        // Technically doesn't work for the following types:
-        // SVGs: Our image standardization function doesn't support SVGs
-        // TODO: fix the above issues
-
-        openPanel.begin { result in
-            if result == .OK, let url = openPanel.url {
-                self.handleFile(url)
-            }
-        }
-
-        PostHogSDK.shared.capture("open_file")
-    }
-
-    func handleDrop(providers: [NSItemProvider]) -> Bool {
-        // logger.debug("Handling drop")
-        // logger.debug("Providers: \(providers)")
-        for provider in providers {
-            // logger.debug("Provider: \(provider.description)")
-            // logger.debug("Provider types: \(provider.registeredTypeIdentifiers)")
-            if provider.hasItemConformingToTypeIdentifier("public.file-url") {
-                provider.loadItem(forTypeIdentifier: "public.file-url", options: nil) { item, error in
-                    guard error == nil else {
-                        self.logger.error("Error loading the dropped item: \(error!)")
-                        return
-                    }
-                    if let data = item as? Data, let url = URL(dataRepresentation: data, relativeTo: nil) {
-                        // Process the file URL
-                        // self.logger.debug("File URL: \(url)")
-                        self.handleFile(url)
-                    }
-                }
-            } else {
-                logger.error("Unsupported item provider type")
-            }
-        }
-        return true
-    }
-
-    /// Public function that handles file via a URL regarding a message
-    public func handleFile(_ url: URL) {
-        defer {
-            PostHogSDK.shared.capture("handle_file")
-        }
-        // First determine if we are dealing with an image or audio file
-        logger.debug("Selected file \(url)")
-        if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
-            // Check if it's an image type
-            if fileType.conforms(to: .image) {
-                logger.debug("Selected file \(url) is an image.")
-                handleImage(url: url)
-            } else if fileType.conforms(to: .pdf) {
-                logger.debug("Selected file \(url) is a PDF.")
-                handlePDF(url: url)
-            } else if fileType.conforms(to: .text) {
-                logger.debug("Selected file \(url) is a text file.")
-                handleText(url: url)
-            } else {
-                logger.error("Selected file \(url) is of an unknown type.")
-                ToastViewModel.shared.showToast(
-                    title: "Unknown file type"
-                )
-            }
-        }
-    }
-
-    private func handleImage(url: URL) {
-        defer { PostHogSDK.shared.capture("handle_image") }
-        guard let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) else {
-            logger.error("Failed to create image source from url.")
-            return
-        }
-        guard let cgImage = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) else {
-            logger.error("Failed to create image from image source.")
-            return
-        }
-
-        // Standardize and convert the image to a base64 string and store it in the view model
-        guard let standardizedImage = standardizeImage(cgImage) else {
-            logger.error("Failed to standardize image.")
-            return
-        }
-
-        DispatchQueue.main.async {
-            ChatViewModel.shared.addImage(standardizedImage)
-        }
-    }
-
-    private func handlePDF(url: URL) {
-        defer { PostHogSDK.shared.capture("handle_pdf") }
-        guard let pdf = PDFDocument(url: url) else {
-            logger.error("Failed to read PDF data from url.")
-            return
-        }
-
-        guard let data = pdf.dataRepresentation() else {
-            logger.error("Failed to get data representation from PDF.")
-            return
-        }
-
-        var complete_text = ""
-
-        // Insert PDF attributedString if available
-        if let pdf = PDFDocument(url: url) {
-            let pageCount = pdf.pageCount
-            let documentContent = NSMutableAttributedString()
-
-            for i in 0 ..< pageCount {
-                guard let page = pdf.page(at: i) else { continue }
-                guard let pageContent = page.attributedString else { continue }
-                documentContent.append(pageContent)
-            }
-
-            complete_text += documentContent.string
-        }
-
-        DispatchQueue.main.async {
-            TextViewModel.shared.text += complete_text.trimmingCharacters(in: .whitespacesAndNewlines)
-        }
-    }
-
-    private func handleText(url: URL) {
-        defer { PostHogSDK.shared.capture("handle_text") }
-        guard let data = try? Data(contentsOf: url) else {
-            logger.error("Failed to read text data from url.")
-            return
-        }
-
-        guard let text = String(data: data, encoding: .utf8) else {
-            logger.error("Failed to convert text data to string.")
-            return
-        }
-
-        DispatchQueue.main.async {
-            TextViewModel.shared.text += text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 }

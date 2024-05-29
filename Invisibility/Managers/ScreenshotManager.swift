@@ -19,8 +19,6 @@ class ScreenshotManager {
 
     static let shared = ScreenshotManager()
 
-    private let messageViewModel: MessageViewModel = MessageViewModel.shared
-
     var task: Process?
     let sceenCaptureURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
 
@@ -43,7 +41,7 @@ class ScreenshotManager {
 
         WindowManager.shared.hideWindow(completion: {
             guard let url = self.captureImageToURL() else { return }
-            self.messageViewModel.handleFile(url)
+            InvisibilityFileManager.handleFile(url)
             WindowManager.shared.showWindow()
             try? FileManager.default.removeItem(atPath: self.screenShotFilePath)
         })

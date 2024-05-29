@@ -7,6 +7,7 @@ struct MessageView: View {
 
     @State private var isDragActive: Bool = false
     @State private var xOffset: CGFloat = -1000
+    @State private var isShowingHistory: Bool = false
 
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject private var settingsViewModel = SettingsViewModel.shared
@@ -25,7 +26,10 @@ struct MessageView: View {
         VStack(alignment: .center, spacing: 0) {
             ZStack {
                 MessageScrollView()
-                    .sentryTrace("ScrollView")
+                    .visible(if: !isShowingHistory, removeCompletely: true)
+
+                HistoryView()
+                    .visible(if: isShowingHistory, removeCompletely: true)
 
                 Rectangle()
                     .foregroundColor(Color.white.opacity(0.001))
@@ -44,8 +48,7 @@ struct MessageView: View {
             Spacer()
 
             // Action Icons
-            ChatButtonsView()
-                .sentryTrace("ChatButtonsView")
+            ChatButtonsView(isShowingHistory: $isShowingHistory)
                 .frame(maxHeight: 40)
 
             Spacer()
@@ -58,7 +61,6 @@ struct MessageView: View {
                 .padding(.top, 4)
                 .padding(.bottom, 10)
                 .scrollIndicators(.never)
-                .sentryTrace("ChatField")
         }
         .animation(AppConfig.snappy, value: chatViewModel.textHeight)
         .animation(AppConfig.snappy, value: chatViewModel.images)
@@ -69,7 +71,7 @@ struct MessageView: View {
                 .foregroundColor(Color.gray.opacity(0.2))
                 .opacity(isDragActive ? 1 : 0)
                 .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
-                    MessageViewModel.shared.handleDrop(providers: providers)
+                    InvisibilityFileManager.handleDrop(providers: providers)
                 }
                 // This is critical to make the reorderable model list work
                 .hide(if: SettingsViewModel.shared.showSettings, removeCompletely: true)
@@ -99,7 +101,6 @@ struct MessageView: View {
                 }
             }
         }
-        .sentryTrace("MessageView")
         // .whatsNewSheet()
     }
 }

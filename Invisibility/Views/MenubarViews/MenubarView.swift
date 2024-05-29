@@ -1,5 +1,5 @@
 //
-//  MenuBarView.swift
+//  MenubarView.swift
 //  Invisibility
 //
 //  Created by Sulaiman Ghori on 2/4/24.
@@ -36,10 +36,11 @@ struct MenubarView: View {
             }
             .disabled(!updaterViewModel.canCheckForUpdates)
 
-            SettingsLink(label: {
-                Text("Settings")
-            })
-            .keyboardShortcut(",", modifiers: .command)
+            Button("Settings") {
+                WindowManager.shared.showWindow()
+                SettingsViewModel.shared.showSettings.toggle()
+            }
+            .keyboardShortcut(",", modifiers: [.command])
 
             Divider()
 

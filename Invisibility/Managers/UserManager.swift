@@ -88,7 +88,8 @@ final class UserManager: ObservableObject {
 
     /// per day free 10 messages + 20 per invite also per day
     var numMessagesAllowed: Int {
-        10 + (20 * inviteCount)
+        // 10 + (20 * inviteCount)
+        10
     }
 
     var numMessagesLeft: Int {
@@ -115,6 +116,7 @@ final class UserManager: ObservableObject {
 
     @MainActor
     func setup() async {
+        numMessagesSentToday = 9
         resetMessagesIfNeeded()
         if await userIsLoggedIn() {
             self.confettis = 1

@@ -29,10 +29,8 @@ struct AppView: View {
         MessageView()
             .pasteDestination(for: URL.self) { urls in
                 guard let url = urls.first else { return }
-                MessageViewModel.shared.handleFile(url)
+                InvisibilityFileManager.handleFile(url)
             }
-            // .handlesExternalEvents(matching: ["openURL:", "openFile:"])
-            // .handlesExternalEvents(preferring: Set(arrayLiteral: "master"), allowing: Set(arrayLiteral: "*"))
             .simpleToast(isPresented: $toastViewModel.showToast, options: toastViewModel.toastOptions) {
                 HStack {
                     Image(systemName: toastViewModel.icon)

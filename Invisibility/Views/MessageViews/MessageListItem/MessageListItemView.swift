@@ -15,11 +15,6 @@ struct MessageListItemView: View {
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
 
             MessageContentView(message: message)
-
-            MessageActionButtonsView(
-                message: message,
-                isHovered: $isHovered
-            )
         }
         .onHover {
             if $0 {
@@ -28,6 +23,12 @@ struct MessageListItemView: View {
                 isHovered = false
             }
         }
+        .overlay(
+            MessageActionButtonsView(
+                message: message,
+                isHovered: $isHovered
+            )
+        )
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color(nsColor: .separatorColor))

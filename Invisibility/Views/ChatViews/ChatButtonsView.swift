@@ -12,8 +12,6 @@ import SwiftUI
 struct ChatButtonsView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatButtonsView")
 
-    private let screenshotManager = ScreenshotManager.shared
-
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("betaFeatures") private var betaFeatures: Bool = false
     @AppStorage("resized") private var resized: Bool = false
@@ -24,11 +22,13 @@ struct ChatButtonsView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
     private var windowManager: WindowManager = WindowManager.shared
+    private let screenshotManager = ScreenshotManager.shared
 
     @State private var whoIsHovering: String?
+    @Binding var isShowingHistory: Bool
 
-    private var isDisplayingModelPicker: Bool {
-        whoIsHovering == "Models"
+    init(isShowingHistory: Binding<Bool>) {
+        self._isShowingHistory = isShowingHistory
     }
 
     var body: some View {
@@ -45,7 +45,7 @@ struct ChatButtonsView: View {
                     Task { await screenshotManager.capture() }
                 }
                 .keyboardShortcut("1", modifiers: [.command, .shift])
-                .hide(if: isDisplayingModelPicker, removeCompletely: true)
+                .visible(if: !isShowingHistory, removeCompletely: true)
 
                 // Video
                 MessageButtonItemView(
@@ -58,6 +58,33 @@ struct ChatButtonsView: View {
                     screenRecorder.toggleRecording()
                 }
                 .keyboardShortcut("2", modifiers: [.command, .shift])
+                .visible(if: !isShowingHistory, removeCompletely: true)
+
+                // New Chat
+                MessageButtonItemView(
+                    label: "New Chat",
+                    icon: "plus",
+                    shortcut_hint: "⌘ N",
+                    whoIsHovering: $whoIsHovering
+                ) {
+                    MessageViewModel.shared.newChat()
+                    isShowingHistory = false
+                }
+                .keyboardShortcut("n", modifiers: [.command])
+                .visible(if: isShowingHistory, removeCompletely: true)
+
+                // Search Chat History
+                MessageButtonItemView(
+                    label: "History",
+                    icon: "magnifyingglass",
+                    shortcut_hint: "⌘ F",
+                    whoIsHovering: $whoIsHovering
+                ) {
+                    withAnimation(AppConfig.easeIn) {
+                        isShowingHistory.toggle()
+                    }
+                }
+                .keyboardShortcut("f", modifiers: [.command])
 
                 // Settings
                 MessageButtonItemView(
@@ -66,28 +93,9 @@ struct ChatButtonsView: View {
                     shortcut_hint: "⌘ ,",
                     whoIsHovering: $whoIsHovering
                 ) {
-                    DispatchQueue.main.async {
-                        SettingsViewModel.shared.showSettings.toggle()
-                    }
+                    SettingsViewModel.shared.showSettings.toggle()
                 }
                 .keyboardShortcut(",", modifiers: [.command])
-                .hide(if: isDisplayingModelPicker, removeCompletely: true)
-
-                // Models
-                // ChatModelPicker(whoIsHovering: $whoIsHovering)
-
-                // Clear Chat
-                MessageButtonItemView(
-                    label: "Clear Chat",
-                    icon: "rays",
-                    shortcut_hint: "⌘ ⇧ ⌫",
-                    whoIsHovering: $whoIsHovering
-                ) {
-                    messageViewModel.clearChat()
-                }
-                .keyboardShortcut(.delete, modifiers: [.command, .shift])
-                .hide(if: messageViewModel.messages.count == 0, removeCompletely: true)
-                .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
                 // Stop generating
                 MessageButtonItemView(
@@ -101,7 +109,7 @@ struct ChatButtonsView: View {
                 }
                 .keyboardShortcut("p", modifiers: [.command])
                 .visible(if: messageViewModel.isGenerating, removeCompletely: true)
-                .hide(if: isDisplayingModelPicker, removeCompletely: true)
+                .visible(if: !isShowingHistory, removeCompletely: true)
 
                 // Resize
                 MessageButtonItemView(
@@ -113,7 +121,6 @@ struct ChatButtonsView: View {
                     resizeAction()
                 }
                 .keyboardShortcut("b", modifiers: [.command, .shift])
-                .hide(if: isDisplayingModelPicker, removeCompletely: true)
 
                 // Switch Sides
                 MessageButtonItemView(
@@ -125,7 +132,6 @@ struct ChatButtonsView: View {
                     switchSide()
                 }
                 .keyboardShortcut("s", modifiers: [.command, .shift])
-                .hide(if: isDisplayingModelPicker, removeCompletely: true)
             }
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
@@ -145,10 +151,6 @@ struct ChatButtonsView: View {
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(AppConfig.snappy, value: betaFeatures)
         .frame(maxWidth: resized ? 500 : 380)
-    }
-
-    private func openFileAction() {
-        messageViewModel.openFile()
     }
 
     @MainActor

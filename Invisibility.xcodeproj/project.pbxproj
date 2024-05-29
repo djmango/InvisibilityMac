@@ -54,6 +54,10 @@
 		4D9354292B99851E00C34A63 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4D9354282B99851E00C34A63 /* Alamofire */; };
 		4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D93542A2B99A81400C34A63 /* OnboardingManager.swift */; };
 		4D9ADB792BFEE05400A1EFC7 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */; };
+		4D9ADB7E2C07BBBE00A1EFC7 /* HistoryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB7D2C07BBBE00A1EFC7 /* HistoryCardView.swift */; };
+		4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB7F2C07BBC500A1EFC7 /* HistoryView.swift */; };
+		4D9ADB822C07E1EF00A1EFC7 /* InvisibilityFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB812C07E1EF00A1EFC7 /* InvisibilityFileManager.swift */; };
+		4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB832C07E59700A1EFC7 /* APITypes.swift */; };
 		4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */; };
 		4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893AF2B54C45300560DAD /* OnboardingView.swift */; };
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
@@ -134,7 +138,10 @@
 		4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonsView.swift; sourceTree = "<group>"; };
 		4D93542A2B99A81400C34A63 /* OnboardingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingManager.swift; sourceTree = "<group>"; };
 		4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
-		4D9ADB7B2C001E1500A1EFC7 /* OpenAI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenAI; path = ../OpenAI; sourceTree = "<group>"; };
+		4D9ADB7D2C07BBBE00A1EFC7 /* HistoryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCardView.swift; sourceTree = "<group>"; };
+		4D9ADB7F2C07BBC500A1EFC7 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
+		4D9ADB812C07E1EF00A1EFC7 /* InvisibilityFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvisibilityFileManager.swift; sourceTree = "<group>"; };
+		4D9ADB832C07E59700A1EFC7 /* APITypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITypes.swift; sourceTree = "<group>"; };
 		4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4DA893AF2B54C45300560DAD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
@@ -195,7 +202,6 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
-				4D9ADB7B2C001E1500A1EFC7 /* OpenAI */,
 				4D8E05272B2516DE00B60D0D /* Invisibility */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
@@ -218,6 +224,7 @@
 				4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */,
 				4D885C7B2B96E53E009A1F48 /* UserManager.swift */,
 				4D93542A2B99A81400C34A63 /* OnboardingManager.swift */,
+				4D9ADB812C07E1EF00A1EFC7 /* InvisibilityFileManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -233,15 +240,16 @@
 		4D8E05272B2516DE00B60D0D /* Invisibility */ = {
 			isa = PBXGroup;
 			children = (
+				4D8E052E2B2516DE00B60D0D /* App */,
+				4D9ADB852C07E5B500A1EFC7 /* Types */,
+				4D8E05362B2516DE00B60D0D /* Models */,
 				4D1FC3502B623147009DA851 /* Managers */,
 				4D8E05282B2516DE00B60D0D /* ViewModels */,
-				4D8E052E2B2516DE00B60D0D /* App */,
-				4D8E05302B2516DE00B60D0D /* Resources */,
-				4D8E05342B2516DE00B60D0D /* Utils */,
-				4D8E05362B2516DE00B60D0D /* Models */,
-				4D8E053A2B2516DE00B60D0D /* Preview Content */,
-				4D8E053C2B2516DE00B60D0D /* Extensions */,
 				4D8E053E2B2516DE00B60D0D /* Views */,
+				4D8E05342B2516DE00B60D0D /* Utils */,
+				4D8E053C2B2516DE00B60D0D /* Extensions */,
+				4D8E05302B2516DE00B60D0D /* Resources */,
+				4D8E053A2B2516DE00B60D0D /* Preview Content */,
 			);
 			path = Invisibility;
 			sourceTree = "<group>";
@@ -328,6 +336,7 @@
 		4D8E053E2B2516DE00B60D0D /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				4D9ADB7C2C07BBB000A1EFC7 /* HistoryViews */,
 				4D8E05442B2516DE00B60D0D /* AppView.swift */,
 				4DF195012B91B46E0017365F /* Effects */,
 				4D5896D92B7C67BD00484BFA /* MenubarViews */,
@@ -375,6 +384,23 @@
 				4D37F2C62BDACA9900F2FC93 /* MessageLoaderView.swift */,
 			);
 			path = MessageListItem;
+			sourceTree = "<group>";
+		};
+		4D9ADB7C2C07BBB000A1EFC7 /* HistoryViews */ = {
+			isa = PBXGroup;
+			children = (
+				4D9ADB7D2C07BBBE00A1EFC7 /* HistoryCardView.swift */,
+				4D9ADB7F2C07BBC500A1EFC7 /* HistoryView.swift */,
+			);
+			path = HistoryViews;
+			sourceTree = "<group>";
+		};
+		4D9ADB852C07E5B500A1EFC7 /* Types */ = {
+			isa = PBXGroup;
+			children = (
+				4D9ADB832C07E59700A1EFC7 /* APITypes.swift */,
+			);
+			path = Types;
 			sourceTree = "<group>";
 		};
 		4DA893AE2B54C44200560DAD /* OnboardingViews */ = {
@@ -544,11 +570,14 @@
 				4D2428DB2BCF42FE00BE444C /* MessagePDFsView.swift in Sources */,
 				4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */,
 				4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */,
+				4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */,
+				4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
 				4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */,
 				4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */,
 				4DD3A4AB2B7D7C1100E0AB94 /* String+isValidUrl.swift in Sources */,
+				4D9ADB822C07E1EF00A1EFC7 /* InvisibilityFileManager.swift in Sources */,
 				4DB061BE2BF4A028007CF7DD /* QRView.swift in Sources */,
 				4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */,
 				4D2428D92BCF39CA00BE444C /* ChatPDFView.swift in Sources */,
@@ -572,6 +601,7 @@
 				4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */,
 				4DC8B35A2BD7332700FE5EC8 /* SettingsModelListView.swift in Sources */,
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
+				4D9ADB7E2C07BBBE00A1EFC7 /* HistoryCardView.swift in Sources */,
 				4D2428D52BC6070500BE444C /* TextViewModel.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
 				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,

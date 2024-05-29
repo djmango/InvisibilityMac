@@ -88,6 +88,7 @@ struct MessageScrollView: View {
 
                     CaptureView()
                         .visible(if: screenRecorder.isRunning, removeCompletely: true)
+                        .frame(maxHeight: 200)
 
                     Rectangle()
 
