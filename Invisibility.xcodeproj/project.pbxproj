@@ -58,6 +58,7 @@
 		4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB7F2C07BBC500A1EFC7 /* HistoryView.swift */; };
 		4D9ADB822C07E1EF00A1EFC7 /* InvisibilityFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB812C07E1EF00A1EFC7 /* InvisibilityFileManager.swift */; };
 		4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB832C07E59700A1EFC7 /* APITypes.swift */; };
+		4D9ADB882C09917B00A1EFC7 /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB872C09917B00A1EFC7 /* HistoryViewModel.swift */; };
 		4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */; };
 		4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893AF2B54C45300560DAD /* OnboardingView.swift */; };
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
@@ -142,6 +143,7 @@
 		4D9ADB7F2C07BBC500A1EFC7 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		4D9ADB812C07E1EF00A1EFC7 /* InvisibilityFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvisibilityFileManager.swift; sourceTree = "<group>"; };
 		4D9ADB832C07E59700A1EFC7 /* APITypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITypes.swift; sourceTree = "<group>"; };
+		4D9ADB872C09917B00A1EFC7 /* HistoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4DA893AF2B54C45300560DAD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 				4D2428DC2BD1FB8700BE444C /* SettingsViewModel.swift */,
 				4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */,
 				4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */,
+				4D9ADB872C09917B00A1EFC7 /* HistoryViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -606,6 +609,7 @@
 				4D8E05632B2516DE00B60D0D /* MainView.swift in Sources */,
 				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,
 				4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */,
+				4D9ADB882C09917B00A1EFC7 /* HistoryViewModel.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4D2428D32BC6031100BE444C /* MessageScrollView.swift in Sources */,
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,

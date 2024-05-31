@@ -160,6 +160,7 @@ final class LLMManager {
 
     func chat(
         messages: [Message],
+        chat: APIChat,
         processOutput: @escaping (String, Message) -> Void,
         regenerate_from_message_id: UUID? = nil
     ) async {
@@ -171,6 +172,7 @@ final class LLMManager {
         // Drop last to avoid sending the empty assistant message to the LLM
         let chatQuery = await constructChatQuery(
             messages: messages.dropLast().suffix(10).map { $0 },
+            chat: chat,
             regenerate_from_message_id: regenerate_from_message_id
         )
 
@@ -188,15 +190,21 @@ final class LLMManager {
                 logger.error("No data received from chat")
                 PostHogSDK.shared.capture("chat_error", properties: ["error": "No data received from chat", "model": model.human_name])
                 ToastViewModel.shared.showToast(title: "No data received from model. Please try again.")
+                DispatchQueue.main.async {
+                    MessageViewModel.shared.isGenerating = false
+                }
             }
         } catch {
             logger.error("Error in chat: \(error)")
             PostHogSDK.shared.capture("chat_error", properties: ["error": error.localizedDescription, "model": model.human_name])
             ToastViewModel.shared.showToast(title: "Chat Error: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                MessageViewModel.shared.isGenerating = false
+            }
         }
     }
 
-    func constructChatQuery(messages: [Message], regenerate_from_message_id: UUID? = nil) async -> ChatQuery {
+    func constructChatQuery(messages: [Message], chat: APIChat, regenerate_from_message_id: UUID? = nil) async -> ChatQuery {
         var messages = messages
 
         // If the last message has any images use the vision model, otherwise use the regular model
@@ -208,23 +216,27 @@ final class LLMManager {
             model.text
         }
 
-        // Ensure the first message is always from the user
-        // First check if the 2nd message is from the user, if so pop the first message, otherwise insert a user message at the start
-        if messages.first?.role != .user {
-            if messages.count > 1, messages[1].role == .user {
-                messages.removeFirst()
-            } else {
-                messages.insert(Message(content: "", role: .user), at: 0)
-            }
+        var chat_messages = messages.compactMap { message in
+            message.toChat(allow_images: allow_images)
         }
 
-        let chat_messages = messages.compactMap { message in
-            message.toChat(allow_images: allow_images)
+        // Ensure the first message is always from the user
+        // First check if the 2nd message is from the user, if so pop the first message, otherwise insert a user message at the start
+        if chat_messages.first?.role != .user {
+            if chat_messages.count > 1, chat_messages[1].role == .user {
+                chat_messages.removeFirst()
+            } else {
+                if let chat_query = ChatQuery.ChatCompletionMessageParam(role: .user, content: "") {
+                    chat_messages.insert(chat_query, at: 0)
+                } else {
+                    logger.error("Failed to create user message")
+                }
+            }
         }
 
         var chat_query = ChatQuery(messages: chat_messages, model: model_id)
 
-        if let chat = MessageViewModel.shared.chat, let last_message = messages.last {
+        if let last_message = messages.last {
             var show_files_to_user: [Bool] = Array(repeating: true, count: last_message.images_data.count)
 
             // Iterate through the hidden images' indexes and mark the corresponding values as false

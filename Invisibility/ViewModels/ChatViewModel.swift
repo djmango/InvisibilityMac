@@ -40,7 +40,7 @@ final class ChatViewModel: ObservableObject {
     @Published public var shouldFocusTextField: Bool = false
 
     /// A boolean value that indicates whether the text field should scroll to the bottom.
-    // @Published public var shouldScrollToBottom: Bool = false
+    @Published public var shouldScrollToBottom: Bool = false
 
     /// List of JPEG images and items to be sent with the message
     @Published public var items: [ChatDataItem] = []
@@ -56,8 +56,6 @@ final class ChatViewModel: ObservableObject {
     /// The height of the text field.
     @Published public var textHeight: CGFloat = 52
     @Published public var lastTextHeight: CGFloat = 0
-
-    @Published public var shouldScrollToBottom: Bool = false
 
     private init() {}
 

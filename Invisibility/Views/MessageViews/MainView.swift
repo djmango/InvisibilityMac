@@ -25,15 +25,11 @@ struct MainView: View {
         VStack(alignment: .center, spacing: 0) {
             ZStack {
                 MessageScrollView()
-                    // .opacity(isShowingHistory ? 0 : 1)
-                    .offset(x: !isShowingHistory ? 0 : 1000, y: 0)
-                // .offset(x: 0, y: isShowingHistory ? 1000 : 0)
+                    .offset(x: !isShowingHistory ? 0 : sideSwitched ? 1000 : -1000, y: 0)
 
-                HistoryView()
-                    // .offset(x: isShowingHistory ? 0 : -1000, y: 0)
-                    .offset(x: 0, y: isShowingHistory ? 0 : -500)
-                // .visible(if: isShowingHistory, removeCompletely: true)
-                // .opacity(isShowingHistory ? 1 : 0)
+                HistoryView(isShowingHistory: $isShowingHistory)
+                    .offset(x: 0, y: isShowingHistory ? 0 : 500)
+                    .opacity(isShowingHistory ? 1 : 0)
 
                 Rectangle()
                     .foregroundColor(Color.white.opacity(0.001))

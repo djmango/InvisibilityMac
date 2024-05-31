@@ -29,9 +29,12 @@ enum MessageRole: String, Codable {
 
 final class Message: Identifiable, ObservableObject {
     /// Unique identifier for the message
-    var id: UUID
-    /// Datetime the message was created
-    var created_at: Date
+    var id: UUID {
+        api.id
+    }
+
+    /// Chat id
+    var api: APIMessage
     /// Message textual content
     @Published var content: String?
     /// Role for message sender, system, user, or assistant
@@ -42,15 +45,13 @@ final class Message: Identifiable, ObservableObject {
     var hidden_images: [Int]?
 
     init(
-        id: UUID = UUID(),
-        created_at: Date = Date.now,
+        api: APIMessage,
         content: String? = nil,
         role: MessageRole? = nil,
         images: [Data] = [],
         hidden_images: [Int]? = nil
     ) {
-        self.id = id
-        self.created_at = created_at
+        self.api = api
         self.content = content
         self.role = role
         self.images_data = images
@@ -135,8 +136,7 @@ extension Message {
         }
 
         return Message(
-            id: message.id,
-            created_at: message.created_at,
+            api: message,
             content: message.text,
             role: role,
             images: imagesData,

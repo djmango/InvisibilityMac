@@ -18,6 +18,12 @@ extension Date {
 struct HistoryView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
 
+    @Binding var isShowingHistory: Bool
+
+    init(isShowingHistory: Binding<Bool>) {
+        self._isShowingHistory = isShowingHistory
+    }
+
     // Seperate the chats into lists per day
     // private var chatsByDay: [[APIChat]] {
     //     let grouped = Dictionary(grouping: messageViewModel.api_chats, by: { $0.created_at.startOfDay })
@@ -27,12 +33,20 @@ struct HistoryView: View {
     var body: some View {
         ScrollView {
             Spacer()
-            ForEach(messageViewModel.api_chats) { chat in
-                HistoryCardView(chat: chat)
+            // Sort by date reverse
+            ForEach(messageViewModel.api_chats.sorted { $0.created_at > $1.created_at }) { chat in
+                HistoryCardView(
+                    chat: chat,
+                    last_message: messageViewModel.api_messages.filter { $0.chat_id == chat.id }.last,
+                    isShowingHistory: $isShowingHistory
+                )
+                .rotationEffect(.degrees(180))
             }
             .padding(.horizontal, 10)
             Spacer()
         }
+        // Upside down hack
+        .rotationEffect(.degrees(180))
         .mask(
             LinearGradient(
                 gradient: Gradient(stops: [

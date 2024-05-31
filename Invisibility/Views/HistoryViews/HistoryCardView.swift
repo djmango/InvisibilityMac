@@ -11,12 +11,16 @@ import SwiftUI
 
 struct HistoryCardView: View {
     let chat: APIChat
-
-    var messages: [APIMessage] {
-        MessageViewModel.shared.api_messages.filter { $0.chat_id == chat.id }
-    }
+    let last_message: APIMessage?
 
     @State private var isHovered: Bool = false
+    @Binding var isShowingHistory: Bool
+
+    init(chat: APIChat, last_message: APIMessage?, isShowingHistory: Binding<Bool>) {
+        self.chat = chat
+        self.last_message = last_message
+        self._isShowingHistory = isShowingHistory
+    }
 
     var body: some View {
         HStack {
@@ -25,32 +29,29 @@ struct HistoryCardView: View {
                 .fill(Color.accentColor)
                 .frame(width: 5)
 
-            VStack {
+            VStack(alignment: .leading) {
                 HStack {
                     Text(chat.name)
                         .font(.title3)
 
                     Spacer()
 
-                    Text(messages.last?.created_at ?? Date(), style: .time)
+                    Text(last_message?.created_at ?? Date(), style: .time)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
-                .padding(.bottom, 5)
+                .padding(.top, 5)
 
-                Text(messages.last?.text ?? "")
+                Spacer()
+
+                Text(last_message?.text ?? "")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .lineLimit(2)
-
-                // TextField("Last message", text: .constant(messages.last?.text ?? ""))
-                //     .font(.body)
-                //     // .foregroundColor(.gray)
-                //     .textFieldStyle(.plain)
-                //     .disabled(true)
-                // .frame(height: 50)
+                    .padding(.bottom, 5)
             }
         }
+        .frame(height: 65)
         .padding()
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
@@ -60,15 +61,20 @@ struct HistoryCardView: View {
                 withAnimation(AppConfig.snappy) {
                     isHovered = true
                 }
+                // Preemtively load the chat, snappier!
+                MessageViewModel.shared.switchChat(chat)
             } else {
+                // TODO: make this smoother
                 withAnimation(AppConfig.snappy) {
                     isHovered = false
                 }
             }
         }
         .onTapGesture {
-            print("Switching to chat \(chat.name)")
             MessageViewModel.shared.switchChat(chat)
+            withAnimation(AppConfig.snappy) {
+                isShowingHistory = false
+            }
         }
         .overlay(
             RoundedRectangle(cornerRadius: 16)

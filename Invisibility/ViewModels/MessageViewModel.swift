@@ -11,11 +11,11 @@ final class MessageViewModel: ObservableObject {
 
     private var chatTask: Task<Void, Error>?
 
-    @Published public var messages: [Message] = []
-    @Published public var chat: APIChat?
+    private var chat: APIChat?
+    @Published public var messages: [Message] = [] // TODO: refactor out of this old class
     @Published public var api_chats: [APIChat] = []
-    public var api_messages: [APIMessage] = []
-    public var api_files: [APIFile] = []
+    @Published public var api_messages: [APIMessage] = []
+    @Published private var api_files: [APIFile] = []
     @Published public var windowHeight: CGFloat = 0
     @Published public var isGenerating: Bool = false
 
@@ -75,6 +75,15 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func sendFromChat() async {
+        guard let chat else {
+            logger.error("No chat to send message to")
+            return
+        }
+        guard let user = UserManager.shared.user else {
+            logger.error("No user to send message as")
+            return
+        }
+
         // Stop the chat from generating if it is
         if isGenerating { stopGenerating() }
 
@@ -111,7 +120,17 @@ final class MessageViewModel: ObservableObject {
             index
         }
 
-        let message = Message(content: TextViewModel.shared.text, role: .user, images: images, hidden_images: hidden_images)
+        let api_message = APIMessage(
+            id: UUID(),
+            chat_id: chat.id,
+            user_id: user.id,
+            text: TextViewModel.shared.text,
+            role: "user",
+            regenerated: false,
+            created_at: Date(),
+            updated_at: Date()
+        )
+        let message = Message(api: api_message, content: TextViewModel.shared.text, role: .user, images: images, hidden_images: hidden_images)
         TextViewModel.shared.clearText()
         ChatViewModel.shared.removeAll()
 
@@ -121,6 +140,15 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     private func send(_ message: Message, regenerate_from_message_id: UUID? = nil) async {
+        guard let chat else {
+            logger.error("No chat to send message to")
+            return
+        }
+        guard let user = UserManager.shared.user else {
+            logger.error("No user to send message as")
+            return
+        }
+
         isGenerating = true
         defer { PostHogSDK.shared.capture(
             "send_message",
@@ -131,7 +159,17 @@ final class MessageViewModel: ObservableObject {
             ]
         )
         }
-        let assistantMessage = Message(content: nil, role: .assistant)
+        let api_message = APIMessage(
+            id: UUID(),
+            chat_id: chat.id,
+            user_id: user.id,
+            text: "",
+            role: "assistant",
+            regenerated: false,
+            created_at: Date(),
+            updated_at: Date()
+        )
+        let assistantMessage = Message(api: api_message, content: nil, role: .assistant)
 
         messages.append(contentsOf: [message, assistantMessage])
 
@@ -139,6 +177,7 @@ final class MessageViewModel: ObservableObject {
             let lastMessageId = messages.last?.id
             await LLMManager.shared.chat(
                 messages: messages,
+                chat: chat,
                 processOutput: processOutput,
                 regenerate_from_message_id: regenerate_from_message_id
             )
@@ -183,7 +222,7 @@ final class MessageViewModel: ObservableObject {
         if let userMessage = messages.popLast() {
             // New uuid4 for the user message
             let regenerate_from_message_id = userMessage.id
-            userMessage.id = UUID()
+            userMessage.api.id = UUID()
             await send(userMessage, regenerate_from_message_id: regenerate_from_message_id)
         }
     }
@@ -205,7 +244,7 @@ final class MessageViewModel: ObservableObject {
             return
         }
 
-        chat = APIChat(
+        self.chat = APIChat(
             id: UUID(),
             user_id: user.id,
             name: "New Chat",
@@ -213,6 +252,7 @@ final class MessageViewModel: ObservableObject {
             updated_at: Date()
         )
 
+        self.api_chats.append(chat!)
         self.messages.removeAll()
     }
 
@@ -220,10 +260,12 @@ final class MessageViewModel: ObservableObject {
     func switchChat(_ chat: APIChat) {
         defer { PostHogSDK.shared.capture("switch_chat") }
         self.chat = chat
-        self.messages.removeAll()
-        self.api_messages.filter { $0.chat_id == chat.id }.forEach { message in
-            self.messages.append(Message.fromAPI(message, files: self.api_files.filter { $0.message_id == message.id }))
-        }
+        self.messages = self.api_messages
+            .filter { $0.chat_id == chat.id }
+            .compactMap { message in
+                let files = self.api_files.filter { $0.message_id == message.id }
+                return Message.fromAPI(message, files: files)
+            }
     }
 
     @MainActor

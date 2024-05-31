@@ -17,7 +17,7 @@ struct APIChat: Codable, Identifiable {
 }
 
 struct APIMessage: Codable {
-    let id: UUID
+    var id: UUID
     let chat_id: UUID
     let user_id: String
     let text: String

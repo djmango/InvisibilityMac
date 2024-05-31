@@ -33,7 +33,7 @@ struct MessageActionButtonsView: View {
     }
 
     private var isCopyButtonVisible: Bool {
-        (isHovered && !isGenerating) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
+        isHovered || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
     }
 
     private var isRegenerateButtonVisible: Bool {
