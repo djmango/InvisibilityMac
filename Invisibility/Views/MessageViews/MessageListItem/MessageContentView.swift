@@ -12,14 +12,6 @@ import SwiftUI
 struct MessageContentView: View {
     @ObservedObject private var message: Message
 
-    private var message_content: Binding<String> {
-        Binding {
-            message.content ?? ""
-        } set: { newValue in
-            message.content = newValue
-        }
-    }
-
     init(message: Message) {
         self.message = message
     }
@@ -76,7 +68,7 @@ struct MessageContentView: View {
             // .visible(if: !message.images_data.isEmpty || !message.pdfs_data.isEmpty, removeCompletely: true)
             .visible(if: !message.images_data.isEmpty, removeCompletely: true)
 
-            MarkdownWebView(message_content)
+            MarkdownWebView(message.content ?? "")
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()

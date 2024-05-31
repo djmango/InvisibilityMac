@@ -26,7 +26,7 @@ struct AppView: View {
     )
 
     var body: some View {
-        MessageView()
+        MainView()
             .pasteDestination(for: URL.self) { urls in
                 guard let url = urls.first else { return }
                 InvisibilityFileManager.handleFile(url)

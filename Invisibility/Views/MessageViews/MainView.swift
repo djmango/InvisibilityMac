@@ -1,7 +1,7 @@
 import SentrySwiftUI
 import SwiftUI
 
-struct MessageView: View {
+struct MainView: View {
     @FocusState private var isEditorFocused: Bool
     @FocusState private var promptFocused: Bool
 
@@ -13,7 +13,6 @@ struct MessageView: View {
     @ObservedObject private var settingsViewModel = SettingsViewModel.shared
     @ObservedObject private var screenRecorder = ScreenRecorder.shared
 
-    @AppStorage("resized") private var resized: Bool = false
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
     init() {
@@ -26,10 +25,15 @@ struct MessageView: View {
         VStack(alignment: .center, spacing: 0) {
             ZStack {
                 MessageScrollView()
-                    .visible(if: !isShowingHistory, removeCompletely: true)
+                    // .opacity(isShowingHistory ? 0 : 1)
+                    .offset(x: !isShowingHistory ? 0 : 1000, y: 0)
+                // .offset(x: 0, y: isShowingHistory ? 1000 : 0)
 
                 HistoryView()
-                    .visible(if: isShowingHistory, removeCompletely: true)
+                    // .offset(x: isShowingHistory ? 0 : -1000, y: 0)
+                    .offset(x: 0, y: isShowingHistory ? 0 : -500)
+                // .visible(if: isShowingHistory, removeCompletely: true)
+                // .opacity(isShowingHistory ? 1 : 0)
 
                 Rectangle()
                     .foregroundColor(Color.white.opacity(0.001))
@@ -44,6 +48,30 @@ struct MessageView: View {
                 SettingsView()
                     .visible(if: settingsViewModel.showSettings, removeCompletely: true)
             }
+            .mask(
+                LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: .clear, location: 0),
+                        .init(color: .black, location: 0.010), // Finish fading in
+                        .init(color: .black, location: 0.990), // Start fading out
+                        .init(color: .clear, location: 1.0),
+                    ]),
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .mask(
+                LinearGradient(
+                    gradient: Gradient(stops: [
+                        .init(color: .clear, location: 0),
+                        .init(color: .black, location: 0.005), // Finish fading in
+                        .init(color: .black, location: 0.995), // Start fading out
+                        .init(color: .clear, location: 1.0),
+                    ]),
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+            )
 
             Spacer()
 
@@ -64,7 +92,6 @@ struct MessageView: View {
         }
         .animation(AppConfig.snappy, value: chatViewModel.textHeight)
         .animation(AppConfig.snappy, value: chatViewModel.images)
-        .animation(AppConfig.snappy, value: resized)
         .animation(AppConfig.snappy, value: screenRecorder.isRunning)
         .overlay(
             Rectangle()
@@ -95,8 +122,8 @@ struct MessageView: View {
             if sideSwitched {
                 xOffset = 1000
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                withAnimation(.easeIn(duration: 0.3)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                withAnimation(.snappy(duration: 0.3)) {
                     xOffset = 0
                 }
             }

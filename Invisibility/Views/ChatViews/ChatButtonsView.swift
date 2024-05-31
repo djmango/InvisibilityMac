@@ -80,7 +80,7 @@ struct ChatButtonsView: View {
                     shortcut_hint: "⌘ F",
                     whoIsHovering: $whoIsHovering
                 ) {
-                    withAnimation(AppConfig.easeIn) {
+                    withAnimation(AppConfig.snappy) {
                         isShowingHistory.toggle()
                     }
                 }

@@ -60,6 +60,7 @@ struct RefreshTokenResponse: Decodable {
     let token: String
 }
 
+@MainActor
 final class UserManager: ObservableObject {
     static let shared = UserManager()
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "UserManager")
@@ -114,7 +115,6 @@ final class UserManager: ObservableObject {
         }
     }
 
-    @MainActor
     func setup() async {
         numMessagesSentToday = 9
         resetMessagesIfNeeded()
@@ -160,9 +160,7 @@ final class UserManager: ObservableObject {
             return self.user
         }
         if let user = try? await fetchUser() {
-            await MainActor.run {
-                self.user = user
-            }
+            self.user = user
             return user
         } else {
             return nil
@@ -329,8 +327,6 @@ final class UserManager: ObservableObject {
 
     func logout() {
         self.token = nil
-        DispatchQueue.main.async {
-            self.user = nil
-        }
+        self.user = nil
     }
 }

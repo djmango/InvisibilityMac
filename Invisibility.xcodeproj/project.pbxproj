@@ -47,7 +47,7 @@
 		4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E053B2B2516DE00B60D0D /* Preview Assets.xcassets */; };
 		4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05442B2516DE00B60D0D /* AppView.swift */; };
 		4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */; };
-		4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MessageView.swift */; };
+		4D8E05632B2516DE00B60D0D /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MainView.swift */; };
 		4D911BAD2BC1DD480034B1A8 /* MessageImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */; };
 		4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */; };
 		4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */; };
@@ -132,7 +132,7 @@
 		4D8E053B2B2516DE00B60D0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4D8E05442B2516DE00B60D0D /* AppView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
-		4D8E054B2B2516DE00B60D0D /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
+		4D8E054B2B2516DE00B60D0D /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageImagesView.swift; sourceTree = "<group>"; };
 		4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContentView.swift; sourceTree = "<group>"; };
 		4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonsView.swift; sourceTree = "<group>"; };
@@ -366,7 +366,7 @@
 			isa = PBXGroup;
 			children = (
 				4D911BB02BC1E1170034B1A8 /* MessageListItem */,
-				4D8E054B2B2516DE00B60D0D /* MessageView.swift */,
+				4D8E054B2B2516DE00B60D0D /* MainView.swift */,
 			);
 			path = MessageViews;
 			sourceTree = "<group>";
@@ -603,7 +603,7 @@
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
 				4D9ADB7E2C07BBBE00A1EFC7 /* HistoryCardView.swift in Sources */,
 				4D2428D52BC6070500BE444C /* TextViewModel.swift in Sources */,
-				4D8E05632B2516DE00B60D0D /* MessageView.swift in Sources */,
+				4D8E05632B2516DE00B60D0D /* MainView.swift in Sources */,
 				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,
 				4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,

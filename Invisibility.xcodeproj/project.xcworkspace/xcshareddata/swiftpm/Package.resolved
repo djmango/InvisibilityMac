@@ -61,7 +61,7 @@
       "location" : "https://github.com/djmango/markdown-webview.git",
       "state" : {
         "branch" : "master",
-        "revision" : "7475aa35dc580fbde8f09e8f1943d0498cb7d3be"
+        "revision" : "0f4fea2d171f618b9d54c9698f7e6988820b6f25"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/danielsaidi/ScrollKit.git",
       "state" : {
-        "revision" : "7c9530ceda4c9717679d7a483d77753eeb5acccf",
-        "version" : "0.5.0"
+        "revision" : "b3142033da3769046770e38d459203756db879b5",
+        "version" : "0.5.1"
       }
     },
     {

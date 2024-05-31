@@ -6,6 +6,7 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import MarkdownWebView
 import SwiftUI
 
 struct HistoryCardView: View {
@@ -18,33 +19,51 @@ struct HistoryCardView: View {
     @State private var isHovered: Bool = false
 
     var body: some View {
-        ZStack {
-            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+        HStack {
+            // Rounded blue line
+            RoundedRectangle(cornerRadius: 5)
+                .fill(Color.accentColor)
+                .frame(width: 5)
 
-            VStack(alignment: .leading) {
+            VStack {
                 HStack {
                     Text(chat.name)
-                        .font(.title2)
+                        .font(.title3)
 
                     Spacer()
 
-                    Text(chat.created_at, style: .time)
+                    Text(messages.last?.created_at ?? Date(), style: .time)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
+                .padding(.bottom, 5)
 
                 Text(messages.last?.text ?? "")
-                    .font(.body)
-                    .lineLimit(2)
+                    .font(.subheadline)
                     .foregroundColor(.gray)
+                    .lineLimit(2)
+
+                // TextField("Last message", text: .constant(messages.last?.text ?? ""))
+                //     .font(.body)
+                //     // .foregroundColor(.gray)
+                //     .textFieldStyle(.plain)
+                //     .disabled(true)
+                // .frame(height: 50)
             }
-            .padding()
         }
+        .padding()
+        .background(
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+        )
         .onHover {
             if $0 {
-                isHovered = true
+                withAnimation(AppConfig.snappy) {
+                    isHovered = true
+                }
             } else {
-                isHovered = false
+                withAnimation(AppConfig.snappy) {
+                    isHovered = false
+                }
             }
         }
         .onTapGesture {
@@ -55,6 +74,6 @@ struct HistoryCardView: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color(nsColor: .separatorColor))
         )
-        .frame(height: 80, alignment: .leading)
+        .scaleEffect(isHovered ? 1.02 : 1.0)
     }
 }

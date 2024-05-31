@@ -30,20 +30,18 @@ final class MessageViewModel: ObservableObject {
         Task {
             do {
                 let fetched = try await fetchChatsAndMessages()
-                self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
-                self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
-                self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
-
-                let mapped_messages = self.api_messages.map { message in
-                    Message.fromAPI(message, files: fetched.files.filter { $0.message_id == message.id })
-                }
-                logger.debug("Fetched messages: \(mapped_messages.count)")
-
                 DispatchQueue.main.async {
-                    self.chat = self.api_chats.last
-                    withAnimation {
-                        self.messages = mapped_messages
+                    self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
+                    self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
+                    self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
+
+                    let mapped_messages = self.api_messages.map { message in
+                        Message.fromAPI(message, files: fetched.files.filter { $0.message_id == message.id })
                     }
+                    self.logger.debug("Fetched messages: \(mapped_messages.count)")
+
+                    self.chat = self.api_chats.last
+                    self.messages = mapped_messages
                 }
             } catch {
                 logger.warning("Error fetching data: \(error)")
