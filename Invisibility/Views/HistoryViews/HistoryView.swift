@@ -13,40 +13,101 @@ extension Date {
     var startOfDay: Date {
         Calendar.current.startOfDay(for: self)
     }
+
+    var startOfWeek: Date? {
+        let cal = Calendar.current
+        let components = cal.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self)
+        return cal.date(from: components)
+    }
+
+    var startOfMonth: Date? {
+        let cal = Calendar.current
+        let components = cal.dateComponents([.year, .month], from: self)
+        return cal.date(from: components)
+    }
+
+    func isInSameWeek(as date: Date) -> Bool {
+        Calendar.current.isDate(self, equalTo: date, toGranularity: .weekOfYear)
+    }
+
+    func isInSameMonth(as date: Date) -> Bool {
+        Calendar.current.isDate(self, equalTo: date, toGranularity: .month)
+    }
+
+    func daysAgo(_ days: Int) -> Date {
+        Calendar.current.date(byAdding: .day, value: -days, to: self.startOfDay) ?? self
+    }
 }
 
 struct HistoryView: View {
-    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject private var messageViewModel = MessageViewModel.shared
 
-    @Binding var isShowingHistory: Bool
+    // Define the desired order of categories
+    private let categoryOrder: [String] = [
+        "Today",
+        "This Week",
+        "Last Week",
+        "Last 30 Days",
+        "Older",
+    ]
 
-    init(isShowingHistory: Binding<Bool>) {
-        self._isShowingHistory = isShowingHistory
+    // Seperate the chats into lists per logical group
+    private var groupedChats: [String: [APIChat]] {
+        let now = Date()
+        var categories: [String: [APIChat]] = [
+            "Today": [],
+            "This Week": [],
+            "Last Week": [],
+            "Last 30 Days": [],
+            "Older": [],
+        ]
+
+        // for chat in messageViewModel.api_chats {
+        for chat in messageViewModel.sortedChatsByLastMessage() {
+            let chatDate = messageViewModel.lastMessageFor(chat: chat)?.created_at ?? chat.created_at
+
+            if Calendar.current.isDateInToday(chatDate) {
+                categories["Today"]?.append(chat)
+                continue
+            }
+
+            if let startOfWeek = now.startOfWeek, let chatWeek = chatDate.startOfWeek, chatDate >= startOfWeek, chatDate < now {
+                categories["This Week"]?.append(chat)
+                continue
+            }
+
+            let lastWeekStart = now.daysAgo(14).startOfWeek ?? now
+            let thisWeekStart = now.startOfWeek ?? now
+            if chatDate >= lastWeekStart, chatDate < thisWeekStart {
+                categories["Last Week"]?.append(chat)
+                continue
+            }
+
+            let thirtyDaysAgo = now.daysAgo(30)
+            if chatDate >= thirtyDaysAgo, chatDate < now {
+                categories["Last 30 Days"]?.append(chat)
+                continue
+            }
+
+            categories["Older"]?.append(chat)
+        }
+
+        return categories
     }
-
-    // Seperate the chats into lists per day
-    // private var chatsByDay: [[APIChat]] {
-    //     let grouped = Dictionary(grouping: messageViewModel.api_chats, by: { $0.created_at.startOfDay })
-    //     return Array(grouped.values)
-    // }
 
     var body: some View {
         ScrollView {
             Spacer()
-            // Sort by date reverse
-            ForEach(messageViewModel.api_chats.sorted { $0.created_at > $1.created_at }) { chat in
-                HistoryCardView(
-                    chat: chat,
-                    last_message: messageViewModel.api_messages.filter { $0.chat_id == chat.id }.last,
-                    isShowingHistory: $isShowingHistory
-                )
-                .rotationEffect(.degrees(180))
+            ForEach(categoryOrder, id: \.self) { key in
+                if let chats = groupedChats[key], !chats.isEmpty {
+                    HistorySectionView(title: key, chats: chats, messageViewModel: messageViewModel)
+                    // .rotationEffect(.degrees(180))
+                }
             }
             .padding(.horizontal, 10)
             Spacer()
         }
-        // Upside down hack
-        .rotationEffect(.degrees(180))
+        // .rotationEffect(.degrees(180))
         .mask(
             LinearGradient(
                 gradient: Gradient(stops: [
@@ -62,22 +123,23 @@ struct HistoryView: View {
     }
 }
 
-// struct ChatDateSectionView: View {
-//     let chats: [APIChat]
+struct HistorySectionView: View {
+    let title: String
+    let chats: [APIChat]
+    let messageViewModel: MessageViewModel
 
-//     private var created_at: Date {
-//         chats.first?.created_at ?? Date()
-//     }
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.title2)
+                .foregroundColor(.white)
 
-//     var body: some View {
-//         VStack(alignment: .leading, spacing: 8) {
-//             Text(created_at, style: .date)
-//                 .font(.title3)
-//                 .foregroundColor(.primary)
-
-//             ForEach(chats) { chat in
-//                 HistoryCardView(chat: chat)
-//             }
-//         }
-//     }
-// }
+            ForEach(chats) { chat in
+                HistoryCardView(
+                    chat: chat,
+                    last_message: messageViewModel.api_messages.filter { $0.chat_id == chat.id }.last
+                )
+            }
+        }
+    }
+}

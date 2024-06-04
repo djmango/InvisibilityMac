@@ -14,7 +14,7 @@ import SwiftUI
 // Alias for ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent(images: images)
 typealias VisionContent = ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent
 
-struct APIChat: Codable, Identifiable {
+struct APIChat: Codable, Identifiable, Hashable {
     let id: UUID
     let user_id: String
     let name: String

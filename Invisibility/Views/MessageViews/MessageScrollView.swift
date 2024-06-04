@@ -11,6 +11,7 @@ import SwiftUI
 
 struct MessageScrollView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
     @ObservedObject private var userManager = UserManager.shared

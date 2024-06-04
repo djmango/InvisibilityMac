@@ -11,34 +11,33 @@ final class MessageViewModel: ObservableObject {
 
     private var chatTask: Task<Void, Error>?
 
-    private var chat: APIChat?
+    private var chat: APIChat? {
+        ChatViewModel.shared.chat
+    }
+
     @Published public var api_chats: [APIChat] = []
     @Published public var api_messages: [APIMessage] = []
-    @Published private var api_files: [APIFile] = []
+    @Published public var api_files: [APIFile] = []
     @Published public var windowHeight: CGFloat = 0
     @Published public var isGenerating: Bool = false
 
     public var api_messages_in_chat: [APIMessage] {
-        api_messages.filter { $0.chat_id == chat?.id }.filter { $0.regenerated == false }
+        api_messages.filter { $0.chat_id == ChatViewModel.shared.chat?.id }.filter { $0.regenerated == false }
     }
 
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
     @AppStorage("token") private var token: String?
 
     private init() {
-        try? fetch()
-    }
-
-    func fetch() throws {
         Task {
             do {
-                let fetched = try await fetchChatsAndMessages()
+                let fetched = try await fetchAPI()
                 DispatchQueue.main.async {
                     self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
                     self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
                     self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
                     self.logger.debug("Fetched messages: \(self.api_messages.count)")
-                    self.chat = self.api_chats.last
+                    ChatViewModel.shared.chat = self.api_chats.last
                 }
             } catch {
                 logger.warning("Error fetching data: \(error)")
@@ -46,7 +45,7 @@ final class MessageViewModel: ObservableObject {
         }
     }
 
-    func fetchChatsAndMessages() async throws -> APIChatsAndMessagesResponse {
+    func fetchAPI() async throws -> APIChatsAndMessagesResponse {
         guard let url = URL(string: AppConfig.invisibility_api_base + "/sync/all") else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
@@ -228,7 +227,7 @@ final class MessageViewModel: ObservableObject {
         api_messages.append(contentsOf: [user_message, assistant_message])
 
         chatTask = Task {
-            let lastMessageId = user_message.id
+            let lastMessageId = assistant_message.id
             await LLMManager.shared.chat(
                 messages: api_messages_in_chat,
                 chat: chat,
@@ -244,31 +243,6 @@ final class MessageViewModel: ObservableObject {
             }
             logger.debug("Regenerate complete")
         }
-    }
-
-    @MainActor
-    func newChat() {
-        defer { PostHogSDK.shared.capture("new_chat") }
-        guard let user = UserManager.shared.user else {
-            logger.error("User not found")
-            return
-        }
-
-        self.chat = APIChat(
-            id: UUID(),
-            user_id: user.id,
-            name: "New Chat",
-            created_at: Date(),
-            updated_at: Date()
-        )
-
-        self.api_chats.append(chat!)
-    }
-
-    @MainActor
-    func switchChat(_ chat: APIChat) {
-        defer { PostHogSDK.shared.capture("switch_chat") }
-        self.chat = chat
     }
 
     @MainActor
@@ -304,5 +278,17 @@ final class MessageViewModel: ObservableObject {
 
     func shownImagesFor(message: APIMessage) -> [APIFile] {
         filesFor(message: message).filter { $0.filetype == .jpeg && $0.show_to_user == true }
+    }
+
+    func lastMessageFor(chat: APIChat) -> APIMessage? {
+        api_messages.filter { $0.chat_id == chat.id }.last
+    }
+
+    func sortedChatsByLastMessage() -> [APIChat] {
+        api_chats.sorted { chat1, chat2 in
+            let lastMessageDate1 = lastMessageFor(chat: chat1)?.created_at ?? Date.distantPast
+            let lastMessageDate2 = lastMessageFor(chat: chat2)?.created_at ?? Date.distantPast
+            return lastMessageDate1 > lastMessageDate2
+        }
     }
 }

@@ -21,15 +21,12 @@ struct ChatButtonsView: View {
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
+    @ObservedObject private var historyViewModel: HistoryViewModel = HistoryViewModel.shared
+    private var chatViewModel: ChatViewModel = ChatViewModel.shared
     private var windowManager: WindowManager = WindowManager.shared
     private let screenshotManager = ScreenshotManager.shared
 
     @State private var whoIsHovering: String?
-    @Binding var isShowingHistory: Bool
-
-    init(isShowingHistory: Binding<Bool>) {
-        self._isShowingHistory = isShowingHistory
-    }
 
     var body: some View {
         HStack {
@@ -45,7 +42,7 @@ struct ChatButtonsView: View {
                     Task { await screenshotManager.capture() }
                 }
                 .keyboardShortcut("1", modifiers: [.command, .shift])
-                .visible(if: !isShowingHistory, removeCompletely: true)
+                .visible(if: !historyViewModel.isShowingHistory, removeCompletely: true)
 
                 // Video
                 MessageButtonItemView(
@@ -58,7 +55,7 @@ struct ChatButtonsView: View {
                     screenRecorder.toggleRecording()
                 }
                 .keyboardShortcut("2", modifiers: [.command, .shift])
-                .visible(if: !isShowingHistory, removeCompletely: true)
+                .visible(if: !historyViewModel.isShowingHistory, removeCompletely: true)
 
                 // New Chat
                 MessageButtonItemView(
@@ -67,11 +64,13 @@ struct ChatButtonsView: View {
                     shortcut_hint: "⌘ N",
                     whoIsHovering: $whoIsHovering
                 ) {
-                    MessageViewModel.shared.newChat()
-                    isShowingHistory = false
+                    withAnimation(AppConfig.snappy) {
+                        chatViewModel.newChat()
+                        historyViewModel.isShowingHistory = false
+                    }
                 }
                 .keyboardShortcut("n", modifiers: [.command])
-                .visible(if: isShowingHistory, removeCompletely: true)
+                .visible(if: historyViewModel.isShowingHistory, removeCompletely: true)
 
                 // Search Chat History
                 MessageButtonItemView(
@@ -81,7 +80,7 @@ struct ChatButtonsView: View {
                     whoIsHovering: $whoIsHovering
                 ) {
                     withAnimation(AppConfig.snappy) {
-                        isShowingHistory.toggle()
+                        historyViewModel.isShowingHistory.toggle()
                     }
                 }
                 .keyboardShortcut("f", modifiers: [.command])
@@ -109,7 +108,7 @@ struct ChatButtonsView: View {
                 }
                 .keyboardShortcut("p", modifiers: [.command])
                 .visible(if: messageViewModel.isGenerating, removeCompletely: true)
-                .visible(if: !isShowingHistory, removeCompletely: true)
+                .visible(if: !historyViewModel.isShowingHistory, removeCompletely: true)
 
                 // Resize
                 MessageButtonItemView(

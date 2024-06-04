@@ -7,11 +7,11 @@ struct MainView: View {
 
     @State private var isDragActive: Bool = false
     @State private var xOffset: CGFloat = -1000
-    @State private var isShowingHistory: Bool = false
 
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject private var settingsViewModel = SettingsViewModel.shared
     @ObservedObject private var screenRecorder = ScreenRecorder.shared
+    @ObservedObject private var historyViewModel = HistoryViewModel.shared
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
@@ -25,12 +25,11 @@ struct MainView: View {
         VStack(alignment: .center, spacing: 0) {
             ZStack {
                 MessageScrollView()
-                    .offset(x: !isShowingHistory ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                    .offset(x: !historyViewModel.isShowingHistory ? 0 : sideSwitched ? 1000 : -1000, y: 0)
 
-                HistoryView(isShowingHistory: $isShowingHistory)
-                    .offset(x: 0, y: isShowingHistory ? 0 : 500)
-                    .opacity(isShowingHistory ? 1 : 0)
-                    .visible(if: isShowingHistory, removeCompletely: true)
+                HistoryView()
+                    .offset(x: 0, y: historyViewModel.isShowingHistory ? 0 : -1000)
+                    .opacity(historyViewModel.isShowingHistory ? 1 : 0)
 
                 Rectangle()
                     .foregroundColor(Color.white.opacity(0.001))
@@ -73,7 +72,7 @@ struct MainView: View {
             Spacer()
 
             // Action Icons
-            ChatButtonsView(isShowingHistory: $isShowingHistory)
+            ChatButtonsView()
                 .frame(maxHeight: 40)
 
             Spacer()

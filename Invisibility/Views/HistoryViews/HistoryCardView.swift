@@ -14,29 +14,19 @@ struct HistoryCardView: View {
     let last_message: APIMessage?
 
     @State private var isHovered: Bool = false
-    @Binding var isShowingHistory: Bool
+    private var historyViewModel: HistoryViewModel = HistoryViewModel.shared
+    private var chatViewModel: ChatViewModel = ChatViewModel.shared
 
-    init(chat: APIChat, last_message: APIMessage?, isShowingHistory: Binding<Bool>) {
+    init(chat: APIChat, last_message: APIMessage?) {
         self.chat = chat
         self.last_message = last_message
-        self._isShowingHistory = isShowingHistory
     }
 
     func formattedDate(_ date: Date) -> String {
-        let calendar = Calendar.current
-        let isToday = calendar.isDateInToday(date)
-
-        let timeFormatter = DateFormatter()
-        timeFormatter.timeStyle = .short
-
-        if isToday {
-            return timeFormatter.string(from: date)
-        } else {
-            let dateTimeFormatter = DateFormatter()
-            dateTimeFormatter.dateStyle = .short
-            dateTimeFormatter.timeStyle = .short
-            return dateTimeFormatter.string(from: date)
-        }
+        let dateTimeFormatter = DateFormatter()
+        dateTimeFormatter.dateStyle = .long
+        dateTimeFormatter.timeStyle = .short
+        return dateTimeFormatter.string(from: date)
     }
 
     var body: some View {
@@ -81,7 +71,7 @@ struct HistoryCardView: View {
                 // Wait until the hover animation is done to show the history
                 // DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 //     print("Switching to chat: \(chat.id)")
-                MessageViewModel.shared.switchChat(chat)
+                chatViewModel.switchChat(chat)
                 // }
             } else {
                 // TODO: make this smoother
@@ -91,9 +81,9 @@ struct HistoryCardView: View {
             }
         }
         .onTapGesture {
-            MessageViewModel.shared.switchChat(chat)
+            chatViewModel.switchChat(chat)
             withAnimation(AppConfig.snappy) {
-                isShowingHistory = false
+                historyViewModel.isShowingHistory = false
             }
         }
         .overlay(

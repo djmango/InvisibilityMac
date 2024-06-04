@@ -8,6 +8,7 @@
 
 import Foundation
 import OSLog
+import PostHog
 
 enum DataType: String {
     case pdf
@@ -35,6 +36,9 @@ final class ChatViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatViewModel")
 
     static let shared = ChatViewModel()
+
+    /// The currently viewed chat.
+    @Published public var chat: APIChat?
 
     /// A boolean value that indicates whether the text field should be focused.
     @Published public var shouldFocusTextField: Bool = false
@@ -77,5 +81,30 @@ final class ChatViewModel: ObservableObject {
     @MainActor
     public func focusTextField() {
         shouldFocusTextField = true
+    }
+
+    @MainActor
+    func newChat() {
+        defer { PostHogSDK.shared.capture("new_chat") }
+        guard let user = UserManager.shared.user else {
+            logger.error("User not found")
+            return
+        }
+
+        ChatViewModel.shared.chat = APIChat(
+            id: UUID(),
+            user_id: user.id,
+            name: "New Chat",
+            created_at: Date(),
+            updated_at: Date()
+        )
+
+        MessageViewModel.shared.api_chats.append(chat!)
+    }
+
+    @MainActor
+    func switchChat(_ chat: APIChat) {
+        defer { PostHogSDK.shared.capture("switch_chat") }
+        ChatViewModel.shared.chat = chat
     }
 }
