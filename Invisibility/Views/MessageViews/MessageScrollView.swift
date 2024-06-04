@@ -25,12 +25,12 @@ struct MessageScrollView: View {
                 header: {
                     HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
                 },
-                headerHeight: messageViewModel.messages.count > 7 ? 50 : max(10, messageViewModel.windowHeight - 205),
+                headerHeight: messageViewModel.api_messages_in_chat.count > 7 ? 50 : max(10, messageViewModel.windowHeight - 205),
                 headerMinHeight: 0,
                 onScroll: handleOffset
             ) {
                 MessageListView(
-                    messages: $messageViewModel.messages,
+                    messages: messageViewModel.api_messages_in_chat,
                     numMessagesDisplayed: $numMessagesDisplayed,
                     canSendMessages: userManager.canSendMessages,
                     isRecording: $screenRecorder.isRunning
@@ -100,15 +100,15 @@ struct HeaderView: View {
             .keyboardShortcut("u", modifiers: [.command, .shift])
 
             MessageButtonItemView(
-                label: "Show +\(min(messageViewModel.messages.count - numMessagesDisplayed, 10))",
+                label: "Show +\(min(messageViewModel.api_messages_in_chat.count - numMessagesDisplayed, 10))",
                 icon: "chevron.up",
                 shortcut_hint: "⌘ + ⇧ + I",
                 whoIsHovering: $whoIsHovering,
                 action: {
-                    numMessagesDisplayed = min(messageViewModel.messages.count, numMessagesDisplayed + 10)
+                    numMessagesDisplayed = min(messageViewModel.api_messages_in_chat.count, numMessagesDisplayed + 10)
                 }
             )
-            .visible(if: messageViewModel.messages.count > 10 && numMessagesDisplayed < messageViewModel.messages.count, removeCompletely: true)
+            .visible(if: messageViewModel.api_messages_in_chat.count > 10 && numMessagesDisplayed < messageViewModel.api_messages_in_chat.count, removeCompletely: true)
             .keyboardShortcut("i", modifiers: [.command, .shift])
         }
         .animation(AppConfig.snappy, value: whoIsHovering)
@@ -117,12 +117,12 @@ struct HeaderView: View {
 }
 
 struct MessageListView: View {
-    @Binding var messages: [Message]
+    var messages: [APIMessage]
     @Binding var numMessagesDisplayed: Int
     let canSendMessages: Bool
     @Binding var isRecording: Bool
 
-    private var displayedMessages: [Message] {
+    private var displayedMessages: [APIMessage] {
         messages.suffix(numMessagesDisplayed)
     }
 

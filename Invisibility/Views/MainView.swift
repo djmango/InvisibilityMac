@@ -30,6 +30,7 @@ struct MainView: View {
                 HistoryView(isShowingHistory: $isShowingHistory)
                     .offset(x: 0, y: isShowingHistory ? 0 : 500)
                     .opacity(isShowingHistory ? 1 : 0)
+                    .visible(if: isShowingHistory, removeCompletely: true)
 
                 Rectangle()
                     .foregroundColor(Color.white.opacity(0.001))

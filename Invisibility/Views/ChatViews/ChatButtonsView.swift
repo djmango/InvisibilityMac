@@ -147,7 +147,7 @@ struct ChatButtonsView: View {
         }
         .animation(AppConfig.snappy, value: whoIsHovering)
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
-        .animation(AppConfig.snappy, value: messageViewModel.messages.count)
+        .animation(AppConfig.snappy, value: messageViewModel.api_messages_in_chat.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(AppConfig.snappy, value: betaFeatures)
         .frame(maxWidth: resized ? 500 : 380)

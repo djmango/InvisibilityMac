@@ -43,7 +43,6 @@
 		4D8E05512B2516DE00B60D0D /* InvisibilityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E052F2B2516DE00B60D0D /* InvisibilityApp.swift */; };
 		4D8E05522B2516DE00B60D0D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E05322B2516DE00B60D0D /* Assets.xcassets */; };
 		4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05352B2516DE00B60D0D /* AppMessages.swift */; };
-		4D8E05562B2516DE00B60D0D /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05382B2516DE00B60D0D /* Message.swift */; };
 		4D8E05582B2516DE00B60D0D /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D8E053B2B2516DE00B60D0D /* Preview Assets.xcassets */; };
 		4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E05442B2516DE00B60D0D /* AppView.swift */; };
 		4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */; };
@@ -129,7 +128,6 @@
 		4D8E05312B2516DE00B60D0D /* Invisibility.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Invisibility.entitlements; sourceTree = "<group>"; };
 		4D8E05322B2516DE00B60D0D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4D8E05352B2516DE00B60D0D /* AppMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppMessages.swift; sourceTree = "<group>"; };
-		4D8E05382B2516DE00B60D0D /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		4D8E053B2B2516DE00B60D0D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		4D8E05442B2516DE00B60D0D /* AppView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
 		4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListItemView.swift; sourceTree = "<group>"; };
@@ -244,7 +242,6 @@
 			children = (
 				4D8E052E2B2516DE00B60D0D /* App */,
 				4D9ADB852C07E5B500A1EFC7 /* Types */,
-				4D8E05362B2516DE00B60D0D /* Models */,
 				4D1FC3502B623147009DA851 /* Managers */,
 				4D8E05282B2516DE00B60D0D /* ViewModels */,
 				4D8E053E2B2516DE00B60D0D /* Views */,
@@ -310,14 +307,6 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
-		4D8E05362B2516DE00B60D0D /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				4D8E05382B2516DE00B60D0D /* Message.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		4D8E053A2B2516DE00B60D0D /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,6 +330,7 @@
 			children = (
 				4D9ADB7C2C07BBB000A1EFC7 /* HistoryViews */,
 				4D8E05442B2516DE00B60D0D /* AppView.swift */,
+				4D8E054B2B2516DE00B60D0D /* MainView.swift */,
 				4DF195012B91B46E0017365F /* Effects */,
 				4D5896D92B7C67BD00484BFA /* MenubarViews */,
 				4DA893AE2B54C44200560DAD /* OnboardingViews */,
@@ -368,15 +358,6 @@
 		4D8E05492B2516DE00B60D0D /* MessageViews */ = {
 			isa = PBXGroup;
 			children = (
-				4D911BB02BC1E1170034B1A8 /* MessageListItem */,
-				4D8E054B2B2516DE00B60D0D /* MainView.swift */,
-			);
-			path = MessageViews;
-			sourceTree = "<group>";
-		};
-		4D911BB02BC1E1170034B1A8 /* MessageListItem */ = {
-			isa = PBXGroup;
-			children = (
 				4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */,
 				4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */,
 				4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */,
@@ -386,7 +367,7 @@
 				4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */,
 				4D37F2C62BDACA9900F2FC93 /* MessageLoaderView.swift */,
 			);
-			path = MessageListItem;
+			path = MessageViews;
 			sourceTree = "<group>";
 		};
 		4D9ADB7C2C07BBB000A1EFC7 /* HistoryViews */ = {
@@ -591,7 +572,6 @@
 				4DB061B52BF2B82D007CF7DD /* CaptureViewModel.swift in Sources */,
 				4DB061AD2BF2B031007CF7DD /* ScreenRecorder.swift in Sources */,
 				4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */,
-				4D8E05562B2516DE00B60D0D /* Message.swift in Sources */,
 				4D451C302B83604600DCEF48 /* String+extractAfter.swift in Sources */,
 				4D1773D82B8C1060004C5D13 /* ChatButtonsView.swift in Sources */,
 				4D911BAD2BC1DD480034B1A8 /* MessageImagesView.swift in Sources */,

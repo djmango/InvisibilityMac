@@ -10,7 +10,7 @@ import SwiftUI
 import ViewCondition
 
 struct MessageActionButtonsView: View {
-    private let message: Message
+    private let message: APIMessage
 
     @State private var whoIsHovering: String?
     @State private var isCopied: Bool = false
@@ -25,7 +25,7 @@ struct MessageActionButtonsView: View {
     }
 
     private var isGenerating: Bool {
-        messageViewModel.isGenerating && (message.content?.isEmpty ?? true)
+        messageViewModel.isGenerating && (message.text.isEmpty)
     }
 
     private var isResizeButtonVisible: Bool {
@@ -45,11 +45,11 @@ struct MessageActionButtonsView: View {
     }
 
     private var isLastMessage: Bool {
-        message.id == messageViewModel.messages.last?.id
+        message.id == messageViewModel.api_messages_in_chat.last?.id
     }
 
     init(
-        message: Message,
+        message: APIMessage,
         isHovered: Binding<Bool>
     ) {
         self.message = message
@@ -58,29 +58,10 @@ struct MessageActionButtonsView: View {
 
     var body: some View {
         VStack(alignment: .trailing) {
-            // Button(action: {
-            //     messageViewModel.deleteMessage(id: message.id)
-            // }) {
-            //     Image(systemName: "xmark")
-            //         .font(.system(size: 12))
-            // }
-            // .buttonStyle(.plain)
-            // .visible(if: isDeleteButtonVisible)
-            // .padding(2)
-
             Spacer()
 
             HStack {
                 Spacer()
-                // MessageButtonItemView(
-                //     label: "Remove",
-                //     icon: "minus",
-                //     shortcut_hint: nil,
-                //     whoIsHovering: $whoIsHovering
-                // ) {
-                //     messageViewModel.deleteMessage(id: message.id)
-                // }
-                // .visible(if: isHovered, removeCompletely: true)
 
                 MessageButtonItemView(
                     label: "Regenerate",
@@ -107,25 +88,6 @@ struct MessageActionButtonsView: View {
             }
         }
         .padding(8)
-        // .overlay(
-        //     VStack {
-        //         HStack {
-        //             Spacer()
-        //             MessageButtonItemView(
-        //                 label: nil,
-        //                 icon: "xmark",
-        //                 shortcut_hint: nil,
-        //                 whoIsHovering: $whoIsHovering
-        //             ) {
-        //                 messageViewModel.deleteMessage(id: message.id)
-        //             }
-        //             .visible(if: isHovered, removeCompletely: true)
-        //             .scaleEffect(0.8)
-        //             .offset(x: 10, y: -10)
-        //         }
-        //         Spacer()
-        //     }
-        // )
         .animation(AppConfig.snappy, value: whoIsHovering)
         .animation(AppConfig.snappy, value: isHovered)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
@@ -136,7 +98,7 @@ struct MessageActionButtonsView: View {
     private func copyAction() {
         let pasteBoard = NSPasteboard.general
         pasteBoard.clearContents()
-        pasteBoard.setString(message.content ?? "", forType: .string)
+        pasteBoard.setString(message.text, forType: .string)
 
         isCopied = true
 
@@ -147,7 +109,7 @@ struct MessageActionButtonsView: View {
 
     private func regenerateAction() {
         Task {
-            await messageViewModel.regenerate()
+            await messageViewModel.regenerate(message: message)
         }
     }
 }

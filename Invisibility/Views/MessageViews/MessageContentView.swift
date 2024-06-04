@@ -10,16 +10,16 @@ import MarkdownWebView
 import SwiftUI
 
 struct MessageContentView: View {
-    @ObservedObject private var message: Message
-
-    init(message: Message) {
-        self.message = message
-    }
+    @ObservedObject var message: APIMessage
 
     private var isAssistant: Bool { message.role == .assistant }
-    private var isGenerating: Bool { MessageViewModel.shared.isGenerating && (message.content?.isEmpty ?? true) }
-    private var isLastMessage: Bool { message.id == MessageViewModel.shared.messages.last?.id }
+    private var isGenerating: Bool { MessageViewModel.shared.isGenerating && (message.text.isEmpty) }
+    private var isLastMessage: Bool { message.id == MessageViewModel.shared.api_messages.last?.id }
     private var showLoading: Bool { isGenerating && isLastMessage }
+
+    private var images: [APIFile] {
+        MessageViewModel.shared.shownImagesFor(message: message)
+    }
 
     var body: some View {
         // let _ = Self._printChanges()
@@ -59,16 +59,16 @@ struct MessageContentView: View {
             // .visible(if: showLoading, removeCompletely: true)
 
             HStack {
-                MessageImagesView(images: message.nonHiddenImages)
-                    .visible(if: !message.images_data.isEmpty, removeCompletely: true)
+                MessageImagesView(images: images)
+                    .visible(if: !images.isEmpty, removeCompletely: true)
 
                 // MessagePDFsView(items: message.pdfs_data)
                 //     .visible(if: !message.pdfs_data.isEmpty, removeCompletely: true)
             }
             // .visible(if: !message.images_data.isEmpty || !message.pdfs_data.isEmpty, removeCompletely: true)
-            .visible(if: !message.images_data.isEmpty, removeCompletely: true)
+            .visible(if: !images.isEmpty, removeCompletely: true)
 
-            MarkdownWebView(message.content ?? "")
+            MarkdownWebView(message.text)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()

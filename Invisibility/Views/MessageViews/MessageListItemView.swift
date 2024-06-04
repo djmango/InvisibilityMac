@@ -1,11 +1,7 @@
 import SwiftUI
 
 struct MessageListItemView: View {
-    private let message: Message
-
-    init(message: Message) {
-        self.message = message
-    }
+    let message: APIMessage
 
     @State private var isHovered: Bool = false
 

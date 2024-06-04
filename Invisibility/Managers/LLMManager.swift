@@ -159,9 +159,9 @@ final class LLMManager {
     }
 
     func chat(
-        messages: [Message],
+        messages: [APIMessage],
         chat: APIChat,
-        processOutput: @escaping (String, Message) -> Void,
+        processOutput: @escaping (String, APIMessage) -> Void,
         regenerate_from_message_id: UUID? = nil
     ) async {
         guard let assistantMessage = messages.last else {
@@ -204,11 +204,9 @@ final class LLMManager {
         }
     }
 
-    func constructChatQuery(messages: [Message], chat: APIChat, regenerate_from_message_id: UUID? = nil) async -> ChatQuery {
-        var messages = messages
-
+    func constructChatQuery(messages: [APIMessage], chat: APIChat, regenerate_from_message_id: UUID? = nil) async -> ChatQuery {
         // If the last message has any images use the vision model, otherwise use the regular model
-        let allow_images = messages.last?.images_data.count ?? 0 > 0 && model.vision != nil
+        let allow_images = model.vision != nil
 
         let model_id: String = if allow_images {
             model.vision ?? model.text
@@ -217,7 +215,8 @@ final class LLMManager {
         }
 
         var chat_messages = messages.compactMap { message in
-            message.toChat(allow_images: allow_images)
+            // message.toChat(allow_images: allow_images)
+            oaiFromAPIMessage(api_message: message, api_files: [], allow_images: allow_images)
         }
 
         // Ensure the first message is always from the user
@@ -237,16 +236,7 @@ final class LLMManager {
         var chat_query = ChatQuery(messages: chat_messages, model: model_id)
 
         if let last_message = messages.last {
-            var show_files_to_user: [Bool] = Array(repeating: true, count: last_message.images_data.count)
-
-            // Iterate through the hidden images' indexes and mark the corresponding values as false
-            if let hidden_images = last_message.hidden_images {
-                for index in hidden_images {
-                    if index < show_files_to_user.count {
-                        show_files_to_user[index] = false
-                    }
-                }
-            }
+            let show_files_to_user: [Bool] = MessageViewModel.shared.imagesFor(message: last_message).map(\.show_to_user)
 
             chat_query.invisibility = ChatQuery.InvisibilityMetadata(
                 chat_id: chat.id,
@@ -257,5 +247,36 @@ final class LLMManager {
         }
 
         return chat_query
+    }
+}
+
+func oaiFromAPIMessage(api_message: APIMessage, api_files: [APIFile], allow_images: Bool = false) -> ChatQuery.ChatCompletionMessageParam? {
+    var role: ChatQuery.ChatCompletionMessageParam.Role = .user
+    if api_message.role == .assistant {
+        role = .assistant
+    } else if api_message.role == .system {
+        role = .system
+    }
+
+    let complete_text: String = api_message.text
+
+    if allow_images, !api_files.isEmpty {
+        // Images, multimodal
+        let imageUrls = api_files.compactMap { file -> VisionContent.ChatCompletionContentPartImageParam.ImageURL? in
+            guard let url = file.url else { return nil }
+            return VisionContent.ChatCompletionContentPartImageParam.ImageURL(url: url, detail: .auto)
+        }
+        let imageParams = imageUrls.map { VisionContent.ChatCompletionContentPartImageParam(imageUrl: $0) }
+        let visionContent = imageParams.map { VisionContent(chatCompletionContentPartImageParam: $0) }
+
+        let textParam = VisionContent.ChatCompletionContentPartTextParam(text: complete_text)
+        let textVisionContent = [VisionContent(chatCompletionContentPartTextParam: textParam)]
+
+        let content = textVisionContent + visionContent
+
+        return ChatQuery.ChatCompletionMessageParam(role: role, content: content)
+    } else {
+        // Pure text
+        return ChatQuery.ChatCompletionMessageParam(role: role, content: complete_text)
     }
 }

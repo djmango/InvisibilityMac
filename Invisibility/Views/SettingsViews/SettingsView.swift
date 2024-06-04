@@ -121,8 +121,8 @@ struct SettingsView: View {
                             .buttonStyle(.bordered)
 
                             Button("Export Chat") {
-                                let text = MessageViewModel.shared.messages.map { message in
-                                    "\(message.role?.rawValue.capitalized ?? ""): \(message.text)"
+                                let text = MessageViewModel.shared.api_messages_in_chat.map { message in
+                                    "\(message.role.rawValue.capitalized): \(message.text)"
                                 }.joined(separator: "\n")
                                 document = TextDocument(text: text)
                                 showingExporter = true

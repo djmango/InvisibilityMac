@@ -12,12 +12,15 @@ final class MessageViewModel: ObservableObject {
     private var chatTask: Task<Void, Error>?
 
     private var chat: APIChat?
-    @Published public var messages: [Message] = [] // TODO: refactor out of this old class
     @Published public var api_chats: [APIChat] = []
     @Published public var api_messages: [APIMessage] = []
     @Published private var api_files: [APIFile] = []
     @Published public var windowHeight: CGFloat = 0
     @Published public var isGenerating: Bool = false
+
+    public var api_messages_in_chat: [APIMessage] {
+        api_messages.filter { $0.chat_id == chat?.id }.filter { $0.regenerated == false }
+    }
 
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
     @AppStorage("token") private var token: String?
@@ -34,14 +37,8 @@ final class MessageViewModel: ObservableObject {
                     self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
                     self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
                     self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
-
-                    let mapped_messages = self.api_messages.map { message in
-                        Message.fromAPI(message, files: fetched.files.filter { $0.message_id == message.id })
-                    }
-                    self.logger.debug("Fetched messages: \(mapped_messages.count)")
-
+                    self.logger.debug("Fetched messages: \(self.api_messages.count)")
                     self.chat = self.api_chats.last
-                    self.messages = mapped_messages
                 }
             } catch {
                 logger.warning("Error fetching data: \(error)")
@@ -88,7 +85,6 @@ final class MessageViewModel: ObservableObject {
         if isGenerating { stopGenerating() }
 
         // If the user has exceeded the daily message limit, don't send the message and pop up an alert
-        print(UserManager.shared.numMessagesLeft)
         if !UserManager.shared.canSendMessages {
             ToastViewModel.shared.showToast(
                 title: "Daily message limit reached"
@@ -120,119 +116,133 @@ final class MessageViewModel: ObservableObject {
             index
         }
 
-        let api_message = APIMessage(
+        let user_message = APIMessage(
             id: UUID(),
             chat_id: chat.id,
             user_id: user.id,
             text: TextViewModel.shared.text,
-            role: "user",
-            regenerated: false,
-            created_at: Date(),
-            updated_at: Date()
+            role: .user
         )
-        let message = Message(api: api_message, content: TextViewModel.shared.text, role: .user, images: images, hidden_images: hidden_images)
+
+        let assistant_message = APIMessage(
+            id: UUID(),
+            chat_id: chat.id,
+            user_id: user.id,
+            text: "",
+            role: .assistant
+        )
+
         TextViewModel.shared.clearText()
         ChatViewModel.shared.removeAll()
-
-        await send(message)
-        numMessagesSentToday += 1
-    }
-
-    @MainActor
-    private func send(_ message: Message, regenerate_from_message_id: UUID? = nil) async {
-        guard let chat else {
-            logger.error("No chat to send message to")
-            return
-        }
-        guard let user = UserManager.shared.user else {
-            logger.error("No user to send message as")
-            return
-        }
 
         isGenerating = true
         defer { PostHogSDK.shared.capture(
             "send_message",
             properties: [
-                "num_images": message.images_data.count,
-                "message_length": message.content?.count ?? 0,
+                "num_images": imagesFor(message: user_message).count,
+                "message_length": user_message.text.count,
                 "model": LLMManager.shared.model.human_name,
             ]
         )
         }
-        let api_message = APIMessage(
-            id: UUID(),
-            chat_id: chat.id,
-            user_id: user.id,
-            text: "",
-            role: "assistant",
-            regenerated: false,
-            created_at: Date(),
-            updated_at: Date()
-        )
-        let assistantMessage = Message(api: api_message, content: nil, role: .assistant)
 
-        messages.append(contentsOf: [message, assistantMessage])
+        api_messages.append(contentsOf: [user_message, assistant_message])
 
         chatTask = Task {
-            let lastMessageId = messages.last?.id
+            let lastMessageId = assistant_message.id
             await LLMManager.shared.chat(
-                messages: messages,
+                messages: api_messages_in_chat,
                 chat: chat,
-                processOutput: processOutput,
-                regenerate_from_message_id: regenerate_from_message_id
+                processOutput: processOutput
             )
 
             await MainActor.run {
-                if let lastMessageId, messages.last?.id == lastMessageId {
+                if api_messages_in_chat.last?.id == lastMessageId {
                     // Only update isGenerating if the last message is the chat we are responsible for
                     self.isGenerating = false
                 }
             }
             logger.debug("Chat complete")
         }
+
+        numMessagesSentToday += 1
     }
 
     @MainActor
-    func regenerate() async {
+    func regenerate(message: APIMessage) async {
+        guard let chat = self.chat else {
+            logger.error("No chat to regenerate")
+            return
+        }
+        guard let user = UserManager.shared.user else {
+            logger.error("No user to regenerate as")
+            return
+        }
+        // Get the user message before the message to be regenerated
+        guard let user_message_before = api_messages_in_chat.last(where: { $0.created_at < message.created_at && $0.role == .user }) else {
+            logger.error("No user message before message to regenerate")
+            return
+        }
+
+        if api_messages_in_chat.count < 2 {
+            logger.error("Not enough messages to regenerate")
+            return
+        }
+
         isGenerating = true
+
         defer { PostHogSDK.shared.capture(
             "regenerate_message",
             properties: [
-                "num_images": messages.last?.images_data.count ?? 0,
-                "message_length": messages.last?.content?.count ?? 0,
+                "num_images": imagesFor(message: message).count,
+                "message_length": message.text.count,
                 "model": LLMManager.shared.model.human_name,
             ]
         )
         }
 
-        // For easy code reuse, essentially what we're doing here is resetting the state to before the message we want to regenerate was generated
-        // So for that, we'll recreate the original send scenario, when the new user message was sent
-        // We'll delete it the last two messages, the user message and the assistant message we want to regenerate
-        // This assumes chat structure is always user -> assistant -> user
-
-        if messages.count < 2 {
-            logger.error("Not enough messages to regenerate")
-            return
+        // Mark all messges after the message to be regenerated as regenerated
+        for index in api_messages.indices where
+            api_messages[index].chat_id == message.chat_id &&
+            api_messages[index].created_at >= user_message_before.created_at
+        {
+            api_messages[index].regenerated = true
         }
 
-        // Remove the assistant message we are regenerating from class
-        messages.removeLast()
+        let user_message = APIMessage(
+            id: UUID(),
+            chat_id: chat.id,
+            user_id: user.id,
+            text: user_message_before.text,
+            role: .user
+        )
 
-        // Removes the user message and presents a fresh send scenario
-        if let userMessage = messages.popLast() {
-            // New uuid4 for the user message
-            let regenerate_from_message_id = userMessage.id
-            userMessage.api.id = UUID()
-            await send(userMessage, regenerate_from_message_id: regenerate_from_message_id)
-        }
-    }
+        let assistant_message = APIMessage(
+            id: UUID(),
+            chat_id: chat.id,
+            user_id: user.id,
+            text: "",
+            role: .assistant
+        )
 
-    @MainActor
-    func deleteMessage(id: UUID) {
-        if let index = messages.firstIndex(where: { $0.id == id }) {
-            _ = withAnimation {
-                messages.remove(at: index)
+        api_messages.append(contentsOf: [user_message, assistant_message])
+
+        chatTask = Task {
+            let lastMessageId = user_message.id
+            await LLMManager.shared.chat(
+                messages: api_messages_in_chat,
+                chat: chat,
+                processOutput: processOutput,
+                regenerate_from_message_id: user_message_before.id
+            )
+
+            await MainActor.run {
+                if api_messages.last?.id == lastMessageId {
+                    // Only update isGenerating if the last message is the chat we are responsible for
+                    self.isGenerating = false
+                }
             }
+            logger.debug("Regenerate complete")
         }
     }
 
@@ -253,19 +263,12 @@ final class MessageViewModel: ObservableObject {
         )
 
         self.api_chats.append(chat!)
-        self.messages.removeAll()
     }
 
     @MainActor
     func switchChat(_ chat: APIChat) {
         defer { PostHogSDK.shared.capture("switch_chat") }
         self.chat = chat
-        self.messages = self.api_messages
-            .filter { $0.chat_id == chat.id }
-            .compactMap { message in
-                let files = self.api_files.filter { $0.message_id == message.id }
-                return Message.fromAPI(message, files: files)
-            }
     }
 
     @MainActor
@@ -274,17 +277,32 @@ final class MessageViewModel: ObservableObject {
         defer {
             PostHogSDK.shared.capture(
                 "stop_generating",
-                properties: ["stopped_message_length": messages.last?.content?.count ?? 0]
+                properties: ["stopped_message_length": api_messages.last?.text.count ?? 0]
             )
         }
         isGenerating = false
         chatTask?.cancel()
     }
 
-    private func processOutput(output: String, message: Message) {
+    private func processOutput(output: String, message: APIMessage) {
         DispatchQueue.main.async {
-            if message.content == nil { message.content = "" }
-            message.content?.append(output)
+            message.text.append(output)
         }
+    }
+
+    func filesFor(message: APIMessage) -> [APIFile] {
+        api_files.filter { $0.message_id == message.id }
+    }
+
+    func imagesFor(message: APIMessage) -> [APIFile] {
+        filesFor(message: message).filter { $0.filetype == .jpeg }
+    }
+
+    func hiddenImagesFor(message: APIMessage) -> [APIFile] {
+        filesFor(message: message).filter { $0.filetype == .jpeg && $0.show_to_user == false }
+    }
+
+    func shownImagesFor(message: APIMessage) -> [APIFile] {
+        filesFor(message: message).filter { $0.filetype == .jpeg && $0.show_to_user == true }
     }
 }
