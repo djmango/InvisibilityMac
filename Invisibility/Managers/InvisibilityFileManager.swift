@@ -1,5 +1,5 @@
 //
-//  FileManager.swift
+//  InvisibilityFileManager.swift
 //  Invisibility
 //
 //  Created by Sulaiman Ghori on 5/29/24.
@@ -16,33 +16,7 @@ import UniformTypeIdentifiers
 enum InvisibilityFileManager {
     static var logger = Logger(subsystem: AppConfig.subsystem, category: "FileManager")
 
-    /// Public function that can be called to begin the file open process
-    public static func openFile() {
-        let openPanel = NSOpenPanel()
-        openPanel.allowsMultipleSelection = false
-        openPanel.canChooseFiles = true
-        openPanel.canChooseDirectories = false
-
-        // Define allowed content types using UTType
-        openPanel.allowedContentTypes = [
-            UTType.image,
-        ]
-
-        // Technically doesn't work for the following types:
-        // SVGs: Our image standardization function doesn't support SVGs
-        // TODO: fix the above issues
-
-        openPanel.begin { result in
-            if result == .OK, let url = openPanel.url {
-                self.handleFile(url)
-            }
-        }
-
-        PostHogSDK.shared.capture("open_file")
-    }
-
     public static func handleDrop(providers: [NSItemProvider]) -> Bool {
-        // logger.debug("Handling drop")
         // logger.debug("Providers: \(providers)")
         for provider in providers {
             // logger.debug("Provider: \(provider.description)")
@@ -87,7 +61,7 @@ enum InvisibilityFileManager {
             } else {
                 logger.error("Selected file \(url) is of an unknown type.")
                 ToastViewModel.shared.showToast(
-                    title: "Unknown file type"
+                    title: "Unsupported file type"
                 )
             }
         }
@@ -122,7 +96,7 @@ enum InvisibilityFileManager {
             return
         }
 
-        guard let data = pdf.dataRepresentation() else {
+        guard let _ = pdf.dataRepresentation() else {
             logger.error("Failed to get data representation from PDF.")
             return
         }

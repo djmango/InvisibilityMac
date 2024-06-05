@@ -11,15 +11,26 @@ import Foundation
 import OpenAI
 import SwiftUI
 
-// Alias for ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent(images: images)
-typealias VisionContent = ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent
-
 struct APIChat: Codable, Identifiable, Hashable {
     let id: UUID
     let user_id: String
     let name: String
     let created_at: Date
     let updated_at: Date
+
+    init(
+        id: UUID,
+        user_id: String,
+        name: String = "New Chat",
+        created_at: Date = Date(),
+        updated_at: Date = Date()
+    ) {
+        self.id = id
+        self.user_id = user_id
+        self.name = name
+        self.created_at = created_at
+        self.updated_at = updated_at
+    }
 }
 
 enum APIRole: String, Codable {
@@ -116,14 +127,36 @@ enum APIFiletype: String, Codable, Equatable, CustomStringConvertible {
 /// File representation with necessary properties and codable conformance
 struct APIFile: Codable, Equatable {
     let id: UUID
+    let message_id: UUID
     let chat_id: UUID
     let user_id: String
-    let message_id: UUID
     let filetype: APIFiletype
     let show_to_user: Bool
     let url: String?
     let created_at: Date
     let updated_at: Date
+
+    init(
+        id: UUID,
+        message_id: UUID,
+        chat_id: UUID,
+        user_id: String,
+        filetype: APIFiletype,
+        show_to_user: Bool,
+        url: String?,
+        created_at: Date = Date(),
+        updated_at: Date = Date()
+    ) {
+        self.id = id
+        self.message_id = message_id
+        self.chat_id = chat_id
+        self.user_id = user_id
+        self.filetype = filetype
+        self.show_to_user = show_to_user
+        self.url = url
+        self.created_at = created_at
+        self.updated_at = updated_at
+    }
 }
 
 // Define a struct for the response

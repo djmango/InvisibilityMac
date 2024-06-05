@@ -14,7 +14,7 @@ final class SettingsViewModel: ObservableObject {
 
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "SettingsViewModel")
 
-    @Published var showSettings = false
+    @Published var isShowingSettings = false
 
     private init() {}
 }

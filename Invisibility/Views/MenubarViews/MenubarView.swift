@@ -38,7 +38,7 @@ struct MenubarView: View {
 
             Button("Settings") {
                 WindowManager.shared.showWindow()
-                SettingsViewModel.shared.showSettings.toggle()
+                SettingsViewModel.shared.isShowingSettings.toggle()
             }
             .keyboardShortcut(",", modifiers: [.command])
 

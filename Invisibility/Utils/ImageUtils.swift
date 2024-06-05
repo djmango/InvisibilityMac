@@ -26,9 +26,18 @@ extension CGImage {
 extension String {
     /// Converts a base64 string to an NSImage
     func base64ToImage() -> NSImage? {
-        guard let imageData = Data(base64Encoded: self, options: .ignoreUnknownCharacters) else {
+        // Check if there's a prefix and remove it
+        var base64String = self
+        if let range = base64String.range(of: "base64,") {
+            base64String = String(base64String[range.upperBound...])
+        }
+
+        // Decode Base64 string
+        guard let imageData = Data(base64Encoded: base64String, options: .ignoreUnknownCharacters) else {
             return nil
         }
+
+        // Create an NSImage from the data
         return NSImage(data: imageData)
     }
 }

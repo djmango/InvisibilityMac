@@ -10,18 +10,13 @@ import Foundation
 import OSLog
 import PostHog
 
-enum DataType: String {
-    case pdf
-    case image
-}
-
 struct ChatDataItem: Identifiable, Equatable {
     let id = UUID()
     let data: Data
-    let dataType: DataType
+    let dataType: APIFiletype
     let hide: Bool
 
-    init(data: Data, dataType: DataType, hide: Bool = false) {
+    init(data: Data, dataType: APIFiletype, hide: Bool = false) {
         self.data = data
         self.dataType = dataType
         self.hide = hide
@@ -29,6 +24,19 @@ struct ChatDataItem: Identifiable, Equatable {
 
     static func == (lhs: ChatDataItem, rhs: ChatDataItem) -> Bool {
         lhs.id == rhs.id
+    }
+
+    func toAPI(message: APIMessage) -> APIFile {
+        APIFile(
+            id: UUID(),
+            message_id: message.id,
+            chat_id: message.chat_id,
+            user_id: message.user_id,
+            filetype: dataType,
+            show_to_user: !hide,
+            // Data to base64. Needs the correct prefix for the data type.
+            url: "data:image/jpeg;base64,\(data.base64EncodedString())"
+        )
     }
 }
 
@@ -50,7 +58,7 @@ final class ChatViewModel: ObservableObject {
     @Published public var items: [ChatDataItem] = []
 
     public var images: [ChatDataItem] {
-        items.filter { $0.dataType == .image }
+        items.filter { $0.dataType == .jpeg }
     }
 
     public var pdfs: [ChatDataItem] {
@@ -65,7 +73,7 @@ final class ChatViewModel: ObservableObject {
 
     @MainActor
     public func addImage(_ data: Data, hide: Bool = false) {
-        items.append(ChatDataItem(data: data, dataType: .image, hide: hide))
+        items.append(ChatDataItem(data: data, dataType: .jpeg, hide: hide))
     }
 
     @MainActor
@@ -93,10 +101,7 @@ final class ChatViewModel: ObservableObject {
 
         ChatViewModel.shared.chat = APIChat(
             id: UUID(),
-            user_id: user.id,
-            name: "New Chat",
-            created_at: Date(),
-            updated_at: Date()
+            user_id: user.id
         )
 
         MessageViewModel.shared.api_chats.append(chat!)

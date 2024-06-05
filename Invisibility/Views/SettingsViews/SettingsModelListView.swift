@@ -62,7 +62,7 @@ struct SettingsModelListView: View {
                 }
             }
             // To allow other drag and drops throughout the app
-            .hide(if: !SettingsViewModel.shared.showSettings, removeCompletely: true)
+            .hide(if: !SettingsViewModel.shared.isShowingSettings, removeCompletely: true)
             .padding(20)
             .background(
                 RoundedRectangle(cornerRadius: 16)

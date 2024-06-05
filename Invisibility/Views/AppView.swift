@@ -34,11 +34,12 @@ struct AppView: View {
             .simpleToast(isPresented: $toastViewModel.showToast, options: toastViewModel.toastOptions) {
                 HStack {
                     Image(systemName: toastViewModel.icon)
+                        .foregroundColor(.yellow)
                     Text(toastViewModel.title)
+                        .font(.title3)
                 }
-                .padding()
-                .background(.background
-                )
+                .padding(15)
+                .background(.background)
                 .overlay(
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(Color(NSColor.separatorColor), lineWidth: 1)

@@ -27,11 +27,17 @@ class InteractivePanel: NSPanel {
     // Listen for escape
     override func cancelOperation(_: Any?) {
         // If settings are open, close that instead
-        if SettingsViewModel.shared.showSettings {
-            SettingsViewModel.shared.showSettings.toggle()
-            return
+        if SettingsViewModel.shared.isShowingSettings {
+            withAnimation(AppConfig.snappy) {
+                SettingsViewModel.shared.isShowingSettings = false
+            }
+        } else if HistoryViewModel.shared.isShowingHistory {
+            withAnimation(AppConfig.snappy) {
+                HistoryViewModel.shared.isShowingHistory = false
+            }
+        } else {
+            WindowManager.shared.hideWindow()
         }
-        WindowManager.shared.hideWindow()
     }
 }
 

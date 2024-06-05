@@ -80,6 +80,7 @@ final class UserManager: ObservableObject {
         }
     }
 
+    // TODO: published somehow
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
     @AppStorage("lastResetDate") public var lastResetDate: String = ""
 
@@ -89,8 +90,7 @@ final class UserManager: ObservableObject {
 
     /// per day free 10 messages + 20 per invite also per day
     var numMessagesAllowed: Int {
-        // 10 + (20 * inviteCount)
-        10
+        10 + (20 * inviteCount)
     }
 
     var numMessagesLeft: Int {
@@ -140,14 +140,14 @@ final class UserManager: ObservableObject {
 
     func userIsLoggedIn() async -> Bool {
         guard token != nil else {
-            logger.info("User is not logged in")
+            logger.debug("User is not logged in")
             return false
         }
         if await getUser() != nil {
-            logger.info("User is logged in")
+            logger.debug("User is logged in")
             return true
         } else {
-            logger.info("User is not logged in")
+            logger.debug("User is not logged in")
             return false
         }
     }
@@ -193,7 +193,7 @@ final class UserManager: ObservableObject {
     func checkPaymentStatus() async -> Bool {
         guard let jwtToken = self.token else {
             logger.warning("No JWT token")
-            logger.info("User is not paid")
+            logger.debug("User is not paid")
             return false
         }
 
@@ -206,14 +206,14 @@ final class UserManager: ObservableObject {
                     switch response.result {
                     case .success:
                         if response.response?.statusCode == 200 {
-                            self.logger.info("User is paid")
+                            self.logger.debug("User is paid")
                             continuation.resume(returning: true)
                         } else {
-                            self.logger.info("User is not paid")
+                            self.logger.debug("User is not paid")
                             continuation.resume(returning: false)
                         }
                     case .failure:
-                        self.logger.info("User is not paid")
+                        self.logger.debug("User is not paid")
                         continuation.resume(returning: false)
                     }
                 }
@@ -240,7 +240,7 @@ final class UserManager: ObservableObject {
                     DispatchQueue.main.async {
                         self.inviteCount = userInvites.count
                     }
-                    self.logger.info("Fetched \(userInvites.count) invites")
+                    self.logger.debug("Fetched \(userInvites.count) invites")
                 case .failure:
                     self.logger.error("Error fetching invites")
                 }
@@ -267,7 +267,7 @@ final class UserManager: ObservableObject {
 
         if let url = URL(string: AppConfig.invisibility_api_base + "/pay/checkout?email=\(user.email)") {
             NSWorkspace.shared.open(url)
-            Task { await WindowManager.shared.hideWindow() }
+            Task { WindowManager.shared.hideWindow() }
         }
     }
 
@@ -305,7 +305,7 @@ final class UserManager: ObservableObject {
                                 let oldToken = self.token
                                 self.token = refreshTokenResponse.token
                                 if await self.userIsLoggedIn() {
-                                    self.logger.info("Token refreshed")
+                                    self.logger.debug("Token refreshed")
                                     continuation.resume(returning: true)
                                 } else {
                                     self.token = oldToken

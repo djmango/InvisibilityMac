@@ -15,7 +15,7 @@ final class ToastViewModel: ObservableObject {
 
     @Published var showToast: Bool = false
     public var toastOptions = SimpleToastOptions(
-        hideAfter: 3
+        hideAfter: 5
     )
     public var title: String = ""
     public var icon: String = ""

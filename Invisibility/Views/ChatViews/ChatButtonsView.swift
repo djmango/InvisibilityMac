@@ -92,7 +92,7 @@ struct ChatButtonsView: View {
                     shortcut_hint: "⌘ ,",
                     whoIsHovering: $whoIsHovering
                 ) {
-                    SettingsViewModel.shared.showSettings.toggle()
+                    SettingsViewModel.shared.isShowingSettings.toggle()
                 }
                 .keyboardShortcut(",", modifiers: [.command])
 

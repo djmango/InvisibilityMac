@@ -12,6 +12,9 @@ import OSLog
 import PostHog
 import SwiftUI
 
+// Alias for ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent(images: images)
+typealias VisionContent = ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent
+
 struct LLMModel: Codable, Equatable, Hashable, Identifiable {
     let text: String
     let vision: String?
@@ -215,8 +218,7 @@ final class LLMManager {
         }
 
         var chat_messages = messages.compactMap { message in
-            // message.toChat(allow_images: allow_images)
-            oaiFromAPIMessage(api_message: message, api_files: [], allow_images: allow_images)
+            oaiFromAPIMessage(api_message: message, allow_images: allow_images)
         }
 
         // Ensure the first message is always from the user
@@ -250,7 +252,7 @@ final class LLMManager {
     }
 }
 
-func oaiFromAPIMessage(api_message: APIMessage, api_files: [APIFile], allow_images: Bool = false) -> ChatQuery.ChatCompletionMessageParam? {
+func oaiFromAPIMessage(api_message: APIMessage, allow_images: Bool = false) -> ChatQuery.ChatCompletionMessageParam? {
     var role: ChatQuery.ChatCompletionMessageParam.Role = .user
     if api_message.role == .assistant {
         role = .assistant
@@ -259,6 +261,7 @@ func oaiFromAPIMessage(api_message: APIMessage, api_files: [APIFile], allow_imag
     }
 
     let complete_text: String = api_message.text
+    let api_files: [APIFile] = MessageViewModel.shared.imagesFor(message: api_message)
 
     if allow_images, !api_files.isEmpty {
         // Images, multimodal

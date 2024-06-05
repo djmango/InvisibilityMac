@@ -103,17 +103,8 @@ final class MessageViewModel: ObservableObject {
             }
         }
 
-        let images = ChatViewModel.shared.images.map(\.data)
-
         // Allow empty messages if there is a least 1 image
-        guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 || images.count > 0 else { return }
-
-        // Get indices of images that are marked as hidden
-        let hidden_images = ChatViewModel.shared.images.enumerated().filter { _, image in
-            image.hide
-        }.map { index, _ in
-            index
-        }
+        guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 || ChatViewModel.shared.images.count > 0 else { return }
 
         let user_message = APIMessage(
             id: UUID(),
@@ -130,6 +121,10 @@ final class MessageViewModel: ObservableObject {
             text: "",
             role: .assistant
         )
+
+        let images = ChatViewModel.shared.images.map { $0.toAPI(message: user_message) }
+
+        api_files.append(contentsOf: images)
 
         TextViewModel.shared.clearText()
         ChatViewModel.shared.removeAll()
@@ -270,10 +265,6 @@ final class MessageViewModel: ObservableObject {
 
     func imagesFor(message: APIMessage) -> [APIFile] {
         filesFor(message: message).filter { $0.filetype == .jpeg }
-    }
-
-    func hiddenImagesFor(message: APIMessage) -> [APIFile] {
-        filesFor(message: message).filter { $0.filetype == .jpeg && $0.show_to_user == false }
     }
 
     func shownImagesFor(message: APIMessage) -> [APIFile] {

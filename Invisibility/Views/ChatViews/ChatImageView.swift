@@ -47,6 +47,6 @@ struct ChatImageView: View {
             .onTapGesture {
                 ChatViewModel.shared.removeItem(id: imageItem.id)
             }
-            .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.images)
+            .animation(AppConfig.easeIn, value: ChatViewModel.shared.images)
     }
 }

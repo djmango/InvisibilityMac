@@ -35,14 +35,14 @@ struct MainView: View {
                     .foregroundColor(Color.white.opacity(0.001))
                     .onTapGesture {
                         // Dismiss settings when tapping on the chat in the background
-                        if settingsViewModel.showSettings {
-                            settingsViewModel.showSettings = false
+                        if settingsViewModel.isShowingSettings {
+                            settingsViewModel.isShowingSettings = false
                         }
                     }
-                    .visible(if: settingsViewModel.showSettings, removeCompletely: true)
+                    .visible(if: settingsViewModel.isShowingSettings, removeCompletely: true)
 
                 SettingsView()
-                    .visible(if: settingsViewModel.showSettings, removeCompletely: true)
+                    .visible(if: settingsViewModel.isShowingSettings, removeCompletely: true)
             }
             .mask(
                 LinearGradient(
@@ -97,7 +97,7 @@ struct MainView: View {
                     InvisibilityFileManager.handleDrop(providers: providers)
                 }
                 // This is critical to make the reorderable model list work
-                .hide(if: SettingsViewModel.shared.showSettings, removeCompletely: true)
+                .hide(if: SettingsViewModel.shared.isShowingSettings, removeCompletely: true)
         )
         .border(isDragActive ? Color.blue : Color.clear, width: 5)
         .onAppear {
