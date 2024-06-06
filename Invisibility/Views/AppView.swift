@@ -40,10 +40,7 @@ struct AppView: View {
                 }
                 .padding(15)
                 .background(.background)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-                )
+                .shadow(color: Color.black.opacity(0.3), radius: 2)
                 .cornerRadius(16)
                 .padding()
                 .shadow(radius: 2)

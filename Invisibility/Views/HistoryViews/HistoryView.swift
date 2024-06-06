@@ -130,9 +130,26 @@ struct HistorySectionView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            // HStack {
+            //     RoundedRectangle(cornerRadius: 2)
+            //         .fill(Color.white)
+            //         .frame(height: 1)
+
+            //     Text(title)
+            //         .font(.title2)
+            //         .foregroundColor(.white)
+
+            //     RoundedRectangle(cornerRadius: 5)
+            //         .fill(Color.white)
+            //         .frame(height: 1)
+            // }
+            // .shadow(color: Color.black.opacity(0.5), radius: 2)
+
             Text(title)
                 .font(.title2)
+                .bold()
                 .foregroundColor(.white)
+                .shadow(color: Color.black.opacity(0.7), radius: 2)
 
             ForEach(chats) { chat in
                 HistoryCardView(

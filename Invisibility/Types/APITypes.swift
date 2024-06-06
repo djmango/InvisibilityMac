@@ -14,7 +14,7 @@ import SwiftUI
 struct APIChat: Codable, Identifiable, Hashable {
     let id: UUID
     let user_id: String
-    let name: String
+    var name: String
     let created_at: Date
     let updated_at: Date
 
@@ -156,6 +156,20 @@ struct APIFile: Codable, Equatable {
         self.url = url
         self.created_at = created_at
         self.updated_at = updated_at
+    }
+
+    func copyToMessage(message: APIMessage) -> APIFile {
+        APIFile(
+            id: id,
+            message_id: message.id,
+            chat_id: chat_id,
+            user_id: user_id,
+            filetype: filetype,
+            show_to_user: show_to_user,
+            url: url,
+            created_at: created_at,
+            updated_at: updated_at
+        )
     }
 }
 

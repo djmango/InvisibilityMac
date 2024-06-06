@@ -211,6 +211,10 @@ final class MessageViewModel: ObservableObject {
             role: .user
         )
 
+        // Copy the images to the new message
+        let images = imagesFor(message: user_message_before).map { $0.copyToMessage(message: user_message) }
+        api_files.append(contentsOf: images)
+
         let assistant_message = APIMessage(
             id: UUID(),
             chat_id: chat.id,
