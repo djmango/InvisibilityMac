@@ -123,7 +123,7 @@ struct SettingsUserCardView: View {
         .padding(.vertical, 15)
         .background(
             RoundedRectangle(cornerRadius: 16)
-                .fill(Color("ChatButtonBackgroundColor"))
+                .fill(Color(.chatButtonBackground))
                 .stroke(Color(nsColor: .separatorColor))
         )
         .visible(if: userManager.user != nil)

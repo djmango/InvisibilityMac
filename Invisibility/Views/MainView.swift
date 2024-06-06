@@ -48,18 +48,6 @@ struct MainView: View {
                 LinearGradient(
                     gradient: Gradient(stops: [
                         .init(color: .clear, location: 0),
-                        .init(color: .black, location: 0.010), // Finish fading in
-                        .init(color: .black, location: 0.990), // Start fading out
-                        .init(color: .clear, location: 1.0),
-                    ]),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-            )
-            .mask(
-                LinearGradient(
-                    gradient: Gradient(stops: [
-                        .init(color: .clear, location: 0),
                         .init(color: .black, location: 0.005), // Finish fading in
                         .init(color: .black, location: 0.995), // Start fading out
                         .init(color: .clear, location: 1.0),

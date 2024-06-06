@@ -30,7 +30,7 @@ struct CaptureView: View {
             .padding(2)
             .background(
                 RoundedRectangle(cornerRadius: 10)
-                    .fill(Color("ChatButtonBackgroundColor"))
+                    .fill(Color(.chatButtonBackground))
             )
             .overlay(
                 RoundedRectangle(cornerRadius: 10)

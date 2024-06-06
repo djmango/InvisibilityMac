@@ -120,16 +120,18 @@ final class ChatViewModel: ObservableObject {
         ChatViewModel.shared.chat = chat
     }
 
-    func deleteChat(chat: APIChat) {
+    func deleteChat(_ chat: APIChat) {
         defer { PostHogSDK.shared.capture("delete_chat") }
-        MessageViewModel.shared.api_chats.removeAll { $0 == chat }
+        withAnimation {
+            MessageViewModel.shared.api_chats.removeAll { $0 == chat }
+        }
         if ChatViewModel.shared.chat == chat {
             ChatViewModel.shared.chat = MessageViewModel.shared.api_chats.first
         }
 
         // DELETE chat
         Task {
-            guard let url = URL(string: AppConfig.invisibility_api_base + "/chat/\(chat.id)") else {
+            guard let url = URL(string: AppConfig.invisibility_api_base + "/chats/\(chat.id)") else {
                 return
             }
             guard let token else {
@@ -147,7 +149,7 @@ final class ChatViewModel: ObservableObject {
         }
     }
 
-    func renameChat(chat: APIChat, name: String) {
+    func renameChat(_ chat: APIChat, name: String) {
         defer { PostHogSDK.shared.capture("rename_chat", properties: ["name": name]) }
 
         guard let index = MessageViewModel.shared.api_chats.firstIndex(of: chat) else {
@@ -158,7 +160,7 @@ final class ChatViewModel: ObservableObject {
 
         // PUT chat
         Task {
-            guard let url = URL(string: AppConfig.invisibility_api_base + "/chat/\(chat.id)") else {
+            guard let url = URL(string: AppConfig.invisibility_api_base + "/chats/\(chat.id)") else {
                 return
             }
             guard let token else {

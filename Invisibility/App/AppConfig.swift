@@ -14,6 +14,7 @@ enum AppConfig {
 
     static let snappy: Animation = .snappy(duration: 0.4)
     static let easeIn: Animation = .easeIn(duration: 0.2)
+    static let easeOut: Animation = .easeOut(duration: 0.2)
     static let sentry_dsn = "https://a345c7071f6f1c4adee0a33e5f359e9e@o4506922235592704.ingest.us.sentry.io/4506922241097728"
     static let posthog_api_key = "phc_aVzM8zKxuKj8BzbIDO7ByvmSH90WwB1vCZ1zPCZw9Y3"
 

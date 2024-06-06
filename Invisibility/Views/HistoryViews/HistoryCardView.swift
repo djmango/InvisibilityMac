@@ -14,7 +14,10 @@ struct HistoryCardView: View {
     let last_message: APIMessage?
 
     @State private var isHovered: Bool = false
-    @State private var whoIsHovering: String?
+    @State private var isNameHovered: Bool = false
+    @State private var isEditing: Bool = false
+    @FocusState private var isFocused: Bool
+    @State private var editedName: String = ""
     private var historyViewModel: HistoryViewModel = HistoryViewModel.shared
     private var chatViewModel: ChatViewModel = ChatViewModel.shared
 
@@ -32,27 +35,60 @@ struct HistoryCardView: View {
 
     var body: some View {
         HStack {
-            // Rounded blue line
+            // TODO: Capture the esc action so that people can exit the editing mode
             RoundedRectangle(cornerRadius: 5)
-                .fill(Color("HistoryColor"))
+                .fill(.history)
                 .frame(width: 5)
                 .padding(.trailing, 5)
 
             VStack(alignment: .leading) {
                 HStack {
-                    Text(chat.name)
+                    if isEditing {
+                        TextField("Enter new name", text: $editedName, onCommit: {
+                            // If the name is not empty, rename the chat
+                            if !editedName.isEmpty {
+                                chatViewModel.renameChat(chat, name: editedName)
+                            } else {
+                                editedName = chat.name
+                            }
+                            isEditing = false
+                        })
                         .font(.title3)
+                        .textFieldStyle(.plain)
+                        .focused($isFocused)
+                        .onAppear {
+                            isFocused = true
+                        }
+                    } else {
+                        HStack {
+                            Text(chat.name)
+                                .font(.title3)
 
-                    Button(action: {
-                        print("Rename chat: \(chat.id)")
-                    }) {
-                        Image(systemName: "pencil")
-                            .resizable()
-                            .foregroundColor(.gray)
+                            Image(systemName: "pencil")
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                                .foregroundColor(.chatButtonForeground)
+                                .visible(if: isNameHovered)
+                        }
+                        .onHover {
+                            if $0 {
+                                withAnimation(AppConfig.easeOut) {
+                                    isNameHovered = true
+                                }
+                            } else {
+                                withAnimation(AppConfig.easeOut) {
+                                    isNameHovered = false
+                                }
+                            }
+                        }
+                        .onTapGesture {
+                            // If not New Chat, give the current name as the starting point
+                            if chat.name != "New Chat" {
+                                editedName = chat.name
+                            }
+                            isEditing = true
+                        }
                     }
-                    .buttonStyle(.plain)
-                    .frame(width: 12, height: 12)
-                    .visible(if: isHovered)
 
                     Spacer()
 
@@ -83,32 +119,55 @@ struct HistoryCardView: View {
         )
         .overlay(
             // The X delete button
-            HStack {
-                VStack {
+            VStack {
+                HStack {
                     Button(action: {
-                        print("Delete chat: \(chat.id)")
+                        chatViewModel.deleteChat(chat)
                     }) {
                         Image(systemName: "xmark")
                             .resizable()
                             .padding(5)
                             .foregroundColor(.chatButtonForeground)
                             .clipShape(Circle())
+                            .overlay(
+                                Circle()
+                                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                            )
+                            .background(
+                                Circle()
+                                    .fill(Color.cardBackground)
+                                    .shadow(radius: 2)
+                            )
                     }
-                    .overlay(
-                        Circle()
-                            .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-                    )
-                    .background(
-                        Circle()
-                            .fill(Color.cardBackground)
-                            .shadow(radius: 2)
-                    )
                     .buttonStyle(.plain)
                     .frame(width: 21, height: 21)
                     .padding(.leading, -5)
                     .padding(.top, -5)
 
                     Spacer()
+
+                    // Button(action: {
+                    //     isEditing = true
+                    // }) {
+                    //     Image(systemName: "pencil")
+                    //         .resizable()
+                    //         .padding(5)
+                    //         .foregroundColor(.chatButtonForeground)
+                    //         .clipShape(Circle())
+                    //         .overlay(
+                    //             Circle()
+                    //                 .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                    //         )
+                    //         .background(
+                    //             Circle()
+                    //                 .fill(Color.cardBackground)
+                    //                 .shadow(radius: 2)
+                    //         )
+                    // }
+                    // .buttonStyle(.plain)
+                    // .frame(width: 21, height: 21)
+                    // .padding(.trailing, -5)
+                    // .padding(.top, -5)
                 }
                 Spacer()
             }
@@ -122,12 +181,11 @@ struct HistoryCardView: View {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     // Check if still hovered
                     if isHovered {
-                        print("Switching to chat: \(chat.id)")
                         chatViewModel.switchChat(chat)
                     }
                 }
             } else {
-                withAnimation(.easeOut(duration: 0.2)) {
+                withAnimation(AppConfig.easeOut) {
                     isHovered = false
                 }
             }

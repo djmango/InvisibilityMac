@@ -33,8 +33,8 @@ struct MessageContentView: View {
                 .opacity(0)
                 .overlay(LinearGradient(
                     gradient: isAssistant ?
-                        Gradient(colors: [Color("InvisGrad1"), Color("InvisGrad2")]) :
-                        Gradient(colors: [Color("YouText"), Color("YouText")]),
+                        Gradient(colors: [.invisGrad1, .invisGrad2]) :
+                        Gradient(colors: [.youText, .youText]),
                     startPoint: .leading, endPoint: .trailing
                 ))
                 .mask(

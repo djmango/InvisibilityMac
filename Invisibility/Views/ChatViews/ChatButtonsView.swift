@@ -50,7 +50,7 @@ struct ChatButtonsView: View {
                     icon: "shared.with.you",
                     shortcut_hint: "⌘ ⇧ 2",
                     whoIsHovering: $whoIsHovering,
-                    iconColor: screenRecorder.isRunning ? .purple : Color("ChatButtonForegroundColor")
+                    iconColor: screenRecorder.isRunning ? .purple : Color(.chatButtonForeground)
                 ) {
                     screenRecorder.toggleRecording()
                 }

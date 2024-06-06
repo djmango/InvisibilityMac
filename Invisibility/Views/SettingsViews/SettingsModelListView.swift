@@ -66,7 +66,7 @@ struct SettingsModelListView: View {
             .padding(20)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .foregroundColor(Color("ChatButtonBackgroundColor"))
+                    .foregroundColor(Color.chatButtonBackground)
                     .shadow(radius: 2)
             )
             .padding(.horizontal)

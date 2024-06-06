@@ -28,7 +28,7 @@ struct MessageButtonItemView: View {
          icon: String,
          shortcut_hint: String?,
          whoIsHovering: Binding<String?>,
-         iconColor: Color = Color("ChatButtonForegroundColor"),
+         iconColor: Color = .chatButtonForeground,
          action: @escaping () -> Void)
     {
         self.label = label
@@ -56,7 +56,7 @@ struct MessageButtonItemView: View {
                     if let shortcut_hint {
                         Text(shortcut_hint)
                             .font(.title3)
-                            .foregroundColor(Color("ChatButtonForegroundColor"))
+                            .foregroundColor(.chatButtonForeground)
                             .visible(
                                 if: ShortcutViewModel.shared.modifierFlags.contains(.command) && shortcutHints,
                                 removeCompletely: true
@@ -68,22 +68,22 @@ struct MessageButtonItemView: View {
                 if let label {
                     Text(label)
                         .font(.title3)
-                        .foregroundColor(Color("ChatButtonForegroundColor"))
+                        .foregroundColor(.chatButtonForeground)
                         .visible(if: isHovering && animateButtons && !ShortcutViewModel.shared.modifierFlags.contains(.command), removeCompletely: true)
                         .padding(.leading, 8)
                 }
             }
             .padding(8)
             .contentShape(RoundedRectangle(cornerRadius: 100))
+            .background(
+                RoundedRectangle(cornerRadius: 100)
+                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+            )
+            .background(
+                RoundedRectangle(cornerRadius: 100)
+                    .fill(Color(.chatButtonBackground))
+            )
         }
-        .background(
-            RoundedRectangle(cornerRadius: 100)
-                .fill(Color("ChatButtonBackgroundColor"))
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 100)
-                .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-        )
         .onHover { hovering in
             isHovering = hovering
             if hovering {
