@@ -26,16 +26,8 @@ class InteractivePanel: NSPanel {
 
     // Listen for escape
     override func cancelOperation(_: Any?) {
-        // If settings are open, close that instead
-        if SettingsViewModel.shared.isShowingSettings {
-            withAnimation(AppConfig.snappy) {
-                SettingsViewModel.shared.isShowingSettings = false
-            }
-        } else if HistoryViewModel.shared.isShowingHistory {
-            withAnimation(AppConfig.snappy) {
-                HistoryViewModel.shared.isShowingHistory = false
-            }
-        } else {
+        // If non-chat is open, close that instead
+        if !MainWindowViewModel.shared.changeView(to: .chat) {
             WindowManager.shared.hideWindow()
         }
     }
@@ -47,8 +39,8 @@ class WindowManager {
 
     static let shared = WindowManager()
 
-    private static let defaultWidth: CGFloat = 400
-    private static let resizeWidth: CGFloat = 800
+    static let defaultWidth: CGFloat = 400
+    static let resizeWidth: CGFloat = 800
 
     private var contentView = AppView()
     private var window: NSPanel?
@@ -80,35 +72,7 @@ class WindowManager {
     }
 
     private init() {
-        setupShortcuts()
-    }
-
-    private func setupShortcuts() {
-        KeyboardShortcuts.onKeyUp(for: .summon) {
-            // If we are just changing screens, don't toggle the window
-            if self.windowIsOnScreenWithCursor {
-                Task {
-                    self.toggleWindow()
-                }
-            } else {
-                // Just move to the new screen
-                self.positionWindowOnCursorScreen()
-                Task {
-                    self.showWindow()
-                }
-            }
-        }
-
-        KeyboardShortcuts.onKeyUp(for: .screenshot) {
-            self.logger.debug("Taking screenshot")
-            Task { await ScreenshotManager.shared.capture() }
-            self.positionWindowOnCursorScreen()
-        }
-
-        KeyboardShortcuts.onKeyUp(for: .record) {
-            self.logger.debug("Toggling recording")
-            ScreenRecorder.shared.toggleRecording()
-        }
+        ShortcutViewModel.shared.setupShortcuts()
     }
 
     public func toggleWindow() {
@@ -189,7 +153,7 @@ class WindowManager {
     }
 
     /// Position the window on the screen with the cursor
-    private func positionWindowOnCursorScreen(animate: Bool = false) {
+    public func positionWindowOnCursorScreen(animate: Bool = false) {
         guard let window else { return }
 
         // Get the current mouse location

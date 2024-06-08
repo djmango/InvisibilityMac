@@ -11,19 +11,23 @@ import SwiftUI
 
 struct HistoryCardView: View {
     let chat: APIChat
-    let last_message: APIMessage?
 
+    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+    private var chatViewModel: ChatViewModel = ChatViewModel.shared
+    private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
+
+    @State private var editedName: String = ""
     @State private var isHovered: Bool = false
     @State private var isNameHovered: Bool = false
     @State private var isEditing: Bool = false
     @FocusState private var isFocused: Bool
-    @State private var editedName: String = ""
-    private var historyViewModel: HistoryViewModel = HistoryViewModel.shared
-    private var chatViewModel: ChatViewModel = ChatViewModel.shared
 
-    init(chat: APIChat, last_message: APIMessage?) {
+    // var shouldHighlight: Bool {
+    //     chatViewModel.chat == chat || isHovered
+    // }
+
+    init(chat: APIChat) {
         self.chat = chat
-        self.last_message = last_message
     }
 
     func formattedDate(_ date: Date) -> String {
@@ -34,6 +38,7 @@ struct HistoryCardView: View {
     }
 
     var body: some View {
+        let _ = Self._printChanges()
         HStack {
             // TODO: Capture the esc action so that people can exit the editing mode
             RoundedRectangle(cornerRadius: 5)
@@ -92,14 +97,14 @@ struct HistoryCardView: View {
 
                     Spacer()
 
-                    Text(formattedDate(last_message?.created_at ?? Date()))
+                    Text(formattedDate(messageViewModel.lastMessageWithTextFor(chat: chat)?.created_at ?? chat.created_at))
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }
 
                 Spacer()
 
-                Text(last_message?.text ?? "")
+                Text(messageViewModel.lastMessageWithTextFor(chat: chat)?.text ?? "")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .lineLimit(2)
@@ -112,6 +117,8 @@ struct HistoryCardView: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
+            // .stroke(Color(NSColor.separatorColor), lineWidth: chatViewModel.chat == chat ? 3 : 1)
+            // .stroke(chatViewModel.chat == chat ? .history : Color(NSColor.separatorColor), lineWidth: chatViewModel.chat == chat ? 2 : 1)
         )
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
@@ -145,29 +152,6 @@ struct HistoryCardView: View {
                     .padding(.top, -5)
 
                     Spacer()
-
-                    // Button(action: {
-                    //     isEditing = true
-                    // }) {
-                    //     Image(systemName: "pencil")
-                    //         .resizable()
-                    //         .padding(5)
-                    //         .foregroundColor(.chatButtonForeground)
-                    //         .clipShape(Circle())
-                    //         .overlay(
-                    //             Circle()
-                    //                 .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-                    //         )
-                    //         .background(
-                    //             Circle()
-                    //                 .fill(Color.cardBackground)
-                    //                 .shadow(radius: 2)
-                    //         )
-                    // }
-                    // .buttonStyle(.plain)
-                    // .frame(width: 21, height: 21)
-                    // .padding(.trailing, -5)
-                    // .padding(.top, -5)
                 }
                 Spacer()
             }
@@ -192,9 +176,7 @@ struct HistoryCardView: View {
         }
         .onTapGesture {
             chatViewModel.switchChat(chat)
-            withAnimation(AppConfig.snappy) {
-                historyViewModel.isShowingHistory = false
-            }
+            _ = mainWindowViewModel.changeView(to: .chat)
         }
     }
 }

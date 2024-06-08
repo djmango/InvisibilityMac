@@ -1,5 +1,5 @@
 {
-  "originHash" : "ec4e17a51d696d8b5f39ae73317463db22048fc2fbfad33ea883544e7d5cc4eb",
+  "originHash" : "39d190a2d61dd257dbd0c25e17552ded8c1565468ba1c4ec27499b0aece75943",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "f455c2975872ccd2d9c81594c658af65716e9b9a",
         "version" : "5.9.1"
-      }
-    },
-    {
-      "identity" : "compactslider",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/buh/CompactSlider.git",
-      "state" : {
-        "revision" : "abe4d1df6f0c85dcb133266cc07c2a5d08295726",
-        "version" : "1.1.6"
       }
     },
     {
@@ -134,15 +125,6 @@
       "state" : {
         "revision" : "467a3d17479887943ab917a379e62bbaff60ac8a",
         "version" : "2.1.1"
-      }
-    },
-    {
-      "identity" : "swiftui-reorderable-foreach",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/globulus/swiftui-reorderable-foreach.git",
-      "state" : {
-        "revision" : "47f6ca1ad906ef2ae1f872ed34a10cc615ad99ca",
-        "version" : "1.0.0"
       }
     },
     {

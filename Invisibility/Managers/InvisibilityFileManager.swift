@@ -16,6 +16,29 @@ import UniformTypeIdentifiers
 enum InvisibilityFileManager {
     static var logger = Logger(subsystem: AppConfig.subsystem, category: "FileManager")
 
+    /// Public function that can be called to begin the file open process
+    public static func openFile() {
+        let openPanel = NSOpenPanel()
+        openPanel.allowsMultipleSelection = false
+        openPanel.canChooseFiles = true
+        openPanel.canChooseDirectories = false
+
+        // Define allowed content types using UTType
+        openPanel.allowedContentTypes = [
+            UTType.image,
+            UTType.pdf,
+            UTType.text,
+        ]
+
+        openPanel.begin { result in
+            if result == .OK, let url = openPanel.url {
+                self.handleFile(url)
+            }
+        }
+
+        PostHogSDK.shared.capture("open_file")
+    }
+
     public static func handleDrop(providers: [NSItemProvider]) -> Bool {
         // logger.debug("Providers: \(providers)")
         for provider in providers {

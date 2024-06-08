@@ -9,11 +9,22 @@ struct MainView: View {
     @State private var xOffset: CGFloat = -1000
 
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
-    @ObservedObject private var settingsViewModel = SettingsViewModel.shared
+    @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
     @ObservedObject private var screenRecorder = ScreenRecorder.shared
-    @ObservedObject private var historyViewModel = HistoryViewModel.shared
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
+
+    var isShowingMessages: Bool {
+        mainWindowViewModel.whoIsVisible == .chat
+    }
+
+    var isShowingHistory: Bool {
+        mainWindowViewModel.whoIsVisible == .history
+    }
+
+    var isShowingSettings: Bool {
+        mainWindowViewModel.whoIsVisible == .settings
+    }
 
     init() {
         isEditorFocused = true
@@ -25,24 +36,15 @@ struct MainView: View {
         VStack(alignment: .center, spacing: 0) {
             ZStack {
                 MessageScrollView()
-                    .offset(x: !historyViewModel.isShowingHistory ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                    .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
 
                 HistoryView()
-                    .offset(x: 0, y: historyViewModel.isShowingHistory ? 0 : -1000)
-                    .opacity(historyViewModel.isShowingHistory ? 1 : 0)
-
-                Rectangle()
-                    .foregroundColor(Color.white.opacity(0.001))
-                    .onTapGesture {
-                        // Dismiss settings when tapping on the chat in the background
-                        if settingsViewModel.isShowingSettings {
-                            settingsViewModel.isShowingSettings = false
-                        }
-                    }
-                    .visible(if: settingsViewModel.isShowingSettings, removeCompletely: true)
+                    .offset(x: 0, y: isShowingHistory ? 0 : -1000)
+                    .opacity(isShowingHistory ? 1 : 0)
 
                 SettingsView()
-                    .visible(if: settingsViewModel.isShowingSettings, removeCompletely: true)
+                    .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                    .opacity(isShowingSettings ? 1 : 0)
             }
             .mask(
                 LinearGradient(
@@ -84,8 +86,6 @@ struct MainView: View {
                 .onDrop(of: [.fileURL], isTargeted: $isDragActive) { providers in
                     InvisibilityFileManager.handleDrop(providers: providers)
                 }
-                // This is critical to make the reorderable model list work
-                .hide(if: SettingsViewModel.shared.isShowingSettings, removeCompletely: true)
         )
         .border(isDragActive ? Color.blue : Color.clear, width: 5)
         .onAppear {

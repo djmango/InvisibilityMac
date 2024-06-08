@@ -23,74 +23,77 @@ struct FreeTierCardView: View {
     }
 
     var body: some View {
-        ZStack {
-            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+        VStack(spacing: 15) {
+            Spacer()
 
-            VStack(spacing: 15) {
-                Spacer()
+            Text("Invite friends to Invisibility 💙")
+                .font(.title3)
+                .fontWeight(.bold)
 
-                Text("Invite friends to Invisibility 💙")
-                    .font(.title3)
-                    .fontWeight(.bold)
+            Text("Earn 20 messages for every friend you invite! 🎉")
+                .font(.body)
+                .foregroundColor(.gray)
 
-                Text("Earn 20 messages for every friend you invite! 🎉")
-                    .font(.body)
-                    .foregroundColor(.gray)
-
-                // Link is invite.i.inc/firstName
-                Button(action: {
-                    if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
-                        NSWorkspace.shared.open(url)
-                    }
-                }) {
-                    Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
-                        .font(.title2)
+            // Link is invite.i.inc/firstName
+            Button(action: {
+                if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
+                    NSWorkspace.shared.open(url)
                 }
-                .buttonStyle(.link)
+            }) {
+                Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
+                    .font(.title2)
+            }
+            .buttonStyle(.link)
 
-                QRView(string: userManager.inviteLink)
-                    .frame(width: 80, height: 80)
-                    .shadow(radius: 2)
-
-                Text(friendsInvitedText)
-                    .font(.callout)
-                    .foregroundColor(.gray)
-
-                Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
-                    .font(.callout)
-                    .foregroundColor(.gray)
-
-                Text("Or")
-                    .font(.title3)
-                    .fontWeight(.bold)
-
-                Button(action: {
-                    UserManager.shared.pay()
-                }) {
-                    Text("Get Free Trial")
-                        .font(.system(size: 25, weight: .bold))
-                        .foregroundColor(.white)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 28)
-                        .background(Color.blue)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color(nsColor: .separatorColor))
-                        )
-                        .cornerRadius(8)
-                }
-                .buttonStyle(.plain)
+            QRView(string: userManager.inviteLink)
+                .frame(width: 80, height: 80)
                 .shadow(radius: 2)
 
-                Text("Unlimited messages, early access, and more!")
-                    .font(.body)
-                    .foregroundColor(.gray)
-                    .multilineTextAlignment(.center)
+            Text(friendsInvitedText)
+                .font(.callout)
+                .foregroundColor(.gray)
 
-                Spacer()
+            Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
+                .font(.callout)
+                .foregroundColor(.gray)
+
+            Text("Or")
+                .font(.title3)
+                .fontWeight(.bold)
+
+            Button(action: {
+                UserManager.shared.pay()
+            }) {
+                Text("Get Free Trial")
+                    .font(.system(size: 25, weight: .bold))
+                    .foregroundColor(.white)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 28)
+                    .background(Color.blue)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color(nsColor: .separatorColor))
+                    )
+                    .cornerRadius(8)
             }
+            .buttonStyle(.plain)
+            .shadow(radius: 2)
+
+            Text("Unlimited messages, early access, and more!")
+                .font(.body)
+                .foregroundColor(.gray)
+                .multilineTextAlignment(.center)
+
+            Spacer()
         }
         .cornerRadius(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(nsColor: .separatorColor))
+        )
+        .background(
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+        )
         .overlay(
             VStack {
                 HStack {
@@ -103,10 +106,6 @@ struct FreeTierCardView: View {
                 }
                 Spacer()
             }
-        )
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color(nsColor: .separatorColor))
         )
         .onTapGesture {
             onTap()

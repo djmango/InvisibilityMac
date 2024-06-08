@@ -23,7 +23,6 @@ struct MenubarView: View {
             Button("Toggle Panel") {
                 WindowManager.shared.toggleWindow()
             }
-            .keyboardShortcut("g", modifiers: .command)
 
             Divider()
 
@@ -38,7 +37,7 @@ struct MenubarView: View {
 
             Button("Settings") {
                 WindowManager.shared.showWindow()
-                SettingsViewModel.shared.isShowingSettings.toggle()
+                _ = MainWindowViewModel.shared.changeView(to: .settings)
             }
             .keyboardShortcut(",", modifiers: [.command])
 

@@ -91,7 +91,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func application(_: NSApplication, open urls: [URL]) {
         for url in urls {
             // Parse and handle the URL as needed
-            print("URL received: \(url)")
+            logger.debug("URL received: \(url)")
             // Example: Check the scheme and handle the URL
             if url.scheme == "invisibility", let components = URLComponents(url: url, resolvingAgainstBaseURL: true) {
                 // Perform actions based on the URL components, such as extracting a token

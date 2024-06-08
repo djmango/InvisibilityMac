@@ -40,7 +40,6 @@ struct ChatPDFView: View {
                 }
             }
             .onTapGesture {
-                print("Removing PDF")
                 ChatViewModel.shared.removeItem(id: item.id)
             }
             .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)

@@ -18,21 +18,6 @@ struct InvisibilityApp: App {
             MenubarView()
         }
         .menuBarExtraStyle(.menu)
-        .commands {
-            CommandGroup(replacing: CommandGroupPlacement.help) {
-                Button("Invisibility Help") {
-                    NSWorkspace.shared.open(URL(string: "https://help.invisibility.so")!)
-                }
-                .keyboardShortcut("?", modifiers: [.command])
-            }
-
-            // Send message
-            CommandGroup(after: CommandGroupPlacement.saveItem) {
-                Button("Send Message") {
-                    Task { await MessageViewModel.shared.sendFromChat() }
-                }
-                .keyboardShortcut(.return, modifiers: [.command])
-            }
-        }
+        .commands { AppMenuCommands() }
     }
 }

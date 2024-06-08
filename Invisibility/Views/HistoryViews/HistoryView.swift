@@ -9,36 +9,6 @@
 import Foundation
 import SwiftUI
 
-extension Date {
-    var startOfDay: Date {
-        Calendar.current.startOfDay(for: self)
-    }
-
-    var startOfWeek: Date? {
-        let cal = Calendar.current
-        let components = cal.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self)
-        return cal.date(from: components)
-    }
-
-    var startOfMonth: Date? {
-        let cal = Calendar.current
-        let components = cal.dateComponents([.year, .month], from: self)
-        return cal.date(from: components)
-    }
-
-    func isInSameWeek(as date: Date) -> Bool {
-        Calendar.current.isDate(self, equalTo: date, toGranularity: .weekOfYear)
-    }
-
-    func isInSameMonth(as date: Date) -> Bool {
-        Calendar.current.isDate(self, equalTo: date, toGranularity: .month)
-    }
-
-    func daysAgo(_ days: Int) -> Date {
-        Calendar.current.date(byAdding: .day, value: -days, to: self.startOfDay) ?? self
-    }
-}
-
 struct HistoryView: View {
     @ObservedObject private var messageViewModel = MessageViewModel.shared
 
@@ -71,7 +41,7 @@ struct HistoryView: View {
                 continue
             }
 
-            if let startOfWeek = now.startOfWeek, let chatWeek = chatDate.startOfWeek, chatDate >= startOfWeek, chatDate < now {
+            if let startOfWeek = now.startOfWeek, chatDate >= startOfWeek, chatDate < now {
                 categories["This Week"]?.append(chat)
                 continue
             }
@@ -100,14 +70,23 @@ struct HistoryView: View {
             Spacer()
             ForEach(categoryOrder, id: \.self) { key in
                 if let chats = groupedChats[key], !chats.isEmpty {
-                    HistorySectionView(title: key, chats: chats, messageViewModel: messageViewModel)
-                    // .rotationEffect(.degrees(180))
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text(key)
+                            .font(.title2)
+                            .bold()
+                            .foregroundColor(.white)
+                            .shadow(color: Color.black.opacity(0.7), radius: 2)
+
+                        ForEach(chats) { chat in
+                            HistoryCardView(chat: chat)
+                        }
+                    }
                 }
             }
             .padding(.horizontal, 10)
             Spacer()
         }
-        // .rotationEffect(.degrees(180))
+        .background(Rectangle().fill(Color.white.opacity(0.001)))
         .mask(
             LinearGradient(
                 gradient: Gradient(stops: [
@@ -120,28 +99,5 @@ struct HistoryView: View {
                 endPoint: .bottom
             )
         )
-    }
-}
-
-struct HistorySectionView: View {
-    let title: String
-    let chats: [APIChat]
-    let messageViewModel: MessageViewModel
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title)
-                .font(.title2)
-                .bold()
-                .foregroundColor(.white)
-                .shadow(color: Color.black.opacity(0.7), radius: 2)
-
-            ForEach(chats) { chat in
-                HistoryCardView(
-                    chat: chat,
-                    last_message: messageViewModel.api_messages.filter { $0.chat_id == chat.id }.last
-                )
-            }
-        }
     }
 }

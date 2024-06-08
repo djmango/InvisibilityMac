@@ -74,6 +74,14 @@ struct MessageScrollView: View {
                     }
                 }
             }
+            .onChange(of: messageViewModel.shouldScrollToBottom) {
+                if let scrollProxy, messageViewModel.shouldScrollToBottom {
+                    withAnimation(AppConfig.easeIn) {
+                        scrollProxy.scrollTo("bottom", anchor: .bottom)
+                        messageViewModel.shouldScrollToBottom = false
+                    }
+                }
+            }
         }
     }
 
@@ -128,25 +136,24 @@ struct MessageListView: View {
     }
 
     var body: some View {
-        VStack(alignment: .trailing, spacing: 5) {
+        VStack(spacing: 5) {
             ForEach(displayedMessages) { message in
                 MessageListItemView(message: message)
                     .id(message.id)
                     .sentryTrace("MessageListItemView")
             }
-
-            FreeTierCardView()
-                .visible(if: !canSendMessages, removeCompletely: true)
-
-            CaptureView()
-                .visible(if: isRecording, removeCompletely: true)
-                .frame(maxHeight: 200)
-
-            Rectangle()
-                .hidden()
-                .frame(height: 1)
-                .id("bottom")
         }
         .background(Rectangle().fill(Color.white.opacity(0.001)))
+
+        FreeTierCardView()
+            .visible(if: !canSendMessages, removeCompletely: true)
+
+        CaptureView()
+            .visible(if: isRecording, removeCompletely: true)
+
+        Rectangle()
+            .hidden()
+            .frame(height: 1)
+            .id("bottom")
     }
 }

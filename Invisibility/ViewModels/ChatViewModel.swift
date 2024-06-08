@@ -106,18 +106,22 @@ final class ChatViewModel: ObservableObject {
             return
         }
 
-        ChatViewModel.shared.chat = APIChat(
-            id: UUID(),
-            user_id: user.id
-        )
-
+        withAnimation(AppConfig.snappy) {
+            ChatViewModel.shared.chat = APIChat(
+                id: UUID(),
+                user_id: user.id
+            )
+            _ = MainWindowViewModel.shared.changeView(to: .chat)
+        }
         MessageViewModel.shared.api_chats.append(chat!)
     }
 
     @MainActor
     func switchChat(_ chat: APIChat) {
         defer { PostHogSDK.shared.capture("switch_chat") }
-        ChatViewModel.shared.chat = chat
+        withAnimation(AppConfig.snappy) {
+            ChatViewModel.shared.chat = chat
+        }
     }
 
     func deleteChat(_ chat: APIChat) {

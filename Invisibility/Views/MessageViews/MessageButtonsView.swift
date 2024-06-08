@@ -77,7 +77,7 @@ struct MessageActionButtonsView: View {
                 MessageButtonItemView(
                     label: "Copy",
                     icon: isCopied ? "checkmark" : "square.on.square",
-                    shortcut_hint: "⌘ ⌥ C",
+                    shortcut_hint: isLastMessage ? "⌘ ⌥ C" : nil,
                     whoIsHovering: $whoIsHovering
                 ) {
                     copyAction()

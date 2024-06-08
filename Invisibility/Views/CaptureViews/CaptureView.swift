@@ -32,7 +32,7 @@ struct CaptureView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color(.chatButtonBackground))
             )
-            .overlay(
+            .background(
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color(NSColor.separatorColor), lineWidth: 1)
             )
@@ -86,7 +86,7 @@ struct CaptureView: View {
             .animation(.easeInOut(duration: 0.2), value: whoIsHovering)
             .animation(.easeInOut(duration: 0.2), value: isHovering)
             .padding(.horizontal, 10)
-            .frame(maxWidth: .infinity)
+            .frame(width: 400, height: 250)
             .padding(.bottom, 3)
     }
 }

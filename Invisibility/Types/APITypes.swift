@@ -45,7 +45,7 @@ enum APIRole: String, Codable {
     }
 }
 
-class APIMessage: ObservableObject, Codable, Identifiable {
+class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
     let id: UUID
     let chat_id: UUID
     let user_id: String
@@ -108,6 +108,18 @@ class APIMessage: ObservableObject, Codable, Identifiable {
         try container.encode(regenerated, forKey: .regenerated)
         try container.encode(created_at, forKey: .created_at)
         try container.encode(updated_at, forKey: .updated_at)
+    }
+
+    // Equatable conformance
+    static func == (lhs: APIMessage, rhs: APIMessage) -> Bool {
+        lhs.id == rhs.id &&
+            lhs.chat_id == rhs.chat_id &&
+            lhs.user_id == rhs.user_id &&
+            lhs.text == rhs.text &&
+            lhs.role == rhs.role &&
+            lhs.regenerated == rhs.regenerated &&
+            lhs.created_at == rhs.created_at &&
+            lhs.updated_at == rhs.updated_at
     }
 }
 
@@ -174,7 +186,7 @@ struct APIFile: Codable, Equatable {
 }
 
 // Define a struct for the response
-struct APIChatsAndMessagesResponse: Codable {
+struct APISyncResponse: Codable {
     let chats: [APIChat]
     let messages: [APIMessage]
     let files: [APIFile]

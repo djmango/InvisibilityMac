@@ -20,6 +20,7 @@ final class MessageViewModel: ObservableObject {
     @Published public var api_files: [APIFile] = []
     @Published public var windowHeight: CGFloat = 0
     @Published public var isGenerating: Bool = false
+    @Published public var shouldScrollToBottom: Bool = false
 
     public var api_messages_in_chat: [APIMessage] {
         api_messages.filter { $0.chat_id == ChatViewModel.shared.chat?.id }.filter { $0.regenerated == false }
@@ -45,7 +46,7 @@ final class MessageViewModel: ObservableObject {
         }
     }
 
-    func fetchAPI() async throws -> APIChatsAndMessagesResponse {
+    func fetchAPI() async throws -> APISyncResponse {
         guard let url = URL(string: AppConfig.invisibility_api_base + "/sync/all") else {
             throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
         }
@@ -64,21 +65,32 @@ final class MessageViewModel: ObservableObject {
 
         let decoder = iso8601Decoder()
 
-        let response = try decoder.decode(APIChatsAndMessagesResponse.self, from: data)
+        let response = try decoder.decode(APISyncResponse.self, from: data)
 
         return response
     }
 
     @MainActor
     func sendFromChat() async {
-        guard let chat else {
-            logger.error("No chat to send message to")
-            return
-        }
         guard let user = UserManager.shared.user else {
             logger.error("No user to send message as")
             return
         }
+        // Get or create chat
+        if self.chat == nil {
+            let chat = APIChat(
+                id: UUID(),
+                user_id: user.id
+            )
+            ChatViewModel.shared.chat = chat
+            api_chats.append(chat)
+        }
+        guard let chat else {
+            logger.error("No chat to send message to")
+            return
+        }
+
+        _ = MainWindowViewModel.shared.changeView(to: .chat)
 
         // Stop the chat from generating if it is
         if isGenerating { stopGenerating() }
@@ -279,10 +291,14 @@ final class MessageViewModel: ObservableObject {
         api_messages.filter { $0.chat_id == chat.id }.last
     }
 
+    func lastMessageWithTextFor(chat: APIChat) -> APIMessage? {
+        api_messages.filter { $0.chat_id == chat.id }.last { $0.text.count > 0 }
+    }
+
     func sortedChatsByLastMessage() -> [APIChat] {
         api_chats.sorted { chat1, chat2 in
-            let lastMessageDate1 = lastMessageFor(chat: chat1)?.created_at ?? Date.distantPast
-            let lastMessageDate2 = lastMessageFor(chat: chat2)?.created_at ?? Date.distantPast
+            let lastMessageDate1 = lastMessageFor(chat: chat1)?.created_at ?? Date.now
+            let lastMessageDate2 = lastMessageFor(chat: chat2)?.created_at ?? Date.now
             return lastMessageDate1 > lastMessageDate2
         }
     }
