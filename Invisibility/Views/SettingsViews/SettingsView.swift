@@ -246,9 +246,9 @@ struct SettingsView: View {
                 Spacer()
             }
         )
-        .shadow(radius: colorScheme == .dark ? 5 : 0)
-        .padding(.horizontal)
-        .padding(.bottom, 10)
+        .padding(.horizontal, 10)
+        .padding(.top, 5)
+        .padding(.bottom, 3)
         .fileExporter(
             isPresented: $showingExporter,
             document: document,
