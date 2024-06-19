@@ -54,6 +54,10 @@ class WindowManager {
     /// Persist the resized state
     @AppStorage("resized") private var resized: Bool = false
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
+    
+    public var is_resized: Bool {
+        return resized
+    }
 
     /// Whether the window is visible
     public var windowIsVisible: Bool {

@@ -1,17 +1,8 @@
-//
-//  ChatPDFView.swift
-//  Invisibility
-//
-//  Created by Sulaiman Ghori on 4/16/24.
-//  Copyright © 2024 Invisibility Inc. All rights reserved.
-//
-
 import SwiftUI
 
 struct ChatPDFView: View {
     let item: ChatDataItem
-
-    @Binding private var whoIsHovering: UUID?
+    @Binding var whoIsHovering: UUID?
 
     var isHovering: Bool {
         whoIsHovering == item.id
@@ -23,25 +14,35 @@ struct ChatPDFView: View {
     }
 
     var body: some View {
-        Image("PDFIcon")
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(width: 150, height: 150)
-            .shadow(radius: isHovering ? 4 : 0)
-            .padding(.horizontal, 10)
-            .onHover { hovering in
-                if hovering {
-                    whoIsHovering = item.id
-                } else {
-                    // First check if we still have command over var, ensuring someone else hasn't changed it
-                    if whoIsHovering == item.id {
-                        whoIsHovering = nil
-                    }
+        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+            Image("PDFIcon")  // Ensure this image is included in your assets
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 100, height: 100)
+                .shadow(radius: isHovering ? 4 : 0)
+                .padding(.horizontal, 10)
+            
+            Button(action: {
+                // This is where the deletion of the PDF item happens
+                ChatViewModel.shared.removeItem(id: item.id)
+            }) {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundColor(.red)  // Make the button red to highlight it as a delete button
+                    .font(.title)  // Adjust the font size as needed
+                    .opacity(isHovering ? 1 : 0)  // Button is only visible when hovering
+            }
+            .buttonStyle(PlainButtonStyle())
+            .padding(.all, 5)
+        }
+        .onHover { hovering in
+            if hovering {
+                whoIsHovering = item.id
+            } else {
+                if whoIsHovering == item.id {
+                    whoIsHovering = nil
                 }
             }
-            .onTapGesture {
-                ChatViewModel.shared.removeItem(id: item.id)
-            }
-            .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
+        }
+        .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
     }
 }
