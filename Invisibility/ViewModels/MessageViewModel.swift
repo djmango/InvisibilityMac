@@ -269,6 +269,13 @@ final class MessageViewModel: ObservableObject {
         chatTask?.cancel()
     }
 
+    @MainActor
+    func clearAll() {
+        api_chats = []
+        api_messages = []
+        api_files = []
+    }
+
     private func processOutput(output: String, message: APIMessage) {
         DispatchQueue.main.async {
             message.text.append(output)

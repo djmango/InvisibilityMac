@@ -39,6 +39,7 @@ struct LLMModel: Codable, Equatable, Hashable, Identifiable {
 }
 
 enum LLMModelRepository: CaseIterable {
+    case claude3_5Sonnet
     case gpt4o
     case claude3Opus
     case llama3_70b
@@ -47,6 +48,12 @@ enum LLMModelRepository: CaseIterable {
 
     var model: LLMModel {
         switch self {
+        case .claude3_5Sonnet:
+            LLMModel(
+                text: "claude-3-5-sonnet-20240620",
+                vision: "claude-3-5-sonnet-20240620",
+                human_name: "Claude-3.5 Sonnet"
+            )
         case .gpt4o:
             LLMModel(
                 text: "gpt-4o",

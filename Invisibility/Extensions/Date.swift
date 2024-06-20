@@ -37,3 +37,14 @@ extension Date {
         Calendar.current.date(byAdding: .day, value: -days, to: self.startOfDay) ?? self
     }
 }
+
+// Extension for decoding a date in the custom ISO8601 format with nanoseconds
+extension DateFormatter {
+    static let extendedISO8601: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSX"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return formatter
+    }()
+}
