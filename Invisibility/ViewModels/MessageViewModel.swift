@@ -62,7 +62,6 @@ final class MessageViewModel: ObservableObject {
         let (data, _) = try await URLSession.shared.data(for: request)
 
         // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
-
         let decoder = iso8601Decoder()
 
         let response = try decoder.decode(APISyncResponse.self, from: data)
@@ -161,17 +160,49 @@ final class MessageViewModel: ObservableObject {
                 chat: chat,
                 processOutput: processOutput
             )
-
-            await MainActor.run {
-                if api_messages_in_chat.last?.id == lastMessageId {
-                    // Only update isGenerating if the last message is the chat we are responsible for
-                    self.isGenerating = false
-                }
-            }
-            logger.debug("Chat complete")
+            chatComplete(chat: chat, lastMessageId: lastMessageId)
         }
 
         numMessagesSentToday += 1
+    }
+
+    @MainActor
+    func chatComplete(chat: APIChat, lastMessageId: UUID) {
+        logger.debug("Chat complete")
+        if api_messages_in_chat.last?.id == lastMessageId {
+            // Only update isGenerating if the last message is the chat we are responsible for
+            self.isGenerating = false
+        }
+
+        // PUT request to autorename if the chat is named New Chat
+        if chat.name == "New Chat" {
+            Task {
+                let url = URL(string: AppConfig.invisibility_api_base + "/chats/\(chat.id)/autorename")!
+                guard let token else {
+                    logger.warning("No token for autorename")
+                    return
+                }
+
+                var request = URLRequest(url: url)
+                request.httpMethod = "PUT"
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+                let (data, _) = try await URLSession.shared.data(for: request)
+
+                // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
+                let decoder = iso8601Decoder()
+
+                let new_chat = try decoder.decode(APIChat.self, from: data)
+                print(new_chat)
+
+                DispatchQueue.main.async {
+                    if let index = self.api_chats.firstIndex(of: chat) {
+                        self.api_chats[index].name = new_chat.name
+                    }
+                    print(new_chat.name)
+                }
+            }
+        }
     }
 
     @MainActor
@@ -245,14 +276,7 @@ final class MessageViewModel: ObservableObject {
                 processOutput: processOutput,
                 regenerate_from_message_id: user_message_before.id
             )
-
-            await MainActor.run {
-                if api_messages.last?.id == lastMessageId {
-                    // Only update isGenerating if the last message is the chat we are responsible for
-                    self.isGenerating = false
-                }
-            }
-            logger.debug("Regenerate complete")
+            chatComplete(chat: chat, lastMessageId: lastMessageId)
         }
     }
 

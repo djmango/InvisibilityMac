@@ -32,7 +32,7 @@ struct HistoryCardView: View {
 
     func formattedDate(_ date: Date) -> String {
         let dateTimeFormatter = DateFormatter()
-        dateTimeFormatter.dateStyle = .long
+        dateTimeFormatter.dateStyle = .short
         dateTimeFormatter.timeStyle = .short
         return dateTimeFormatter.string(from: date)
     }
