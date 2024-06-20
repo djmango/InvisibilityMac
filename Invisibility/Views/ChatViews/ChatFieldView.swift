@@ -14,10 +14,7 @@ struct ChatFieldView: View {
     @State private var whoIsHovering: UUID?
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
 
-    public var body: some View {
-        // let _ = Self._printChanges()
-
-        // Items: Images, and PDFs
+    var body: some View {
         VStack {
             HStack {
                 ForEach(ChatViewModel.shared.images) { imageItem in
@@ -39,7 +36,9 @@ struct ChatFieldView: View {
                 .padding(.horizontal, 10)
                 .visible(if: !ChatViewModel.shared.items.isEmpty, removeCompletely: true)
 
-            ChatEditorView()
+            WebViewChatField()
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
         }
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
