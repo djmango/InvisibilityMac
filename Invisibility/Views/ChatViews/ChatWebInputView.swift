@@ -17,12 +17,12 @@ struct WebViewChatField: View {
 
     var body: some View {
         WebViewChatFieldRepresentable()
-            .frame(height: max(ChatEditorView.minTextHeight, min(chatViewModel.textHeight, ChatEditorView.maxTextHeight)))
+            .frame(height: max(WebViewChatField.minTextHeight, min(chatViewModel.textHeight, WebViewChatField.maxTextHeight)))
     }
 }
 
 struct WebViewChatFieldRepresentable: NSViewRepresentable {
-    private var chatViewModel = ChatViewModel.shared
+    @ObservedObject private var chatViewModel = ChatViewModel.shared
     @ObservedObject private var textViewModel = TextViewModel.shared
 
     func makeNSView(context: Context) -> WKWebView {
@@ -44,7 +44,7 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: WKWebView, context _: Context) {
-        nsView.evaluateJavaScript("document.getElementById('editor').innerHTML = `\(textViewModel.text)`", completionHandler: nil)
+        nsView.evaluateJavaScript("updateEditorContent(`\(textViewModel.text.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
     }
 
     func makeCoordinator() -> Coordinator {
@@ -65,24 +65,19 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
                     DispatchQueue.main.async {
                         self.parent.textViewModel.text = text
                     }
-                    print("Text changed: \(text)")
                 }
-
             case "heightChanged":
                 if let height = message.body as? CGFloat {
                     DispatchQueue.main.async {
                         self.parent.chatViewModel.textHeight = height
                     }
-                    print("Height changed: \(height)")
                 }
-
             case "submit":
                 DispatchQueue.main.async {
                     // Handle text submission
                     print("Text submitted: \(self.parent.textViewModel.text)")
                     self.parent.textViewModel.text = "" // Clear text after submission
                 }
-
             default:
                 break
             }
@@ -114,6 +109,13 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
                     word-wrap: break-word;
                     overflow-y: hidden;
                     background-color: transparent;
+                    white-space: pre-wrap;
+                }
+                #editor:empty:before {
+                    content: attr(placeholder);
+                    color: gray;
+                    pointer-events: none;
+                    display: block; /* For Firefox */
                 }
                 input, textarea, div[contenteditable] {
                     caret-color: \(accentColorStr);
@@ -121,83 +123,85 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
             </style>
         </head>
         <body>
-            <div id="editor" contenteditable="true"></div>
+            <div id="editor" contenteditable="true" placeholder="Type a message..."></div>
             <script>
                 const editor = document.getElementById('editor');
+                let lastHeight = 0;
 
                 function updateHeight() {
-                    const height = editor.scrollHeight;
-                    webkit.messageHandlers.heightChanged.postMessage(height);
+                    const newHeight = editor.scrollHeight;
+                    if (newHeight !== lastHeight) {
+                        lastHeight = newHeight;
+                        webkit.messageHandlers.heightChanged.postMessage(newHeight);
+                    }
                 }
 
-                function moveCursorToEnd() {
+                function updateEditorContent(content) {
+                    if (editor.innerText !== content) {
+                        editor.innerText = content;
+                        updateHeight();
+                        placeCaretAtEnd();
+                    }
+                }
+
+                function placeCaretAtEnd() {
                     const range = document.createRange();
                     const selection = window.getSelection();
                     range.selectNodeContents(editor);
                     range.collapse(false);
                     selection.removeAllRanges();
                     selection.addRange(range);
+                    editor.focus();
                 }
 
                 editor.addEventListener('input', function() {
-                    webkit.messageHandlers.textChanged.postMessage(editor.innerHTML);
+                    if (editor.innerHTML === '<br>') {
+                        editor.innerHTML = '';
+                    }
+                    webkit.messageHandlers.textChanged.postMessage(editor.innerText);
                     updateHeight();
-                    moveCursorToEnd();
                 });
 
                 editor.addEventListener('paste', function(e) {
                     e.preventDefault();
                     const text = e.clipboardData.getData('text/plain');
                     document.execCommand('insertText', false, text);
-                    setTimeout(() => {
-                        updateHeight();
-                        moveCursorToEnd();
-                    }, 10);  // Delay to ensure height is updated
+                    updateHeight();
                 });
 
                 editor.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         webkit.messageHandlers.submit.postMessage('');
-                    }
-                });
-
-                editor.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter' && e.shiftKey) {
-                        // Allow Shift + Enter for new line
+                    } else if (e.key === 'Enter' && e.shiftKey) {
                         e.preventDefault();
                         document.execCommand('insertLineBreak');
                         updateHeight();
-                        moveCursorToEnd();
                     }
                 });
 
-                editor.addEventListener('keydown', function(e) {
-                    // Handle copy, cut, paste via Command keys
-                    if ((e.metaKey || e.ctrlKey) && (e.key === 'c' || e.key === 'x' || e.key === 'v')) {
-                        document.execCommand(e.key);
-                        updateHeight();
-                        moveCursorToEnd();
-                    } else if ((e.metaKey || e.ctrlKey) && e.key === 'a') {
-                        // Command + A: Select All
-                        e.preventDefault();
-                        document.execCommand('selectAll');
-                    } else {
-                        // Delay height adjustment to ensure correct rendering
-                        setTimeout(() => {
-                            updateHeight();
-                            moveCursorToEnd();
-                        }, 10);
+                // Ensure editor always has content
+                editor.addEventListener('blur', function() {
+                    if (editor.innerHTML === '') {
+                        editor.innerHTML = '<br>';
                     }
                 });
 
-                new MutationObserver(() => {
+                new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'childList') {
+                            const br = editor.querySelector('br');
+                            if (br && br.parentNode === editor) {
+                                br.remove();
+                            }
+                        }
+                    });
                     updateHeight();
-                    moveCursorToEnd();
                 }).observe(editor, {
                     attributes: true,
                     childList: true,
-                    subtree: true
+                    subtree: true,
+                    characterData: true
                 });
 
                 updateHeight();
@@ -221,21 +225,22 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
             menu.items.removeAll { $0.identifier == .init("WKMenuItemIdentifierReload") }
         }
 
-        override func keyDown(with event: NSEvent) {
-            // Ensure command keys work correctly in macOS
+        override func performKeyEquivalent(with event: NSEvent) -> Bool {
             if event.modifierFlags.contains(.command) {
-                nextResponder?.keyDown(with: event)
-                return
+                switch event.charactersIgnoringModifiers {
+                case "x":
+                    if NSApp.sendAction(#selector(NSText.cut(_:)), to: nil, from: self) { return true }
+                case "c":
+                    if NSApp.sendAction(#selector(NSText.copy(_:)), to: nil, from: self) { return true }
+                case "v":
+                    if NSApp.sendAction(#selector(NSText.paste(_:)), to: nil, from: self) { return true }
+                case "a":
+                    if NSApp.sendAction(#selector(NSStandardKeyBindingResponding.selectAll(_:)), to: nil, from: self) { return true }
+                default:
+                    break
+                }
             }
-            super.keyDown(with: event)
-        }
-
-        override func keyUp(with event: NSEvent) {
-            nextResponder?.keyUp(with: event)
-        }
-
-        override func flagsChanged(with event: NSEvent) {
-            nextResponder?.flagsChanged(with: event)
+            return super.performKeyEquivalent(with: event)
         }
     }
 }
