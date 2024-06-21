@@ -11,7 +11,7 @@ import ViewCondition
 
 struct MessageActionButtonsView: View {
     private let message: APIMessage
-
+    
     @State private var whoIsHovering: String?
     @State private var isCopied: Bool = false
     @Binding private var isHovered: Bool
@@ -19,6 +19,7 @@ struct MessageActionButtonsView: View {
     @AppStorage("shortcutHints") private var shortcutHints = true
     @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject var hoverTrackerModel: HoverTrackerModel = HoverTrackerModel.shared
 
     private var isAssistant: Bool {
         message.role == .assistant
@@ -66,7 +67,8 @@ struct MessageActionButtonsView: View {
                 MessageButtonItemView(
                     label: "Regenerate",
                     icon: "arrow.clockwise",
-                    shortcut_hint: "⌘ ⇧ R"
+                    shortcut_hint: "⌘ ⇧ R",
+                    whoIsHovering: $whoIsHovering
                 ) {
                     regenerateAction()
                 }
@@ -76,7 +78,8 @@ struct MessageActionButtonsView: View {
                 MessageButtonItemView(
                     label: "Copy",
                     icon: isCopied ? "checkmark" : "square.on.square",
-                    shortcut_hint: isLastMessage ? "⌘ ⌥ C" : nil
+                    shortcut_hint: isLastMessage ? "⌘ ⌥ C" : nil,
+                    whoIsHovering: $whoIsHovering
                 ) {
                     copyAction()
                 }
