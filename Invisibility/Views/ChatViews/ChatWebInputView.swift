@@ -9,6 +9,8 @@
 import SwiftUI
 import WebKit
 
+// TODO: fix scrollbars on this, currently they are disabled due to white background bug
+
 struct WebViewChatField: View {
     @ObservedObject private var chatViewModel = ChatViewModel.shared
 
@@ -22,7 +24,8 @@ struct WebViewChatField: View {
 }
 
 struct WebViewChatFieldRepresentable: NSViewRepresentable {
-    @ObservedObject private var chatViewModel = ChatViewModel.shared
+    private var chatViewModel = ChatViewModel.shared
+    private var messageViewModel = MessageViewModel.shared
     @ObservedObject private var textViewModel = TextViewModel.shared
 
     func makeNSView(context: Context) -> WKWebView {
@@ -47,6 +50,10 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
         nsView.evaluateJavaScript("updateEditorContent(`\(textViewModel.text.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
     }
 
+    private func setFocus(_ webView: WKWebView) {
+        webView.evaluateJavaScript("document.getElementById('editor').focus();", completionHandler: nil)
+    }
+
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
@@ -65,18 +72,19 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
                     DispatchQueue.main.async {
                         self.parent.textViewModel.text = text
                     }
+                    // print("Text changed: \(text)")
                 }
             case "heightChanged":
                 if let height = message.body as? CGFloat {
                     DispatchQueue.main.async {
                         self.parent.chatViewModel.textHeight = height
                     }
+                    // print("Text height changed: \(height)")
                 }
             case "submit":
                 DispatchQueue.main.async {
-                    // Handle text submission
-                    print("Text submitted: \(self.parent.textViewModel.text)")
-                    self.parent.textViewModel.text = "" // Clear text after submission
+                    // print("Text submitted: \(self.parent.textViewModel.text)")
+                    Task { await self.parent.messageViewModel.sendFromChat() }
                 }
             default:
                 break
@@ -95,13 +103,25 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
+                :root {
+                    color-scheme: light dark !important;
+                }
+
                 body, html {
                     margin: 0;
                     padding: 0;
                     height: 100%;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
                     background-color: transparent;
+                    color: -apple-system-label;
+                    font-family: system-ui;
+                    font-size: 11pt;
+                    line-height: 1.5;
                 }
+
+                body::-webkit-scrollbar {
+                    display: none !important;
+                }
+
                 #editor {
                     min-height: 20px;
                     padding: 10px;
@@ -115,7 +135,6 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
                     content: attr(placeholder);
                     color: gray;
                     pointer-events: none;
-                    display: block; /* For Firefox */
                 }
                 input, textarea, div[contenteditable] {
                     caret-color: \(accentColorStr);
@@ -165,9 +184,23 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
                 editor.addEventListener('paste', function(e) {
                     e.preventDefault();
                     const text = e.clipboardData.getData('text/plain');
-                    document.execCommand('insertText', false, text);
+                    const selection = window.getSelection();
+                    const range = selection.getRangeAt(0);
+
+                    range.deleteContents();
+
+                    const textNode = document.createTextNode(text);
+                    range.insertNode(textNode);
+
+                    range.setStartAfter(textNode);
+                    range.setEndAfter(textNode);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+
+                    webkit.messageHandlers.textChanged.postMessage(editor.textContent);
                     updateHeight();
                 });
+
 
                 editor.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -241,6 +274,20 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
                 }
             }
             return super.performKeyEquivalent(with: event)
+        }
+
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+
+            NotificationCenter.default.addObserver(self, selector: #selector(windowDidBecomeKey), name: NSWindow.didBecomeKeyNotification, object: nil)
+        }
+
+        @objc private func windowDidBecomeKey() {
+            self.evaluateJavaScript("document.getElementById('editor').focus();", completionHandler: nil)
+        }
+
+        deinit {
+            NotificationCenter.default.removeObserver(self)
         }
     }
 }

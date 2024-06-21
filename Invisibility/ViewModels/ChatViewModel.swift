@@ -64,6 +64,9 @@ final class ChatViewModel: ObservableObject {
     /// List of JPEG images and items to be sent with the message
     @Published public var items: [ChatDataItem] = []
 
+    /// A string representing the file content of PDFs and text files added to the chat.
+    public var fileContent: String = ""
+
     public var images: [ChatDataItem] {
         items.filter { $0.dataType == .jpeg }
     }
@@ -91,6 +94,7 @@ final class ChatViewModel: ObservableObject {
     @MainActor
     public func removeAll() {
         items.removeAll()
+        fileContent = ""
     }
 
     @MainActor

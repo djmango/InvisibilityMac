@@ -141,7 +141,7 @@ enum InvisibilityFileManager {
         }
 
         DispatchQueue.main.async {
-            TextViewModel.shared.text += complete_text.trimmingCharacters(in: .whitespacesAndNewlines)
+            ChatViewModel.shared.fileContent += complete_text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 
@@ -158,7 +158,7 @@ enum InvisibilityFileManager {
         }
 
         DispatchQueue.main.async {
-            TextViewModel.shared.text += text.trimmingCharacters(in: .whitespacesAndNewlines)
+            ChatViewModel.shared.fileContent += text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 }

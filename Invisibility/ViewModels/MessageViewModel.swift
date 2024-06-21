@@ -71,6 +71,7 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func sendFromChat() async {
+        var text = TextViewModel.shared.text
         guard let user = UserManager.shared.user else {
             logger.error("No user to send message as")
             return
@@ -114,14 +115,25 @@ final class MessageViewModel: ObservableObject {
             }
         }
 
-        // Allow empty messages if there is a least 1 image
-        guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 || ChatViewModel.shared.images.count > 0 else { return }
+        // Allow empty messages if there is a least 1 image or fileContent
+        guard text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 ||
+            ChatViewModel.shared.images.count > 0 ||
+            !ChatViewModel.shared.fileContent.isEmpty
+        else {
+            logger.warning("Empty message")
+            return
+        }
+
+        // Prepend the fileContent if necessary
+        if !ChatViewModel.shared.fileContent.isEmpty {
+            text = ChatViewModel.shared.fileContent + "\n" + text
+        }
 
         let user_message = APIMessage(
             id: UUID(),
             chat_id: chat.id,
             user_id: user.id,
-            text: TextViewModel.shared.text,
+            text: text,
             role: .user
         )
 
@@ -151,7 +163,9 @@ final class MessageViewModel: ObservableObject {
         )
         }
 
-        api_messages.append(contentsOf: [user_message, assistant_message])
+        withAnimation(AppConfig.snappy) {
+            api_messages.append(contentsOf: [user_message, assistant_message])
+        }
 
         chatTask = Task {
             let lastMessageId = assistant_message.id
