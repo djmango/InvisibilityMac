@@ -6,13 +6,15 @@ struct MainView: View {
     @FocusState private var promptFocused: Bool
 
     @State private var isDragActive: Bool = false
-    @State private var xOffset: CGFloat = -1000
+    @State private var isDraggingResize = false
+    @State private var xOffset: Int = 10000
 
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
     @ObservedObject private var screenRecorder = ScreenRecorder.shared
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
+    @AppStorage("width") private var width: Int = Int(WindowManager.defaultWidth)
 
     var isShowingMessages: Bool {
         mainWindowViewModel.whoIsVisible == .chat
@@ -79,6 +81,24 @@ struct MainView: View {
         .animation(AppConfig.snappy, value: chatViewModel.textHeight)
         .animation(AppConfig.snappy, value: chatViewModel.images)
         .animation(AppConfig.snappy, value: screenRecorder.isRunning)
+        // .gesture(
+        //     DragGesture()
+        //         .onChanged { value in
+        //             withAnimation(AppConfig.snappy) {
+        //                 WindowManager.shared.width = max(WindowManager.defaultWidth, min(WindowManager.shared.maxWidth, width - Int(value.translation.width)))
+        //             }
+        //         }
+        // )
+        .overlay(
+            ChatDragResizeView(isDragging: $isDraggingResize)
+                .gesture(
+                    DragGesture()
+                        .onChanged { _ in
+                            let mouseLocation = NSEvent.mouseLocation
+                            WindowManager.shared.resizeWindowToMouseX(mouseLocation.x)
+                        }
+                )
+        )
         .overlay(
             Rectangle()
                 .foregroundColor(Color.gray.opacity(0.2))
@@ -100,11 +120,15 @@ struct MainView: View {
                 chatViewModel.shouldFocusTextField = false
             }
         }
-        .offset(x: xOffset, y: 0)
+        .offset(x: CGFloat(xOffset), y: 0)
         .onAppear {
+            // Initial offset is set to 10000 to prevent the window from being visible guarenteed
+            // For nice animation it should be about 500 more than the width of the window
+            xOffset = -width - 500
+
             // If side is switched, invert the offset
             if sideSwitched {
-                xOffset = 1000
+                xOffset = xOffset * -1
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
                 withAnimation(.snappy(duration: 0.3)) {

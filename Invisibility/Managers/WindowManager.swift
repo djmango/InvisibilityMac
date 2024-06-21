@@ -39,8 +39,14 @@ class WindowManager {
 
     static let shared = WindowManager()
 
-    static let defaultWidth: CGFloat = 400
-    static let resizeWidth: CGFloat = 800
+    static let defaultWidth: Int = 400
+    static let resizeWidth: Int = 800
+    public var maxWidth: Int = {
+        guard let screen = NSScreen.main else { return 1000 } // Default value if no screen is found
+        let screenWidth = Int(screen.frame.width)
+        return screenWidth
+    }()
+
     private var contentView = AppView()
     private var window: NSPanel?
     private var cancellables = Set<AnyCancellable>()
@@ -50,13 +56,8 @@ class WindowManager {
     /// The current screen the window is on
     private var currentScreen: NSScreen?
 
-    /// Persist the resized state
-    @AppStorage("resized") private var resized: Bool = false
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
-    
-    public var is_resized: Bool {
-        return resized
-    }
+    @AppStorage("width") public var width: Int = Int(defaultWidth)
 
     /// Whether the window is visible
     public var windowIsVisible: Bool {
@@ -76,6 +77,15 @@ class WindowManager {
 
     private init() {
         ShortcutViewModel.shared.setupShortcuts()
+    }
+
+    public func resizeWindowToggle() {
+        if width == WindowManager.defaultWidth {
+            width = WindowManager.resizeWidth
+        } else {
+            width = WindowManager.defaultWidth
+        }
+        positionWindowOnCursorScreen(animate: true)
     }
 
     public func toggleWindow() {
@@ -115,14 +125,6 @@ class WindowManager {
         })
     }
 
-    public func resizeWindow() {
-        guard let window else { return }
-        guard window.isVisible else { return }
-        resized.toggle()
-        positionWindowOnCursorScreen(animate: true)
-        PostHogSDK.shared.capture("resize", properties: ["resized": resized])
-    }
-
     public func switchSide() {
         sideSwitched.toggle()
         positionWindowOnCursorScreen(animate: true)
@@ -158,6 +160,34 @@ class WindowManager {
         return true
     }
 
+    func resizeWindowToMouseX(_ mouseX: CGFloat) {
+        guard let window = self.window, let screen = currentScreen else { return }
+
+        var frame = window.frame
+        let screenFrame = screen.visibleFrame
+
+        // Constrain mouseX within allowable range
+        let constrainedMouseX: CGFloat = if sideSwitched {
+            // Right side: constrain mouseX between (screenFrame.maxX - maxWidth) and (screenFrame.maxX - defaultWidth)
+            max(screenFrame.maxX - CGFloat(maxWidth), min(screenFrame.maxX - CGFloat(WindowManager.defaultWidth), mouseX))
+        } else {
+            // Left side: constrain mouseX between (screenFrame.minX + defaultWidth) and (screenFrame.minX + maxWidth)
+            max(screenFrame.minX + CGFloat(WindowManager.defaultWidth), min(screenFrame.minX + CGFloat(maxWidth), mouseX))
+        }
+
+        if sideSwitched {
+            // Right side: adjust left edge
+            frame.size.width = screenFrame.maxX - constrainedMouseX
+            frame.origin.x = constrainedMouseX
+        } else {
+            // Left side: adjust right edge
+            frame.size.width = constrainedMouseX - screenFrame.minX
+        }
+
+        window.setFrame(frame, display: true, animate: false)
+        self.width = Int(frame.size.width)
+    }
+
     /// Position the window on the screen with the cursor
     public func positionWindowOnCursorScreen(animate: Bool = false) {
         guard let window else { return }
@@ -171,7 +201,7 @@ class WindowManager {
         currentScreen = screen
 
         // Define window width and the desired positioning
-        let windowWidth: CGFloat = if resized { WindowManager.resizeWidth } else { WindowManager.defaultWidth }
+        let windowWidth: CGFloat = CGFloat(width)
 
         // Get the menu bar height to adjust the window position
         let menuBarHeight = NSStatusBar.system.thickness

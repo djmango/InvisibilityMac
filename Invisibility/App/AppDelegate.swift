@@ -22,8 +22,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_: Notification) {
         SentrySDK.start { options in
             options.dsn = AppConfig.sentry_dsn
-            options.tracesSampleRate = 0.2 // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-            options.profilesSampleRate = 0.2
+            options.tracesSampleRate = 0.05 // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+            options.profilesSampleRate = 0.05
             options.swiftAsyncStacktraces = true
             options.enableMetricKit = true
         }

@@ -11,19 +11,19 @@ import WebKit
 
 // TODO: fix scrollbars on this, currently they are disabled due to white background bug
 
-struct WebViewChatField: View {
+struct ChatWebInputView: View {
     @ObservedObject private var chatViewModel = ChatViewModel.shared
 
     static let minTextHeight: CGFloat = 40
     static let maxTextHeight: CGFloat = 500
 
     var body: some View {
-        WebViewChatFieldRepresentable()
-            .frame(height: max(WebViewChatField.minTextHeight, min(chatViewModel.textHeight, WebViewChatField.maxTextHeight)))
+        ChatWebInputViewRepresentable()
+            .frame(height: max(ChatWebInputView.minTextHeight, min(chatViewModel.textHeight, ChatWebInputView.maxTextHeight)))
     }
 }
 
-struct WebViewChatFieldRepresentable: NSViewRepresentable {
+struct ChatWebInputViewRepresentable: NSViewRepresentable {
     private var chatViewModel = ChatViewModel.shared
     private var messageViewModel = MessageViewModel.shared
     @ObservedObject private var textViewModel = TextViewModel.shared
@@ -59,9 +59,9 @@ struct WebViewChatFieldRepresentable: NSViewRepresentable {
     }
 
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler, WKUIDelegate {
-        var parent: WebViewChatFieldRepresentable
+        var parent: ChatWebInputViewRepresentable
 
-        init(_ parent: WebViewChatFieldRepresentable) {
+        init(_ parent: ChatWebInputViewRepresentable) {
             self.parent = parent
         }
 

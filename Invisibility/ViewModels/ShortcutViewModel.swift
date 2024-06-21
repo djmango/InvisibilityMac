@@ -85,6 +85,14 @@ struct AppMenuCommands: Commands {
                 }
             }
             .keyboardShortcut("j", modifiers: [.command])
+
+            // Resize
+            Button("Resize") {
+                DispatchQueue.main.async {
+                    WindowManager.shared.resizeWindowToggle()
+                }
+            }
+            .keyboardShortcut("b", modifiers: [.command, .shift])
         }
 
         CommandGroup(replacing: CommandGroupPlacement.help) {

@@ -31,42 +31,42 @@ final class MessageViewModel: ObservableObject {
 
     private init() {
         Task {
-            do {
-                let fetched = try await fetchAPI()
-                DispatchQueue.main.async {
-                    self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
-                    self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
-                    self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
-                    self.logger.debug("Fetched messages: \(self.api_messages.count)")
-                    ChatViewModel.shared.chat = self.api_chats.last
-                }
-            } catch {
-                logger.warning("Error fetching data: \(error)")
-            }
+            await fetchAPI()
         }
     }
 
-    func fetchAPI() async throws -> APISyncResponse {
-        guard let url = URL(string: AppConfig.invisibility_api_base + "/sync/all") else {
-            throw NSError(domain: "InvalidURL", code: -1, userInfo: nil)
-        }
+    func fetchAPI() async {
+        let url = URL(string: AppConfig.invisibility_api_base + "/sync/all")!
+
         guard let token else {
             logger.warning("No token for fetch")
-            throw NSError(domain: "NoToken", code: -1, userInfo: nil)
+            return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-        let (data, _) = try await URLSession.shared.data(for: request)
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
 
-        // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
-        let decoder = iso8601Decoder()
+            // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
+            let decoder = iso8601Decoder()
 
-        let response = try decoder.decode(APISyncResponse.self, from: data)
+            let fetched = try decoder.decode(APISyncResponse.self, from: data)
 
-        return response
+            DispatchQueue.main.async {
+                self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
+                self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
+                self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
+                self.logger.debug("Fetched messages: \(self.api_messages.count)")
+                ChatViewModel.shared.chat = self.api_chats.last
+            }
+        }
+
+        catch {
+            logger.error("Failed to fetch API: \(error)")
+        }
     }
 
     @MainActor

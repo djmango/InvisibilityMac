@@ -18,7 +18,6 @@ struct MessageButtonItemView: View {
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
-    @AppStorage("resized") private var resized: Bool = false
 
     @State private var isPressed: Bool = false
     @State private var isHovering: Bool = false
@@ -59,7 +58,7 @@ struct MessageButtonItemView: View {
                                 removeCompletely: true
                             )
                             .truncationMode(.head)
-                            .kerning(resized ? 0 : -1)
+                            .kerning(-1)
                     }
                 }
                 if let label {

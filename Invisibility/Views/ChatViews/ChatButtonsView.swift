@@ -14,7 +14,6 @@ struct ChatButtonsView: View {
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("betaFeatures") private var betaFeatures: Bool = false
-    @AppStorage("resized") private var resized: Bool = false
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
@@ -33,6 +32,18 @@ struct ChatButtonsView: View {
 
     var body: some View {
         HStack(alignment: .center) {
+            // New Chat
+            MessageButtonItemView(
+                label: "New Chat",
+                icon: "plus",
+                shortcut_hint: "⌘ N"
+            ) {
+                withAnimation(AppConfig.snappy) {
+                    chatViewModel.newChat()
+                }
+            }
+            .keyboardShortcut("n", modifiers: [.command])
+
             // Screenshot
             MessageButtonItemView(
                 label: "Screenshot",
@@ -68,6 +79,7 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("n", modifiers: [.command])
             .visible(if: isShowingHistory, removeCompletely: true)
+
 
             // Search Chat History
             MessageButtonItemView(
@@ -111,15 +123,6 @@ struct ChatButtonsView: View {
             .visible(if: messageViewModel.isGenerating, removeCompletely: true)
             .visible(if: !isShowingHistory, removeCompletely: true)
 
-            // Resize
-            MessageButtonItemView(
-                label: resized ? "Shrink" : "Expand",
-                icon: resized ? "arrow.down.right.and.arrow.up.left" : "arrow.up.backward.and.arrow.down.forward",
-                shortcut_hint: "⌘ ⇧ B"
-            ) {
-                resizeAction()
-            }
-            .keyboardShortcut("b", modifiers: [.command, .shift])
 
             // Switch Sides
             MessageButtonItemView(
@@ -141,17 +144,12 @@ struct ChatButtonsView: View {
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
         )
-        .frame(maxWidth: resized ? 500 : 380)
+        .frame(maxWidth: 380)
         .animation(AppConfig.snappy, value: HoverTrackerModel.shared.targetItem)
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
         .animation(AppConfig.snappy, value: messageViewModel.api_messages_in_chat.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(AppConfig.snappy, value: betaFeatures)
-    }
-
-    @MainActor
-    private func resizeAction() {
-        windowManager.resizeWindow()
     }
 
     @MainActor
