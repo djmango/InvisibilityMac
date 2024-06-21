@@ -80,10 +80,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         logger.debug("Window set up successfully")
 
         if !onboardingViewed {
-            logger.debug("Onboarding not viewed")
             OnboardingManager.shared.startOnboarding()
         } else {
-            logger.debug("Onboarding viewed")
             WindowManager.shared.showWindow()
         }
     }

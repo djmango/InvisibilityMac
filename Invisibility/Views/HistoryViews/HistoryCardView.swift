@@ -32,13 +32,13 @@ struct HistoryCardView: View {
 
     func formattedDate(_ date: Date) -> String {
         let dateTimeFormatter = DateFormatter()
-        dateTimeFormatter.dateStyle = .long
+        dateTimeFormatter.dateStyle = .short
         dateTimeFormatter.timeStyle = .short
         return dateTimeFormatter.string(from: date)
     }
 
     var body: some View {
-        let _ = Self._printChanges()
+        // let _ = Self._printChanges()
         HStack {
             // TODO: Capture the esc action so that people can exit the editing mode
             RoundedRectangle(cornerRadius: 5)

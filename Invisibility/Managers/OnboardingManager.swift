@@ -11,6 +11,7 @@ import Combine
 import Foundation
 import KeyboardShortcuts
 import OSLog
+import PostHog
 import SwiftUI
 
 class OnboardingManager {
@@ -28,14 +29,14 @@ class OnboardingManager {
 
     @MainActor
     public func startOnboarding() {
-        logger.debug("Starting onboarding")
+        defer { PostHogSDK.shared.capture("start_onboarding") }
         WindowManager.shared.hideWindow()
         setupWindow()
     }
 
     @MainActor
     public func completeOnboarding() {
-        logger.debug("Completing onboarding")
+        defer { PostHogSDK.shared.capture("complete_onboarding") }
         onboardingViewed = true
         window?.close()
         WindowManager.shared.showWindow()
@@ -46,8 +47,7 @@ class OnboardingManager {
 
     @MainActor
     public func setupWindow() {
-        logger.debug("Setting up onboarding")
-
+        defer { PostHogSDK.shared.capture("setup_onboarding") }
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
             styleMask: [.titled, .closable, .fullSizeContentView],
@@ -83,7 +83,5 @@ class OnboardingManager {
         // Set the window frame
         window.setFrame(windowRect, display: true, animate: false)
         window.makeKeyAndOrderFront(nil)
-
-        logger.debug("Onboarding set up")
     }
 }

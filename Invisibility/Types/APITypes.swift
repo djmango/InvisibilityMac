@@ -191,3 +191,36 @@ struct APISyncResponse: Codable {
     let messages: [APIMessage]
     let files: [APIFile]
 }
+
+struct User: Decodable {
+    var object: String
+    var id: String
+    var email: String
+    var firstName: String?
+    var lastName: String?
+    var emailVerified: Bool?
+    var profilePictureUrl: String?
+    var createdAt: Date
+    var updatedAt: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case object, id, email, emailVerified
+        case firstName = "first_name"
+        case lastName = "last_name"
+        case profilePictureUrl = "profile_picture_url"
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+    }
+}
+
+struct UserInvite: Decodable {
+    var email: String
+    var code: String
+    var createdAt: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case email
+        case code
+        case createdAt = "created_at"
+    }
+}

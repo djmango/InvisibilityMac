@@ -62,7 +62,6 @@ final class MessageViewModel: ObservableObject {
         let (data, _) = try await URLSession.shared.data(for: request)
 
         // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
-
         let decoder = iso8601Decoder()
 
         let response = try decoder.decode(APISyncResponse.self, from: data)
@@ -72,6 +71,7 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func sendFromChat() async {
+        var text = TextViewModel.shared.text
         guard let user = UserManager.shared.user else {
             logger.error("No user to send message as")
             return
@@ -115,14 +115,25 @@ final class MessageViewModel: ObservableObject {
             }
         }
 
-        // Allow empty messages if there is a least 1 image
-        guard TextViewModel.shared.text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 || ChatViewModel.shared.images.count > 0 else { return }
+        // Allow empty messages if there is a least 1 image or fileContent
+        guard text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 ||
+            ChatViewModel.shared.images.count > 0 ||
+            !ChatViewModel.shared.fileContent.isEmpty
+        else {
+            logger.warning("Empty message")
+            return
+        }
+
+        // Prepend the fileContent if necessary
+        if !ChatViewModel.shared.fileContent.isEmpty {
+            text = ChatViewModel.shared.fileContent + "\n" + text
+        }
 
         let user_message = APIMessage(
             id: UUID(),
             chat_id: chat.id,
             user_id: user.id,
-            text: TextViewModel.shared.text,
+            text: text,
             role: .user
         )
 
@@ -152,7 +163,9 @@ final class MessageViewModel: ObservableObject {
         )
         }
 
-        api_messages.append(contentsOf: [user_message, assistant_message])
+        withAnimation(AppConfig.snappy) {
+            api_messages.append(contentsOf: [user_message, assistant_message])
+        }
 
         chatTask = Task {
             let lastMessageId = assistant_message.id
@@ -161,17 +174,49 @@ final class MessageViewModel: ObservableObject {
                 chat: chat,
                 processOutput: processOutput
             )
-
-            await MainActor.run {
-                if api_messages_in_chat.last?.id == lastMessageId {
-                    // Only update isGenerating if the last message is the chat we are responsible for
-                    self.isGenerating = false
-                }
-            }
-            logger.debug("Chat complete")
+            chatComplete(chat: chat, lastMessageId: lastMessageId)
         }
 
         numMessagesSentToday += 1
+    }
+
+    @MainActor
+    func chatComplete(chat: APIChat, lastMessageId: UUID) {
+        logger.debug("Chat complete")
+        if api_messages_in_chat.last?.id == lastMessageId {
+            // Only update isGenerating if the last message is the chat we are responsible for
+            self.isGenerating = false
+        }
+
+        // PUT request to autorename if the chat is named New Chat
+        if chat.name == "New Chat" {
+            Task {
+                let url = URL(string: AppConfig.invisibility_api_base + "/chats/\(chat.id)/autorename")!
+                guard let token else {
+                    logger.warning("No token for autorename")
+                    return
+                }
+
+                var request = URLRequest(url: url)
+                request.httpMethod = "PUT"
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+                let (data, _) = try await URLSession.shared.data(for: request)
+
+                // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
+                let decoder = iso8601Decoder()
+
+                let new_chat = try decoder.decode(APIChat.self, from: data)
+                print(new_chat)
+
+                DispatchQueue.main.async {
+                    if let index = self.api_chats.firstIndex(of: chat) {
+                        self.api_chats[index].name = new_chat.name
+                    }
+                    print(new_chat.name)
+                }
+            }
+        }
     }
 
     @MainActor
@@ -245,14 +290,7 @@ final class MessageViewModel: ObservableObject {
                 processOutput: processOutput,
                 regenerate_from_message_id: user_message_before.id
             )
-
-            await MainActor.run {
-                if api_messages.last?.id == lastMessageId {
-                    // Only update isGenerating if the last message is the chat we are responsible for
-                    self.isGenerating = false
-                }
-            }
-            logger.debug("Regenerate complete")
+            chatComplete(chat: chat, lastMessageId: lastMessageId)
         }
     }
 
@@ -267,6 +305,13 @@ final class MessageViewModel: ObservableObject {
         }
         isGenerating = false
         chatTask?.cancel()
+    }
+
+    @MainActor
+    func clearAll() {
+        api_chats = []
+        api_messages = []
+        api_files = []
     }
 
     private func processOutput(output: String, message: APIMessage) {

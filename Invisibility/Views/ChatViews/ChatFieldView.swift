@@ -20,10 +20,7 @@ struct ChatFieldView: View {
            GridItem(.flexible())
     ]
 
-    public var body: some View {
-        // let _ = Self._printChanges()
-
-        // Items: Images, and PDFs
+    var body: some View {
         VStack {
               LazyVGrid(columns: columns, spacing: 20) {
                   ForEach(chatViewModel.images) { imageItem in
@@ -44,7 +41,9 @@ struct ChatFieldView: View {
                 .padding(.horizontal, 10)
                 .visible(if: !ChatViewModel.shared.items.isEmpty, removeCompletely: true)
 
-            ChatEditorView()
+            WebViewChatField()
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
         }
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)

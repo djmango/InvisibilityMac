@@ -12,50 +12,6 @@ import OSLog
 import PostHog
 import SwiftUI
 
-struct User: Decodable {
-    var object: String
-    var id: String
-    var email: String
-    var firstName: String?
-    var lastName: String?
-    var emailVerified: Bool?
-    var profilePictureUrl: String?
-    var createdAt: Date
-    var updatedAt: Date
-
-    private enum CodingKeys: String, CodingKey {
-        case object, id, email, emailVerified
-        case firstName = "first_name"
-        case lastName = "last_name"
-        case profilePictureUrl = "profile_picture_url"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-    }
-}
-
-struct UserInvite: Decodable {
-    var email: String
-    var code: String
-    var createdAt: Date
-
-    private enum CodingKeys: String, CodingKey {
-        case email
-        case code
-        case createdAt = "created_at"
-    }
-}
-
-// Extension for decoding a date in the custom ISO8601 format with nanoseconds
-extension DateFormatter {
-    static let extendedISO8601: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSX"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0)
-        return formatter
-    }()
-}
-
 struct RefreshTokenResponse: Decodable {
     let token: String
 }
@@ -248,6 +204,7 @@ final class UserManager: ObservableObject {
     }
 
     func manage() {
+        defer { PostHogSDK.shared.capture("manage_stripe") }
         if let url = URL(string: "https://billing.stripe.com/p/login/eVa17KdHk6D62qcbII") {
             NSWorkspace.shared.open(url)
         }
@@ -259,11 +216,7 @@ final class UserManager: ObservableObject {
             return
         }
 
-        defer {
-            PostHogSDK.shared.capture(
-                "send_message", properties: ["email": user.email, "num_messages_left": numMessagesLeft]
-            )
-        }
+        defer { PostHogSDK.shared.capture("pay", properties: ["num_messages_left": numMessagesLeft]) }
 
         if let url = URL(string: AppConfig.invisibility_api_base + "/pay/checkout?email=\(user.email)") {
             NSWorkspace.shared.open(url)
@@ -272,6 +225,7 @@ final class UserManager: ObservableObject {
     }
 
     func login() {
+        defer { PostHogSDK.shared.capture("login") }
         // Open the login page in the default browser
         if let url = URL(string: AppConfig.invisibility_api_base + "/auth/login") {
             NSWorkspace.shared.open(url)
@@ -279,6 +233,7 @@ final class UserManager: ObservableObject {
     }
 
     func signup() {
+        defer { PostHogSDK.shared.capture("signup") }
         // Open the signup page in the default browser
         if let url = URL(string: AppConfig.invisibility_api_base + "/auth/signup") {
             NSWorkspace.shared.open(url)
@@ -326,7 +281,9 @@ final class UserManager: ObservableObject {
     }
 
     func logout() {
+        defer { PostHogSDK.shared.capture("logout", properties: ["num_messages_left": numMessagesLeft]) }
         self.token = nil
         self.user = nil
+        MessageViewModel.shared.clearAll()
     }
 }
