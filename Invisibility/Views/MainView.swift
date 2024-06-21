@@ -98,6 +98,7 @@ struct MainView: View {
                             WindowManager.shared.resizeWindowToMouseX(mouseLocation.x)
                         }
                 )
+                .visible(if: !isShowingHistory, removeCompletely: true)
         )
         .overlay(
             Rectangle()

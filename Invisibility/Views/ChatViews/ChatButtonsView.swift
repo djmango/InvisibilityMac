@@ -29,7 +29,6 @@ struct ChatButtonsView: View {
         mainWindowViewModel.whoIsVisible == .history
     }
 
-
     var body: some View {
         HStack(alignment: .center) {
             // New Chat
@@ -66,20 +65,6 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("2", modifiers: [.command, .shift])
             .visible(if: !isShowingHistory, removeCompletely: true)
-
-            // New Chat
-            MessageButtonItemView(
-                label: "New Chat",
-                icon: "plus",
-                shortcut_hint: "⌘ N"
-            ) {
-                withAnimation(AppConfig.snappy) {
-                    chatViewModel.newChat()
-                }
-            }
-            .keyboardShortcut("n", modifiers: [.command])
-            .visible(if: isShowingHistory, removeCompletely: true)
-
 
             // Search Chat History
             MessageButtonItemView(
@@ -122,7 +107,6 @@ struct ChatButtonsView: View {
             .keyboardShortcut("p", modifiers: [.command])
             .visible(if: messageViewModel.isGenerating, removeCompletely: true)
             .visible(if: !isShowingHistory, removeCompletely: true)
-
 
             // Switch Sides
             MessageButtonItemView(

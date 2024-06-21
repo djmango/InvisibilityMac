@@ -12,6 +12,12 @@ struct ChatDragResizeView: View {
     @Binding var isDragging: Bool
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
+    @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
+
+    var isShowingHistory: Bool {
+        mainWindowViewModel.whoIsVisible == .history
+    }
+
     var body: some View {
         HStack {
             if !sideSwitched {
