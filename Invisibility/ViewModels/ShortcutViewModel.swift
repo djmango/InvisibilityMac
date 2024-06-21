@@ -11,6 +11,7 @@ import Foundation
 import KeyboardShortcuts
 import OSLog
 import SwiftUI
+import Combine
 
 extension KeyboardShortcuts.Name {
     // NOTE: default keybindings are overwritten during onboarding
@@ -23,8 +24,12 @@ final class ShortcutViewModel: ObservableObject {
     static let shared = ShortcutViewModel()
 
     @Published public var modifierFlags: NSEvent.ModifierFlags = []
+    
+    private var cancellables: Set<AnyCancellable> = []
 
-    private init() {}
+    private init() {
+        setupCommandKeyObserver()
+    }
 
     @MainActor
     /// Set up the global keyboard shortcuts
@@ -51,6 +56,24 @@ final class ShortcutViewModel: ObservableObject {
 
         KeyboardShortcuts.onKeyUp(for: .record) {
             ScreenRecorder.shared.toggleRecording()
+        }
+    }
+    
+    private func setupCommandKeyObserver() {
+        NotificationCenter.default.publisher(for: .commandKeyPressed)
+            .sink { [weak self] notification in
+                if let isPressed = notification.userInfo?["isPressed"] as? Bool {
+                    self?.updateModifierFlags(isCommandPressed: isPressed)
+                }
+            }
+            .store(in: &cancellables)
+    }
+
+    private func updateModifierFlags(isCommandPressed: Bool) {
+        if isCommandPressed {
+            modifierFlags.insert(.command)
+        } else {
+            modifierFlags.remove(.command)
         }
     }
 }

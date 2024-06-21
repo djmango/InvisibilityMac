@@ -26,6 +26,7 @@ struct ChatWebInputView: View {
 struct ChatWebInputViewRepresentable: NSViewRepresentable {
     private var chatViewModel = ChatViewModel.shared
     private var messageViewModel = MessageViewModel.shared
+    private var shortcutViewModel = ShortcutViewModel.shared
     @ObservedObject private var textViewModel = TextViewModel.shared
 
     func makeNSView(context: Context) -> WKWebView {
@@ -142,7 +143,7 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
             </style>
         </head>
         <body>
-            <div id="editor" contenteditable="true" placeholder="Type a message..."></div>
+            <div id="editor" contenteditable="true" placeholder="Message Invisibility"></div>
             <script>
                 const editor = document.getElementById('editor');
                 let lastHeight = 0;
@@ -257,9 +258,17 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
         override func willOpenMenu(_ menu: NSMenu, with _: NSEvent) {
             menu.items.removeAll { $0.identifier == .init("WKMenuItemIdentifierReload") }
         }
-
+        
+        // detect command
+        override func flagsChanged(with event: NSEvent) {
+             super.flagsChanged(with: event)
+            NotificationCenter.default.post(name: .commandKeyPressed, object: nil, userInfo: ["isPressed": event.modifierFlags.contains(.command)])
+         }
+        
         override func performKeyEquivalent(with event: NSEvent) -> Bool {
             if event.modifierFlags.contains(.command) {
+                NotificationCenter.default.post(name: .commandKeyPressed, object: nil, userInfo: ["isPressed": false])
+
                 switch event.charactersIgnoringModifiers {
                 case "x":
                     if NSApp.sendAction(#selector(NSText.cut(_:)), to: nil, from: self) { return true }
@@ -290,4 +299,8 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
             NotificationCenter.default.removeObserver(self)
         }
     }
+}
+
+extension Notification.Name {
+    static let commandKeyPressed = Notification.Name("commandKeyPressed")
 }

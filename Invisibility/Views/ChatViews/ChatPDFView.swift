@@ -17,20 +17,18 @@ struct ChatPDFView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 100, height: 100)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
                 .shadow(radius: isHovering ? 4 : 0)
-                .padding(.horizontal, 10)
             
             Button(action: {
-                // This is where the deletion of the PDF item happens
                 ChatViewModel.shared.removeItem(id: item.id)
             }) {
                 Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.red)  // Make the button red to highlight it as a delete button
+                    .foregroundColor(.gray)  // Make the button red to highlight it as a delete button
                     .font(.title)  // Adjust the font size as needed
-                    .opacity(isHovering ? 1 : 0)  // Button is only visible when hovering
             }
+            .opacity(isHovering ? 1 : 0)  // Button is only visible when hovering
             .buttonStyle(PlainButtonStyle())
-            .padding(.all, 5)
             .onHover{ isHovering in
                 HoverTrackerModel.shared.targetType = isHovering ? .chatPDFDelete : .nil_
                 HoverTrackerModel.shared.targetItem = isHovering ? item.id.uuidString : nil
