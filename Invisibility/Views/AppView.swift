@@ -45,6 +45,11 @@ struct AppView: View {
                 .padding()
                 .shadow(radius: 2)
             }
+            .onHover{ _ in
+                HoverTrackerModel.shared.targetType = .nil_
+            }
+                
+        
         // .sheet( whatsNew: self.$whatsNew)
         // .environment(
         //     \.whatsNew,

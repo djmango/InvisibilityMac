@@ -66,8 +66,7 @@ struct MessageActionButtonsView: View {
                 MessageButtonItemView(
                     label: "Regenerate",
                     icon: "arrow.clockwise",
-                    shortcut_hint: "⌘ ⇧ R",
-                    whoIsHovering: $whoIsHovering
+                    shortcut_hint: "⌘ ⇧ R"
                 ) {
                     regenerateAction()
                 }
@@ -77,8 +76,7 @@ struct MessageActionButtonsView: View {
                 MessageButtonItemView(
                     label: "Copy",
                     icon: isCopied ? "checkmark" : "square.on.square",
-                    shortcut_hint: isLastMessage ? "⌘ ⌥ C" : nil,
-                    whoIsHovering: $whoIsHovering
+                    shortcut_hint: isLastMessage ? "⌘ ⌥ C" : nil
                 ) {
                     copyAction()
                 }

@@ -11,7 +11,6 @@ import SwiftUI
 
 /// A view that displays an editable text interface for chat purposes.
 struct ChatFieldView: View {
-    @State private var whoIsHovering: UUID?
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     
     let columns = [
@@ -24,10 +23,10 @@ struct ChatFieldView: View {
         VStack {
               LazyVGrid(columns: columns, spacing: 20) {
                   ForEach(chatViewModel.images) { imageItem in
-                      ChatImageView(imageItem: imageItem, whoIsHovering: $whoIsHovering)
+                      ChatImageView(imageItem: imageItem)
                   }
                   ForEach(chatViewModel.pdfs) { pdfItem in
-                      ChatPDFView(pdfItem: pdfItem, whoIsHovering: $whoIsHovering)
+                      ChatPDFView(pdfItem: pdfItem)
                   }
               }
             .padding(.horizontal, 10)

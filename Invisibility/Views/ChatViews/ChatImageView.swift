@@ -6,16 +6,12 @@ struct ChatImageView: View {
 
     let imageItem: ChatDataItem
     let nsImage: NSImage
-    @Binding var whoIsHovering: UUID?
+    
+    @State private var isHovering: Bool = false
 
-    var isHovering: Bool {
-        whoIsHovering == imageItem.id
-    }
-
-    init(imageItem: ChatDataItem, whoIsHovering: Binding<UUID?>) {
+    init(imageItem: ChatDataItem) {
         self.imageItem = imageItem
         self.nsImage = NSImage(data: imageItem.data) ?? NSImage()
-        self._whoIsHovering = whoIsHovering
     }
 
     var body: some View {
@@ -28,27 +24,24 @@ struct ChatImageView: View {
                 .shadow(radius: isHovering ? 4 : 0)
 
             Button(action: {
-                // TODO: this raises Error at TUINSRemoteViewController which I need to view and debug. bug only happens when first calling this method upon app launch
-                DispatchQueue.main.async{
-                    ChatViewModel.shared.removeItem(id: imageItem.id)
-                }
+                ChatViewModel.shared.removeItem(id: imageItem.id)
             }) {
                 Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(.gray)  // You can change to red or any other color
-                    .font(.title)  // Adjust the size as needed
+                    .foregroundColor(.gray)
+                    .font(.title)
             }
-            .opacity(isHovering ? 1 : 0)  // Only show the button when hovering
+            .opacity(isHovering ? 1 : 0)
             .buttonStyle(PlainButtonStyle())
+            .onHover{ isHovering in
+                HoverTrackerModel.shared.targetType = isHovering ? .chatImageDelete : .nil_
+                HoverTrackerModel.shared.targetItem = isHovering ? imageItem.id : nil
+            }
         }
         .padding(.horizontal, 10)
         .onHover { hovering in
-            if hovering {
-                whoIsHovering = imageItem.id
-            } else {
-                if whoIsHovering == imageItem.id {
-                    whoIsHovering = nil
-                }
-            }
+            isHovering = hovering
+            HoverTrackerModel.shared.targetType = hovering ? .chatImage : .nil_
+            HoverTrackerModel.shared.targetItem = hovering ? imageItem.id : nil
         }
     }
 }

@@ -1,16 +1,14 @@
 import SwiftUI
 
 struct ChatPDFView: View {
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
+
     let item: ChatDataItem
-    @Binding var whoIsHovering: UUID?
 
-    var isHovering: Bool {
-        whoIsHovering == item.id
-    }
+    @State private var isHovering: Bool = false
 
-    init(pdfItem: ChatDataItem, whoIsHovering: Binding<UUID?>) {
+    init(pdfItem: ChatDataItem) {
         self.item = pdfItem
-        self._whoIsHovering = whoIsHovering
     }
 
     var body: some View {
@@ -33,15 +31,15 @@ struct ChatPDFView: View {
             }
             .buttonStyle(PlainButtonStyle())
             .padding(.all, 5)
+            .onHover{ isHovering in
+                HoverTrackerModel.shared.targetType = isHovering ? .chatPDFDelete : .nil_
+                HoverTrackerModel.shared.targetItem = isHovering ? item.id : nil
+            }
         }
         .onHover { hovering in
-            if hovering {
-                whoIsHovering = item.id
-            } else {
-                if whoIsHovering == item.id {
-                    whoIsHovering = nil
-                }
-            }
+            isHovering = hovering
+            HoverTrackerModel.shared.targetType = hovering ? .chatPDF : .nil_
+            HoverTrackerModel.shared.targetItem = hovering ? item.id : nil
         }
         .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
     }

@@ -102,7 +102,6 @@ struct HeaderView: View {
                 label: "Collapse",
                 icon: "chevron.down",
                 shortcut_hint: "⌘ + ⇧ + U",
-                whoIsHovering: $whoIsHovering,
                 action: { numMessagesDisplayed = 10 }
             )
             .visible(if: numMessagesDisplayed > 10, removeCompletely: true)
@@ -112,7 +111,6 @@ struct HeaderView: View {
                 label: "Show +\(min(messageViewModel.api_messages_in_chat.count - numMessagesDisplayed, 10))",
                 icon: "chevron.up",
                 shortcut_hint: "⌘ + ⇧ + I",
-                whoIsHovering: $whoIsHovering,
                 action: {
                     numMessagesDisplayed = min(messageViewModel.api_messages_in_chat.count, numMessagesDisplayed + 10)
                 }
