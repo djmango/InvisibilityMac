@@ -190,6 +190,7 @@ final class MessageViewModel: ObservableObject {
 
         // PUT request to autorename if the chat is named New Chat
         if chat.name == "New Chat" {
+            logger.debug("Chat named New Chat, autorenaming")
             Task {
                 let url = URL(string: AppConfig.invisibility_api_base + "/chats/\(chat.id)/autorename")!
                 guard let token else {

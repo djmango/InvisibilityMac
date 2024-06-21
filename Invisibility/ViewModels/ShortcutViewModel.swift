@@ -7,11 +7,11 @@
 //
 
 import AppKit
+import Combine
 import Foundation
 import KeyboardShortcuts
 import OSLog
 import SwiftUI
-import Combine
 
 extension KeyboardShortcuts.Name {
     // NOTE: default keybindings are overwritten during onboarding
@@ -24,7 +24,7 @@ final class ShortcutViewModel: ObservableObject {
     static let shared = ShortcutViewModel()
 
     @Published public var modifierFlags: NSEvent.ModifierFlags = []
-    
+
     private var cancellables: Set<AnyCancellable> = []
 
     private init() {
@@ -58,7 +58,7 @@ final class ShortcutViewModel: ObservableObject {
             ScreenRecorder.shared.toggleRecording()
         }
     }
-    
+
     private func setupCommandKeyObserver() {
         NotificationCenter.default.publisher(for: .commandKeyPressed)
             .sink { [weak self] notification in
@@ -88,6 +88,7 @@ struct AppMenuCommands: Commands {
                 }
             }
             .keyboardShortcut("n")
+            .keyboardShortcut(.delete, modifiers: [.command, .shift])
 
             Button("Open") {
                 InvisibilityFileManager.openFile()

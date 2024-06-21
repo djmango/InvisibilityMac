@@ -21,7 +21,7 @@ struct ChatButtonsView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
     @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
-    @ObservedObject private var hoverTrackerModel : HoverTrackerModel = HoverTrackerModel.shared
+    @ObservedObject private var hoverTrackerModel: HoverTrackerModel = HoverTrackerModel.shared
     private var chatViewModel: ChatViewModel = ChatViewModel.shared
     private var windowManager: WindowManager = WindowManager.shared
     private let screenshotManager = ScreenshotManager.shared
@@ -73,21 +73,6 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("2", modifiers: [.command, .shift])
             .visible(if: !isShowingHistory, removeCompletely: true)
-
-            // New Chat
-            MessageButtonItemView(
-                label: "New Chat",
-                icon: "plus",
-                shortcut_hint: "⌘ N",
-                whoIsHovering: $whoIsHovering
-
-            ) {
-                withAnimation(AppConfig.snappy) {
-                    chatViewModel.newChat()
-                }
-            }
-            .keyboardShortcut("n", modifiers: [.command])
-            .visible(if: isShowingHistory, removeCompletely: true)
 
             // Search Chat History
             MessageButtonItemView(

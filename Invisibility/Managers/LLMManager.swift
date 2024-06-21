@@ -23,16 +23,18 @@ class LLMModelRepository: ObservableObject {
 
     @AppStorage("dynamicLLMLoad") private var dynamicLLMLoad = false
 
+    static let hardcodedModels = [
+        LLMModel(text: "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0", vision: "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0", human_name: "Claude-3.5 Sonnet"),
+        LLMModel(text: "gpt-4o", vision: "gpt-4o", human_name: "GPT-4o"),
+        LLMModel(text: "bedrock/anthropic.claude-3-opus-20240229-v1:0", vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0", human_name: "Claude-3 Opus"),
+        LLMModel(text: "groq/llama3-70b-8192", vision: nil, human_name: "Llama-3 70B"),
+        LLMModel(text: "openrouter/google/gemini-pro-1.5", vision: "openrouter/google/gemini-pro-1.5", human_name: "Gemini Pro 1.5"),
+        LLMModel(text: "openrouter/perplexity/llama-3-sonar-large-32k-online", vision: nil, human_name: "Perplexity"),
+    ]
+
     private init() {
+        models = Self.hardcodedModels
         // Initialize with constant models
-        models = [
-            LLMModel(text: "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0", vision: "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0", human_name: "Claude-3.5 Sonnet"),
-            LLMModel(text: "gpt-4o", vision: "gpt-4o", human_name: "GPT-4o"),
-            LLMModel(text: "bedrock/anthropic.claude-3-opus-20240229-v1:0", vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0", human_name: "Claude-3 Opus"),
-            LLMModel(text: "groq/llama3-70b-8192", vision: nil, human_name: "Llama-3 70B"),
-            LLMModel(text: "openrouter/google/gemini-pro-1.5", vision: "openrouter/google/gemini-pro-1.5", human_name: "Gemini Pro 1.5"),
-            LLMModel(text: "openrouter/perplexity/llama-3-sonar-large-32k-online", vision: nil, human_name: "Perplexity"),
-        ]
 
         Task {
             await loadDynamicModels()
@@ -40,7 +42,10 @@ class LLMModelRepository: ObservableObject {
     }
 
     func loadDynamicModels() async {
-        guard dynamicLLMLoad else { return }
+        if !dynamicLLMLoad {
+            models = Self.hardcodedModels
+            return
+        }
         do {
             let url = URL(string: "https://api.keywordsai.co/api/models/public")!
             let (data, _) = try await URLSession.shared.data(from: url)
