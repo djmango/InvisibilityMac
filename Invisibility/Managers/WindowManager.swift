@@ -141,8 +141,6 @@ class WindowManager {
             backing: .buffered,
             defer: false
         )
-        self.window = window
-
         window.contentView = NSHostingView(rootView: contentView)
         window.level = .mainMenu // Make the window float above all windows
         window.isOpaque = false // Enable transparency
@@ -150,9 +148,14 @@ class WindowManager {
         window.hasShadow = false // Optional: Disable shadow for a more "overlay" feel
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
-        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        //window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .transient, .ignoresCycle]
         window.orderFrontRegardless()
+        
+        NSApp.activate(ignoringOtherApps: true)
+        window.makeKeyAndOrderFront(window)
 
+        self.window = window
         logger.debug("Panel set up")
         return true
     }

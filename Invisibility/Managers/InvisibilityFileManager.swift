@@ -68,6 +68,7 @@ enum InvisibilityFileManager {
         defer {
             PostHogSDK.shared.capture("handle_file")
         }
+        
         // First determine if we are dealing with an image or audio file
         logger.debug("Selected file \(url)")
         if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {

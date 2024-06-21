@@ -55,7 +55,6 @@ struct SettingsView: View {
 
                 Divider()
                     .padding(.horizontal, 80)
-
                 Spacer()
 
                 HStack {

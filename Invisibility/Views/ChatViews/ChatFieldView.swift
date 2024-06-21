@@ -18,11 +18,11 @@ struct ChatFieldView: View {
         VStack {
             HStack {
                 ForEach(ChatViewModel.shared.images) { imageItem in
-                    ChatImageView(imageItem: imageItem, whoIsHovering: $whoIsHovering)
+                    ChatImageView(imageItem: imageItem)
                 }
 
                 ForEach(ChatViewModel.shared.pdfs) { pdfItem in
-                    ChatPDFView(pdfItem: pdfItem, whoIsHovering: $whoIsHovering)
+                    ChatPDFView(pdfItem: pdfItem)
                 }
 
                 Spacer()

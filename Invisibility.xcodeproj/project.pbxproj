@@ -86,6 +86,8 @@
 		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
 		4DF46B392BBF96D700846217 /* ScrollKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B382BBF96D700846217 /* ScrollKit */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
+		77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29832C25479E007D923C /* HoverTrackerModel.swift */; };
+		77FE29862C254AAF007D923C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29852C254AAF007D923C /* Buttons.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -154,6 +156,8 @@
 		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
 		4DF2D9002BA689220093CA3E /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
+		77FE29832C25479E007D923C /* HoverTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverTrackerModel.swift; sourceTree = "<group>"; };
+		77FE29852C254AAF007D923C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -250,6 +254,7 @@
 				4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */,
 				4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */,
 				4D3A15542C13D36300272B84 /* MainWindowViewModel.swift */,
+				77FE29832C25479E007D923C /* HoverTrackerModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -365,6 +370,7 @@
 			isa = PBXGroup;
 			children = (
 				4D9ADB832C07E59700A1EFC7 /* APITypes.swift */,
+				77FE29852C254AAF007D923C /* Buttons.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -546,6 +552,7 @@
 				4D8E055E2B2516DE00B60D0D /* AppView.swift in Sources */,
 				4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */,
 				4DB061B52BF2B82D007CF7DD /* CaptureViewModel.swift in Sources */,
+				77FE29862C254AAF007D923C /* Buttons.swift in Sources */,
 				4DB061AD2BF2B031007CF7DD /* ScreenRecorder.swift in Sources */,
 				4DE4ACDB2C2528A2002D8156 /* ChatDragView.swift in Sources */,
 				4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */,
@@ -557,6 +564,7 @@
 				4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */,
 				4D4DB2492B913E2E003B9D53 /* ChatViewModel.swift in Sources */,
 				4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */,
+				77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */,
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
 				4D9ADB7E2C07BBBE00A1EFC7 /* HistoryCardView.swift in Sources */,
@@ -720,7 +728,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = U854WW4U2R;
+				DEVELOPMENT_TEAM = DS65N3ZNNX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;
@@ -754,7 +762,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = U854WW4U2R;
+				DEVELOPMENT_TEAM = DS65N3ZNNX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;

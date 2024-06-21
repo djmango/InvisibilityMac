@@ -44,8 +44,7 @@ struct CaptureView: View {
                         MessageButtonItemView(
                             label: "Minimize",
                             icon: "minus",
-                            shortcut_hint: nil,
-                            whoIsHovering: $whoIsHovering
+                            shortcut_hint: nil
                         ) {
                             withAnimation(AppConfig.snappy) {
                                 minimized.toggle()
@@ -64,8 +63,7 @@ struct CaptureView: View {
                         MessageButtonItemView(
                             label: "Open Picker",
                             icon: "rectangle.inset.filled.and.person.filled",
-                            shortcut_hint: nil,
-                            whoIsHovering: $whoIsHovering
+                            shortcut_hint: nil
                         ) {
                             screenRecorder.presentPicker()
                         }

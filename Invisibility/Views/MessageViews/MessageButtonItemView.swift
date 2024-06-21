@@ -21,19 +21,16 @@ struct MessageButtonItemView: View {
 
     @State private var isPressed: Bool = false
     @State private var isHovering: Bool = false
-    @Binding private var whoIsHovering: String?
 
     init(label: String?,
          icon: String,
          shortcut_hint: String?,
-         whoIsHovering: Binding<String?>,
          iconColor: Color = .chatButtonForeground,
          action: @escaping () -> Void)
     {
         self.label = label
         self.icon = icon
         self.shortcut_hint = shortcut_hint
-        self._whoIsHovering = whoIsHovering
         self.iconColor = iconColor
         self.action = action
     }
@@ -86,9 +83,9 @@ struct MessageButtonItemView: View {
         .onHover { hovering in
             isHovering = hovering
             if hovering {
-                whoIsHovering = label
+                HoverTrackerModel.shared.targetType = .menuItem
             } else {
-                whoIsHovering = nil
+                HoverTrackerModel.shared.targetType = .nil_
             }
         }
         .buttonStyle(.plain)

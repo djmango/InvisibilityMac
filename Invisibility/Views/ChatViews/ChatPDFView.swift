@@ -1,47 +1,46 @@
-//
-//  ChatPDFView.swift
-//  Invisibility
-//
-//  Created by Sulaiman Ghori on 4/16/24.
-//  Copyright © 2024 Invisibility Inc. All rights reserved.
-//
-
 import SwiftUI
 
 struct ChatPDFView: View {
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
+
     let item: ChatDataItem
 
-    @Binding private var whoIsHovering: UUID?
+    @State private var isHovering: Bool = false
 
-    var isHovering: Bool {
-        whoIsHovering == item.id
-    }
-
-    init(pdfItem: ChatDataItem, whoIsHovering: Binding<UUID?>) {
+    init(pdfItem: ChatDataItem) {
         self.item = pdfItem
-        self._whoIsHovering = whoIsHovering
     }
 
     var body: some View {
-        Image("PDFIcon")
-            .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(width: 150, height: 150)
-            .shadow(radius: isHovering ? 4 : 0)
-            .padding(.horizontal, 10)
-            .onHover { hovering in
-                if hovering {
-                    whoIsHovering = item.id
-                } else {
-                    // First check if we still have command over var, ensuring someone else hasn't changed it
-                    if whoIsHovering == item.id {
-                        whoIsHovering = nil
-                    }
-                }
-            }
-            .onTapGesture {
+        ZStack(alignment: Alignment(horizontal: .trailing, vertical: .top)) {
+            Image("PDFIcon")  // Ensure this image is included in your assets
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 100, height: 100)
+                .shadow(radius: isHovering ? 4 : 0)
+                .padding(.horizontal, 10)
+            
+            Button(action: {
+                // This is where the deletion of the PDF item happens
                 ChatViewModel.shared.removeItem(id: item.id)
+            }) {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundColor(.red)  // Make the button red to highlight it as a delete button
+                    .font(.title)  // Adjust the font size as needed
+                    .opacity(isHovering ? 1 : 0)  // Button is only visible when hovering
             }
-            .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
+            .buttonStyle(PlainButtonStyle())
+            .padding(.all, 5)
+            .onHover{ isHovering in
+                HoverTrackerModel.shared.targetType = isHovering ? .chatPDFDelete : .nil_
+                HoverTrackerModel.shared.targetItem = isHovering ? item.id : nil
+            }
+        }
+        .onHover { hovering in
+            isHovering = hovering
+            HoverTrackerModel.shared.targetType = hovering ? .chatPDF : .nil_
+            HoverTrackerModel.shared.targetItem = hovering ? item.id : nil
+        }
+        .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
     }
 }
