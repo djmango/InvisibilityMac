@@ -21,6 +21,7 @@ struct ChatButtonsView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
     @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
+    @ObservedObject private var hoverTrackerModel : HoverTrackerModel = HoverTrackerModel.shared
     private var chatViewModel: ChatViewModel = ChatViewModel.shared
     private var windowManager: WindowManager = WindowManager.shared
     private let screenshotManager = ScreenshotManager.shared
@@ -29,6 +30,8 @@ struct ChatButtonsView: View {
         mainWindowViewModel.whoIsVisible == .history
     }
 
+    @State private var whoIsHovering: String?
+
 
     var body: some View {
         HStack(alignment: .center) {
@@ -36,7 +39,9 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: "New Chat",
                 icon: "plus",
-                shortcut_hint: "⌘ N"
+                shortcut_hint: "⌘ N",
+                whoIsHovering: $whoIsHovering
+
             ) {
                 withAnimation(AppConfig.snappy) {
                     chatViewModel.newChat()
@@ -48,7 +53,9 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: "Screenshot",
                 icon: "text.viewfinder",
-                shortcut_hint: "⌘ ⇧ 1"
+                shortcut_hint: "⌘ ⇧ 1",
+                whoIsHovering: $whoIsHovering
+
             ) {
                 Task { await screenshotManager.capture() }
             }
@@ -60,6 +67,7 @@ struct ChatButtonsView: View {
                 label: screenRecorder.isRunning ? "Stop Sidekick" : "Start Sidekick",
                 icon: "shared.with.you",
                 shortcut_hint: "⌘ ⇧ 2",
+                whoIsHovering: $whoIsHovering,
                 iconColor: screenRecorder.isRunning ? .purple : .chatButtonForeground
             ) {
                 screenRecorder.toggleRecording()
@@ -71,7 +79,9 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: "New Chat",
                 icon: "plus",
-                shortcut_hint: "⌘ N"
+                shortcut_hint: "⌘ N",
+                whoIsHovering: $whoIsHovering
+
             ) {
                 withAnimation(AppConfig.snappy) {
                     chatViewModel.newChat()
@@ -86,6 +96,7 @@ struct ChatButtonsView: View {
                 label: "History",
                 icon: "magnifyingglass",
                 shortcut_hint: "⌘ F",
+                whoIsHovering: $whoIsHovering,
                 iconColor: isShowingHistory ? .history : .chatButtonForeground
             ) {
                 if isShowingHistory {
@@ -100,7 +111,9 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: "Settings",
                 icon: "gearshape",
-                shortcut_hint: "⌘ ,"
+                shortcut_hint: "⌘ ,",
+                whoIsHovering: $whoIsHovering
+
             ) {
                 if mainWindowViewModel.whoIsVisible == .settings {
                     _ = mainWindowViewModel.changeView(to: .chat)
@@ -114,7 +127,9 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: "Stop",
                 icon: "stop.circle.fill",
-                shortcut_hint: "⌘ P"
+                shortcut_hint: "⌘ P",
+                whoIsHovering: $whoIsHovering
+
             ) {
                 logger.info("Stop generating")
                 messageViewModel.stopGenerating()
@@ -128,7 +143,8 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: sideSwitched ? "Left" : "Right",
                 icon: sideSwitched ? "arrow.left" : "arrow.right",
-                shortcut_hint: "⌘ ⇧ S"
+                shortcut_hint: "⌘ ⇧ S",
+                whoIsHovering: $whoIsHovering
             ) {
                 switchSide()
             }
@@ -145,7 +161,7 @@ struct ChatButtonsView: View {
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
         )
         .frame(maxWidth: 380)
-        .animation(AppConfig.snappy, value: HoverTrackerModel.shared.targetItem)
+        .animation(AppConfig.snappy, value: whoIsHovering)
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
         .animation(AppConfig.snappy, value: messageViewModel.api_messages_in_chat.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)

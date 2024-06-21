@@ -16,7 +16,7 @@ final class HoverTrackerModel: ObservableObject {
 
     // The text content of the chat field
     public var targetType: HoverItemType = .nil_
-    public var targetItem: UUID? = nil
+    public var targetItem: String? = nil
 
     private init() {}
 }
