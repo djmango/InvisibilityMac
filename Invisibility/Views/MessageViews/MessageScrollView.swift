@@ -20,6 +20,27 @@ struct MessageScrollView: View {
 
     @State private var numMessagesDisplayed = 10
 
+    func calculateHeaderHeight(messageCount: Int, windowHeight: CGFloat) -> CGFloat {
+        let minHeight: CGFloat = 10
+        let maxHeight: CGFloat = max(minHeight, windowHeight - 290)
+
+        // Define the range where the transition occurs
+        let startTransition = 1
+        let endTransition = 7
+
+        if messageCount <= startTransition {
+            return maxHeight
+        } else if messageCount >= endTransition {
+            return minHeight
+        } else {
+            // Calculate the progress of the transition
+            let progress = CGFloat(messageCount - startTransition) / CGFloat(endTransition - startTransition)
+
+            // Interpolate between maxHeight and minHeight
+            return maxHeight - (maxHeight - minHeight)
+        }
+    }
+
     var body: some View {
         ScrollViewReader { proxy in
             ScrollViewWithStickyHeader(
@@ -27,6 +48,10 @@ struct MessageScrollView: View {
                     HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
                 },
                 headerHeight: messageViewModel.api_messages_in_chat.count > 7 ? 50 : max(10, messageViewModel.windowHeight - 205),
+                // headerHeight: calculateHeaderHeight(
+                //     messageCount: messageViewModel.api_messages_in_chat.count,
+                //     windowHeight: messageViewModel.windowHeight
+                // ),
                 headerMinHeight: 0,
                 onScroll: handleOffset
             ) {
@@ -94,6 +119,7 @@ struct HeaderView: View {
     @Binding var numMessagesDisplayed: Int
 
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+    @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @State private var whoIsHovering: String?
 
     var body: some View {

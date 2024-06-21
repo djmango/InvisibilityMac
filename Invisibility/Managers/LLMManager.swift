@@ -15,94 +15,64 @@ import SwiftUI
 // Alias for ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent(images: images)
 typealias VisionContent = ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent
 
-struct LLMModel: Codable, Equatable, Hashable, Identifiable {
-    let text: String
-    let vision: String?
-    let human_name: String
+class LLMModelRepository: ObservableObject {
+    static let shared = LLMModelRepository()
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "LLMModelRepository")
 
-    // Equatable
-    static func == (lhs: LLMModel, rhs: LLMModel) -> Bool {
-        lhs.text == rhs.text && lhs.vision == rhs.vision && lhs.human_name == rhs.human_name
-    }
+    @Published public var models: [LLMModel] = []
 
-    // Hashable
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(text)
-        hasher.combine(vision)
-        hasher.combine(human_name)
-    }
+    @AppStorage("dynamicLLMLoad") private var dynamicLLMLoad = false
 
-    // Identifiable
-    var id: String {
-        human_name
-    }
-}
+    private init() {
+        // Initialize with constant models
+        models = [
+            LLMModel(text: "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0", vision: "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0", human_name: "Claude-3.5 Sonnet"),
+            LLMModel(text: "gpt-4o", vision: "gpt-4o", human_name: "GPT-4o"),
+            LLMModel(text: "bedrock/anthropic.claude-3-opus-20240229-v1:0", vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0", human_name: "Claude-3 Opus"),
+            LLMModel(text: "groq/llama3-70b-8192", vision: nil, human_name: "Llama-3 70B"),
+            LLMModel(text: "openrouter/google/gemini-pro-1.5", vision: "openrouter/google/gemini-pro-1.5", human_name: "Gemini Pro 1.5"),
+            LLMModel(text: "openrouter/perplexity/llama-3-sonar-large-32k-online", vision: nil, human_name: "Perplexity"),
+        ]
 
-enum LLMModelRepository: CaseIterable {
-    case claude3_5Sonnet
-    case gpt4o
-    case claude3Opus
-    case llama3_70b
-    case geminiPro
-    case perplexitySonarOnline
-
-    var model: LLMModel {
-        switch self {
-        case .claude3_5Sonnet:
-            LLMModel(
-                text: "claude-3-5-sonnet-20240620",
-                vision: "claude-3-5-sonnet-20240620",
-                human_name: "Claude-3.5 Sonnet"
-            )
-        case .gpt4o:
-            LLMModel(
-                text: "gpt-4o",
-                vision: "gpt-4o",
-                human_name: "GPT-4o"
-            )
-        case .claude3Opus:
-            LLMModel(
-                text: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
-                vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
-                human_name: "Claude-3 Opus"
-            )
-        case .llama3_70b:
-            LLMModel(
-                text: "groq/llama3-70b-8192",
-                vision: nil,
-                human_name: "Llama-3 70B"
-            )
-        case .geminiPro:
-            LLMModel(
-                text: "openrouter/google/gemini-pro-1.5",
-                vision: "openrouter/google/gemini-pro-1.5",
-                human_name: "Gemini Pro 1.5"
-            )
-        case .perplexitySonarOnline:
-            LLMModel(
-                text: "openrouter/perplexity/llama-3-sonar-large-32k-online",
-                vision: nil,
-                human_name: "Perplexity"
-            )
+        Task {
+            await loadDynamicModels()
         }
     }
 
-    static var allModels: [LLMModel] {
-        allCases.map(\.model)
-    }
-
-    static var enabledModels: [LLMModel] {
-        var enabledModels: [LLMModel] = []
-        for model in allCases {
-            if UserDefaults.standard.bool(forKey: "llmEnabled_\(model.model.human_name)") {
-                enabledModels.append(model.model)
+    func loadDynamicModels() async {
+        guard dynamicLLMLoad else { return }
+        do {
+            let url = URL(string: "https://api.keywordsai.co/api/models/public")!
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let response = try JSONDecoder().decode(APIModelResponse.self, from: data)
+            // models.append(contentsOf: response.models.map(LLMModel.fromAPIModel).filter { !models.contains($0) })
+            DispatchQueue.main.async {
+                for model in response.models {
+                    let llmModel = LLMModel.fromAPIModel(model)
+                    if !self.models.contains(llmModel) {
+                        self.models.append(llmModel)
+                    }
+                }
             }
+        } catch {
+            logger.error("Failed to load dynamic models: \(error)")
         }
-        return enabledModels
     }
 
-    static var humanNameToModel: [String: LLMModel] {
-        Dictionary(uniqueKeysWithValues: allCases.map { ($0.model.human_name, $0.model) })
+    func modelByHumanName(_ name: String) -> LLMModel? {
+        models.first { $0.human_name == name }
+    }
+
+    func addModel(_ model: LLMModel) {
+        if !models.contains(where: { $0.human_name == model.human_name }) {
+            models.append(model)
+        }
+    }
+
+    func updateModel(_ model: LLMModel) {
+        if let index = models.firstIndex(where: { $0.human_name == model.human_name }) {
+            models[index] = model
+        }
     }
 }
 
@@ -118,36 +88,10 @@ final class LLMManager {
     @AppStorage("token") private var token: String?
 
     public var model: LLMModel {
-        LLMModelRepository.humanNameToModel[llmModel] ?? LLMModelRepository.gpt4o.model
+        LLMModelRepository.shared.modelByHumanName(llmModel) ?? LLMModelRepository.shared.models[0]
     }
 
-    /// The index of the model in the allModels array
-    public var modelIndex: Int {
-        LLMModelRepository.allModels.firstIndex(of: model) ?? 0
-    }
-
-    /// The index of the model in the enabledModels array
-    public var enabledModelIndex: Int {
-        LLMModelRepository.enabledModels.firstIndex(of: model) ?? 0
-    }
-
-    /// All enabled models via UserDefaults
-    public var enabledModels: [LLMModel] {
-        var enabledModels: [LLMModel] = []
-        for model in LLMModelRepository.allModels {
-            if UserDefaults.standard.bool(forKey: "llmEnabled_\(model.human_name)") {
-                enabledModels.append(model)
-            }
-        }
-        return enabledModels
-    }
-
-    /// Set the model to the given index in the enabled models
-    public func setModel(index: Int) {
-        llmModel = LLMModelRepository.enabledModels[index].human_name
-    }
-
-    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.gpt4o.model.human_name
+    @AppStorage("llmModelName") public var llmModel = LLMModelRepository.shared.models[0].id
 
     private init() {
         @AppStorage("token") var token: String?

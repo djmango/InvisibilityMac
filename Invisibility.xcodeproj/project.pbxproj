@@ -76,6 +76,7 @@
 		4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4DDCE8522B50BA0900A22B1E /* Sparkle */; };
 		4DE4ACD92C24FE37002D8156 /* TextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4ACD82C24FE37002D8156 /* TextViewModel.swift */; };
 		4DE4ACDB2C2528A2002D8156 /* ChatDragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4ACDA2C2528A2002D8156 /* ChatDragView.swift */; };
+		4DE4ACDF2C257CC3002D8156 /* LLMTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE4ACDE2C257CC3002D8156 /* LLMTypes.swift */; };
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
 		4DEA4ADF2B70689B00393858 /* MenubarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEA4ADE2B70689B00393858 /* MenubarView.swift */; };
 		4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */; };
@@ -151,6 +152,7 @@
 		4DDCE84F2B509F9800A22B1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DE4ACD82C24FE37002D8156 /* TextViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextViewModel.swift; sourceTree = "<group>"; };
 		4DE4ACDA2C2528A2002D8156 /* ChatDragView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatDragView.swift; sourceTree = "<group>"; };
+		4DE4ACDE2C257CC3002D8156 /* LLMTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMTypes.swift; sourceTree = "<group>"; };
 		4DE673792B17F46B00A5F9AE /* Invisibility.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Invisibility.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DEA4ADE2B70689B00393858 /* MenubarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenubarView.swift; sourceTree = "<group>"; };
 		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
@@ -371,6 +373,7 @@
 			children = (
 				4D9ADB832C07E59700A1EFC7 /* APITypes.swift */,
 				77FE29852C254AAF007D923C /* Buttons.swift */,
+				4DE4ACDE2C257CC3002D8156 /* LLMTypes.swift */,
 			);
 			path = Types;
 			sourceTree = "<group>";
@@ -542,6 +545,7 @@
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
 				4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */,
+				4DE4ACDF2C257CC3002D8156 /* LLMTypes.swift in Sources */,
 				4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */,
 				4D9ADB822C07E1EF00A1EFC7 /* InvisibilityFileManager.swift in Sources */,
 				4D3A15532C13D1AC00272B84 /* Date.swift in Sources */,
@@ -728,7 +732,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = DS65N3ZNNX;
+				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;
@@ -762,7 +766,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = DS65N3ZNNX;
+				DEVELOPMENT_TEAM = U854WW4U2R;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;

@@ -63,7 +63,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: NSWorkspace.didWakeNotification,
             object: nil
         )
-        
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(panelDidBecomeKey),
@@ -80,8 +80,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         let windowSuccess = WindowManager.shared.setupWindow()
-        
-        
+
         guard windowSuccess else {
             logger.error("Failed to set up window")
             return
@@ -150,16 +149,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 await WindowManager.shared.showWindow()
             }
         }
-        
-     
     }
-    
-    @objc func panelDidBecomeKey(notification: Notification) {
+
+    @objc func panelDidBecomeKey(notification _: Notification) {
         // Move the switch logic here
-        print("yo")
         let hoverType: HoverItemType = HoverTrackerModel.shared.targetType
         let target: UUID? = HoverTrackerModel.shared.targetItem
-        
+
         switch hoverType {
         case .chatImageDelete:
             logger.debug("Performing Chat Image Delete action")
@@ -177,18 +173,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         case .menuItem:
             logger.debug("Opening Menu Settings")
-            // Implement menu move functionality
+        // Implement menu move functionality
         case .chatImage:
             logger.debug("Handling Chat Image action")
-              // Implement chat image functionality
+        // Implement chat image functionality
         case .chatPDF:
             logger.debug("Handling Chat PDF action")
-              // Implement chat PDF functionality
+        // Implement chat PDF functionality
         case .nil_:
             logger.debug("No specific button action")
         }
     }
-
 
     @objc func appDidResignActive(notification _: NSNotification) {
         logger.debug("App did resign active")
@@ -201,7 +196,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             logger.debug("Woke up")
         } else {
             logger.warning("Some other event other than sleep/wake: \(notification.name.rawValue)")
-            print("wake")
         }
     }
 

@@ -22,18 +22,19 @@ struct SettingsView: View {
     @AppStorage("onboardingViewed") private var onboardingViewed = false
     @AppStorage("shortcutHints") private var shortcutHints = true
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
-    @AppStorage("llmModelName") private var llmModel = LLMModelRepository.gpt4o.model.human_name
+    @AppStorage("llmModelName") public var llmModel = LLMModelRepository.shared.models[0].id
+    @AppStorage("dynamicLLMLoad") private var dynamicLLMLoad = false
 
     // TODO: func to reset to default settings
 
     @State private var showingExporter = false
     @State private var document: TextDocument = TextDocument(text: "")
 
+    @Environment(\.colorScheme) var colorScheme
     @ObservedObject private var userManager = UserManager.shared
+    @ObservedObject private var llmModelRepository = LLMModelRepository.shared
     private var mainWindowViewModel = MainWindowViewModel.shared
     private var updaterViewModel = UpdaterViewModel.shared
-
-    @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
         ScrollView {
@@ -94,8 +95,15 @@ struct SettingsView: View {
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
 
+                Toggle("All LLMs", isOn: $dynamicLLMLoad)
+                    .toggleStyle(.switch)
+                    .visible(if: betaFeatures, removeCompletely: true)
+                    .onChange(of: dynamicLLMLoad) {
+                        Task { await llmModelRepository.loadDynamicModels() }
+                    }
+
                 Picker("", selection: $llmModel) {
-                    ForEach(LLMModelRepository.allModels, id: \.self) { model in
+                    ForEach(llmModelRepository.models, id: \.self) { model in
                         Text(model.human_name).tag(model.human_name)
                     }
                 }
