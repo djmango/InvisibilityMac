@@ -40,7 +40,6 @@ struct AppView: View {
                 }
                 .padding(15)
                 .background(.background)
-                .shadow(color: Color.black.opacity(0.3), radius: 2)
                 .cornerRadius(16)
                 .padding()
                 .shadow(radius: 2)
