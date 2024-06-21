@@ -33,6 +33,19 @@ struct ChatButtonsView: View {
 
     var body: some View {
         HStack(alignment: .center) {
+            // New Chat
+            MessageButtonItemView(
+                label: "New Chat",
+                icon: "plus",
+                shortcut_hint: "⌘ N",
+                whoIsHovering: $whoIsHovering
+            ) {
+                withAnimation(AppConfig.snappy) {
+                    chatViewModel.newChat()
+                }
+            }
+            .keyboardShortcut("n", modifiers: [.command])
+
             // Screenshot
             MessageButtonItemView(
                 label: "Screenshot",
@@ -57,20 +70,6 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("2", modifiers: [.command, .shift])
             .visible(if: !isShowingHistory, removeCompletely: true)
-
-            // New Chat
-            MessageButtonItemView(
-                label: "New Chat",
-                icon: "plus",
-                shortcut_hint: "⌘ N",
-                whoIsHovering: $whoIsHovering
-            ) {
-                withAnimation(AppConfig.snappy) {
-                    chatViewModel.newChat()
-                }
-            }
-            .keyboardShortcut("n", modifiers: [.command])
-            .visible(if: isShowingHistory, removeCompletely: true)
 
             // Search Chat History
             MessageButtonItemView(
