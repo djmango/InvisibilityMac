@@ -22,10 +22,6 @@ struct HistoryCardView: View {
     @State private var isEditing: Bool = false
     @FocusState private var isFocused: Bool
 
-    // var shouldHighlight: Bool {
-    //     chatViewModel.chat == chat || isHovered
-    // }
-
     init(chat: APIChat) {
         self.chat = chat
     }
@@ -117,8 +113,6 @@ struct HistoryCardView: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
-            // .stroke(Color(NSColor.separatorColor), lineWidth: chatViewModel.chat == chat ? 3 : 1)
-            // .stroke(chatViewModel.chat == chat ? .history : Color(NSColor.separatorColor), lineWidth: chatViewModel.chat == chat ? 2 : 1)
         )
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)

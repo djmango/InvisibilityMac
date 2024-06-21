@@ -36,7 +36,7 @@ struct ChatFieldView: View {
                 .padding(.horizontal, 10)
                 .visible(if: !ChatViewModel.shared.items.isEmpty, removeCompletely: true)
 
-            WebViewChatField()
+            ChatWebInputView()
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
         }

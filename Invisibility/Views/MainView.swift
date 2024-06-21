@@ -6,6 +6,7 @@ struct MainView: View {
     @FocusState private var promptFocused: Bool
 
     @State private var isDragActive: Bool = false
+    @State private var isDraggingResize = false
     @State private var xOffset: CGFloat = -1000
 
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
@@ -13,6 +14,7 @@ struct MainView: View {
     @ObservedObject private var screenRecorder = ScreenRecorder.shared
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
+    @AppStorage("width") private var width: Int = Int(WindowManager.defaultWidth)
 
     var isShowingMessages: Bool {
         mainWindowViewModel.whoIsVisible == .chat
@@ -79,6 +81,24 @@ struct MainView: View {
         .animation(AppConfig.snappy, value: chatViewModel.textHeight)
         .animation(AppConfig.snappy, value: chatViewModel.images)
         .animation(AppConfig.snappy, value: screenRecorder.isRunning)
+        // .gesture(
+        //     DragGesture()
+        //         .onChanged { value in
+        //             withAnimation(AppConfig.snappy) {
+        //                 WindowManager.shared.width = max(WindowManager.defaultWidth, min(WindowManager.shared.maxWidth, width - Int(value.translation.width)))
+        //             }
+        //         }
+        // )
+        .overlay(
+            ChatDragResizeView(isDragging: $isDraggingResize)
+                .gesture(
+                    DragGesture()
+                        .onChanged { _ in
+                            let mouseLocation = NSEvent.mouseLocation
+                            WindowManager.shared.resizeWindowToMouseX(mouseLocation.x)
+                        }
+                )
+        )
         .overlay(
             Rectangle()
                 .foregroundColor(Color.gray.opacity(0.2))

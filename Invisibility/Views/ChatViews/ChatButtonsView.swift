@@ -14,7 +14,6 @@ struct ChatButtonsView: View {
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("betaFeatures") private var betaFeatures: Bool = false
-    @AppStorage("resized") private var resized: Bool = false
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
@@ -118,17 +117,6 @@ struct ChatButtonsView: View {
             .visible(if: messageViewModel.isGenerating, removeCompletely: true)
             .visible(if: !isShowingHistory, removeCompletely: true)
 
-            // Resize
-            MessageButtonItemView(
-                label: resized ? "Shrink" : "Expand",
-                icon: resized ? "arrow.down.right.and.arrow.up.left" : "arrow.up.backward.and.arrow.down.forward",
-                shortcut_hint: "⌘ ⇧ B",
-                whoIsHovering: $whoIsHovering
-            ) {
-                resizeAction()
-            }
-            .keyboardShortcut("b", modifiers: [.command, .shift])
-
             // Switch Sides
             MessageButtonItemView(
                 label: sideSwitched ? "Left" : "Right",
@@ -150,17 +138,12 @@ struct ChatButtonsView: View {
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
         )
-        .frame(maxWidth: resized ? 500 : 380)
+        .frame(maxWidth: 380)
         .animation(AppConfig.snappy, value: whoIsHovering)
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
         .animation(AppConfig.snappy, value: messageViewModel.api_messages_in_chat.count)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(AppConfig.snappy, value: betaFeatures)
-    }
-
-    @MainActor
-    private func resizeAction() {
-        windowManager.resizeWindow()
     }
 
     @MainActor
