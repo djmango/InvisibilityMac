@@ -33,13 +33,13 @@ struct ChatPDFView: View {
             .padding(.all, 5)
             .onHover{ isHovering in
                 HoverTrackerModel.shared.targetType = isHovering ? .chatPDFDelete : .nil_
-                HoverTrackerModel.shared.targetItem = isHovering ? item.id : nil
+                HoverTrackerModel.shared.targetItem = isHovering ? item.id.uuidString : nil
             }
         }
         .onHover { hovering in
             isHovering = hovering
             HoverTrackerModel.shared.targetType = hovering ? .chatPDF : .nil_
-            HoverTrackerModel.shared.targetItem = hovering ? item.id : nil
+            HoverTrackerModel.shared.targetItem = hovering ? item.id.uuidString : nil
         }
         .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
     }

@@ -34,14 +34,14 @@ struct ChatImageView: View {
             .buttonStyle(PlainButtonStyle())
             .onHover{ isHovering in
                 HoverTrackerModel.shared.targetType = isHovering ? .chatImageDelete : .nil_
-                HoverTrackerModel.shared.targetItem = isHovering ? imageItem.id : nil
+                HoverTrackerModel.shared.targetItem = isHovering ? imageItem.id.uuidString : nil
             }
         }
         .padding(.horizontal, 10)
         .onHover { hovering in
             isHovering = hovering
             HoverTrackerModel.shared.targetType = hovering ? .chatImage : .nil_
-            HoverTrackerModel.shared.targetItem = hovering ? imageItem.id : nil
+            HoverTrackerModel.shared.targetItem = hovering ? imageItem.id.uuidString : nil
         }
     }
 }
