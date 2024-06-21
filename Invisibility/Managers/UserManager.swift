@@ -91,6 +91,7 @@ final class UserManager: ObservableObject {
             }
         }
         LLMManager.shared.setup()
+        await MessageViewModel.shared.fetchAPI()
         getInviteCount()
     }
 
