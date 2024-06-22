@@ -52,11 +52,12 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
     @Published var text: String
     let role: APIRole
     var regenerated: Bool
+    let model_id: String?
     let created_at: Date
     let updated_at: Date
 
     enum CodingKeys: CodingKey {
-        case id, chat_id, user_id, text, role, regenerated, created_at, updated_at
+        case id, chat_id, user_id, text, role, regenerated, model_id, created_at, updated_at
     }
 
     /// Conforms to `CustomStringConvertible` for debugging output.
@@ -72,6 +73,7 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
         text: String,
         role: APIRole,
         regenerated: Bool = false,
+        model_id: String? = nil,
         created_at: Date = Date(),
         updated_at: Date = Date()
     ) {
@@ -81,6 +83,7 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
         self.text = text
         self.role = role
         self.regenerated = regenerated
+        self.model_id = model_id
         self.created_at = created_at
         self.updated_at = updated_at
     }
@@ -94,6 +97,7 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
         self.text = try container.decode(String.self, forKey: .text)
         self.role = try container.decode(APIRole.self, forKey: .role)
         self.regenerated = try container.decode(Bool.self, forKey: .regenerated)
+        self.model_id = try container.decodeIfPresent(String.self, forKey: .model_id)
         self.created_at = try container.decode(Date.self, forKey: .created_at)
         self.updated_at = try container.decode(Date.self, forKey: .updated_at)
     }
@@ -106,6 +110,7 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
         try container.encode(text, forKey: .text)
         try container.encode(role, forKey: .role)
         try container.encode(regenerated, forKey: .regenerated)
+        try container.encode(model_id, forKey: .model_id)
         try container.encode(created_at, forKey: .created_at)
         try container.encode(updated_at, forKey: .updated_at)
     }
@@ -117,6 +122,7 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
             lhs.user_id == rhs.user_id &&
             lhs.text == rhs.text &&
             lhs.role == rhs.role &&
+            lhs.model_id == rhs.model_id && 
             lhs.regenerated == rhs.regenerated &&
             lhs.created_at == rhs.created_at &&
             lhs.updated_at == rhs.updated_at

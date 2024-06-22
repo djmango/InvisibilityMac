@@ -79,6 +79,11 @@ class LLMModelRepository: ObservableObject {
             models[index] = model
         }
     }
+    
+    func model_id_2_name(_ model_id: String?) -> String {
+       guard let id = model_id else { return "Invisibility" }
+       return models.first { $0.text == id || $0.human_name == id }?.human_name ?? "Invisibility"
+   }
 }
 
 final class LLMManager {
