@@ -128,13 +128,16 @@ final class MessageViewModel: ObservableObject {
         if !ChatViewModel.shared.fileContent.isEmpty {
             text = ChatViewModel.shared.fileContent + "\n" + text
         }
-
+        
+        // when sending, model_id can be nil here because
+        // LLMManager manages setting it
         let user_message = APIMessage(
             id: UUID(),
             chat_id: chat.id,
             user_id: user.id,
             text: text,
-            role: .user
+            role: .user,
+            model_id: LLMManager.shared.model.human_name
         )
 
         let assistant_message = APIMessage(
@@ -142,7 +145,8 @@ final class MessageViewModel: ObservableObject {
             chat_id: chat.id,
             user_id: user.id,
             text: "",
-            role: .assistant
+            role: .assistant,
+            model_id: LLMManager.shared.model.human_name
         )
 
         let images = ChatViewModel.shared.images.map { $0.toAPI(message: user_message) }
