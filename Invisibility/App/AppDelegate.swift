@@ -95,6 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func application(_: NSApplication, open urls: [URL]) {
+        logger.debug("NSApp init called")
         for url in urls {
             // Parse and handle the URL as needed
             logger.debug("URL received: \(url)")

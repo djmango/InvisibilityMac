@@ -47,10 +47,8 @@ final class BranchManagerModel: ObservableObject {
     private func updateBranchPath() {
          print("updateBranchPath()")
          guard let editMsg = self.editMsg else { return }
-         let messages = self.currentBranchPath
-         print(messages)
+         let messages = MessageViewModel.shared.api_messages_in_chat
          self.currentBranchPath = constructNewPath(currentPath: messages, branch_message_id: editMsg.id)
-        print(self.currentBranchPath)
      }
     
     public func isBranch(message: APIMessage) -> Bool {
@@ -178,6 +176,8 @@ final class BranchManagerModel: ObservableObject {
         
         // Construct prefix path
         let prefixPath = currentPath.prefix(while: { $0.id != branch_message_id })
+        
+        // if its the first msg, prefixPath will be empty
         
         // Recursively construct postfix path
         func constructPostfixPath(branchPointId: UUID) -> [APIMessage] {

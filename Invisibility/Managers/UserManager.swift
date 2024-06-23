@@ -30,6 +30,7 @@ final class UserManager: ObservableObject {
         didSet {
             if token != nil {
                 Task {
+                    logger.debug("token set, thus triggering setup")
                     await setup()
                 }
             }

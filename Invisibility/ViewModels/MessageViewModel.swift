@@ -41,6 +41,7 @@ final class MessageViewModel: ObservableObject {
              .receive(on: DispatchQueue.main)
              .sink { [weak self] newPath in
                  print("setupBranchObserver triggered, new branch path")
+                 print(newPath)
                  self?.api_messages_in_chat = newPath
              }
              .store(in: &cancellables)
@@ -48,10 +49,16 @@ final class MessageViewModel: ObservableObject {
 
    private func updateMessagesForChat(_ chat: APIChat) {
        print("updateMessagesForChat")
+       print(BranchManagerModel.shared.currentBranchPath)
+
       let rootChat = chat // always
       let branchManager = BranchManagerModel.shared
       
       let initialBranch = branchManager.initializeChatBranch(rootChat: rootChat, allMessages: api_messages.filter({$0.regenerated == false}))
+      print("initialBranch: \(initialBranch)")
+      BranchManagerModel.shared.currentBranchPath = initialBranch
+       print("currentBranch: \(BranchManagerModel.shared.currentBranchPath)")
+
       
       DispatchQueue.main.async {
           self.api_messages_in_chat = initialBranch
@@ -74,10 +81,13 @@ final class MessageViewModel: ObservableObject {
         print("setup observers")
         setupChatObserver()
         setupBranchObserver()
+        /*
         guard let currChat = ChatViewModel.shared.chat else {
             return
         }
-        BranchManagerModel.shared.initializeChatBranch(rootChat: currChat, allMessages: api_messages)
+        print("curr Chaet is Not NIL")
+        BranchManagerModel.shared.currentBranchPath = BranchManagerModel.shared.initializeChatBranch(rootChat: currChat, allMessages: api_messages)
+         */
     }
 
     func fetchAPI() async {
@@ -116,11 +126,11 @@ final class MessageViewModel: ObservableObject {
     }
    
     // helper
-    private func createEditChat(for user: User) {
+    private func createEditChat(for user: User) -> APIChat? {
         print("createEditChat")
         // get parent msg of currently edited msg
         guard let parentMessageId = BranchManagerModel.shared.getEditParentMsgId() else {
-            return 
+            return nil
         }
         let newChat = APIChat(
             id: UUID(),
@@ -129,6 +139,7 @@ final class MessageViewModel: ObservableObject {
         )
         api_chats.append(newChat)
         BranchManagerModel.shared.addNewBranch(rootMessageId: parentMessageId, branch: newChat)
+        return newChat
     }
 
     @MainActor
@@ -139,19 +150,24 @@ final class MessageViewModel: ObservableObject {
             logger.error("No user to send message as")
             return
         }
+       
         // Get or create chat
+        var currChat: APIChat?
         if self.chat == nil {
-            let newChat = APIChat(
-                id: UUID(),
-                user_id: user.id
-            )
-            ChatViewModel.shared.chat = newChat
-            api_chats.append(newChat)
+          let newChat = APIChat(
+              id: UUID(),
+              user_id: user.id
+          )
+          ChatViewModel.shared.chat = newChat
+          api_chats.append(newChat)
+              currChat = newChat
         } else if editMode {
-            createEditChat(for: user)
+           currChat = createEditChat(for: user)
+        } else {
+           currChat = self.chat
         }
         
-        guard let chat else {
+        guard let chat = currChat else {
             logger.error("No chat to send message to")
             return
         }
@@ -240,6 +256,7 @@ final class MessageViewModel: ObservableObject {
             api_messages.append(contentsOf: [user_message, assistant_message])
         }
         
+        print("api_messages_in_chat \(api_messages_in_chat)")
         api_messages_in_chat.append(contentsOf: [user_message, assistant_message])
 
         chatTask = Task {
