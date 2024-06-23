@@ -43,22 +43,42 @@ final class BranchManagerModel: ObservableObject {
         return chat.parent_message_id
     }
 
-    public func messageText(_ id : UUID) {
-        let msg = MessageViewModel.shared.api_messages.first(where: {$0.id == id})
-        print("msg id: \(id), text: \(msg!.text)")
-    }
-    
-    private func updateBranchPath(prefixPath: [APIMessage], branchPointId : UUID) {
-         print("updateBranchPath()")
-         let currentBranchPath = prefixPath + constructPostFixPath(branch_message_id: branchPointId)
-        print("branchpoint:")
+    private func updateBranchPath(prefixPath: [APIMessage], branchPointId: UUID) {
+        print("updateBranchPath()")
+        
+        print("Prefix Path:")
+        for msg in prefixPath {
+            messageText(msg.id)
+        }
+        
+        var addedMsgs = Set(prefixPath.map { $0.id })
+        let postfixPath = constructPostFixPath(branchPointId: branchPointId, addedMsgs: addedMsgs)
+        
+        print("Postfix Path:")
+        for msg in postfixPath {
+            messageText(msg.id)
+        }
+        
+        let currentBranchPath = prefixPath + postfixPath
+        
+        print("New Complete Path:")
+        print("Branch Point Message:")
         messageText(branchPointId)
-        print("msgs:")
         for msg in currentBranchPath {
             messageText(msg.id)
         }
-         MessageViewModel.shared.api_messages_in_chat = currentBranchPath
-     }
+        
+        MessageViewModel.shared.api_messages_in_chat = currentBranchPath
+    }
+
+    // Assuming messageText is defined like this:
+    private func messageText(_ id: UUID) {
+        if let msg = MessageViewModel.shared.api_messages.first(where: { $0.id == id }) {
+            print("Message ID: \(id), Text: \(msg.text)")
+        } else {
+            print("Message ID: \(id), Text: Not found")
+        }
+    }
     
     public func isBranch(message: APIMessage) -> Bool {
         let chats = MessageViewModel.shared.api_chats
@@ -111,26 +131,31 @@ final class BranchManagerModel: ObservableObject {
     }
     
     // called when user creates new branchpoint using edit
-    public func addNewBranch(rootMessageId: UUID, branch: APIChat) {
+    public func addNewBranch(rootMsgId: UUID, branch: APIChat) {
         print("addNewBranch()")
+        
+        guard let editMsg = editMsg else {
+            return
+        }
+        
         // Find the chat that this message belongs to
-        guard let rootMessage = MessageViewModel.shared.api_messages.first(where: { $0.id == rootMessageId }) else {
+        guard let rootMsg = MessageViewModel.shared.api_messages.first(where: { $0.id == rootMsgId }) else {
             return
         }
         
-        guard let rootMessageChat = MessageViewModel.shared.api_chats.first(where: { $0.id == rootMessage.chat_id}) else {
+        guard let rootMsgChat = MessageViewModel.shared.api_chats.first(where: { $0.id == rootMsg.chat_id}) else {
             return
         }
         
-        if var branchPoint = branchPoints[rootMessageId] {
+        if var branchPoint = branchPoints[rootMsgId] {
             branchPoint.branches.append(branch)
             branchPoint.currIdx = branchPoint.branches.count - 1
-            branchPoints[rootMessageId] = branchPoint
+            branchPoints[rootMsgId] = branchPoint
         } else {
-            branchPoints[rootMessageId] = BranchPoint(currIdx: 0, branches: [rootMessageChat, branch])
+            branchPoints[rootMsgId] = BranchPoint(currIdx: 1, branches: [rootMsgChat, branch])
         }
         // if its a new branch, the formula is:
-        let prefixPath = MessageViewModel.shared.api_messages_in_chat.prefix(while: { $0.id != rootMessageId })
+        let prefixPath = MessageViewModel.shared.api_messages_in_chat.prefix(while: { $0.id != editMsg.id })
         MessageViewModel.shared.api_messages_in_chat = Array(prefixPath)
     }
    
@@ -187,31 +212,34 @@ final class BranchManagerModel: ObservableObject {
             }
         }
             
-            return initBranch
-        }
+        return initBranch
+    }
     
-    // called whenever rerender of msgs is needed in current chat, so after moveLeft, moveRight,or addNewBranch
-    public func constructPostFixPath(branch_message_id: UUID) -> [APIMessage] {
-        // Assert message is in branchPoints. If not, add it.
-        if branchPoints[branch_message_id] == nil {
-            return []
-        }
-        var addedMsgs = Set<UUID>()
-        // Recursively construct postfix path
-        func constructPostfixPath(branchPointId: UUID) -> [APIMessage] {
-            var postfixPath: [APIMessage] = []
-            guard let branchPoint = branchPoints[branchPointId] else { return postfixPath }
-            
-            // branchPoint.branches is = [originalChat, branchChat1, branchChat2, ...]
+    public func constructPostFixPath(branchPointId: UUID, addedMsgs: Set<UUID>) -> [APIMessage] {
+        var addedMsgs = addedMsgs
+        var blackListChats = Set<UUID>()
+        
+        func constructPath(branchPointId: UUID) -> [APIMessage] {
+            guard let branchPoint = branchPoints[branchPointId] else { return [] }
             
             let currentChat = branchPoint.branches[branchPoint.currIdx]
-            let currentChatMessages = MessageViewModel.shared.api_messages.filter({$0.chat_id == currentChat.id}).filter({$0.regenerated == false}).sorted { $0.created_at < $1.created_at }
-
+            
+            if blackListChats.contains(currentChat.id) { return [] }
+            
+            blackListChats.formUnion(branchPoint.branches.map { $0.id }.filter { $0 != currentChat.id })
+            
+            let currentChatMessages = MessageViewModel.shared.api_messages
+                .filter { $0.chat_id == currentChat.id && !$0.regenerated }
+                .sorted { $0.created_at < $1.created_at }
+            
+            var postfixPath: [APIMessage] = []
+            
             for msg in currentChatMessages where !addedMsgs.contains(msg.id) {
                 postfixPath.append(msg)
                 addedMsgs.insert(msg.id)
-                if msg.role == .user, branchPoints[msg.id] != nil, msg.id != branchPointId {
-                    postfixPath.append(contentsOf: constructPostfixPath(branchPointId: msg.id))
+                
+                if msg.role == .user, let nextBranchPoint = branchPoints[msg.id], msg.id != branchPointId {
+                    postfixPath.append(contentsOf: constructPath(branchPointId: msg.id))
                     break
                 }
             }
@@ -219,6 +247,6 @@ final class BranchManagerModel: ObservableObject {
             return postfixPath
         }
         
-        return constructPostfixPath(branchPointId: branch_message_id)
+        return constructPath(branchPointId: branchPointId)
     }
 }

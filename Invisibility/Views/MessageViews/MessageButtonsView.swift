@@ -67,9 +67,9 @@ struct MessageActionButtonsView: View {
             Spacer()
 
             HStack {
-                Spacer()
-                
                 if isEditButtonVisible {
+                    Spacer()
+                        .frame(width: 60)
                      MessageButtonItemView(
                         label: "Edit",
                         icon: "pencil",
@@ -81,6 +81,7 @@ struct MessageActionButtonsView: View {
                     .keyboardShortcut("e", modifiers: [.command])
                 }
                 
+                Spacer()
                 MessageButtonItemView(
                     label: "Regenerate",
                     icon: "arrow.clockwise",

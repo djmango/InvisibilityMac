@@ -16,6 +16,7 @@ struct MessageContentView: View {
     private let isAssistant: Bool
     private let model_name: String
     private var isBranch: Bool
+    @State private var isHovering = false
 
     init(message: APIMessage) {
         self.message = message
@@ -84,30 +85,27 @@ struct MessageContentView: View {
             } else {
                 EditWebInputView()
             }
-            
             HStack {
-                Image(systemName: "arrow.left")
+                Image(systemName: "arrowtriangle.backward")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
+                    .frame(width: 15, height: 15)
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture{
-                        print("tap left")
                         branchManagerModel.moveLeft(message: message)
                     }
                 
-                Image(systemName: "arrow.right")
+                Image(systemName: "arrowtriangle.forward")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
+                    .frame(width: 15, height: 15)
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture{
-                        print("tap righte")
                         branchManagerModel.moveRight(message: message)
                     }
             }
             // is last msg && there exists chat wtih its id as parent_message_id
-            .visible(if: isBranch, removeCompletely: true)
+            .visible(if: isBranch && !isEditing, removeCompletely: true)
             
             HStack {
                 Image(systemName: "checkmark.circle")
@@ -135,6 +133,9 @@ struct MessageContentView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
+        .onHover { hovering in
+                   isHovering = hovering
+        }
     }
 }
 

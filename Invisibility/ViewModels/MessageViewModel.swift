@@ -109,16 +109,16 @@ final class MessageViewModel: ObservableObject {
     private func createEditChat(for user: User) -> APIChat? {
         print("createEditChat")
         // get parent msg of currently edited msg
-        guard let parentMessageId = BranchManagerModel.shared.getEditParentMsgId() else {
+        guard let parentMsgId = BranchManagerModel.shared.getEditParentMsgId() else {
             return nil
         }
         let newChat = APIChat(
             id: UUID(),
             user_id: user.id,
-            parent_message_id: parentMessageId
+            parent_message_id: parentMsgId
         )
         api_chats.append(newChat)
-        BranchManagerModel.shared.addNewBranch(rootMessageId: parentMessageId, branch: newChat)
+        BranchManagerModel.shared.addNewBranch(rootMsgId: parentMsgId, branch: newChat)
         return newChat
     }
 

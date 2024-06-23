@@ -57,6 +57,12 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                         self.parent.branchManagerModel.editViewHeight = height
                     }
                 }
+            case "sendMessage":
+                 DispatchQueue.main.async {
+                     Task {
+                         await MessageViewModel.shared.sendFromChat(editMode: true)
+                     }
+                 }
             default:
                 break
             }
@@ -147,6 +153,13 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                     e.preventDefault();
                     const text = e.clipboardData.getData('text/plain');
                     document.execCommand('insertText', false, text);
+                });
+        
+                editor.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        webkit.messageHandlers.sendMessage.postMessage('');
+                    }
                 });
 
                 new MutationObserver(function() {
