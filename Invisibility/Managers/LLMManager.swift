@@ -137,7 +137,8 @@ final class LLMManager {
         let chatQuery = await constructChatQuery(
             messages: messages.dropLast().suffix(10).map { $0 },
             chat: chat,
-            regenerate_from_message_id: regenerate_from_message_id
+            regenerate_from_message_id: regenerate_from_message_id,
+            branch_from_message_id: chat.parent_message_id
         )
 
         do {
@@ -168,7 +169,7 @@ final class LLMManager {
         }
     }
 
-    func constructChatQuery(messages: [APIMessage], chat: APIChat, regenerate_from_message_id: UUID? = nil) async -> ChatQuery {
+    func constructChatQuery(messages: [APIMessage], chat: APIChat, regenerate_from_message_id: UUID? = nil, branch_from_message_id: UUID?) async -> ChatQuery {
         // If the last message has any images use the vision model, otherwise use the regular model
         let allow_images = model.vision != nil
 
@@ -205,7 +206,8 @@ final class LLMManager {
                 chat_id: chat.id,
                 user_message_id: last_message.id,
                 show_files_to_user: show_files_to_user,
-                regenerate_from_message_id: regenerate_from_message_id
+                regenerate_from_message_id: regenerate_from_message_id,
+                branch_from_message_id: branch_from_message_id
             )
         }
 

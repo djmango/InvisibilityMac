@@ -9,8 +9,6 @@
 import Foundation
 import SwiftUI
 
-
-
 final class HoverTrackerModel: ObservableObject {
     static let shared = HoverTrackerModel()
 
@@ -18,5 +16,13 @@ final class HoverTrackerModel: ObservableObject {
     public var targetType: HoverItemType = .nil_
     public var targetItem: String? = nil
 
+    private init() {}
+}
+
+final class EditTrackerModel: ObservableObject {
+    static let shared = EditTrackerModel()
+    
+    public var isEditing: Bool = false
+    
     private init() {}
 }

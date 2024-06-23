@@ -158,7 +158,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let targetString = HoverTrackerModel.shared.targetItem,
               let target = UUID(uuidString: targetString) else {
             // Handle the case where the string was nil or not a valid UUID
-            print("Invalid or nil UUID string")
+            print("Invalid or nil UUID hover target string")
             return
         }
 

@@ -14,6 +14,7 @@ import SwiftUI
 struct APIChat: Codable, Identifiable, Hashable {
     let id: UUID
     let user_id: String
+    let parent_message_id: UUID?
     var name: String
     let created_at: Date
     let updated_at: Date
@@ -21,12 +22,14 @@ struct APIChat: Codable, Identifiable, Hashable {
     init(
         id: UUID,
         user_id: String,
+        parent_message_id: UUID? = nil,
         name: String = "New Chat",
         created_at: Date = Date(),
         updated_at: Date = Date()
     ) {
         self.id = id
         self.user_id = user_id
+        self.parent_message_id = parent_message_id
         self.name = name
         self.created_at = created_at
         self.updated_at = updated_at
@@ -59,7 +62,7 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
     enum CodingKeys: CodingKey {
         case id, chat_id, user_id, text, role, regenerated, model_id, created_at, updated_at
     }
-
+ 
     /// Conforms to `CustomStringConvertible` for debugging output.
     var description: String {
         "\(role): \(text)"

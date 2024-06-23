@@ -87,6 +87,8 @@
 		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
 		4DF46B392BBF96D700846217 /* ScrollKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B382BBF96D700846217 /* ScrollKit */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
+		77F39B262C27898700CA40C3 /* BranchManagerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B252C27898700CA40C3 /* BranchManagerModel.swift */; };
+		77F39B282C27CA9F00CA40C3 /* MessageEditWebInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */; };
 		77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29832C25479E007D923C /* HoverTrackerModel.swift */; };
 		77FE29862C254AAF007D923C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29852C254AAF007D923C /* Buttons.swift */; };
 /* End PBXBuildFile section */
@@ -158,8 +160,11 @@
 		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
 		4DF2D9002BA689220093CA3E /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
+		77F39B252C27898700CA40C3 /* BranchManagerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchManagerModel.swift; sourceTree = "<group>"; };
+		77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEditWebInputView.swift; sourceTree = "<group>"; };
 		77FE29832C25479E007D923C /* HoverTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverTrackerModel.swift; sourceTree = "<group>"; };
 		77FE29852C254AAF007D923C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		77FE29872C26B854007D923C /* OpenAI */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OpenAI; path = ../OpenAI; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -194,6 +199,7 @@
 		0A4D35782AF541D900846890 = {
 			isa = PBXGroup;
 			children = (
+				77FE29872C26B854007D923C /* OpenAI */,
 				4D8E05272B2516DE00B60D0D /* Invisibility */,
 				0A4D35822AF541D900846890 /* Products */,
 				4DDCE8512B50BA0900A22B1E /* Frameworks */,
@@ -257,6 +263,7 @@
 				4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */,
 				4D3A15542C13D36300272B84 /* MainWindowViewModel.swift */,
 				77FE29832C25479E007D923C /* HoverTrackerModel.swift */,
+				77F39B252C27898700CA40C3 /* BranchManagerModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -355,6 +362,7 @@
 				4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */,
 				4D2428D22BC6031100BE444C /* MessageScrollView.swift */,
 				4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */,
+				77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */,
 			);
 			path = MessageViews;
 			sourceTree = "<group>";
@@ -539,6 +547,7 @@
 				4D2428DB2BCF42FE00BE444C /* MessagePDFsView.swift in Sources */,
 				4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */,
 				4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */,
+				77F39B282C27CA9F00CA40C3 /* MessageEditWebInputView.swift in Sources */,
 				4D3A15552C13D36300272B84 /* MainWindowViewModel.swift in Sources */,
 				4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */,
 				4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */,
@@ -588,6 +597,7 @@
 				4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */,
 				4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */,
 				4D9ADB792BFEE05400A1EFC7 /* Decoder.swift in Sources */,
+				77F39B262C27898700CA40C3 /* BranchManagerModel.swift in Sources */,
 				4DEA4ADF2B70689B00393858 /* MenubarView.swift in Sources */,
 				4DE4ACD92C24FE37002D8156 /* TextViewModel.swift in Sources */,
 			);
@@ -727,7 +737,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Invisibility/Resources/Invisibility.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
@@ -748,6 +758,7 @@
 				MARKETING_VERSION = 2.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;
@@ -761,7 +772,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Invisibility/Resources/Invisibility.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
@@ -782,6 +793,7 @@
 				MARKETING_VERSION = 2.2.4;
 				PRODUCT_BUNDLE_IDENTIFIER = so.invisibility.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;

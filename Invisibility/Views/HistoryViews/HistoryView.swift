@@ -34,6 +34,11 @@ struct HistoryView: View {
 
         // for chat in messageViewModel.api_chats {
         for chat in messageViewModel.sortedChatsByLastMessage() {
+            // skip chats which have parent_message_id
+            if chat.parent_message_id != nil {
+                continue
+            }
+            
             let chatDate = messageViewModel.lastMessageFor(chat: chat)?.created_at ?? chat.created_at
 
             if Calendar.current.isDateInToday(chatDate) {
