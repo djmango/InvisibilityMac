@@ -46,38 +46,12 @@ final class BranchManagerModel: ObservableObject {
     private func updateBranchPath(prefixPath: [APIMessage], branchPointId: UUID) {
         print("updateBranchPath()")
         
-        print("Prefix Path:")
-        for msg in prefixPath {
-            messageText(msg.id)
-        }
-        
         var addedMsgs = Set(prefixPath.map { $0.id })
         let postfixPath = constructPostFixPath(branchPointId: branchPointId, addedMsgs: addedMsgs)
         
-        print("Postfix Path:")
-        for msg in postfixPath {
-            messageText(msg.id)
-        }
-        
         let currentBranchPath = prefixPath + postfixPath
         
-        print("New Complete Path:")
-        print("Branch Point Message:")
-        messageText(branchPointId)
-        for msg in currentBranchPath {
-            messageText(msg.id)
-        }
-        
         MessageViewModel.shared.api_messages_in_chat = currentBranchPath
-    }
-
-    // Assuming messageText is defined like this:
-    private func messageText(_ id: UUID) {
-        if let msg = MessageViewModel.shared.api_messages.first(where: { $0.id == id }) {
-            print("Message ID: \(id), Text: \(msg.text)")
-        } else {
-            print("Message ID: \(id), Text: Not found")
-        }
     }
     
     public func isBranch(message: APIMessage) -> Bool {

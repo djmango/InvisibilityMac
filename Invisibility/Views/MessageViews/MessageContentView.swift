@@ -105,6 +105,8 @@ struct MessageContentView: View {
                     }
             }
             // is last msg && there exists chat wtih its id as parent_message_id
+            .opacity(isHovering ? 1 : 0)
+            .animation(AppConfig.snappy, value: isHovering)
             .visible(if: isBranch && !isEditing, removeCompletely: true)
             
             HStack {

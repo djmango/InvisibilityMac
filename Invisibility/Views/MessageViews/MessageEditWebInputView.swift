@@ -58,6 +58,7 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                     }
                 }
             case "sendMessage":
+                print("enter detected")
                  DispatchQueue.main.async {
                      Task {
                          await MessageViewModel.shared.sendFromChat(editMode: true)
@@ -100,7 +101,6 @@ struct EditWebInputRepresentable: NSViewRepresentable {
 
                 #editor {
                     min-height: 20px;
-                    padding: 10px;
                     outline: none;
                     word-wrap: break-word;
                     overflow-y: hidden;
@@ -158,6 +158,7 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                 editor.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
+                        console.log('Enter key pressed');
                         webkit.messageHandlers.sendMessage.postMessage('');
                     }
                 });
