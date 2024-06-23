@@ -25,7 +25,7 @@ final class MessageViewModel: ObservableObject {
 
     @Published public var api_messages_in_chat: [APIMessage] = []
     private var cancellables = Set<AnyCancellable>()
-    
+        
     private func setupChatObserver() {
       ChatViewModel.shared.$chat
           .compactMap { $0 } // Ignore nil values
@@ -35,17 +35,6 @@ final class MessageViewModel: ObservableObject {
           }
         .store(in: &cancellables)
       }
-    
-    private func setupBranchObserver() {
-         BranchManagerModel.shared.$currentBranchPath
-             .receive(on: DispatchQueue.main)
-             .sink { [weak self] newPath in
-                 print("setupBranchObserver triggered, new branch path")
-                 print(newPath)
-                 self?.api_messages_in_chat = newPath
-             }
-             .store(in: &cancellables)
-     }
 
    private func updateMessagesForChat(_ chat: APIChat) {
        print("updateMessagesForChat")
@@ -77,17 +66,8 @@ final class MessageViewModel: ObservableObject {
         Task {
             await fetchAPI()
         }
-        // observers to update api_messages_in_chat
-        print("setup observers")
         setupChatObserver()
-        setupBranchObserver()
-        /*
-        guard let currChat = ChatViewModel.shared.chat else {
-            return
-        }
-        print("curr Chaet is Not NIL")
-        BranchManagerModel.shared.currentBranchPath = BranchManagerModel.shared.initializeChatBranch(rootChat: currChat, allMessages: api_messages)
-         */
+        //setupBranchObserver()
     }
 
     func fetchAPI() async {
@@ -110,13 +90,13 @@ final class MessageViewModel: ObservableObject {
 
             let fetched = try decoder.decode(APISyncResponse.self, from: data)
 
-            DispatchQueue.main.async {
-                self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
-                self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
-                self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
-                self.logger.debug("Fetched messages: \(self.api_messages.count)")
-                ChatViewModel.shared.chat = self.api_chats.last
-                BranchManagerModel.shared.initializeBranchPoints(messages: self.api_messages, chats: self.api_chats)
+            DispatchQueue.main.async {[weak self] in
+                self?.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
+                self?.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
+                self?.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
+                self?.logger.debug("Fetched messages: \(self?.api_messages.count)")
+                ChatViewModel.shared.chat = self?.api_chats.last
+                BranchManagerModel.shared.initializeBranchPoints(messages: self!.api_messages, chats: self!.api_chats)
             }
         }
 

@@ -92,6 +92,7 @@ struct MessageContentView: View {
                     .frame(width: 18, height: 18)
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture{
+                        print("tap left")
                         branchManagerModel.moveLeft(message: message)
                     }
                 
@@ -101,6 +102,7 @@ struct MessageContentView: View {
                     .frame(width: 18, height: 18)
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture{
+                        print("tap righte")
                         branchManagerModel.moveRight(message: message)
                     }
             }
