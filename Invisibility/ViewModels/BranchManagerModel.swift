@@ -44,8 +44,6 @@ final class BranchManagerModel: ObservableObject {
     }
 
     private func updateBranchPath(prefixPath: [APIMessage], branchPointId: UUID) {
-        print("updateBranchPath()")
-        
         var addedMsgs = Set(prefixPath.map { $0.id })
         let postfixPath = constructPostFixPath(branchPointId: branchPointId, addedMsgs: addedMsgs)
         
@@ -78,7 +76,6 @@ final class BranchManagerModel: ObservableObject {
     
     public func moveLeft(message: APIMessage) {
         // get the branchingMessage
-        print("moveLeft")
         guard let branchPointId = getEditParentMsgId(message: message) else {return}
         guard var branchPoint = branchPoints[branchPointId] else { return }
         
@@ -92,7 +89,6 @@ final class BranchManagerModel: ObservableObject {
     
     public func moveRight(message: APIMessage) {
         // get the branchingMessage
-        print("moveRight")
         guard let branchPointId = getEditParentMsgId(message: message) else {return}
         guard var branchPoint = branchPoints[branchPointId] else { return }
         
@@ -106,8 +102,6 @@ final class BranchManagerModel: ObservableObject {
     
     // called when user creates new branchpoint using edit
     public func addNewBranch(rootMsgId: UUID, branch: APIChat) {
-        print("addNewBranch()")
-        
         guard let editMsg = editMsg else {
             return
         }
@@ -162,18 +156,30 @@ final class BranchManagerModel: ObservableObject {
       }
     }
     
-    public func initializeChatBranch(rootChat: APIChat, allMessages: [APIMessage]) -> [APIMessage] {
-        print("initializeChatBranch")
-        let rootMessages = allMessages.filter { $0.chat_id == rootChat.id }
-        var initBranch: [APIMessage] = []
-        for msg in rootMessages {
-            if msg.role == .user, branchPoints[msg.id] != nil {
-                return initBranch + constructPostFixPath(branchPointId: msg.id, addedMsgs: Set(initBranch.map {$0.id}))
+    public func initializeChatBranch(rootChat: APIChat) -> [APIMessage] {
+            // use cached messages by chat
+            guard let rootMessages = MessageViewModel.shared.messagesByChat[rootChat.id] else {
+                print("NO cached messages")
+                return []
             }
-            initBranch.append(msg)
+            var initBranch: [APIMessage] = []
+            for msg in rootMessages {
+                if msg.role == .user, branchPoints[msg.id] != nil {
+                    let startTime = CFAbsoluteTimeGetCurrent()
+                    
+                    let res = initBranch + constructPostFixPath(branchPointId: msg.id, addedMsgs: Set(initBranch.map { $0.id }))
+                    
+                    let endTime = CFAbsoluteTimeGetCurrent()
+                    let elapsedTime = endTime - startTime
+                    
+                    print(String(format: "Time taken: %.3f milliseconds", elapsedTime * 1000))
+                    
+                    return res
+                }
+                initBranch.append(msg)
+            }
+            return initBranch
         }
-       return initBranch
-    }
     
     public func constructPostFixPath(branchPointId: UUID, addedMsgs: Set<UUID>) -> [APIMessage] {
         var addedMsgs = addedMsgs
@@ -187,9 +193,8 @@ final class BranchManagerModel: ObservableObject {
             if blackListChats.contains(currentChat.id) { return [] }
             blackListChats.formUnion(branchPoint.branches.map { $0.id }.filter { $0 != currentChat.id })
             
-            let currentChatMessages = MessageViewModel.shared.api_messages
-                .filter { $0.chat_id == currentChat.id && !$0.regenerated }
-                .sorted { $0.created_at < $1.created_at }
+            // use cached messages
+            guard let currentChatMessages = MessageViewModel.shared.messagesByChat[currentChat.id] else { return []}
             
             var postfixPath: [APIMessage] = []
             
