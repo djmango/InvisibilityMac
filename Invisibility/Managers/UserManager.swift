@@ -22,7 +22,8 @@ final class UserManager: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "UserManager")
 
     @Published public var user: User?
-    @Published public var isPaid: Bool = true
+//    @Published public var isPaid: Bool = true
+    @Published public var isPaid: Bool = false
     @Published public var confettis: Int = 0
     @Published public var inviteCount: Int = 0
 
@@ -38,7 +39,16 @@ final class UserManager: ObservableObject {
 
     // TODO: published somehow
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
-    @AppStorage("lastResetDate") public var lastResetDate: String = ""
+//    @AppStorage("lastResetDate") public var lastResetDate: String = ""
+    @AppStorage("lastResetDate") public var lastResetDate: String = "" {
+        didSet {
+            if lastResetDate.isEmpty {
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+                lastResetDate = dateFormatter.string(from: Date())
+            }
+        }
+    }
 
     var inviteLink: String {
         "https://invite.i.inc/\(user?.firstName?.lowercased() ?? "")"
@@ -55,20 +65,30 @@ final class UserManager: ObservableObject {
     }
 
     var canSendMessages: Bool {
-        numMessagesLeft > 0 || isPaid
+        return isPaid || numMessagesLeft > 0
     }
 
     private init() {}
-
+    
     private func resetMessagesIfNeeded() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let today = dateFormatter.string(from: Date())
 
+        if lastResetDate.isEmpty {
+            lastResetDate = today
+        }
+
         if lastResetDate != today {
             numMessagesSentToday = 0
             lastResetDate = today
         }
+    }
+    
+    func incrementMessagesSentToday() {
+        resetMessagesIfNeeded()
+        numMessagesSentToday += 1
+        logger.debug("Incremented messages sent today: \(numMessagesSentToday)")
     }
 
     func setup() async {
