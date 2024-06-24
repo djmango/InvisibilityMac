@@ -35,6 +35,13 @@ final class MessageViewModel: ObservableObject {
           }
         .store(in: &cancellables)
       }
+    
+    /*
+     setupChatObserver triggered, switch root chat
+     updateMessagesForChat
+     [Invisibility.APIMessage, Invisibility.APIMessage]
+     initializeChatBranch
+     */
 
    private func updateMessagesForChat(_ chat: APIChat) {
        print("updateMessagesForChat")
@@ -67,7 +74,6 @@ final class MessageViewModel: ObservableObject {
             await fetchAPI()
         }
         setupChatObserver()
-        //setupBranchObserver()
     }
 
     func fetchAPI() async {

@@ -165,28 +165,14 @@ final class BranchManagerModel: ObservableObject {
     public func initializeChatBranch(rootChat: APIChat, allMessages: [APIMessage]) -> [APIMessage] {
         print("initializeChatBranch")
         let rootMessages = allMessages.filter { $0.chat_id == rootChat.id }
-        var chatQueue = [rootChat]
         var initBranch: [APIMessage] = []
-        
-        while !chatQueue.isEmpty {
-            let currentChat = chatQueue.removeFirst()
-            // Get all messages in current chat
-            let chatMessages = allMessages.filter { $0.chat_id == currentChat.id }
-                .sorted { $0.created_at < $1.created_at }  // Ensure messages are in order
-            
-            for msg in chatMessages {
-                initBranch.append(msg)
-                if let branchPoint = branchPoints[msg.id] {
-                    if branchPoint.currIdx < branchPoint.branches.count {
-                        let nextChat = branchPoint.branches[branchPoint.currIdx]
-                        chatQueue.append(nextChat)
-                    }
-                    break
-                }
+        for msg in rootMessages {
+            if msg.role == .user, branchPoints[msg.id] != nil {
+                return initBranch + constructPostFixPath(branchPointId: msg.id, addedMsgs: Set(initBranch.map {$0.id}))
             }
+            initBranch.append(msg)
         }
-            
-        return initBranch
+       return initBranch
     }
     
     public func constructPostFixPath(branchPointId: UUID, addedMsgs: Set<UUID>) -> [APIMessage] {
@@ -209,19 +195,9 @@ final class BranchManagerModel: ObservableObject {
             
             for msg in currentChatMessages where !addedMsgs.contains(msg.id) {
                 if msg.role == .user, branchPoints[msg.id] != nil, msg.id != branchPointId {
-                    /*
-                    print("-- branchpoint msg--")
-                    print(msg.id)
-                    print(msg.text)
-                     */
                     postfixPath.append(contentsOf: constructPath(branchPointId: msg.id))
                     break
                 } else {
-                    /*
-                    print("-- inbetween msg --")
-                    print(msg.id)
-                    print(msg.text)
-                     */
                     postfixPath.append(msg)
                     addedMsgs.insert(msg.id)
                 }
