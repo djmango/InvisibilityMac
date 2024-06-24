@@ -123,7 +123,7 @@ final class BranchManagerModel: ObservableObject {
         
         if var branchPoint = branchPoints[rootMsgId] {
             branchPoint.branches.append(branch)
-            branchPoint.currIdx = branchPoint.branches.count - 1
+            branchPoint.currIdx = branchPoint.currIdx + 1
             branchPoints[rootMsgId] = branchPoint
         } else {
             branchPoints[rootMsgId] = BranchPoint(currIdx: 1, branches: [rootMsgChat, branch])
@@ -197,9 +197,8 @@ final class BranchManagerModel: ObservableObject {
             guard let branchPoint = branchPoints[branchPointId] else { return [] }
             
             let currentChat = branchPoint.branches[branchPoint.currIdx]
-            
+        
             if blackListChats.contains(currentChat.id) { return [] }
-            
             blackListChats.formUnion(branchPoint.branches.map { $0.id }.filter { $0 != currentChat.id })
             
             let currentChatMessages = MessageViewModel.shared.api_messages
@@ -209,12 +208,22 @@ final class BranchManagerModel: ObservableObject {
             var postfixPath: [APIMessage] = []
             
             for msg in currentChatMessages where !addedMsgs.contains(msg.id) {
-                postfixPath.append(msg)
-                addedMsgs.insert(msg.id)
-                
-                if msg.role == .user, let nextBranchPoint = branchPoints[msg.id], msg.id != branchPointId {
+                if msg.role == .user, branchPoints[msg.id] != nil, msg.id != branchPointId {
+                    /*
+                    print("-- branchpoint msg--")
+                    print(msg.id)
+                    print(msg.text)
+                     */
                     postfixPath.append(contentsOf: constructPath(branchPointId: msg.id))
                     break
+                } else {
+                    /*
+                    print("-- inbetween msg --")
+                    print(msg.id)
+                    print(msg.text)
+                     */
+                    postfixPath.append(msg)
+                    addedMsgs.insert(msg.id)
                 }
             }
             

@@ -24,7 +24,7 @@ class LLMModelRepository: ObservableObject {
     @AppStorage("dynamicLLMLoad") private var dynamicLLMLoad = false
 
     static let hardcodedModels = [
-        LLMModel(text: "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0", vision: "bedrock/anthropic.claude-3-5-sonnet-20240620-v1:0", human_name: "Claude-3.5 Sonnet"),
+        LLMModel(text: "claude-3-5-sonnet-20240620", vision: "claude-3-5-sonnet-20240620", human_name: "Claude-3.5 Sonnet"),
         LLMModel(text: "gpt-4o", vision: "gpt-4o", human_name: "GPT-4o"),
         LLMModel(text: "bedrock/anthropic.claude-3-opus-20240229-v1:0", vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0", human_name: "Claude-3 Opus"),
         LLMModel(text: "groq/llama3-70b-8192", vision: nil, human_name: "Llama-3 70B"),
