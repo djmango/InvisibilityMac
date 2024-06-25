@@ -1,4 +1,7 @@
 {
+
+  "originHash" : "fa4d9b492f88f614566a399bbe5122633cf23f6228acd6619ec70e48e8d08ebe",
+
   "pins" : [
     {
       "identity" : "alamofire",
@@ -124,15 +127,6 @@
       "state" : {
         "revision" : "a3d0aaf943271247dfd4870a2a0696693165c884",
         "version" : "1.0.5"
-      }
-    },
-    {
-      "identity" : "whatsnewkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/djmango/WhatsNewKit.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "8e111dd0521db893222ce5db40f30cf711d26ccb"
       }
     }
   ],

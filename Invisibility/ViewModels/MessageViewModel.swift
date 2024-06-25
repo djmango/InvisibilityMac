@@ -172,17 +172,22 @@ final class MessageViewModel: ObservableObject {
         }
 
         _ = MainWindowViewModel.shared.changeView(to: .chat)
-
-        // Stop the chat from generating if it is
-        if isGenerating { stopGenerating() }
+        
+        logger.debug("Can send messages: \(UserManager.shared.canSendMessages)")
+        logger.debug("Messages left: \(UserManager.shared.numMessagesLeft)")
+     
 
         // If the user has exceeded the daily message limit, don't send the message and pop up an alert
-        if !UserManager.shared.canSendMessages {
+        if !(UserManager.shared.canSendMessages) {
             ToastViewModel.shared.showToast(
                 title: "Daily message limit reached"
             )
             return
         }
+        
+        // Stop the chat from generating if it is
+        if isGenerating { stopGenerating() }
+        
 
         // If we are streaming video, add the current frame to the images
         if ScreenRecorder.shared.isRunning {
@@ -266,7 +271,7 @@ final class MessageViewModel: ObservableObject {
             chatComplete(chat: chat, lastMessageId: lastMessageId)
         }
 
-        numMessagesSentToday += 1
+        UserManager.shared.incrementMessagesSentToday()
     }
 
     @MainActor
