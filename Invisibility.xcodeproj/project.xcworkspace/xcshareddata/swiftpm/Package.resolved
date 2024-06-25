@@ -1,5 +1,7 @@
 {
+
   "originHash" : "fa4d9b492f88f614566a399bbe5122633cf23f6228acd6619ec70e48e8d08ebe",
+
   "pins" : [
     {
       "identity" : "alamofire",
@@ -53,15 +55,6 @@
       "state" : {
         "branch" : "master",
         "revision" : "0f4fea2d171f618b9d54c9698f7e6988820b6f25"
-      }
-    },
-    {
-      "identity" : "openai",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/djmango/OpenAI.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "e7527ff5ee87baea1ff1f607c527e99aa6e123f9"
       }
     },
     {
@@ -137,5 +130,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }

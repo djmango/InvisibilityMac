@@ -29,7 +29,7 @@ struct ChatImageView: View {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.gray)
                     .font(.title)
-            }
+}
             .opacity(isHovering ? 1 : 0)
             .buttonStyle(PlainButtonStyle())
             .onHover{ isHovering in

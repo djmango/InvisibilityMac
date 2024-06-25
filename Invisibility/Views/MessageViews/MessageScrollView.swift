@@ -99,6 +99,7 @@ struct MessageScrollView: View {
                     }
                 }
             }
+            // this also work for BranchManager api_message updates?
             .onChange(of: messageViewModel.shouldScrollToBottom) {
                 if let scrollProxy, messageViewModel.shouldScrollToBottom {
                     withAnimation(AppConfig.easeIn) {

@@ -51,6 +51,13 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.bordered)
                 .visible(if: userManager.user == nil, removeCompletely: true)
+                .onHover{ hovered in
+                    if hovered {
+                        NSCursor.pointingHand.set()
+                    } else {
+                        NSCursor.arrow.set()
+                    }
+                }
 
                 Spacer()
 
@@ -70,12 +77,34 @@ struct SettingsView: View {
 
                 LaunchAtLogin.Toggle("Launch at Login")
                     .toggleStyle(.switch)
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
 
                 Toggle("Show on Menu Bar", isOn: $showMenuBar)
                     .toggleStyle(.switch)
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
+                
 
                 Toggle("Shortcut Hints", isOn: $shortcutHints)
                     .toggleStyle(.switch)
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
 
                 Toggle("Beta Features", isOn: $betaFeatures)
                     .toggleStyle(.switch)
@@ -86,6 +115,13 @@ struct SettingsView: View {
                             animateButtons = true
                         }
                     }
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
 
                 Divider()
                     .padding(.horizontal, 150)
@@ -94,12 +130,26 @@ struct SettingsView: View {
                 Toggle("Animate Buttons", isOn: $animateButtons)
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
 
                 Toggle("All LLMs", isOn: $dynamicLLMLoad)
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
                     .onChange(of: dynamicLLMLoad) {
                         Task { await llmModelRepository.loadDynamicModels() }
+                    }
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
                     }
 
                 Picker("", selection: $llmModel) {
@@ -124,6 +174,13 @@ struct SettingsView: View {
                             OnboardingManager.shared.startOnboarding()
                         }
                         .buttonStyle(.bordered)
+                        .onHover{ hovered in
+                            if hovered {
+                                NSCursor.pointingHand.set()
+                            } else {
+                                NSCursor.arrow.set()
+                            }
+                        }
 
                         Button("Export Chat") {
                             let text = MessageViewModel.shared.api_messages_in_chat.map { message in
@@ -133,6 +190,13 @@ struct SettingsView: View {
                             showingExporter = true
                         }
                         .buttonStyle(.bordered)
+                        .onHover{ hovered in
+                            if hovered {
+                                NSCursor.pointingHand.set()
+                            } else {
+                                NSCursor.arrow.set()
+                            }
+                        }
                     }
 
                     GridRow {
@@ -140,6 +204,13 @@ struct SettingsView: View {
                             updaterViewModel.updater.checkForUpdates()
                         }
                         .buttonStyle(.bordered)
+                        .onHover{ hovered in
+                            if hovered {
+                                NSCursor.pointingHand.set()
+                            } else {
+                                NSCursor.arrow.set()
+                            }
+                        }
 
                         Button("Feedback") {
                             if let url = URL(string: "mailto:support@i.inc") {
@@ -147,6 +218,13 @@ struct SettingsView: View {
                             }
                         }
                         .buttonStyle(.bordered)
+                        .onHover{ hovered in
+                            if hovered {
+                                NSCursor.pointingHand.set()
+                            } else {
+                                NSCursor.arrow.set()
+                            }
+                        }
                     }
                 }
 
@@ -159,6 +237,13 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.link)
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
 
                     Button("Privacy") {
                         if let url = URL(string: "https://i.inc/privacy") {
@@ -166,6 +251,13 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.link)
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
                 }
 
                 Image("MenuBarIcon")

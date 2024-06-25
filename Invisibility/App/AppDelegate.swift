@@ -95,6 +95,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func application(_: NSApplication, open urls: [URL]) {
+        logger.debug("NSApp init called")
         for url in urls {
             // Parse and handle the URL as needed
             logger.debug("URL received: \(url)")
@@ -158,7 +159,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let targetString = HoverTrackerModel.shared.targetItem,
               let target = UUID(uuidString: targetString) else {
             // Handle the case where the string was nil or not a valid UUID
-            print("Invalid or nil UUID string")
+            print("Invalid or nil UUID hover target string")
             return
         }
 
