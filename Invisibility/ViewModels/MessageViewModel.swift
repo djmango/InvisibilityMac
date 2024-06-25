@@ -346,13 +346,16 @@ final class MessageViewModel: ObservableObject {
             ])
         }
 
-        // Mark only regenerated message as regenerated
-        for index in api_messages.indices where
-            api_messages[index].chat_id == message.chat_id
-        {
+        // Mark only current msg as regenerated
+        if let index = api_messages.firstIndex(where: { $0.id == message.id && $0.chat_id == message.chat_id }) {
             api_messages[index].regenerated = true
         }
-
+        
+        // assert
+        if let index = api_messages_in_chat.firstIndex(where: { $0.id == message.id }) {
+            api_messages_in_chat.remove(at: index)
+        }
+        
         let user_message = APIMessage(
             id: UUID(),
             chat_id: chat.id,
@@ -375,12 +378,13 @@ final class MessageViewModel: ObservableObject {
             model_id: LLMManager.shared.model.human_name
         )
         
-        addMessages(messages: [user_message, assistant_message])
+        api_messages_in_chat.append(contentsOf: [assistant_message])
+        addMessages(messages: [assistant_message])
 
         chatTask = Task {
             let lastMessageId = assistant_message.id
             await LLMManager.shared.chat(
-                messages: api_messages_in_chat,
+                messages: api_messages,
                 chat: chat,
                 processOutput: processOutput,
                 regenerate_from_message_id: user_message_before.id
