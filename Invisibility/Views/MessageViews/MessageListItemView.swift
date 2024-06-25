@@ -6,6 +6,7 @@ struct MessageListItemView: View {
     @State private var isHovered: Bool = false
 
     var body: some View {
+
         MessageContentView(message: message)
             .onHover {
                 if $0 {

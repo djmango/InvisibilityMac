@@ -157,6 +157,8 @@ struct MessageListView: View {
                 .hidden()
                 .frame(height: 1)
                 .id("bottom")
+
+            Spacer()
         }
         .animation(AppConfig.snappy, value: userManager.canSendMessages)
         .padding(.top, 10)

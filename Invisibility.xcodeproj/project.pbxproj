@@ -84,7 +84,6 @@
 		4DF2D8FF2BA683280093CA3E /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8FE2BA683280093CA3E /* PostHog */; };
 		4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF2D9002BA689220093CA3E /* AppConfig.swift */; };
 		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
-		4DF46B392BBF96D700846217 /* ScrollKit in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B382BBF96D700846217 /* ScrollKit */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
 		77F39B262C27898700CA40C3 /* BranchManagerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B252C27898700CA40C3 /* BranchManagerModel.swift */; };
 		77F39B282C27CA9F00CA40C3 /* MessageEditWebInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */; };
@@ -181,7 +180,6 @@
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
-				4DF46B392BBF96D700846217 /* ScrollKit in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
 				4DF2D8FA2BA628530093CA3E /* Sentry in Frameworks */,
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
@@ -459,7 +457,6 @@
 				4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */,
 				4DF2D8FE2BA683280093CA3E /* PostHog */,
 				4DF46B352BBE1A2700846217 /* MarkdownWebView */,
-				4DF46B382BBF96D700846217 /* ScrollKit */,
 				4D37F2C92BDAD5B400F2FC93 /* CachedAsyncImage */,
 				4DB061C22BF4ACC2007CF7DD /* SimpleToast */,
 			);
@@ -500,7 +497,6 @@
 				4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				4DF2D8FD2BA683280093CA3E /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				4DF46B342BBE1A2700846217 /* XCRemoteSwiftPackageReference "markdown-webview" */,
-				4DF46B372BBF96D700846217 /* XCRemoteSwiftPackageReference "ScrollKit" */,
 				4D37F2C82BDAD5B400F2FC93 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				4DB061C12BF4ACC2007CF7DD /* XCRemoteSwiftPackageReference "SimpleToast" */,
 			);
@@ -938,14 +934,6 @@
 				kind = branch;
 			};
 		};
-		4DF46B372BBF96D700846217 /* XCRemoteSwiftPackageReference "ScrollKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/danielsaidi/ScrollKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.5.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1023,11 +1011,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DF46B342BBE1A2700846217 /* XCRemoteSwiftPackageReference "markdown-webview" */;
 			productName = MarkdownWebView;
-		};
-		4DF46B382BBF96D700846217 /* ScrollKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DF46B372BBF96D700846217 /* XCRemoteSwiftPackageReference "ScrollKit" */;
-			productName = ScrollKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
