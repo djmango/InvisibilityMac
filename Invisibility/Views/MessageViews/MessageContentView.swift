@@ -19,6 +19,7 @@ struct MessageContentView: View {
     @State private var isHovering = false
     @State private var leftArrowHovered = false
     @State private var rightArrowHovered = false
+    @State private var isEditingWithDelay = false
 
     init(message: APIMessage) {
         self.message = message
@@ -90,11 +91,25 @@ struct MessageContentView: View {
             }
             .visible(if: !images.isEmpty, removeCompletely: true)
             
-            if !isEditing {
-                MarkdownWebView(message.text)
-            } else {
-                EditWebInputView()
-            }
+            ZStack {
+               MarkdownWebView(message.text)
+                   .opacity(isEditingWithDelay ? 0 : 1)
+                   .animation(.easeInOut(duration: 0.2), value: isEditingWithDelay)
+                if isEditing {
+                   EditWebInputView()
+                       .opacity(isEditingWithDelay ? 1 : 0)
+                }
+           }
+           .onChange(of: isEditing) { newValue in
+               if newValue {
+                   DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                       isEditingWithDelay = true
+                   }
+               } else {
+                   isEditingWithDelay = false
+               }
+           }
+           
             HStack {
                 Image(systemName: leftArrowHovered && canMoveLeft ? "arrowtriangle.backward.fill" : "arrowtriangle.backward")
                    .resizable()
@@ -136,13 +151,13 @@ struct MessageContentView: View {
             // is last msg && there exists chat wtih its id as parent_message_id
             .opacity(isHovering ? 1 : 0)
             .animation(AppConfig.snappy, value: isHovering)
-            .visible(if: isBranch && !isEditing, removeCompletely: true)
+            .visible(if: !isEditing && isBranch, removeCompletely: true)
             
             HStack {
                 Image(systemName: "checkmark.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
+                    .frame(width: 15, height: 15)
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture {
                         // cleanup is handled in sendFromChat
@@ -161,7 +176,7 @@ struct MessageContentView: View {
                 Image(systemName: "x.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
+                    .frame(width: 15, height: 15)
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture{
                         branchManagerModel.clearEdit()

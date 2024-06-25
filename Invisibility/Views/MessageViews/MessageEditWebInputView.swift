@@ -91,7 +91,7 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                     background-color: transparent;
                     color: -apple-system-label;
                     font-family: system-ui;
-                    font-size: 11pt;
+                    font-size: 10pt;
                     line-height: 1.5;
                 }
 
@@ -106,6 +106,8 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                     overflow-y: hidden;
                     background-color: transparent;
                     white-space: pre-wrap;
+                    padding: 0;
+                    margin: 0;
                 }
                 input, textarea, div[contenteditable] {
                     caret-color: \(accentColorStr);
@@ -165,6 +167,18 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                         updateHeight();
                     }
                 });
+        
+                // ensure caret is always visible
+                function scrollCaretIntoView() {
+                    const selection = window.getSelection();
+                    if (selection.rangeCount > 0) {
+                        const range = selection.getRangeAt(0);
+                        const rect = range.getBoundingClientRect();
+                        if (rect.bottom > window.innerHeight) {
+                            window.scrollTo(0, window.pageYOffset + rect.bottom - window.innerHeight + 20);
+                        }
+                    }
+                }
 
                 new MutationObserver(function() {
                     updateHeight();
