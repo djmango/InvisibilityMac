@@ -180,7 +180,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Implement menu move functionality
         case .chatImage:
             logger.debug("Handling Chat Image action")
-        // Implement chat image functionality
+            DispatchQueue.main.async {
+                ChatViewModel.shared.removeItem(id: target)
+            }
         case .chatPDF:
             logger.debug("Handling Chat PDF action")
         // Implement chat PDF functionality

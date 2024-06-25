@@ -11,7 +11,9 @@ struct MessageListItemView: View {
                 if $0 {
                     isHovered = true
                 } else {
-                    isHovered = false
+                    withAnimation(AppConfig.snappy) {
+                        isHovered = false
+                    }
                 }
             }
             .background(

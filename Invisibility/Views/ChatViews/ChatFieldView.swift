@@ -48,6 +48,5 @@ struct ChatFieldView: View {
                 .stroke(Color(nsColor: .separatorColor))
         )
         .padding(.horizontal, 10)
-        .animation(.easeIn(duration: 0.2), value: ChatViewModel.shared.items)
     }
 }

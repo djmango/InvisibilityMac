@@ -11,7 +11,7 @@ import ViewCondition
 
 struct MessageActionButtonsView: View {
     private let message: APIMessage
-    
+
     @State private var whoIsHovering: String?
     @State private var isCopied: Bool = false
     @Binding private var isHovered: Bool
@@ -19,9 +19,8 @@ struct MessageActionButtonsView: View {
     @AppStorage("shortcutHints") private var shortcutHints = true
     @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
-    @ObservedObject var hoverTrackerModel: HoverTrackerModel = HoverTrackerModel.shared
     @ObservedObject var branchManagerModel: BranchManagerModel = BranchManagerModel.shared
-   
+
     private var isEditing: Bool {
         branchManagerModel.editMsg != nil
     }
@@ -39,14 +38,14 @@ struct MessageActionButtonsView: View {
     }
 
     private var isCopyButtonVisible: Bool {
-        isHovered || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command)) &&  !isEditing
+        isHovered || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command)) && !isEditing
     }
 
     private var isRegenerateButtonVisible: Bool {
         ((isHovered && message.role == .assistant) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))) && !isEditing
     }
-    
-    private var isEditButtonVisible : Bool {
+
+    private var isEditButtonVisible: Bool {
         ((isHovered && message.role == .user) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))) && !isEditing
     }
 
@@ -63,6 +62,7 @@ struct MessageActionButtonsView: View {
     }
 
     var body: some View {
+        // let _ = Self._printChanges()
         VStack(alignment: .trailing) {
             Spacer()
 
@@ -70,7 +70,7 @@ struct MessageActionButtonsView: View {
                 if isEditButtonVisible {
                     Spacer()
                         .frame(width: 60)
-                     MessageButtonItemView(
+                    MessageButtonItemView(
                         label: "Edit",
                         icon: "pencil",
                         shortcut_hint: "⌘ ⌥ E",
@@ -86,9 +86,8 @@ struct MessageActionButtonsView: View {
                             NSCursor.arrow.set()
                         }
                     }
-
                 }
-                
+
                 Spacer()
                 MessageButtonItemView(
                     label: "Regenerate",
@@ -130,11 +129,11 @@ struct MessageActionButtonsView: View {
         }
         .padding(8)
         .animation(AppConfig.snappy, value: whoIsHovering)
-        .animation(AppConfig.snappy, value: isHovered)
         .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
     }
 
     // MARK: - Actions
+
     private func copyAction() {
         let pasteBoard = NSPasteboard.general
         pasteBoard.clearContents()
@@ -146,7 +145,7 @@ struct MessageActionButtonsView: View {
             isCopied = false
         }
     }
-    
+
     private func editAction() {
         print("editAction()")
         BranchManagerModel.shared.editMsg = message

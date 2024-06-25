@@ -1,9 +1,9 @@
+import Combine
 import CoreGraphics
 import Foundation
 import OSLog
 import PostHog
 import SwiftUI
-import Combine
 
 final class MessageViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
@@ -19,39 +19,38 @@ final class MessageViewModel: ObservableObject {
     @Published public var api_chats: [APIChat] = []
     @Published public var api_messages: [APIMessage] = []
     @Published public var api_files: [APIFile] = []
-    @Published public var windowHeight: CGFloat = 0
     @Published public var isGenerating: Bool = false
     @Published public var shouldScrollToBottom: Bool = false
     @Published public var api_messages_in_chat: [APIMessage] = []
-    @Published public var messagesByChat :  [UUID: [APIMessage]] = [:]
+    @Published public var messagesByChat: [UUID: [APIMessage]] = [:]
     private var cancellables = Set<AnyCancellable>()
-        
-    private func setupChatObserver() {
-      ChatViewModel.shared.$chat
-          .compactMap { $0 } // Ignore nil values
-          .sink { [weak self] newChat in
-              print("setupChatObserver triggered, switch root chat")
-              self?.updateMessagesForChat(newChat)
-          }
-        .store(in: &cancellables)
-      }
-    
-   private func updateMessagesForChat(_ chat: APIChat) {
-      let rootChat = chat // always
-      let branchManager = BranchManagerModel.shared
-      
-      let initialBranch = branchManager.initializeChatBranch(rootChat: rootChat)
-      BranchManagerModel.shared.initializeChatBranchPoints(rootChat: chat, messages: api_messages, chats: api_chats)
-      BranchManagerModel.shared.currentBranchPath = initialBranch
 
-      DispatchQueue.main.async {
-          self.api_messages_in_chat = initialBranch
-          self.shouldScrollToBottom = true
-      }
-   }
-    
-    public func messageBranches (message: APIMessage) -> [APIChat] {
-        return api_chats.filter { $0.parent_message_id == message.id }
+    private func setupChatObserver() {
+        ChatViewModel.shared.$chat
+            .compactMap { $0 } // Ignore nil values
+            .sink { [weak self] newChat in
+                print("setupChatObserver triggered, switch root chat")
+                self?.updateMessagesForChat(newChat)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func updateMessagesForChat(_ chat: APIChat) {
+        let rootChat = chat // always
+        let branchManager = BranchManagerModel.shared
+
+        let initialBranch = branchManager.initializeChatBranch(rootChat: rootChat)
+        BranchManagerModel.shared.initializeChatBranchPoints(rootChat: chat, messages: api_messages, chats: api_chats)
+        BranchManagerModel.shared.currentBranchPath = initialBranch
+
+        DispatchQueue.main.async {
+            self.api_messages_in_chat = initialBranch
+            self.shouldScrollToBottom = true
+        }
+    }
+
+    public func messageBranches(message: APIMessage) -> [APIChat] {
+        api_chats.filter { $0.parent_message_id == message.id }
     }
 
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
@@ -85,37 +84,36 @@ final class MessageViewModel: ObservableObject {
             let fetched = try decoder.decode(APISyncResponse.self, from: data)
 
             DispatchQueue.main.async { [weak self] in
-               guard let self = self else { return }
+                guard let self else { return }
 
-               let fetched_chats = fetched.chats.sorted { $0.created_at < $1.created_at }
-               let fetched_msgs = fetched.messages.filter { !$0.regenerated }.sorted { $0.created_at < $1.created_at }
+                let fetched_chats = fetched.chats.sorted { $0.created_at < $1.created_at }
+                let fetched_msgs = fetched.messages.filter { !$0.regenerated }.sorted { $0.created_at < $1.created_at }
 
-               self.api_chats = fetched_chats
-               self.api_messages = fetched_msgs
-               self.api_files = fetched.files.sorted { $0.created_at < $1.created_at }
+                self.api_chats = fetched_chats
+                self.api_messages = fetched_msgs
+                self.api_files = fetched.files.sorted { $0.created_at < $1.created_at }
 
+                if let lastChat = self.api_chats.last,
+                   let lastRootChat = BranchManagerModel.shared.getRootChat(currentChat: lastChat, msgs: fetched_msgs, chats: fetched_chats)
+                {
+                    if let firstMsg = fetched_msgs.first(where: { $0.chat_id == lastRootChat.id }) {
+                        print("First message ID: \(firstMsg.id)")
+                        print("First message text: \(firstMsg.text)")
+                    } else {
+                        print("No messages found for the root chat")
+                    }
 
-               if let lastChat = self.api_chats.last,
-                  let lastRootChat = BranchManagerModel.shared.getRootChat(currentChat: lastChat, msgs: fetched_msgs, chats: fetched_chats) {
-                   
-                   if let firstMsg = fetched_msgs.first(where: { $0.chat_id == lastRootChat.id }) {
-                       print("First message ID: \(firstMsg.id)")
-                       print("First message text: \(firstMsg.text)")
-                   } else {
-                       print("No messages found for the root chat")
-                   }
+                    ChatViewModel.shared.chat = lastRootChat
 
-                   ChatViewModel.shared.chat = lastRootChat
+                    self.messagesByChat = Dictionary(grouping: fetched_msgs) { $0.chat_id }
+                        .mapValues { messages in
+                            messages.filter { !$0.regenerated }.sorted { $0.created_at < $1.created_at }
+                        }
 
-                   self.messagesByChat = Dictionary(grouping: fetched_msgs) { $0.chat_id }
-                       .mapValues { messages in
-                           messages.filter { !$0.regenerated }.sorted { $0.created_at < $1.created_at }
-                       }
-
-                   BranchManagerModel.shared.initializeChatBranchPoints(rootChat: lastRootChat, messages: fetched_msgs, chats: fetched_chats)
-               } else {
-                   print("No root chat found")
-               }
+                    BranchManagerModel.shared.initializeChatBranchPoints(rootChat: lastRootChat, messages: fetched_msgs, chats: fetched_chats)
+                } else {
+                    print("No root chat found")
+                }
             }
         }
 
@@ -123,7 +121,7 @@ final class MessageViewModel: ObservableObject {
             logger.error("Failed to fetch API: \(error)")
         }
     }
-   
+
     // helper
     private func createEditChat(for user: User) -> APIChat? {
         print("createEditChat")
@@ -142,28 +140,28 @@ final class MessageViewModel: ObservableObject {
     }
 
     @MainActor
-    func sendFromChat(editMode : Bool = false) async {
+    func sendFromChat(editMode: Bool = false) async {
         logger.debug("sendFromChat, editMode: \(editMode)")
         var text = !editMode ? TextViewModel.shared.text : BranchManagerModel.shared.editText
         guard let user = UserManager.shared.user else {
             logger.error("No user to send message as")
             return
         }
-       
+
         // Get or create chat
         var currChat: APIChat?
         if self.chat == nil {
-          let newChat = APIChat(
-              id: UUID(),
-              user_id: user.id
-          )
-          ChatViewModel.shared.chat = newChat
-          api_chats.append(newChat)
-              currChat = newChat
+            let newChat = APIChat(
+                id: UUID(),
+                user_id: user.id
+            )
+            ChatViewModel.shared.chat = newChat
+            api_chats.append(newChat)
+            currChat = newChat
         } else if editMode {
-           currChat = createEditChat(for: user)
+            currChat = createEditChat(for: user)
         } else {
-           currChat = self.chat
+            currChat = self.chat
         }
 
         guard let chat = currChat else {
@@ -172,10 +170,9 @@ final class MessageViewModel: ObservableObject {
         }
 
         _ = MainWindowViewModel.shared.changeView(to: .chat)
-        
+
         logger.debug("Can send messages: \(UserManager.shared.canSendMessages)")
         logger.debug("Messages left: \(UserManager.shared.numMessagesLeft)")
-     
 
         // If the user has exceeded the daily message limit, don't send the message and pop up an alert
         if !(UserManager.shared.canSendMessages) {
@@ -184,10 +181,9 @@ final class MessageViewModel: ObservableObject {
             )
             return
         }
-        
+
         // Stop the chat from generating if it is
         if isGenerating { stopGenerating() }
-        
 
         // If we are streaming video, add the current frame to the images
         if ScreenRecorder.shared.isRunning {
@@ -214,7 +210,7 @@ final class MessageViewModel: ObservableObject {
         if !ChatViewModel.shared.fileContent.isEmpty {
             text = ChatViewModel.shared.fileContent + "\n" + text
         }
-        
+
         let user_message = APIMessage(
             id: UUID(),
             chat_id: chat.id,
@@ -236,7 +232,7 @@ final class MessageViewModel: ObservableObject {
         let images = ChatViewModel.shared.images.map { $0.toAPI(message: user_message) }
 
         api_files.append(contentsOf: images)
-       
+
         // cleanup
         if editMode {
             BranchManagerModel.shared.clearEdit()
@@ -255,7 +251,7 @@ final class MessageViewModel: ObservableObject {
             ]
         )
         }
-        
+
         withAnimation(AppConfig.snappy) {
             addMessages(messages: [user_message, assistant_message])
             api_messages_in_chat.append(contentsOf: [user_message, assistant_message])
@@ -343,7 +339,8 @@ final class MessageViewModel: ObservableObject {
                 "num_images": imagesFor(message: message).count,
                 "message_length": message.text.count,
                 "model": LLMManager.shared.model.human_name,
-            ])
+            ]
+        )
         }
 
         // Mark only regenerated message as regenerated
@@ -374,7 +371,7 @@ final class MessageViewModel: ObservableObject {
             role: .assistant,
             model_id: LLMManager.shared.model.human_name
         )
-        
+
         addMessages(messages: [user_message, assistant_message])
 
         chatTask = Task {
@@ -408,22 +405,22 @@ final class MessageViewModel: ObservableObject {
         api_messages = []
         api_files = []
     }
-        
+
     public func addMessages(messages: [APIMessage]) {
         for msg in messages {
             api_messages.append(msg)
             // keep messages grouped by chat up-to-date with additions
             if var chatMessages = messagesByChat[msg.chat_id] {
                 /*
-               assert(chatMessages.last == nil || msg.created_at > chatMessages.last!.created_at,
-                        "New message's creation time must be later than the last message in the chat")
-               assert(msg.regenerated != true, "New message should not be marked as regenerated")
-                */
-               chatMessages.append(msg)
-               messagesByChat[msg.chat_id] = chatMessages
-           } else {
-               messagesByChat[msg.chat_id] = [msg]
-           }
+                 assert(chatMessages.last == nil || msg.created_at > chatMessages.last!.created_at,
+                          "New message's creation time must be later than the last message in the chat")
+                 assert(msg.regenerated != true, "New message should not be marked as regenerated")
+                  */
+                chatMessages.append(msg)
+                messagesByChat[msg.chat_id] = chatMessages
+            } else {
+                messagesByChat[msg.chat_id] = [msg]
+            }
         }
     }
 
@@ -460,5 +457,4 @@ final class MessageViewModel: ObservableObject {
             return lastMessageDate1 > lastMessageDate2
         }
     }
-    
 }

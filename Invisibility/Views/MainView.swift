@@ -11,7 +11,6 @@ struct MainView: View {
 
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
-    @ObservedObject private var screenRecorder = ScreenRecorder.shared
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
     @AppStorage("width") private var width: Int = Int(WindowManager.defaultWidth)
@@ -79,8 +78,6 @@ struct MainView: View {
                 .scrollIndicators(.never)
         }
         .animation(AppConfig.snappy, value: chatViewModel.textHeight)
-        .animation(AppConfig.snappy, value: chatViewModel.images)
-        .animation(AppConfig.snappy, value: screenRecorder.isRunning)
         // .gesture(
         //     DragGesture()
         //         .onChanged { value in
