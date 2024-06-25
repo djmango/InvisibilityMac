@@ -19,7 +19,7 @@ enum AppConfig {
     static let posthog_api_key = "phc_aVzM8zKxuKj8BzbIDO7ByvmSH90WwB1vCZ1zPCZw9Y3"
 
     static let invisibility_api_base = "https://cloak.i.inc"
-//    static let invisibility_api_base = "http://localhost:8000"
+    //static let invisibility_api_base = "http://localhost:8000"
     // static let invisibility_api_base = "http://localhost:8080/3cdad38b-2438-4999-93b7-50e0f952542f"
     // docker run --rm -p 8080:8080/tcp tarampampam/webhook-tester serve
 }

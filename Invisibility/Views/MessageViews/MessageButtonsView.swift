@@ -67,28 +67,6 @@ struct MessageActionButtonsView: View {
             Spacer()
 
             HStack {
-                if isEditButtonVisible {
-                    Spacer()
-                        .frame(width: 60)
-                     MessageButtonItemView(
-                        label: "Edit",
-                        icon: "pencil",
-                        shortcut_hint: "⌘ ⌥ E",
-                        whoIsHovering: $whoIsHovering
-                    ) {
-                        editAction()
-                    }
-                    .keyboardShortcut("e", modifiers: [.command])
-                    .onHover { inside in
-                        if inside {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
-
-                }
-                
                 Spacer()
                 MessageButtonItemView(
                     label: "Regenerate",
@@ -147,11 +125,6 @@ struct MessageActionButtonsView: View {
         }
     }
     
-    private func editAction() {
-        print("editAction()")
-        BranchManagerModel.shared.editMsg = message
-        BranchManagerModel.shared.editText = message.text
-    }
 
     private func regenerateAction() {
         Task {

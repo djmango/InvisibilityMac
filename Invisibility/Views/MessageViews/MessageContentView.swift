@@ -17,8 +17,6 @@ struct MessageContentView: View {
     private let model_name: String
     private var isBranch: Bool
     @State private var isHovering = false
-    @State private var leftArrowHovered = false
-    @State private var rightArrowHovered = false
     @State private var isEditingWithDelay = false
 
     init(message: APIMessage) {
@@ -51,13 +49,14 @@ struct MessageContentView: View {
         MessageViewModel.shared.shownImagesFor(message: message)
     }
     
-    private var canMoveLeft: Bool {
-        BranchManagerModel.shared.canMoveLeft(message: message)
+    private var showEdit: Bool {
+        // Print individual values
+        print("isHovering: \(isHovering)")
+        print("isBranch: \(isBranch)")
+        print("!isEditing: \(!isEditing)")
+        return isHovering && isBranch && !isEditing
     }
-    
-    private var canMoveRight: Bool {
-        BranchManagerModel.shared.canMoveRight(message: message)
-    }
+
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -109,50 +108,7 @@ struct MessageContentView: View {
                    isEditingWithDelay = false
                }
            }
-           
-            HStack {
-                Image(systemName: leftArrowHovered && canMoveLeft ? "arrowtriangle.backward.fill" : "arrowtriangle.backward")
-                   .resizable()
-                   .aspectRatio(contentMode: .fit)
-                   .frame(width: 15, height: 15)
-                   .foregroundColor(.chatButtonForeground)
-                   .onTapGesture {
-                       branchManagerModel.moveLeft(message: message)
-                   }
-                   .onHover{ hovered in
-                       if hovered {
-                           leftArrowHovered = true
-                           NSCursor.pointingHand.set()
-                       } else {
-                           leftArrowHovered = false
-                           NSCursor.arrow.set()
-                       }
-                   }
-                
-
-                Image(systemName: rightArrowHovered && canMoveRight ? "arrowtriangle.forward.fill" : "arrowtriangle.forward")
-                   .resizable()
-                   .aspectRatio(contentMode: .fit)
-                   .frame(width: 15, height: 15)
-                   .foregroundColor(.chatButtonForeground)
-                   .onTapGesture {
-                       branchManagerModel.moveRight(message: message)
-                   }
-                   .onHover { hovered in
-                       if hovered {
-                           rightArrowHovered = true
-                           NSCursor.pointingHand.set()
-                       } else {
-                           rightArrowHovered = false
-                           NSCursor.arrow.set()
-                       }
-                   }
-            }
-            // is last msg && there exists chat wtih its id as parent_message_id
-            .opacity(isHovering ? 1 : 0)
-            .animation(AppConfig.snappy, value: isHovering)
-            .visible(if: !isEditing && isBranch, removeCompletely: true)
-            
+      
             HStack {
                 Image(systemName: "checkmark.circle")
                     .resizable()
@@ -194,8 +150,16 @@ struct MessageContentView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .onHover { hovering in
-                   isHovering = hovering
+            isHovering = hovering
+            print(isHovering)
         }
+        .overlay(
+            EditButtonsView(message: message)
+                .offset(y: 38) // Adjust this value to control how much the buttons stick out
+                .offset(x: -100)
+                .frame(width: 100)
+                .visible(if: showEdit, removeCompletely: true)
+        )
     }
 }
 
