@@ -27,13 +27,13 @@ struct MessageContentView: View {
         self.isBranch = BranchManagerModel.shared.isBranch(message: message)
     }
 
-    private var isEditing : Bool {
+    private var isEditing: Bool {
         guard let editMsg = branchManagerModel.editMsg else {
             return false
         }
         return editMsg.id == message.id
     }
-    
+
     private var isGenerating: Bool {
         MessageViewModel.shared.isGenerating && message.text.isEmpty
     }
@@ -49,11 +49,11 @@ struct MessageContentView: View {
     private var images: [APIFile] {
         MessageViewModel.shared.shownImagesFor(message: message)
     }
-    
+
     private var canMoveLeft: Bool {
         BranchManagerModel.shared.canMoveLeft(message: message)
     }
-    
+
     private var canMoveRight: Bool {
         BranchManagerModel.shared.canMoveRight(message: message)
     }
@@ -89,55 +89,59 @@ struct MessageContentView: View {
                     .visible(if: !images.isEmpty, removeCompletely: true)
             }
             .visible(if: !images.isEmpty, removeCompletely: true)
-            
-            if !isEditing {
-                MarkdownWebView(message.text)
-            } else {
-                EditWebInputView()
-            }
+
+            MarkdownWebView(message.text)
+                .visible(if: !isEditing, removeCompletely: true)
+
+            EditWebInputView()
+                .visible(if: isEditing, removeCompletely: true)
+            // if !isEditing {
+            //     MarkdownWebView(message.text)
+            // } else {
+            //     EditWebInputView()
+            // }
             HStack {
                 Image(systemName: leftArrowHovered && canMoveLeft ? "arrowtriangle.backward.fill" : "arrowtriangle.backward")
-                   .resizable()
-                   .aspectRatio(contentMode: .fit)
-                   .frame(width: 15, height: 15)
-                   .foregroundColor(.chatButtonForeground)
-                   .onTapGesture {
-                       branchManagerModel.moveLeft(message: message)
-                   }
-                   .onHover{ hovered in
-                       if hovered {
-                           leftArrowHovered = true
-                           NSCursor.pointingHand.set()
-                       } else {
-                           leftArrowHovered = false
-                           NSCursor.arrow.set()
-                       }
-                   }
-                
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 15, height: 15)
+                    .foregroundColor(.chatButtonForeground)
+                    .onTapGesture {
+                        branchManagerModel.moveLeft(message: message)
+                    }
+                    .onHover { hovered in
+                        if hovered {
+                            leftArrowHovered = true
+                            NSCursor.pointingHand.set()
+                        } else {
+                            leftArrowHovered = false
+                            NSCursor.arrow.set()
+                        }
+                    }
 
                 Image(systemName: rightArrowHovered && canMoveRight ? "arrowtriangle.forward.fill" : "arrowtriangle.forward")
-                   .resizable()
-                   .aspectRatio(contentMode: .fit)
-                   .frame(width: 15, height: 15)
-                   .foregroundColor(.chatButtonForeground)
-                   .onTapGesture {
-                       branchManagerModel.moveRight(message: message)
-                   }
-                   .onHover { hovered in
-                       if hovered {
-                           rightArrowHovered = true
-                           NSCursor.pointingHand.set()
-                       } else {
-                           rightArrowHovered = false
-                           NSCursor.arrow.set()
-                       }
-                   }
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 15, height: 15)
+                    .foregroundColor(.chatButtonForeground)
+                    .onTapGesture {
+                        branchManagerModel.moveRight(message: message)
+                    }
+                    .onHover { hovered in
+                        if hovered {
+                            rightArrowHovered = true
+                            NSCursor.pointingHand.set()
+                        } else {
+                            rightArrowHovered = false
+                            NSCursor.arrow.set()
+                        }
+                    }
             }
             // is last msg && there exists chat wtih its id as parent_message_id
             .opacity(isHovering ? 1 : 0)
             .animation(AppConfig.snappy, value: isHovering)
             .visible(if: isBranch && !isEditing, removeCompletely: true)
-            
+
             HStack {
                 Image(systemName: "checkmark.circle")
                     .resizable()
@@ -146,11 +150,11 @@ struct MessageContentView: View {
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture {
                         // cleanup is handled in sendFromChat
-                        Task{
+                        Task {
                             await MessageViewModel.shared.sendFromChat(editMode: true)
                         }
                     }
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
@@ -163,10 +167,10 @@ struct MessageContentView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 18, height: 18)
                     .foregroundColor(.chatButtonForeground)
-                    .onTapGesture{
+                    .onTapGesture {
                         branchManagerModel.clearEdit()
                     }
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
@@ -179,8 +183,7 @@ struct MessageContentView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
         .onHover { hovering in
-                   isHovering = hovering
+            isHovering = hovering
         }
     }
 }
-

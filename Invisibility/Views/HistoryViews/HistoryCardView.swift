@@ -73,9 +73,7 @@ struct HistoryCardView: View {
                         }
                         .onHover {
                             if $0 {
-                                withAnimation(AppConfig.easeOut) {
-                                    isNameHovered = true
-                                }
+                                isNameHovered = true
                             } else {
                                 withAnimation(AppConfig.easeOut) {
                                     isNameHovered = false
@@ -156,12 +154,12 @@ struct HistoryCardView: View {
                 isHovered = true
                 // Preemtively load the chat, snappier!
                 // Wait until the hover animation is done to show the history
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    // Check if still hovered
-                    if isHovered {
-                        chatViewModel.switchChat(chat)
-                    }
-                }
+                // DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                //     // Check if still hovered
+                //     if isHovered {
+                //         chatViewModel.switchChat(chat)
+                //     }
+                // }
             } else {
                 withAnimation(AppConfig.easeOut) {
                     isHovered = false
