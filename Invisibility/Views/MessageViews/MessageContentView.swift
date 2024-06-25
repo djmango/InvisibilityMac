@@ -17,6 +17,8 @@ struct MessageContentView: View {
     private let model_name: String
     private var isBranch: Bool
     @State private var isHovering = false
+    @State private var leftArrowHovered = false
+    @State private var rightArrowHovered = false
 
     init(message: APIMessage) {
         self.message = message
@@ -46,6 +48,14 @@ struct MessageContentView: View {
 
     private var images: [APIFile] {
         MessageViewModel.shared.shownImagesFor(message: message)
+    }
+    
+    private var canMoveLeft: Bool {
+        BranchManagerModel.shared.canMoveLeft(message: message)
+    }
+    
+    private var canMoveRight: Bool {
+        BranchManagerModel.shared.canMoveRight(message: message)
     }
 
     var body: some View {
@@ -86,23 +96,42 @@ struct MessageContentView: View {
                 EditWebInputView()
             }
             HStack {
-                Image(systemName: "arrowtriangle.backward")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 15, height: 15)
-                    .foregroundColor(.chatButtonForeground)
-                    .onTapGesture{
-                        branchManagerModel.moveLeft(message: message)
-                    }
+                Image(systemName: leftArrowHovered && canMoveLeft ? "arrowtriangle.backward.fill" : "arrowtriangle.backward")
+                   .resizable()
+                   .aspectRatio(contentMode: .fit)
+                   .frame(width: 15, height: 15)
+                   .foregroundColor(.chatButtonForeground)
+                   .onTapGesture {
+                       branchManagerModel.moveLeft(message: message)
+                   }
+                   .onHover{ hovered in
+                       if hovered {
+                           leftArrowHovered = true
+                           NSCursor.pointingHand.set()
+                       } else {
+                           leftArrowHovered = false
+                           NSCursor.arrow.set()
+                       }
+                   }
                 
-                Image(systemName: "arrowtriangle.forward")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 15, height: 15)
-                    .foregroundColor(.chatButtonForeground)
-                    .onTapGesture{
-                        branchManagerModel.moveRight(message: message)
-                    }
+
+                Image(systemName: rightArrowHovered && canMoveRight ? "arrowtriangle.forward.fill" : "arrowtriangle.forward")
+                   .resizable()
+                   .aspectRatio(contentMode: .fit)
+                   .frame(width: 15, height: 15)
+                   .foregroundColor(.chatButtonForeground)
+                   .onTapGesture {
+                       branchManagerModel.moveRight(message: message)
+                   }
+                   .onHover { hovered in
+                       if hovered {
+                           rightArrowHovered = true
+                           NSCursor.pointingHand.set()
+                       } else {
+                           rightArrowHovered = false
+                           NSCursor.arrow.set()
+                       }
+                   }
             }
             // is last msg && there exists chat wtih its id as parent_message_id
             .opacity(isHovering ? 1 : 0)
@@ -121,7 +150,14 @@ struct MessageContentView: View {
                             await MessageViewModel.shared.sendFromChat(editMode: true)
                         }
                     }
-                
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
+
                 Image(systemName: "x.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -129,6 +165,13 @@ struct MessageContentView: View {
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture{
                         branchManagerModel.clearEdit()
+                    }
+                    .onHover{ hovered in
+                        if hovered {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
                     }
             }
             .visible(if: isEditing, removeCompletely: true)

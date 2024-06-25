@@ -79,6 +79,14 @@ struct MessageActionButtonsView: View {
                         editAction()
                     }
                     .keyboardShortcut("e", modifiers: [.command])
+                    .onHover { inside in
+                        if inside {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
+                    }
+
                 }
                 
                 Spacer()
@@ -90,9 +98,16 @@ struct MessageActionButtonsView: View {
                 ) {
                     regenerateAction()
                 }
-                .visible(if: isRegenerateButtonVisible, removeCompletely: true)
                 .keyboardShortcut("r", modifiers: [.command, .shift])
-                
+                .onHover { inside in
+                    if inside {
+                        NSCursor.pointingHand.set()
+                    } else {
+                        NSCursor.arrow.set()
+                    }
+                }
+                .visible(if: isRegenerateButtonVisible, removeCompletely: true)
+
                 MessageButtonItemView(
                     label: "Copy",
                     icon: isCopied ? "checkmark" : "square.on.square",
@@ -103,6 +118,13 @@ struct MessageActionButtonsView: View {
                 }
                 .keyboardShortcut("c", modifiers: [.command, .option])
                 .changeEffect(.jump(height: 10), value: isCopied)
+                .onHover { inside in
+                    if inside {
+                        NSCursor.pointingHand.set()
+                    } else {
+                        NSCursor.arrow.set()
+                    }
+                }
                 .visible(if: isCopyButtonVisible)
             }
         }

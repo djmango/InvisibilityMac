@@ -23,6 +23,7 @@ struct EditWebInputRepresentable: NSViewRepresentable {
         let contentController = webView.configuration.userContentController
         contentController.add(context.coordinator, name: "textChanged")
         contentController.add(context.coordinator, name: "heightChanged")
+        contentController.add(context.coordinator, name: "submit")
 
         webView.loadHTMLString(htmlContent, baseURL: nil)
         return webView
@@ -57,8 +58,7 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                         self.parent.branchManagerModel.editViewHeight = height
                     }
                 }
-            case "sendMessage":
-                print("enter detected")
+            case "submit":
                  DispatchQueue.main.async {
                      Task {
                          await MessageViewModel.shared.sendFromChat(editMode: true)
@@ -158,8 +158,11 @@ struct EditWebInputRepresentable: NSViewRepresentable {
                 editor.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        console.log('Enter key pressed');
-                        webkit.messageHandlers.sendMessage.postMessage('');
+                        webkit.messageHandlers.submit.postMessage('');
+                    } else if (e.key === 'Enter' && e.shiftKey) {
+                        e.preventDefault();
+                        document.execCommand('insertLineBreak');
+                        updateHeight();
                     }
                 });
 

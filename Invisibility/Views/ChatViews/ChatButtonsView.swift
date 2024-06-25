@@ -47,6 +47,13 @@ struct ChatButtonsView: View {
                 }
             }
             .keyboardShortcut("n", modifiers: [.command])
+            .onHover{ hovered in
+                if hovered {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
+            }
 
             // Screenshot
             MessageButtonItemView(
@@ -60,6 +67,13 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("1", modifiers: [.command, .shift])
             .visible(if: !isShowingHistory, removeCompletely: true)
+            .onHover{ hovered in
+                if hovered {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
+            }
 
             // Video
             MessageButtonItemView(
@@ -73,6 +87,13 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("2", modifiers: [.command, .shift])
             .visible(if: !isShowingHistory, removeCompletely: true)
+            .onHover{ hovered in
+                if hovered {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
+            }
 
             // Search Chat History
             MessageButtonItemView(
@@ -89,6 +110,13 @@ struct ChatButtonsView: View {
                 }
             }
             .keyboardShortcut("f", modifiers: [.command])
+            .onHover{ hovered in
+                if hovered {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
+            }
 
             // Settings
             MessageButtonItemView(
@@ -105,6 +133,13 @@ struct ChatButtonsView: View {
                 }
             }
             .keyboardShortcut(",", modifiers: [.command])
+            .onHover{ hovered in
+                if hovered {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
+            }
 
             // Stop generating
             MessageButtonItemView(
@@ -120,6 +155,13 @@ struct ChatButtonsView: View {
             .keyboardShortcut("p", modifiers: [.command])
             .visible(if: messageViewModel.isGenerating, removeCompletely: true)
             .visible(if: !isShowingHistory, removeCompletely: true)
+            .onHover{ hovered in
+                if hovered {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
+            }
 
             // Switch Sides
             MessageButtonItemView(
@@ -131,6 +173,13 @@ struct ChatButtonsView: View {
                 switchSide()
             }
             .keyboardShortcut("s", modifiers: [.command, .shift])
+            .onHover{ hovered in
+                if hovered {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
+            }
         }
         .focusable(false)
         .padding(.horizontal, 10)

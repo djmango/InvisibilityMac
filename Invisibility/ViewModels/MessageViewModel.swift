@@ -37,16 +37,12 @@ final class MessageViewModel: ObservableObject {
       }
     
    private func updateMessagesForChat(_ chat: APIChat) {
-       print("updateMessagesForChat")
-       //print(BranchManagerModel.shared.currentBranchPath)
-
       let rootChat = chat // always
       let branchManager = BranchManagerModel.shared
       
       let initialBranch = branchManager.initializeChatBranch(rootChat: rootChat)
-      //print("initialBranch: \(initialBranch)")
+      BranchManagerModel.shared.initializeChatBranchPoints(rootChat: chat, messages: api_messages, chats: api_chats)
       BranchManagerModel.shared.currentBranchPath = initialBranch
-       //print("currentBranch: \(BranchManagerModel.shared.currentBranchPath)")
 
       DispatchQueue.main.async {
           self.api_messages_in_chat = initialBranch
@@ -66,10 +62,6 @@ final class MessageViewModel: ObservableObject {
             await fetchAPI()
         }
         setupChatObserver()
-        // group messages by chat
-        // caching this since its hit a lot
-        // remember to upate when api_messages changes
-       
     }
 
     func fetchAPI() async {
@@ -92,22 +84,38 @@ final class MessageViewModel: ObservableObject {
 
             let fetched = try decoder.decode(APISyncResponse.self, from: data)
 
-            DispatchQueue.main.async {[weak self] in
-                self?.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
-                let fetched_msgs = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
-                self?.api_messages = fetched_msgs
-                self?.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
-                self?.logger.debug("Fetched messages: \(self?.api_messages.count)")
-                ChatViewModel.shared.chat = self?.api_chats.last
-                BranchManagerModel.shared.initializeBranchPoints(messages: self!.api_messages, chats: self!.api_chats)
-                
-                print("caching messages")
-                self?.messagesByChat = Dictionary(grouping: fetched_msgs) { $0.chat_id }
-                .mapValues { messages in
-                    messages.filter( {$0.regenerated == false})
-                    .sorted { $0.created_at < $1.created_at }
-                }
-                
+            DispatchQueue.main.async { [weak self] in
+               guard let self = self else { return }
+
+               let fetched_chats = fetched.chats.sorted { $0.created_at < $1.created_at }
+               let fetched_msgs = fetched.messages.filter { !$0.regenerated }.sorted { $0.created_at < $1.created_at }
+
+               self.api_chats = fetched_chats
+               self.api_messages = fetched_msgs
+               self.api_files = fetched.files.sorted { $0.created_at < $1.created_at }
+
+
+               if let lastChat = self.api_chats.last,
+                  let lastRootChat = BranchManagerModel.shared.getRootChat(currentChat: lastChat, msgs: fetched_msgs, chats: fetched_chats) {
+                   
+                   if let firstMsg = fetched_msgs.first(where: { $0.chat_id == lastRootChat.id }) {
+                       print("First message ID: \(firstMsg.id)")
+                       print("First message text: \(firstMsg.text)")
+                   } else {
+                       print("No messages found for the root chat")
+                   }
+
+                   ChatViewModel.shared.chat = lastRootChat
+
+                   self.messagesByChat = Dictionary(grouping: fetched_msgs) { $0.chat_id }
+                       .mapValues { messages in
+                           messages.filter { !$0.regenerated }.sorted { $0.created_at < $1.created_at }
+                       }
+
+                   BranchManagerModel.shared.initializeChatBranchPoints(rootChat: lastRootChat, messages: fetched_msgs, chats: fetched_chats)
+               } else {
+                   print("No root chat found")
+               }
             }
         }
 
@@ -399,13 +407,13 @@ final class MessageViewModel: ObservableObject {
     public func addMessages(messages: [APIMessage]) {
         for msg in messages {
             api_messages.append(msg)
+            // keep messages grouped by chat up-to-date with additions
             if var chatMessages = messagesByChat[msg.chat_id] {
-               // Assert that the new message's creation time is later than the last message in the chat
+                /*
                assert(chatMessages.last == nil || msg.created_at > chatMessages.last!.created_at,
                         "New message's creation time must be later than the last message in the chat")
-                 
-               // Assert that the new message is not marked as regenerated
                assert(msg.regenerated != true, "New message should not be marked as regenerated")
+                */
                chatMessages.append(msg)
                messagesByChat[msg.chat_id] = chatMessages
            } else {

@@ -47,6 +47,7 @@ struct MenubarView: View {
                 NSApplication.shared.terminate(self)
             }
             .keyboardShortcut("q", modifiers: .command)
+            
 
             Divider()
         }
