@@ -3,21 +3,14 @@ import SwiftUI
 
 struct MessageActionButtonsView: View {
     let message: APIMessage
-    @State private var isCopied: Bool = false
-    @State var whichButtonIsHovered: String? = nil
-    
-    // use this for hovering
+    @State var whichButtonIsHovered: String?
     @Binding var whoIsHovered: String?
     
+    @State private var isCopied: Bool = false
     @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject var branchManagerModel: BranchManagerModel = BranchManagerModel.shared
 
-    init (message: APIMessage, whoIsHovered: Binding<String?>) {
-        self.message = message
-        self._whoIsHovered = whoIsHovered
-    }
-    
     private var isHovered: Bool {
         whoIsHovered == message.id.uuidString
     }
@@ -65,19 +58,22 @@ struct MessageActionButtonsView: View {
                     label: "Edit",
                     icon: "pencil",
                     shortcut_hint: nil,
-                    whichButtonIsHovered: $whichButtonIsHovered,
-                    action: editAction
-                )
+                    whichButtonIsHovered: $whichButtonIsHovered
+                ) {
+                    editAction()
+                }
                 .visible(if: !isEditing && !isAssistant, removeCompletely: true)
                 
                 MessageButtonItemView(
                     label: "Go Back",
                     icon: canMoveLeft ? "arrowtriangle.backward.fill" : "arrowtriangle.backward",
                     shortcut_hint: nil,
-                    whichButtonIsHovered: $whichButtonIsHovered,
-                    action: { branchManagerModel.moveLeft(message: message) }
-                )
-                .visible(if: isBranch, removeCompletely: true)
+                    whichButtonIsHovered: $whichButtonIsHovered
+                    )
+                    {
+                        branchManagerModel.moveLeft(message: message)
+                    }
+                    .visible(if: isBranch, removeCompletely: true)
                 
                 Text("\(branchManagerModel.getCurrBranchIdx(message: message))/\(branchManagerModel.getTotalBranches(message: message))")
                     .font(.system(size: 8))
@@ -88,31 +84,36 @@ struct MessageActionButtonsView: View {
                     label: "Go Forward",
                     icon: canMoveRight ? "arrowtriangle.forward.fill" : "arrowtriangle.forward",
                     shortcut_hint: nil,
-                    whichButtonIsHovered: $whichButtonIsHovered,
-                    action: { branchManagerModel.moveRight(message: message) }
-                )
-                .visible(if: isBranch, removeCompletely: true)
+                    whichButtonIsHovered: $whichButtonIsHovered
+                    )
+                     { 
+                         branchManagerModel.moveRight(message: message)
+                     }
+                    .visible(if: isBranch, removeCompletely: true)
                 
                 MessageButtonItemView(
                     label: "Regenerate",
                     icon: "arrow.clockwise",
                     shortcut_hint: "⌘ ⇧ R",
-                    whichButtonIsHovered: $whichButtonIsHovered,
-                    action: regenerateAction
-                )
-                .keyboardShortcut("r", modifiers: [.command, .shift])
-                .visible(if: isRegenerateButtonVisible, removeCompletely: true)
+                    whichButtonIsHovered: $whichButtonIsHovered
+                    )
+                    {
+                      regenerateAction()
+                    }
+                    .keyboardShortcut("r", modifiers: [.command, .shift])
+                    .visible(if: isRegenerateButtonVisible, removeCompletely: true)
                 
                 MessageButtonItemView(
                     label: "Copy",
                     icon: isCopied ? "checkmark" : "square.on.square",
                     shortcut_hint: "⌘ ⌥ C",
-                    whichButtonIsHovered: $whichButtonIsHovered,
-                    action: copyAction
-                )
-                .keyboardShortcut("c", modifiers: [.command, .option])
-                .changeEffect(.jump(height: 10), value: isCopied)
-                .visible(if: isCopyButtonVisible, removeCompletely: true)
+                    whichButtonIsHovered: $whichButtonIsHovered
+                    ) {
+                        copyAction()
+                    }
+                    .keyboardShortcut("c", modifiers: [.command, .option])
+                    .changeEffect(.jump(height: 10), value: isCopied)
+                    .visible(if: isCopyButtonVisible, removeCompletely: true)
                 
                 // cancel
                 Button(action: {

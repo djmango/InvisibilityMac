@@ -10,11 +10,11 @@ import Pow
 import SwiftUI
 
 struct MessageButtonItemView: View {
-    private let action: () -> Void
     private let label: String?
     private let icon: String
     private let shortcut_hint: String?
     private let iconColor: Color
+    private let action: () -> Void
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
@@ -23,7 +23,7 @@ struct MessageButtonItemView: View {
     @Binding private var whichButtonIsHovered: String?
 
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
-
+   
     init(label: String?,
          icon: String,
          shortcut_hint: String?,

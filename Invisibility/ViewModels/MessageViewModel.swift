@@ -280,84 +280,80 @@ final class MessageViewModel: ObservableObject {
     }
 
     @MainActor
-    func regenerate(message: APIMessage) async {
-        guard let chat = self.chat else {
-            logger.error("No chat to regenerate")
-            return
-        }
-        guard let user = UserManager.shared.user else {
-            logger.error("No user to regenerate as")
-            return
-        }
-        // Get the user message before the message to be regenerated
-        guard let user_message_before = api_messages_in_chat.last(where: { $0.created_at < message.created_at && $0.role == .user }) else {
-            logger.error("No user message before message to regenerate")
-            return
-        }
+       func regenerate(message: APIMessage) async {
+           guard let chat = self.chat else {
+               logger.error("No chat to regenerate")
+               return
+           }
+           guard let user = UserManager.shared.user else {
+               logger.error("No user to regenerate as")
+               return
+           }
+           // Get the user message before the message to be regenerated
+           guard let user_message_before = api_messages_in_chat.last(where: { $0.created_at < message.created_at && $0.role == .user }) else {
+               logger.error("No user message before message to regenerate")
+               return
+           }
 
-        if api_messages_in_chat.count < 2 {
-            logger.error("Not enough messages to regenerate")
-            return
-        }
+           if api_messages_in_chat.count < 2 {
+               logger.error("Not enough messages to regenerate")
+               return
+           }
 
-        isGenerating = true
+           isGenerating = true
 
-        defer { PostHogSDK.shared.capture(
-            "regenerate_message",
-            properties: [
-                "num_images": imagesFor(message: message).count,
-                "message_length": message.text.count,
-                "model": LLMManager.shared.model.human_name,
-            ]
-        )
-        }
+           defer { PostHogSDK.shared.capture(
+               "regenerate_message",
+               properties: [
+                   "num_images": imagesFor(message: message).count,
+                   "message_length": message.text.count,
+                   "model": LLMManager.shared.model.human_name,
+               ]
+           )
+           }
 
-        // Mark only current msg as regenerated
-        if let index = api_messages.firstIndex(where: { $0.id == message.id && $0.chat_id == message.chat_id }) {
-            api_messages[index].regenerated = true
-        }
-        
-        // assert
-        if let index = api_messages_in_chat.firstIndex(where: { $0.id == message.id }) {
-            api_messages_in_chat.remove(at: index)
-        }
-        
-        let user_message = APIMessage(
-            id: UUID(),
-            chat_id: chat.id,
-            user_id: user.id,
-            text: user_message_before.text,
-            role: .user,
-            model_id: LLMManager.shared.model.human_name
-        )
+           // Mark only regenerated message as regenerated
+           for index in api_messages.indices where
+               api_messages[index].chat_id == message.chat_id
+           {
+               api_messages[index].regenerated = true
+           }
 
-        // Copy the images to the new message
-        let images = imagesFor(message: user_message_before).map { $0.copyToMessage(message: user_message) }
-        api_files.append(contentsOf: images)
+           let user_message = APIMessage(
+               id: UUID(),
+               chat_id: chat.id,
+               user_id: user.id,
+               text: user_message_before.text,
+               role: .user,
+               model_id: LLMManager.shared.model.human_name
+           )
 
-        let assistant_message = APIMessage(
-            id: UUID(),
-            chat_id: chat.id,
-            user_id: user.id,
-            text: "",
-            role: .assistant,
-            model_id: LLMManager.shared.model.human_name
-        )
-        
-        api_messages_in_chat.append(contentsOf: [assistant_message])
-        addMessages(messages: [assistant_message])
+           // Copy the images to the new message
+           let images = imagesFor(message: user_message_before).map { $0.copyToMessage(message: user_message) }
+           api_files.append(contentsOf: images)
 
-        chatTask = Task {
-            let lastMessageId = assistant_message.id
-            await LLMManager.shared.chat(
-                messages: api_messages,
-                chat: chat,
-                processOutput: processOutput,
-                regenerate_from_message_id: user_message_before.id
-            )
-            chatComplete(chat: chat, lastMessageId: lastMessageId)
-        }
-    }
+           let assistant_message = APIMessage(
+               id: UUID(),
+               chat_id: chat.id,
+               user_id: user.id,
+               text: "",
+               role: .assistant,
+               model_id: LLMManager.shared.model.human_name
+           )
+
+           addMessages(messages: [user_message, assistant_message])
+
+           chatTask = Task {
+               let lastMessageId = assistant_message.id
+               await LLMManager.shared.chat(
+                   messages: api_messages,
+                   chat: chat,
+                   processOutput: processOutput,
+                   regenerate_from_message_id: user_message_before.id
+               )
+               chatComplete(chat: chat, lastMessageId: lastMessageId)
+           }
+       }
 
     @MainActor
     func stopGenerating() {

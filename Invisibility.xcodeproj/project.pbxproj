@@ -44,7 +44,7 @@
 		4D8E05632B2516DE00B60D0D /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D8E054B2B2516DE00B60D0D /* MainView.swift */; };
 		4D911BAD2BC1DD480034B1A8 /* MessageImagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */; };
 		4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */; };
-		4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */; };
+		4D911BB22BC1E1E70034B1A8 /* MessageActionButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D911BB12BC1E1E70034B1A8 /* MessageActionButtonsView.swift */; };
 		4D9354292B99851E00C34A63 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 4D9354282B99851E00C34A63 /* Alamofire */; };
 		4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D93542A2B99A81400C34A63 /* OnboardingManager.swift */; };
 		4D9ADB792BFEE05400A1EFC7 /* Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */; };
@@ -89,6 +89,7 @@
 		4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF2D9002BA689220093CA3E /* AppConfig.swift */; };
 		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
+		776571812C2BE36900F39ED9 /* CustomWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776571802C2BE36900F39ED9 /* CustomWebView.swift */; };
 		77F39B262C27898700CA40C3 /* BranchManagerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B252C27898700CA40C3 /* BranchManagerModel.swift */; };
 		77F39B282C27CA9F00CA40C3 /* MessageEditWebInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */; };
 		77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29832C25479E007D923C /* HoverTrackerModel.swift */; };
@@ -130,7 +131,7 @@
 		4D8E054B2B2516DE00B60D0D /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageImagesView.swift; sourceTree = "<group>"; };
 		4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContentView.swift; sourceTree = "<group>"; };
-		4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonsView.swift; sourceTree = "<group>"; };
+		4D911BB12BC1E1E70034B1A8 /* MessageActionButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageActionButtonsView.swift; sourceTree = "<group>"; };
 		4D93542A2B99A81400C34A63 /* OnboardingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingManager.swift; sourceTree = "<group>"; };
 		4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoder.swift; sourceTree = "<group>"; };
 		4D9ADB7D2C07BBBE00A1EFC7 /* HistoryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryCardView.swift; sourceTree = "<group>"; };
@@ -166,6 +167,7 @@
 		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
 		4DF2D9002BA689220093CA3E /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
+		776571802C2BE36900F39ED9 /* CustomWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomWebView.swift; sourceTree = "<group>"; };
 		77F39B252C27898700CA40C3 /* BranchManagerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchManagerModel.swift; sourceTree = "<group>"; };
 		77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEditWebInputView.swift; sourceTree = "<group>"; };
 		77FE29832C25479E007D923C /* HoverTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverTrackerModel.swift; sourceTree = "<group>"; };
@@ -363,11 +365,12 @@
 				4D8E054A2B2516DE00B60D0D /* MessageListItemView.swift */,
 				4D911BAE2BC1DDB30034B1A8 /* MessageContentView.swift */,
 				4D911BAC2BC1DD480034B1A8 /* MessageImagesView.swift */,
-				4D911BB12BC1E1E70034B1A8 /* MessageButtonsView.swift */,
+				4D911BB12BC1E1E70034B1A8 /* MessageActionButtonsView.swift */,
 				4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */,
 				4D2428D22BC6031100BE444C /* MessageScrollView.swift */,
 				4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */,
 				77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */,
+				776571802C2BE36900F39ED9 /* CustomWebView.swift */,
 			);
 			path = MessageViews;
 			sourceTree = "<group>";
@@ -563,10 +566,11 @@
 				4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
+				776571812C2BE36900F39ED9 /* CustomWebView.swift in Sources */,
 				4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */,
 				4DA375BA2C2BA0580094769B /* NewChatCardView.swift in Sources */,
 				4DE4ACDF2C257CC3002D8156 /* LLMTypes.swift in Sources */,
-				4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */,
+				4D911BB22BC1E1E70034B1A8 /* MessageActionButtonsView.swift in Sources */,
 				4D9ADB822C07E1EF00A1EFC7 /* InvisibilityFileManager.swift in Sources */,
 				4D3A15532C13D1AC00272B84 /* Date.swift in Sources */,
 				4DB061BE2BF4A028007CF7DD /* QRView.swift in Sources */,
@@ -756,7 +760,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = U854WW4U2R;
+				DEVELOPMENT_TEAM = DS65N3ZNNX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;
@@ -791,7 +795,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = U854WW4U2R;
+				DEVELOPMENT_TEAM = DS65N3ZNNX;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;

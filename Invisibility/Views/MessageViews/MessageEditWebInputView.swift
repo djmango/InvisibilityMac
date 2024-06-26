@@ -65,6 +65,21 @@ struct EditWebInputRepresentable: NSViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             parent.setFocus(webView)
         }
+        
+        func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+              print("WebKit process did terminate")
+              
+              // Reset the webView
+              webView.reload()
+              
+              // Optionally, notify the user
+              let alert = NSAlert()
+              alert.messageText = "Web Content Process Terminated"
+              alert.informativeText = "The web content process was terminated unexpectedly. The view has been reset."
+              alert.alertStyle = .warning
+              alert.addButton(withTitle: "OK")
+              alert.runModal()
+          }
 
         func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
             switch message.name {

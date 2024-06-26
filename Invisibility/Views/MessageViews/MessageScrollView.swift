@@ -27,25 +27,25 @@ struct MessageScrollView: View {
             ScrollView {
                 VStack {
                     HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
-
                     Spacer()
-
                     VStack(spacing: 5) {
                         ForEach(displayedMessages) { message in
                             MessageListItemView(message: message, whoIsHovered: $whoIsHovered)
                                 .id(message.id)
-                                .sentryTrace("MessageListItemView")
+                                //.sentryTrace("MessageListItemView")
                                 .onHover{hovered in
                                   whoIsHovered = message.id.uuidString
                                 }
                         }
                     }
 
+                    /*
                     NewChatCardView()
                         .visible(if: displayedMessages.isEmpty, removeCompletely: true)
-
+                    
                     FreeTierCardView()
                         .visible(if: !userManager.canSendMessages, removeCompletely: true)
+                     */
 
                     CaptureView()
                         .visible(if: screenRecorder.isRunning, removeCompletely: true)
@@ -177,9 +177,11 @@ struct MessageListView: View {
                 }
             }
             // .background(Rectangle().fill(Color.white.opacity(0.001)))
-
+            
+            /*
             FreeTierCardView()
                 .visible(if: !userManager.canSendMessages, removeCompletely: true)
+             */
 
             CaptureView()
                 .visible(if: isRecording, removeCompletely: true)

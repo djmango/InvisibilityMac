@@ -86,8 +86,10 @@ struct MessageContentView: View {
             .visible(if: !images.isEmpty, removeCompletely: true)
             MarkdownWebView(message.text)
                 .visible(if: !isEditing, removeCompletely: true)
+            /*
             EditWebInputView()
                 .visible(if: isEditing, removeCompletely: true)
+             */
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
