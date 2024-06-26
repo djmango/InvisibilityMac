@@ -1,5 +1,5 @@
 {
-  "originHash" : "1d18da73547423a70fc64a8ecbfd85c1f6540a7d01df8fe517540038b009ea8f",
+  "originHash" : "e81b79f4325335b7340de9bd6bf317d96350a2cc83173475521404902fa0e22f",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -80,6 +80,15 @@
       "state" : {
         "revision" : "f0d0f3e72d42beaf2b01f1cb798e1b55902814eb",
         "version" : "1.0.4"
+      }
+    },
+    {
+      "identity" : "scrollkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/danielsaidi/ScrollKit.git",
+      "state" : {
+        "revision" : "b3142033da3769046770e38d459203756db879b5",
+        "version" : "0.5.1"
       }
     },
     {
