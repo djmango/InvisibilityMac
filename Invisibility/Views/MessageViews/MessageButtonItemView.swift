@@ -19,22 +19,21 @@ struct MessageButtonItemView: View {
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     
-    
     @State private var isPressed: Bool = false
     @State private var isHovering: Bool = false
-    @Binding private var whoIsHovering: String?
+    @Binding private var whichButtonIsHovered: String?
 
     init(label: String?,
          icon: String,
          shortcut_hint: String?,
-         whoIsHovering: Binding<String?>,
+         whichButtonIsHovered: Binding<String?>,
          iconColor: Color = .chatButtonForeground,
          action: @escaping () -> Void)
     {
         self.label = label
         self.icon = icon
         self.shortcut_hint = shortcut_hint
-        self._whoIsHovering = whoIsHovering
+        self._whichButtonIsHovered = whichButtonIsHovered
         self.iconColor = iconColor
         self.action = action
     }
@@ -87,9 +86,10 @@ struct MessageButtonItemView: View {
         .onHover { hovering in
             isHovering = hovering
               if hovering {
-                  whoIsHovering = label
+                  print("hovering over \(label)")
+                  whichButtonIsHovered = label
               } else {
-                  whoIsHovering = nil
+                  whichButtonIsHovered = nil
               }
         }
         .buttonStyle(.plain)

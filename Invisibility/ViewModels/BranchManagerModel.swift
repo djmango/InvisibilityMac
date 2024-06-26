@@ -7,9 +7,8 @@ final class BranchManagerModel: ObservableObject {
     
     @Published var editMsg: APIMessage? = nil
     public var editText: String = ""
-    public var editViewHeight: CGFloat = 40
-    public var processedChats = Set<UUID>()
-    
+    @Published var editViewHeight: CGFloat = 40
+
     /// This is a hack to update the text field rendering when the text is cleared
     @Published var clearToggle: Bool = false
     
@@ -25,6 +24,7 @@ final class BranchManagerModel: ObservableObject {
         self.editText = ""
         self.clearToggle.toggle()
     }
+   
     
     public func getEditParentMsgId(message: APIMessage? = nil) -> UUID? {
         guard let effectiveMessage = message ?? editMsg else {
@@ -52,25 +52,11 @@ final class BranchManagerModel: ObservableObject {
     }
     
     public func isBranch(message: APIMessage) -> Bool {
-        let chats = MessageViewModel.shared.api_chats
-        let messages = MessageViewModel.shared.api_messages
-        
         // Check if any chat has this message as its parent
         if !getBranches(for: message.id).isEmpty {
             return true
         }
-        
-        // Find the chat that this message belongs to
-        guard let chat = chats.first(where: { $0.id == message.chat_id }) else {
-            return false
-        }
-        
-        // Get all messages for this chat, sorted by creation date
-        let chatMessages = messages.filter({ $0.chat_id == chat.id })
-            .sorted(by: { $0.created_at < $1.created_at })
-        
-        // Check if this chat has a parent and if the message is the first in the chat
-        return chat.parent_message_id != nil && chatMessages.first?.id == message.id
+        return false
     }
     
     public func canMoveLeft(message: APIMessage) -> Bool {

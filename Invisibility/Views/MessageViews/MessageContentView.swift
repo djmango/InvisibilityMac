@@ -76,11 +76,9 @@ struct MessageContentView: View {
                         .tracking(-0.01)
                         .lineSpacing(10)
                 )
-
             ProgressView()
                 .controlSize(.small)
                 .visible(if: isGenerating && isLastMessage, removeCompletely: true)
-
             HStack {
                 MessageImagesView(images: images)
                     .visible(if: !images.isEmpty, removeCompletely: true)
@@ -90,28 +88,6 @@ struct MessageContentView: View {
                 .visible(if: !isEditing, removeCompletely: true)
             EditWebInputView()
                 .visible(if: isEditing, removeCompletely: true)
-            HStack {
-                Image(systemName: "checkmark.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 15, height: 15)
-                    .foregroundColor(.chatButtonForeground)
-                    .onTapGesture {
-                        // cleanup is handled in sendFromChat
-                        Task {
-                            await MessageViewModel.shared.sendFromChat(editMode: true)
-                        }
-                    }
-                Image(systemName: "x.circle")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 15, height: 15)
-                    .foregroundColor(.chatButtonForeground)
-                    .onTapGesture {
-                        branchManagerModel.clearEdit()
-                    }
-            }
-            .visible(if: isEditing, removeCompletely: true)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()

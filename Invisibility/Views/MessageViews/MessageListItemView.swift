@@ -2,10 +2,14 @@ import SwiftUI
 
 struct MessageListItemView: View {
     let message: APIMessage
-
-    @State private var isHovered: Bool = false
     @ObservedObject var branchManagerModel = BranchManagerModel.shared
+    @Binding var whoIsHovered: String?
     
+    init (message: APIMessage, whoIsHovered : Binding<String?>) {
+        self.message = message
+        self._whoIsHovered = whoIsHovered
+    }
+
     private var isAssistant: Bool {
         message.role == .assistant
     }
@@ -17,11 +21,10 @@ struct MessageListItemView: View {
         return editMsg.id == message.id
     }
     
-    private var showEditButtons:Bool {
-        let ret = !isEditing && isHovered && !isAssistant
-        return ret
+    private var isHovered: Bool {
+        whoIsHovered == message.id.uuidString
     }
-
+    
     var body: some View {
         MessageContentView(message: message)
             .background(
@@ -31,30 +34,18 @@ struct MessageListItemView: View {
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
             )
-            .overlay(
-                MessageActionButtonsView(
-                    message: message,
-                    isHovered: $isHovered
-                )
-            )
             .padding(.horizontal, 10)
             .frame(maxWidth: .infinity)
             .padding(.bottom, 3)
-            .onHover {
-                if $0 {
-                    isHovered = true
-                } else {
-                    withAnimation(AppConfig.snappy) {
-                        isHovered = false
-                    }
-                }
-            }
             .overlay(
-                MessageActionButtonsView(message: message, isHovered: $isHovered)
+                MessageActionButtonsView(message: message, whoIsHovered: $whoIsHovered)
                  .offset(y: 10)
                  .offset(x: 130)
                  .frame(width: 200)
-                 .visible(if: showEditButtons, removeCompletely: true)
+                 .visible(if: isHovered || isEditing)
+                 .onHover{ hovered in
+                     print("hovered")
+                 }
             )
     }
 }

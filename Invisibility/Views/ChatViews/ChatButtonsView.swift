@@ -39,7 +39,7 @@ struct ChatButtonsView: View {
                 label: "New Chat",
                 icon: "plus",
                 shortcut_hint: "⌘ N",
-                whoIsHovering: $whoIsHovering
+                whichButtonIsHovered: $whoIsHovering
 
             ) {
                 withAnimation(AppConfig.snappy) {
@@ -60,7 +60,7 @@ struct ChatButtonsView: View {
                 label: "Screenshot",
                 icon: "text.viewfinder",
                 shortcut_hint: "⌘ ⇧ 1",
-                whoIsHovering: $whoIsHovering
+                whichButtonIsHovered: $whoIsHovering
 
             ) {
                 Task { await screenshotManager.capture() }
@@ -80,7 +80,7 @@ struct ChatButtonsView: View {
                 label: screenRecorder.isRunning ? "Stop Sidekick" : "Start Sidekick",
                 icon: "shared.with.you",
                 shortcut_hint: "⌘ ⇧ 2",
-                whoIsHovering: $whoIsHovering,
+                whichButtonIsHovered: $whoIsHovering,
                 iconColor: screenRecorder.isRunning ? .purple : .chatButtonForeground
             ) {
                 screenRecorder.toggleRecording()
@@ -100,7 +100,7 @@ struct ChatButtonsView: View {
                 label: "History",
                 icon: "magnifyingglass",
                 shortcut_hint: "⌘ F",
-                whoIsHovering: $whoIsHovering,
+                whichButtonIsHovered: $whoIsHovering,
                 iconColor: isShowingHistory ? .history : .chatButtonForeground
             ) {
                 if isShowingHistory {
@@ -123,7 +123,7 @@ struct ChatButtonsView: View {
                 label: "Settings",
                 icon: "gearshape",
                 shortcut_hint: "⌘ ,",
-                whoIsHovering: $whoIsHovering
+                whichButtonIsHovered: $whoIsHovering
 
             ) {
                 if mainWindowViewModel.whoIsVisible == .settings {
@@ -146,7 +146,7 @@ struct ChatButtonsView: View {
                 label: "Stop",
                 icon: "stop.circle.fill",
                 shortcut_hint: "⌘ P",
-                whoIsHovering: $whoIsHovering
+                whichButtonIsHovered: $whoIsHovering
 
             ) {
                 logger.info("Stop generating")
@@ -168,7 +168,7 @@ struct ChatButtonsView: View {
                 label: sideSwitched ? "Left" : "Right",
                 icon: sideSwitched ? "arrow.left" : "arrow.right",
                 shortcut_hint: "⌘ ⇧ S",
-                whoIsHovering: $whoIsHovering
+                whichButtonIsHovered: $whoIsHovering
             ) {
                 switchSide()
             }

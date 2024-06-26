@@ -99,7 +99,7 @@ struct HeaderView: View {
                 label: "Collapse",
                 icon: "chevron.down",
                 shortcut_hint: "⌘ + ⇧ + U",
-                whoIsHovering: $whoIsHovering,
+                whichButtonIsHovered: $whoIsHovering,
                 action: { numMessagesDisplayed = 10 }
             )
             .visible(if: numMessagesDisplayed > 10, removeCompletely: true)
@@ -109,7 +109,7 @@ struct HeaderView: View {
                 label: "Show +\(min(messageViewModel.api_messages_in_chat.count - numMessagesDisplayed, 10))",
                 icon: "chevron.up",
                 shortcut_hint: "⌘ + ⇧ + I",
-                whoIsHovering: $whoIsHovering,
+                whichButtonIsHovered: $whoIsHovering,
                 action: {
                     numMessagesDisplayed = min(messageViewModel.api_messages_in_chat.count, numMessagesDisplayed + 10)
                 }
@@ -126,6 +126,7 @@ struct MessageListView: View {
     var messages: [APIMessage]
 
     @State private var numMessagesDisplayed = 10
+    @State var whoIsHovered : String? = nil
     @Binding var isRecording: Bool
 
     @ObservedObject private var userManager = UserManager.shared
@@ -140,11 +141,11 @@ struct MessageListView: View {
 
             VStack(spacing: 5) {
                 ForEach(displayedMessages) { message in
-                    MessageListItemView(message: message)
+                    MessageListItemView(message: message, whoIsHovered: $whoIsHovered)
                         .id(message.id)
                         .sentryTrace("MessageListItemView")
                         .onHover{hovered in
-                            HoverTrackerModel.shared.targetItem = message.id.uuidString
+                            whoIsHovered = message.id.uuidString
                         }
                 }
             }

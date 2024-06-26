@@ -45,7 +45,7 @@ struct CaptureView: View {
                             label: "Minimize",
                             icon: "minus",
                             shortcut_hint: nil,
-                            whoIsHovering: $whoIsHovering
+                            whichButtonIsHovered: $whoIsHovering
                         ) {
                             withAnimation(AppConfig.snappy) {
                                 minimized.toggle()
@@ -65,7 +65,7 @@ struct CaptureView: View {
                             label: "Open Picker",
                             icon: "rectangle.inset.filled.and.person.filled",
                             shortcut_hint: nil,
-                            whoIsHovering: $whoIsHovering
+                            whichButtonIsHovered: $whoIsHovering
                         ) {
                             screenRecorder.presentPicker()
                         }

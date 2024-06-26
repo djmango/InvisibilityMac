@@ -3,10 +3,10 @@ import WebKit
 
 struct EditWebInputView: View {
     @ObservedObject private var branchManagerModel = BranchManagerModel.shared
-
+    static let minTextHeight: CGFloat = 40
     var body: some View {
         EditWebInputRepresentable()
-            .frame(height: branchManagerModel.editViewHeight)
+            .frame(height: max(branchManagerModel.editViewHeight, EditWebInputView.minTextHeight))
     }
 }
 
@@ -24,6 +24,7 @@ struct EditWebInputRepresentable: NSViewRepresentable {
         contentController.add(context.coordinator, name: "textChanged")
         contentController.add(context.coordinator, name: "heightChanged")
         contentController.add(context.coordinator, name: "submit")
+        
 
         webView.loadHTMLString(htmlContent, baseURL: nil)
         return webView
@@ -33,8 +34,25 @@ struct EditWebInputRepresentable: NSViewRepresentable {
         nsView.evaluateJavaScript("updateEditorContent(`\(branchManagerModel.editText.escapedForJS)`)", completionHandler: nil)
     }
 
+   
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
+    }
+    
+    private func setFocus(_ webView: WKWebView) {
+        webView.evaluateJavaScript("""
+            function setFocusToEnd() {
+                var editor = document.getElementById('editor');
+                editor.focus();
+                var range = document.createRange();
+                range.selectNodeContents(editor);
+                range.collapse(false);
+                var selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            setFocusToEnd();
+        """, completionHandler: nil)
     }
 
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler, WKUIDelegate {
@@ -42,6 +60,10 @@ struct EditWebInputRepresentable: NSViewRepresentable {
 
         init(_ parent: EditWebInputRepresentable) {
             self.parent = parent
+        }
+        
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            parent.setFocus(webView)
         }
 
         func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -55,6 +77,7 @@ struct EditWebInputRepresentable: NSViewRepresentable {
             case "heightChanged":
                 if let height = message.body as? CGFloat {
                     DispatchQueue.main.async {
+                        print("heightChanged \(height)")
                         self.parent.branchManagerModel.editViewHeight = height
                     }
                 }
@@ -195,41 +218,55 @@ struct EditWebInputRepresentable: NSViewRepresentable {
         </html>
         """
     }
-}
-
-class CustomWebView: WKWebView {
-    override var intrinsicContentSize: CGSize {
-        .init(width: super.intrinsicContentSize.width, height: .zero)
-    }
-
-    override func scrollWheel(with event: NSEvent) {
-        super.scrollWheel(with: event)
-        nextResponder?.scrollWheel(with: event)
-    }
-
-    override func willOpenMenu(_ menu: NSMenu, with _: NSEvent) {
-        menu.items.removeAll { $0.identifier == .init("WKMenuItemIdentifierReload") }
-    }
-
-    override func performKeyEquivalent(with event: NSEvent) -> Bool {
-        if event.modifierFlags.contains(.command) {
-            switch event.charactersIgnoringModifiers {
-            case "x":
-                if NSApp.sendAction(#selector(NSText.cut(_:)), to: nil, from: self) { return true }
-            case "c":
-                if NSApp.sendAction(#selector(NSText.copy(_:)), to: nil, from: self) { return true }
-            case "v":
-                if NSApp.sendAction(#selector(NSText.paste(_:)), to: nil, from: self) { return true }
-            case "a":
-                if NSApp.sendAction(#selector(NSStandardKeyBindingResponding.selectAll(_:)), to: nil, from: self) { return true }
-            default:
-                break
-            }
+    
+    class CustomWebView: WKWebView {
+        override var intrinsicContentSize: CGSize {
+            .init(width: super.intrinsicContentSize.width, height: .zero)
         }
-        return super.performKeyEquivalent(with: event)
-    }
+
+        override func scrollWheel(with event: NSEvent) {
+            super.scrollWheel(with: event)
+            nextResponder?.scrollWheel(with: event)
+        }
+        
+        override func willOpenMenu(_ menu: NSMenu, with _: NSEvent) {
+            menu.items.removeAll { $0.identifier == .init("WKMenuItemIdentifierReload") }
+        }
+
+        override func performKeyEquivalent(with event: NSEvent) -> Bool {
+            if event.modifierFlags.contains(.command) {
+                switch event.charactersIgnoringModifiers {
+                case "x":
+                    if NSApp.sendAction(#selector(NSText.cut(_:)), to: nil, from: self) { return true }
+                case "c":
+                    if NSApp.sendAction(#selector(NSText.copy(_:)), to: nil, from: self) { return true }
+                case "v":
+                    if NSApp.sendAction(#selector(NSText.paste(_:)), to: nil, from: self) { return true }
+                case "a":
+                    if NSApp.sendAction(#selector(NSStandardKeyBindingResponding.selectAll(_:)), to: nil, from: self) { return true }
+                default:
+                    break
+                }
+            }
+            return super.performKeyEquivalent(with: event)
+        }
+        
+        override func viewDidMoveToWindow() {
+            super.viewDidMoveToWindow()
+            NotificationCenter.default.addObserver(self, selector: #selector(windowDidBecomeKey), name: NSWindow.didBecomeKeyNotification, object: nil)
+        }
+        
+        @objc private func windowDidBecomeKey() {
+            self.evaluateJavaScript("document.getElementById('editor').focus();", completionHandler: nil)
+        }
+        
+        deinit {
+            NotificationCenter.default.removeObserver(self)
+        }
 }
 
+
+}
 extension String {
     var escapedForJS: String {
         return self.replacingOccurrences(of: "\\", with: "\\\\")
