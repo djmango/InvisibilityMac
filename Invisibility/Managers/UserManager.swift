@@ -304,9 +304,9 @@ final class UserManager: ObservableObject {
     @MainActor
     func logout() {
         defer { PostHogSDK.shared.capture("logout", properties: ["num_messages_left": numMessagesLeft]) }
+        self.isLoggedIn = false
         self.token = nil
         self.user = nil
-        self.isLoggedIn = false
         MessageViewModel.shared.clearAll()
     }
 }
