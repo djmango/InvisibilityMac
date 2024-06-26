@@ -26,6 +26,7 @@ final class UserManager: ObservableObject {
     @Published public var isPaid: Bool = false
     @Published public var confettis: Int = 0
     @Published public var inviteCount: Int = 0
+    @Published var isLoggedIn: Bool = false
     
     @AppStorage("token") public var token: String? {
         didSet {
@@ -120,13 +121,16 @@ final class UserManager: ObservableObject {
     
     func userIsLoggedIn() async -> Bool {
         guard token != nil else {
+            isLoggedIn = false
             logger.debug("User is not logged in")
             return false
         }
         if await getUser() != nil {
+            isLoggedIn = true
             logger.debug("User is logged in")
             return true
         } else {
+            isLoggedIn = false
             logger.debug("User is not logged in")
             return false
         }
@@ -308,6 +312,7 @@ final class UserManager: ObservableObject {
         defer { PostHogSDK.shared.capture("logout", properties: ["num_messages_left": numMessagesLeft]) }
         self.token = nil
         self.user = nil
+        self.isLoggedIn = false
         MessageViewModel.shared.clearAll()
     }
 }

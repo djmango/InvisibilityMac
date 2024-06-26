@@ -90,6 +90,7 @@
 		77F39B282C27CA9F00CA40C3 /* MessageEditWebInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */; };
 		77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29832C25479E007D923C /* HoverTrackerModel.swift */; };
 		77FE29862C254AAF007D923C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29852C254AAF007D923C /* Buttons.swift */; };
+		D5BE8FEE2C2B40700011D90C /* LoginCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BE8FED2C2B40700011D90C /* LoginCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -163,6 +164,7 @@
 		77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEditWebInputView.swift; sourceTree = "<group>"; };
 		77FE29832C25479E007D923C /* HoverTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverTrackerModel.swift; sourceTree = "<group>"; };
 		77FE29852C254AAF007D923C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		D5BE8FED2C2B40700011D90C /* LoginCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -409,6 +411,7 @@
 				4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */,
 				4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */,
 				4DB061BD2BF4A028007CF7DD /* QRView.swift */,
+				D5BE8FED2C2B40700011D90C /* LoginCardView.swift */,
 			);
 			path = SettingsViews;
 			sourceTree = "<group>";
@@ -573,6 +576,7 @@
 				4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */,
 				77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */,
+				D5BE8FEE2C2B40700011D90C /* LoginCardView.swift in Sources */,
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
 				4D9ADB7E2C07BBBE00A1EFC7 /* HistoryCardView.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MainView.swift in Sources */,
@@ -736,7 +740,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 115;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = U854WW4U2R;
+				DEVELOPMENT_TEAM = 2PMW658M54;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;
