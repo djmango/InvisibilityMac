@@ -10,7 +10,7 @@
 		"swift"
 	],
 	"argv": [
-		"/usr/local/bin/xcode-build-server"
+		"/opt/homebrew/bin/xcode-build-server"
 	],
 	"workspace": "/Users/djmango/github/invisibility_inc/Invisibility/Invisibility.xcodeproj/project.xcworkspace",
 	"build_root": "/Users/djmango/Library/Developer/Xcode/DerivedData/Invisibility-hbxvwrwlvyhqhlgbsizwyhkkhzac",

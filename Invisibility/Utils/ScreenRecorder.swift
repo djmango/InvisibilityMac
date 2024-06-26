@@ -183,7 +183,9 @@ class ScreenRecorder: NSObject,
             let config = streamConfiguration
             let filter = contentFilter
             // Update the running state.
-            isRunning = true
+            withAnimation(AppConfig.snappy) {
+                isRunning = true
+            }
             setPickerUpdate(false)
             isPickerActive = true
             // Start the stream and await new video frames.
@@ -197,7 +199,9 @@ class ScreenRecorder: NSObject,
         } catch {
             logger.error("\(error.localizedDescription)")
             // Unable to start the stream. Set the running state to false.
-            isRunning = false
+            withAnimation(AppConfig.snappy) {
+                isRunning = false
+            }
         }
     }
 
@@ -206,7 +210,9 @@ class ScreenRecorder: NSObject,
         defer { PostHogSDK.shared.capture("stop_recording") }
         guard isRunning else { return }
         await captureEngine.stopCapture()
-        isRunning = false
+        withAnimation(AppConfig.snappy) {
+            isRunning = false
+        }
         isPickerActive = false
     }
 
