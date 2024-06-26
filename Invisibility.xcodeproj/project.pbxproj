@@ -89,8 +89,6 @@
 		4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF2D9002BA689220093CA3E /* AppConfig.swift */; };
 		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
-		77F39B262C27898700CA40C3 /* BranchManagerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B252C27898700CA40C3 /* BranchManagerModel.swift */; };
-		77F39B282C27CA9F00CA40C3 /* MessageEditWebInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */; };
 		77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29832C25479E007D923C /* HoverTrackerModel.swift */; };
 		77FE29862C254AAF007D923C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29852C254AAF007D923C /* Buttons.swift */; };
 /* End PBXBuildFile section */
@@ -166,8 +164,6 @@
 		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
 		4DF2D9002BA689220093CA3E /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
-		77F39B252C27898700CA40C3 /* BranchManagerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BranchManagerModel.swift; sourceTree = "<group>"; };
-		77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageEditWebInputView.swift; sourceTree = "<group>"; };
 		77FE29832C25479E007D923C /* HoverTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverTrackerModel.swift; sourceTree = "<group>"; };
 		77FE29852C254AAF007D923C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -265,7 +261,6 @@
 				4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */,
 				4D3A15542C13D36300272B84 /* MainWindowViewModel.swift */,
 				77FE29832C25479E007D923C /* HoverTrackerModel.swift */,
-				77F39B252C27898700CA40C3 /* BranchManagerModel.swift */,
 				4DA375BB2C2BAC480094769B /* ChatFieldViewModel.swift */,
 				4DA375BD2C2BAD1B0094769B /* MessageScrollViewModel.swift */,
 			);
@@ -367,7 +362,6 @@
 				4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */,
 				4D2428D22BC6031100BE444C /* MessageScrollView.swift */,
 				4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */,
-				77F39B272C27CA9F00CA40C3 /* MessageEditWebInputView.swift */,
 			);
 			path = MessageViews;
 			sourceTree = "<group>";
@@ -557,7 +551,6 @@
 				4D2428DB2BCF42FE00BE444C /* MessagePDFsView.swift in Sources */,
 				4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */,
 				4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */,
-				77F39B282C27CA9F00CA40C3 /* MessageEditWebInputView.swift in Sources */,
 				4D3A15552C13D36300272B84 /* MainWindowViewModel.swift in Sources */,
 				4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */,
 				4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */,
@@ -611,7 +604,6 @@
 				4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */,
 				4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */,
 				4D9ADB792BFEE05400A1EFC7 /* Decoder.swift in Sources */,
-				77F39B262C27898700CA40C3 /* BranchManagerModel.swift in Sources */,
 				4DEA4ADF2B70689B00393858 /* MenubarView.swift in Sources */,
 				4DE4ACD92C24FE37002D8156 /* TextViewModel.swift in Sources */,
 			);
