@@ -147,7 +147,6 @@ struct MessageActionButtonsView: View {
     }
 
     private func editAction() {
-        print("editAction()")
         BranchManagerModel.shared.editMsg = message
         BranchManagerModel.shared.editText = message.text
     }

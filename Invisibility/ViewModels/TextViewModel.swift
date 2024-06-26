@@ -25,3 +25,12 @@ final class TextViewModel: ObservableObject {
         self.clearToggle.toggle()
     }
 }
+
+final class InputHeightViewModel: ObservableObject {
+    static let shared = InputHeightViewModel()
+
+    /// The height of the text field.
+    @Published public var height: CGFloat = 52
+
+    private init() {}
+}

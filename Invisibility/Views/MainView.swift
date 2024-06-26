@@ -2,14 +2,10 @@ import SentrySwiftUI
 import SwiftUI
 
 struct MainView: View {
-    @FocusState private var isEditorFocused: Bool
-    @FocusState private var promptFocused: Bool
-
     @State private var isDragActive: Bool = false
     @State private var isDraggingResize = false
     @State private var xOffset: Int = 10000
 
-    @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
@@ -25,11 +21,6 @@ struct MainView: View {
 
     var isShowingSettings: Bool {
         mainWindowViewModel.whoIsVisible == .settings
-    }
-
-    init() {
-        isEditorFocused = true
-        promptFocused = true
     }
 
     var body: some View {
@@ -69,15 +60,9 @@ struct MainView: View {
             Spacer()
 
             ChatFieldView()
-                .focused($promptFocused)
-                .onTapGesture {
-                    promptFocused = true
-                }
                 .padding(.top, 4)
                 .padding(.bottom, 10)
-                .scrollIndicators(.never)
         }
-        .animation(AppConfig.snappy, value: chatViewModel.textHeight)
         // .gesture(
         //     DragGesture()
         //         .onChanged { value in
@@ -106,18 +91,6 @@ struct MainView: View {
                 }
         )
         .border(isDragActive ? Color.blue : Color.clear, width: 5)
-        .onAppear {
-            promptFocused = true
-        }
-        .onChange(of: chatViewModel.images) {
-            promptFocused = true
-        }
-        .onChange(of: chatViewModel.shouldFocusTextField) {
-            if chatViewModel.shouldFocusTextField {
-                promptFocused = true
-                chatViewModel.shouldFocusTextField = false
-            }
-        }
         .offset(x: CGFloat(xOffset), y: 0)
         .onAppear {
             // Initial offset is set to 10000 to prevent the window from being visible guarenteed
@@ -134,6 +107,5 @@ struct MainView: View {
                 }
             }
         }
-        // .whatsNewSheet()
     }
 }

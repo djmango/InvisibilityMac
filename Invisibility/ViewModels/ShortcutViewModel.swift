@@ -104,7 +104,6 @@ struct AppMenuCommands: Commands {
         CommandMenu("View") {
             Button("Scroll to Bottom") {
                 DispatchQueue.main.async {
-                    print("Scrolling to bottom")
                     MessageViewModel.shared.shouldScrollToBottom = true
                 }
             }

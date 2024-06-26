@@ -52,6 +52,9 @@
 		4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB7F2C07BBC500A1EFC7 /* HistoryView.swift */; };
 		4D9ADB822C07E1EF00A1EFC7 /* InvisibilityFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB812C07E1EF00A1EFC7 /* InvisibilityFileManager.swift */; };
 		4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D9ADB832C07E59700A1EFC7 /* APITypes.swift */; };
+		4DA375BA2C2BA0580094769B /* NewChatCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA375B92C2BA0580094769B /* NewChatCardView.swift */; };
+		4DA375BC2C2BAC480094769B /* ChatFieldViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA375BB2C2BAC480094769B /* ChatFieldViewModel.swift */; };
+		4DA375BE2C2BAD1B0094769B /* MessageScrollViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA375BD2C2BAD1B0094769B /* MessageScrollViewModel.swift */; };
 		4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */; };
 		4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893AF2B54C45300560DAD /* OnboardingView.swift */; };
 		4DA893B22B54C59400560DAD /* OnboardingIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */; };
@@ -133,6 +136,9 @@
 		4D9ADB7F2C07BBC500A1EFC7 /* HistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryView.swift; sourceTree = "<group>"; };
 		4D9ADB812C07E1EF00A1EFC7 /* InvisibilityFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvisibilityFileManager.swift; sourceTree = "<group>"; };
 		4D9ADB832C07E59700A1EFC7 /* APITypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITypes.swift; sourceTree = "<group>"; };
+		4DA375B92C2BA0580094769B /* NewChatCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewChatCardView.swift; sourceTree = "<group>"; };
+		4DA375BB2C2BAC480094769B /* ChatFieldViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatFieldViewModel.swift; sourceTree = "<group>"; };
+		4DA375BD2C2BAD1B0094769B /* MessageScrollViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageScrollViewModel.swift; sourceTree = "<group>"; };
 		4DA82A4D2B508E400093905A /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
 		4DA893AF2B54C45300560DAD /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		4DA893B12B54C59400560DAD /* OnboardingIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingIntroView.swift; sourceTree = "<group>"; };
@@ -258,6 +264,8 @@
 				4D3A15542C13D36300272B84 /* MainWindowViewModel.swift */,
 				77FE29832C25479E007D923C /* HoverTrackerModel.swift */,
 				77F39B252C27898700CA40C3 /* BranchManagerModel.swift */,
+				4DA375BB2C2BAC480094769B /* ChatFieldViewModel.swift */,
+				4DA375BD2C2BAD1B0094769B /* MessageScrollViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -327,6 +335,7 @@
 				4D9ADB7C2C07BBB000A1EFC7 /* HistoryViews */,
 				4DD282DA2B4DEF6E0041690B /* SettingsViews */,
 				4D8E053F2B2516DE00B60D0D /* ChatViews */,
+				4DA375B82C2BA02B0094769B /* CardViews */,
 				4DB061A02BF2AFF4007CF7DD /* CaptureViews */,
 				4D8E05492B2516DE00B60D0D /* MessageViews */,
 			);
@@ -380,6 +389,15 @@
 			path = Types;
 			sourceTree = "<group>";
 		};
+		4DA375B82C2BA02B0094769B /* CardViews */ = {
+			isa = PBXGroup;
+			children = (
+				4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */,
+				4DA375B92C2BA0580094769B /* NewChatCardView.swift */,
+			);
+			path = CardViews;
+			sourceTree = "<group>";
+		};
 		4DA893AE2B54C44200560DAD /* OnboardingViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -405,7 +423,6 @@
 			children = (
 				4D885C762B96D969009A1F48 /* SettingsView.swift */,
 				4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */,
-				4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */,
 				4DB061BD2BF4A028007CF7DD /* QRView.swift */,
 			);
 			path = SettingsViews;
@@ -544,6 +561,7 @@
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
 				4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */,
+				4DA375BA2C2BA0580094769B /* NewChatCardView.swift in Sources */,
 				4DE4ACDF2C257CC3002D8156 /* LLMTypes.swift in Sources */,
 				4D911BB22BC1E1E70034B1A8 /* MessageButtonsView.swift in Sources */,
 				4D9ADB822C07E1EF00A1EFC7 /* InvisibilityFileManager.swift in Sources */,
@@ -571,6 +589,7 @@
 				4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */,
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
 				4D9ADB7E2C07BBBE00A1EFC7 /* HistoryCardView.swift in Sources */,
+				4DA375BC2C2BAC480094769B /* ChatFieldViewModel.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MainView.swift in Sources */,
 				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,
 				4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */,
@@ -582,6 +601,7 @@
 				4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */,
 				4D8E05542B2516DE00B60D0D /* AppMessages.swift in Sources */,
 				4D8E05622B2516DE00B60D0D /* MessageListItemView.swift in Sources */,
+				4DA375BE2C2BAD1B0094769B /* MessageScrollViewModel.swift in Sources */,
 				4DD5E36A2B6243D300C35B1C /* AppPrompts.swift in Sources */,
 				4D4DB2472B91384D003B9D53 /* ChatImageView.swift in Sources */,
 				4D5B4BC52B48F3320067C543 /* ImageUtils.swift in Sources */,

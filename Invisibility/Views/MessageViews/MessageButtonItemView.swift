@@ -18,8 +18,7 @@ struct MessageButtonItemView: View {
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
-    
-    
+
     @State private var isPressed: Bool = false
     @State private var isHovering: Bool = false
     @Binding private var whoIsHovering: String?
@@ -85,16 +84,18 @@ struct MessageButtonItemView: View {
             )
         }
         .onHover { hovering in
-            isHovering = hovering
-              if hovering {
-                  whoIsHovering = label
-              } else {
-                  whoIsHovering = nil
-              }
+            withAnimation(AppConfig.snappy) {
+                if hovering {
+                    isHovering = true
+                    whoIsHovering = label
+                } else {
+                    isHovering = false
+                    whoIsHovering = nil
+                }
+            }
         }
         .buttonStyle(.plain)
         .animation(AppConfig.snappy, value: label)
-        .animation(AppConfig.snappy, value: isHovering)
         .animation(AppConfig.snappy, value: ShortcutViewModel.shared.modifierFlags)
         .animation(.easeInOut(duration: 0.2), value: isPressed)
     }

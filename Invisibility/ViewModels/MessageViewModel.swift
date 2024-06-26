@@ -29,7 +29,6 @@ final class MessageViewModel: ObservableObject {
         ChatViewModel.shared.$chat
             .compactMap { $0 } // Ignore nil values
             .sink { [weak self] newChat in
-                print("setupChatObserver triggered, switch root chat")
                 self?.updateMessagesForChat(newChat)
             }
             .store(in: &cancellables)
@@ -96,12 +95,12 @@ final class MessageViewModel: ObservableObject {
                 if let lastChat = self.api_chats.last,
                    let lastRootChat = BranchManagerModel.shared.getRootChat(currentChat: lastChat, msgs: fetched_msgs, chats: fetched_chats)
                 {
-                    if let firstMsg = fetched_msgs.first(where: { $0.chat_id == lastRootChat.id }) {
-                        print("First message ID: \(firstMsg.id)")
-                        print("First message text: \(firstMsg.text)")
-                    } else {
-                        print("No messages found for the root chat")
-                    }
+                    // if let firstMsg = fetched_msgs.first(where: { $0.chat_id == lastRootChat.id }) {
+                    //     print("First message ID: \(firstMsg.id)")
+                    //     print("First message text: \(firstMsg.text)")
+                    // } else {
+                    //     print("No messages found for the root chat")
+                    // }
 
                     ChatViewModel.shared.chat = lastRootChat
 
@@ -112,7 +111,7 @@ final class MessageViewModel: ObservableObject {
 
                     BranchManagerModel.shared.initializeChatBranchPoints(rootChat: lastRootChat, messages: fetched_msgs, chats: fetched_chats)
                 } else {
-                    print("No root chat found")
+                    // print("No root chat found")
                 }
             }
         }
@@ -124,7 +123,6 @@ final class MessageViewModel: ObservableObject {
 
     // helper
     private func createEditChat(for user: User) -> APIChat? {
-        print("createEditChat")
         // get parent msg of currently edited msg
         guard let parentMsgId = BranchManagerModel.shared.getEditParentMsgId() else {
             return nil
@@ -190,7 +188,7 @@ final class MessageViewModel: ObservableObject {
             if let image = ScreenRecorder.shared.getCurrentFrameAsCGImage(),
                let standardizedImage = standardizeImage(image)
             {
-                ChatViewModel.shared.addImage(standardizedImage, hide: true)
+                ChatFieldViewModel.shared.addImage(standardizedImage, hide: true)
                 logger.info("Added current frame to images")
             } else {
                 logger.error("Failed to standardize image.")
@@ -199,16 +197,16 @@ final class MessageViewModel: ObservableObject {
 
         // Allow empty messages if there is a least 1 image or fileContent
         guard text.trimmingCharacters(in: .whitespacesAndNewlines).count > 0 ||
-            ChatViewModel.shared.images.count > 0 ||
-            !ChatViewModel.shared.fileContent.isEmpty
+            ChatFieldViewModel.shared.images.count > 0 ||
+            !ChatFieldViewModel.shared.fileContent.isEmpty
         else {
             logger.warning("Empty message")
             return
         }
 
         // Prepend the fileContent if necessary
-        if !ChatViewModel.shared.fileContent.isEmpty {
-            text = ChatViewModel.shared.fileContent + "\n" + text
+        if !ChatFieldViewModel.shared.fileContent.isEmpty {
+            text = ChatFieldViewModel.shared.fileContent + "\n" + text
         }
 
         let user_message = APIMessage(
@@ -229,7 +227,7 @@ final class MessageViewModel: ObservableObject {
             model_id: LLMManager.shared.model.human_name
         )
 
-        let images = ChatViewModel.shared.images.map { $0.toAPI(message: user_message) }
+        let images = ChatFieldViewModel.shared.images.map { $0.toAPI(message: user_message) }
 
         api_files.append(contentsOf: images)
 
@@ -239,7 +237,7 @@ final class MessageViewModel: ObservableObject {
         } else {
             TextViewModel.shared.clearText()
         }
-        ChatViewModel.shared.removeAll()
+        ChatFieldViewModel.shared.removeAll()
 
         isGenerating = true
         defer { PostHogSDK.shared.capture(
@@ -298,13 +296,11 @@ final class MessageViewModel: ObservableObject {
                 let decoder = iso8601Decoder()
 
                 let new_chat = try decoder.decode(APIChat.self, from: data)
-                print(new_chat)
 
                 DispatchQueue.main.async {
                     if let index = self.api_chats.firstIndex(of: chat) {
                         self.api_chats[index].name = new_chat.name
                     }
-                    print(new_chat.name)
                 }
             }
         }

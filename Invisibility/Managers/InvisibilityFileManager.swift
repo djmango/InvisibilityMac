@@ -68,7 +68,7 @@ enum InvisibilityFileManager {
         defer {
             PostHogSDK.shared.capture("handle_file")
         }
-        
+
         // First determine if we are dealing with an image or audio file
         logger.debug("Selected file \(url)")
         if let fileType = try? url.resourceValues(forKeys: [.contentTypeKey]).contentType {
@@ -109,7 +109,7 @@ enum InvisibilityFileManager {
         }
 
         DispatchQueue.main.async {
-            ChatViewModel.shared.addImage(standardizedImage)
+            ChatFieldViewModel.shared.addImage(standardizedImage)
         }
     }
 
@@ -142,7 +142,7 @@ enum InvisibilityFileManager {
         }
 
         DispatchQueue.main.async {
-            ChatViewModel.shared.fileContent += complete_text.trimmingCharacters(in: .whitespacesAndNewlines)
+            ChatFieldViewModel.shared.fileContent += complete_text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 
@@ -159,7 +159,7 @@ enum InvisibilityFileManager {
         }
 
         DispatchQueue.main.async {
-            ChatViewModel.shared.fileContent += text.trimmingCharacters(in: .whitespacesAndNewlines)
+            ChatFieldViewModel.shared.fileContent += text.trimmingCharacters(in: .whitespacesAndNewlines)
         }
     }
 }
