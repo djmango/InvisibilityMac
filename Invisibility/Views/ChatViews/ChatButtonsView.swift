@@ -17,11 +17,9 @@ struct ChatButtonsView: View {
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
-    @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
-    @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
-    @ObservedObject private var hoverTrackerModel: HoverTrackerModel = HoverTrackerModel.shared
+    private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
     private var chatViewModel: ChatViewModel = ChatViewModel.shared
     private var windowManager: WindowManager = WindowManager.shared
     private let screenshotManager = ScreenshotManager.shared
@@ -47,7 +45,7 @@ struct ChatButtonsView: View {
                 }
             }
             .keyboardShortcut("n", modifiers: [.command])
-            .onHover{ hovered in
+            .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
                 } else {
@@ -67,7 +65,7 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("1", modifiers: [.command, .shift])
             .visible(if: !isShowingHistory, removeCompletely: true)
-            .onHover{ hovered in
+            .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
                 } else {
@@ -87,7 +85,7 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("2", modifiers: [.command, .shift])
             .visible(if: !isShowingHistory, removeCompletely: true)
-            .onHover{ hovered in
+            .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
                 } else {
@@ -110,7 +108,7 @@ struct ChatButtonsView: View {
                 }
             }
             .keyboardShortcut("f", modifiers: [.command])
-            .onHover{ hovered in
+            .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
                 } else {
@@ -133,7 +131,7 @@ struct ChatButtonsView: View {
                 }
             }
             .keyboardShortcut(",", modifiers: [.command])
-            .onHover{ hovered in
+            .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
                 } else {
@@ -155,7 +153,7 @@ struct ChatButtonsView: View {
             .keyboardShortcut("p", modifiers: [.command])
             .visible(if: messageViewModel.isGenerating, removeCompletely: true)
             .visible(if: !isShowingHistory, removeCompletely: true)
-            .onHover{ hovered in
+            .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
                 } else {
@@ -170,10 +168,10 @@ struct ChatButtonsView: View {
                 shortcut_hint: "⌘ ⇧ S",
                 whoIsHovering: $whoIsHovering
             ) {
-                switchSide()
+                windowManager.switchSide()
             }
             .keyboardShortcut("s", modifiers: [.command, .shift])
-            .onHover{ hovered in
+            .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
                 } else {
@@ -192,15 +190,8 @@ struct ChatButtonsView: View {
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
         )
         .frame(maxWidth: 380)
-        .animation(AppConfig.snappy, value: whoIsHovering)
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
         .animation(AppConfig.snappy, value: messageViewModel.api_messages_in_chat.count)
-        .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(AppConfig.snappy, value: betaFeatures)
-    }
-
-    @MainActor
-    private func switchSide() {
-        windowManager.switchSide()
     }
 }

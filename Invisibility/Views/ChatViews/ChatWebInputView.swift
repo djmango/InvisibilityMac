@@ -12,7 +12,6 @@ import WebKit
 // TODO: fix scrollbars on this, currently they are disabled due to white background bug
 
 struct ChatWebInputView: View {
-    @ObservedObject private var chatViewModel = ChatViewModel.shared
     @ObservedObject private var inputHeightViewModel = InputHeightViewModel.shared
 
     static let minTextHeight: CGFloat = 40
@@ -25,9 +24,7 @@ struct ChatWebInputView: View {
 }
 
 struct ChatWebInputViewRepresentable: NSViewRepresentable {
-    private var chatViewModel = ChatViewModel.shared
     private var messageViewModel = MessageViewModel.shared
-    private var shortcutViewModel = ShortcutViewModel.shared
     private var inputHeightViewModel = InputHeightViewModel.shared
     @ObservedObject private var textViewModel = TextViewModel.shared
 

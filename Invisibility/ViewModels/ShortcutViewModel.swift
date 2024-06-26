@@ -70,10 +70,12 @@ final class ShortcutViewModel: ObservableObject {
     }
 
     private func updateModifierFlags(isCommandPressed: Bool) {
-        if isCommandPressed {
-            modifierFlags.insert(.command)
-        } else {
-            modifierFlags.remove(.command)
+        withAnimation(AppConfig.snappy) {
+            if isCommandPressed {
+                modifierFlags.insert(.command)
+            } else {
+                modifierFlags.remove(.command)
+            }
         }
     }
 }

@@ -28,7 +28,7 @@ struct ChatFieldView: View {
     }
 
     var body: some View {
-        let _ = Self._printChanges()
+        // let _ = Self._printChanges()
         VStack {
             HStack {
                 ForEach(chatFieldViewModel.images) { imageItem in
