@@ -6,61 +6,52 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
-import ScrollKit
 import SwiftUI
 
 struct MessageScrollView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
-    @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
     @ObservedObject private var userManager = UserManager.shared
 
-    @State private var scrollProxy: ScrollViewProxy?
-
     @State private var numMessagesDisplayed = 10
 
-    func calculateHeaderHeight(messageCount: Int, windowHeight: CGFloat) -> CGFloat {
-        let minHeight: CGFloat = 10
-        let maxHeight: CGFloat = max(minHeight, windowHeight - 290)
-
-        // Define the range where the transition occurs
-        let startTransition = 1
-        let endTransition = 7
-
-        if messageCount <= startTransition {
-            return maxHeight
-        } else if messageCount >= endTransition {
-            return minHeight
-        } else {
-            // Calculate the progress of the transition
-            let progress = CGFloat(messageCount - startTransition) / CGFloat(endTransition - startTransition)
-
-            // Interpolate between maxHeight and minHeight
-            return maxHeight - (maxHeight - minHeight)
-        }
+    private var displayedMessages: [APIMessage] {
+        messageViewModel.api_messages_in_chat.suffix(numMessagesDisplayed)
     }
 
     var body: some View {
+        // let _ = Self._printChanges()
         ScrollViewReader { proxy in
-            ScrollViewWithStickyHeader(
-                header: {
+            ScrollView {
+                VStack {
                     HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
-                },
-                headerHeight: messageViewModel.api_messages_in_chat.count > 7 ? 50 : max(10, messageViewModel.windowHeight - 205),
-                // headerHeight: calculateHeaderHeight(
-                //     messageCount: messageViewModel.api_messages_in_chat.count,
-                //     windowHeight: messageViewModel.windowHeight
-                // ),
-                headerMinHeight: 0,
-                onScroll: handleOffset
-            ) {
-                MessageListView(
-                    messages: messageViewModel.api_messages_in_chat,
-                    numMessagesDisplayed: $numMessagesDisplayed,
-                    canSendMessages: userManager.canSendMessages,
-                    isRecording: $screenRecorder.isRunning
-                )
+
+                    Spacer()
+
+                    VStack(spacing: 5) {
+                        ForEach(displayedMessages) { message in
+                            MessageListItemView(message: message)
+                                .id(message.id)
+                        }
+                    }
+
+                    NewChatCardView()
+                        .visible(if: displayedMessages.isEmpty, removeCompletely: true)
+
+                    FreeTierCardView()
+                        .visible(if: !userManager.canSendMessages, removeCompletely: true)
+
+                    CaptureView()
+                        .visible(if: screenRecorder.isRunning, removeCompletely: true)
+
+                    Rectangle()
+                        .hidden()
+                        .frame(height: 1)
+                        .id("bottom")
+                }
+                .animation(AppConfig.snappy, value: userManager.canSendMessages)
+                .padding(.top, 10)
             }
             .mask(
                 LinearGradient(
@@ -76,51 +67,54 @@ struct MessageScrollView: View {
             )
             .scrollIndicators(.never)
             .defaultScrollAnchor(.bottom)
-            .animation(AppConfig.snappy, value: numMessagesDisplayed)
-            .animation(AppConfig.snappy, value: userManager.canSendMessages)
-            .onAppear {
-                scrollProxy = proxy
-            }
             .onChange(of: messageViewModel.isGenerating) {
-                if let scrollProxy, messageViewModel.isGenerating == true {
+                if messageViewModel.isGenerating == true {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         withAnimation(AppConfig.easeIn) {
-                            scrollProxy.scrollTo("bottom", anchor: .bottom)
+                            proxy.scrollTo("bottom", anchor: .bottom)
                         }
                     }
                 }
             }
             .onChange(of: screenRecorder.isRunning) {
-                if let scrollProxy, screenRecorder.isRunning == true {
+                if screenRecorder.isRunning == true {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         withAnimation(AppConfig.easeIn) {
-                            scrollProxy.scrollTo("bottom", anchor: .bottom)
+                            proxy.scrollTo("bottom", anchor: .bottom)
                         }
                     }
                 }
             }
             // this also work for BranchManager api_message updates?
             .onChange(of: messageViewModel.shouldScrollToBottom) {
-                if let scrollProxy, messageViewModel.shouldScrollToBottom {
+                if messageViewModel.shouldScrollToBottom {
+                    // print("scrolling to bottom cuz we should")
                     withAnimation(AppConfig.easeIn) {
-                        scrollProxy.scrollTo("bottom", anchor: .bottom)
+                        proxy.scrollTo("bottom", anchor: .bottom)
                         messageViewModel.shouldScrollToBottom = false
+                    }
+                }
+            }
+
+            .onChange(of: chatViewModel.chat) {
+                // Wait before scrolling to the bottom to allow the chat to load
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    // print("scrolling to bottom")
+                    withAnimation(AppConfig.easeIn) {
+                        proxy.scrollTo("bottom", anchor: .bottom)
                     }
                 }
             }
         }
     }
-
-    func handleOffset(_: CGPoint, visibleHeaderRatio _: CGFloat) {
-        // handling offset logic
-    }
 }
 
 struct HeaderView: View {
     @Binding var numMessagesDisplayed: Int
+    @State private var whoIsHovering: String?
+
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
-    @State private var whoIsHovering: String?
 
     var body: some View {
         HStack {
@@ -146,40 +140,6 @@ struct HeaderView: View {
             .visible(if: messageViewModel.api_messages_in_chat.count > 10 && numMessagesDisplayed < messageViewModel.api_messages_in_chat.count, removeCompletely: true)
             .keyboardShortcut("i", modifiers: [.command, .shift])
         }
-        .animation(AppConfig.snappy, value: whoIsHovering)
         .animation(AppConfig.snappy, value: numMessagesDisplayed)
-    }
-}
-
-struct MessageListView: View {
-    var messages: [APIMessage]
-    @Binding var numMessagesDisplayed: Int
-    let canSendMessages: Bool
-    @Binding var isRecording: Bool
-
-    private var displayedMessages: [APIMessage] {
-        messages.suffix(numMessagesDisplayed)
-    }
-
-    var body: some View {
-        VStack(spacing: 5) {
-            ForEach(displayedMessages) { message in
-                MessageListItemView(message: message)
-                    .id(message.id)
-                    .sentryTrace("MessageListItemView")
-            }
-        }
-        .background(Rectangle().fill(Color.white.opacity(0.001)))
-
-        FreeTierCardView()
-            .visible(if: !canSendMessages, removeCompletely: true)
-
-        CaptureView()
-            .visible(if: isRecording, removeCompletely: true)
-
-        Rectangle()
-            .hidden()
-            .frame(height: 1)
-            .id("bottom")
     }
 }

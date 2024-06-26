@@ -3,6 +3,8 @@ import SwiftUI
 struct MessageListItemView: View {
     let message: APIMessage
 
+    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
+
     @State private var isHovered: Bool = false
 
     var body: some View {
@@ -11,7 +13,9 @@ struct MessageListItemView: View {
                 if $0 {
                     isHovered = true
                 } else {
-                    isHovered = false
+                    withAnimation(AppConfig.snappy) {
+                        isHovered = false
+                    }
                 }
             }
             .background(
