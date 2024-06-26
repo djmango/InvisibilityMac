@@ -340,19 +340,7 @@ final class MessageViewModel: ObservableObject {
         filesFor(message: message).filter { $0.filetype == .jpeg && $0.show_to_user == true }
     }
 
-    func lastMessageFor(chat: APIChat) -> APIMessage? {
-        api_messages.filter { $0.chat_id == chat.id }.last
-    }
-
     func lastMessageWithTextFor(chat: APIChat) -> APIMessage? {
-        api_messages.filter { $0.chat_id == chat.id }.last { $0.text.count > 0 }
-    }
-
-    func sortedChatsByLastMessage() -> [APIChat] {
-        api_chats.sorted { chat1, chat2 in
-            let lastMessageDate1 = lastMessageFor(chat: chat1)?.created_at ?? Date.now
-            let lastMessageDate2 = lastMessageFor(chat: chat2)?.created_at ?? Date.now
-            return lastMessageDate1 > lastMessageDate2
-        }
+        api_messages.filter { $0.chat_id == chat.id }.filter { $0.text.count > 0 }.last
     }
 }

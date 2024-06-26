@@ -17,7 +17,7 @@ struct ChatFieldView: View {
 
     @FocusState private var promptFocused: Bool {
         didSet {
-            logger.debug("Prompt focused: \(promptFocused)")
+            // logger.debug("Prompt focused: \(promptFocused)")
         }
     }
 
