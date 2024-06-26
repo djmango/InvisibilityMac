@@ -12,27 +12,48 @@ struct MessageScrollView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
-    @ObservedObject private var userManager = UserManager.shared
+    @ObservedObject private var userManager: UserManager = UserManager.shared
 
     @State private var numMessagesDisplayed = 10
 
     private var displayedMessages: [APIMessage] {
         messageViewModel.api_messages_in_chat.suffix(numMessagesDisplayed)
     }
-    @ObservedObject private var userManager: UserManager = UserManager.shared
 
-    @State private var scrollProxy: ScrollViewProxy?
-                ScrollViewReader { proxy in
-                    ScrollView {
+    var body: some View {
+        // let _ = Self._printChanges()
         Group {
             if userManager.isLoggedIn {
                 ScrollViewReader { proxy in
                     ScrollView {
-                        MessageListView(
-                            messages: messageViewModel.api_messages_in_chat,
-                            isRecording: $screenRecorder.isRunning
-                        )
-                        .rotationEffect(.degrees(180))
+                        VStack {
+                            HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
+                            
+                            Spacer()
+                            
+                            VStack(spacing: 5) {
+                                ForEach(displayedMessages) { message in
+                                    MessageListItemView(message: message)
+                                        .id(message.id)
+                                }
+                            }
+                            
+                            NewChatCardView()
+                                .visible(if: displayedMessages.isEmpty, removeCompletely: true)
+                            
+                            FreeTierCardView()
+                                .visible(if: !userManager.canSendMessages, removeCompletely: true)
+                            
+                            CaptureView()
+                                .visible(if: screenRecorder.isRunning, removeCompletely: true)
+                            
+                            Rectangle()
+                                .hidden()
+                                .frame(height: 1)
+                                .id("bottom")
+                        }
+                        .animation(AppConfig.snappy, value: userManager.canSendMessages)
+                        .padding(.top, 10)
                     }
                     .mask(
                         LinearGradient(
@@ -48,132 +69,48 @@ struct MessageScrollView: View {
                     )
                     .scrollIndicators(.never)
                     .defaultScrollAnchor(.bottom)
-                    .onAppear {
-                        scrollProxy = proxy
-                    }
-                    .onChange(of: messageViewModel.isGenerating) { _ in
-                        if let scrollProxy, messageViewModel.isGenerating == true {
+                    .onChange(of: messageViewModel.isGenerating) {
+                        if messageViewModel.isGenerating == true {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                 withAnimation(AppConfig.easeIn) {
-                                    scrollProxy.scrollTo("bottom", anchor: .bottom)
+                                    proxy.scrollTo("bottom", anchor: .bottom)
                                 }
                             }
                         }
                     }
-                    .onChange(of: screenRecorder.isRunning) { _ in
-                        if let scrollProxy, screenRecorder.isRunning == true {
+                    .onChange(of: screenRecorder.isRunning) {
+                        if screenRecorder.isRunning == true {
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                                 withAnimation(AppConfig.easeIn) {
-                                    scrollProxy.scrollTo("bottom", anchor: .bottom)
+                                    proxy.scrollTo("bottom", anchor: .bottom)
                                 }
                             }
                         }
                     }
                     // this also work for BranchManager api_message updates?
-                    .onChange(of: messageViewModel.shouldScrollToBottom) { _ in
-                        if let scrollProxy, messageViewModel.shouldScrollToBottom {
-                            print("scrolling to bottom cuz we should")
+                    .onChange(of: messageViewModel.shouldScrollToBottom) {
+                        if messageViewModel.shouldScrollToBottom {
+                            // print("scrolling to bottom cuz we should")
                             withAnimation(AppConfig.easeIn) {
-                                scrollProxy.scrollTo("bottom", anchor: .bottom)
+                                proxy.scrollTo("bottom", anchor: .bottom)
                                 messageViewModel.shouldScrollToBottom = false
                             }
                         }
                     }
                     
                     .onChange(of: chatViewModel.chat) {
-                        // Wait .8 seconds before scrolling to the bottom to allow the chat to load
-                        // DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                        print("scrolling to bottom")
-                        if let scrollProxy {
+                        // Wait before scrolling to the bottom to allow the chat to load
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            // print("scrolling to bottom")
                             withAnimation(AppConfig.easeIn) {
-                                scrollProxy.scrollTo("bottom", anchor: .bottom)
+                                proxy.scrollTo("bottom", anchor: .bottom)
                             }
                         }
-                        // }
-                    }
-                    .rotationEffect(.degrees(180))
-        // let _ = Self._printChanges()
-        ScrollViewReader { proxy in
-            ScrollView {
-                VStack {
-                    HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
-
-                    Spacer()
-
-                    VStack(spacing: 5) {
-                        ForEach(displayedMessages) { message in
-                            MessageListItemView(message: message)
-                                .id(message.id)
-                        }
-                    }
-
-                    NewChatCardView()
-                        .visible(if: displayedMessages.isEmpty, removeCompletely: true)
-
-                    FreeTierCardView()
-                        .visible(if: !userManager.canSendMessages, removeCompletely: true)
-
-                    CaptureView()
-                        .visible(if: screenRecorder.isRunning, removeCompletely: true)
-
-                    Rectangle()
-                        .hidden()
-                        .frame(height: 1)
-                        .id("bottom")
-                }
-                .animation(AppConfig.snappy, value: userManager.canSendMessages)
-                .padding(.top, 10)
-            }
-            .mask(
-                LinearGradient(
-                    gradient: Gradient(stops: [
-                        .init(color: .clear, location: 0),
-                        .init(color: .black, location: 0.005), // Finish fading in
-                        .init(color: .black, location: 0.995), // Start fading out
-                        .init(color: .clear, location: 1.0),
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-            .scrollIndicators(.never)
-            .defaultScrollAnchor(.bottom)
-            .onChange(of: messageViewModel.isGenerating) {
-                if messageViewModel.isGenerating == true {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        withAnimation(AppConfig.easeIn) {
-                            proxy.scrollTo("bottom", anchor: .bottom)
-                        }
                     }
                 }
+            } else {
+                LoginCardView()
             }
-            .onChange(of: screenRecorder.isRunning) {
-                if screenRecorder.isRunning == true {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        withAnimation(AppConfig.easeIn) {
-                            proxy.scrollTo("bottom", anchor: .bottom)
-                        }
-                    }
-                }
-            }
-            // this also work for BranchManager api_message updates?
-            .onChange(of: messageViewModel.shouldScrollToBottom) {
-                if messageViewModel.shouldScrollToBottom {
-                    // print("scrolling to bottom cuz we should")
-                    withAnimation(AppConfig.easeIn) {
-                        proxy.scrollTo("bottom", anchor: .bottom)
-                        messageViewModel.shouldScrollToBottom = false
-                    }
-                }
-            }
-
-            .onChange(of: chatViewModel.chat) {
-                // Wait before scrolling to the bottom to allow the chat to load
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    // print("scrolling to bottom")
-                    withAnimation(AppConfig.easeIn) {
-                        proxy.scrollTo("bottom", anchor: .bottom)
-                    }
         }
     }
 }

@@ -94,6 +94,7 @@
 		77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29832C25479E007D923C /* HoverTrackerModel.swift */; };
 		77FE29862C254AAF007D923C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29852C254AAF007D923C /* Buttons.swift */; };
 		C793DBDE17714E9942C18089 /* HistoryCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9CCC3953052C640C77031 /* HistoryCardViewModel.swift */; };
+		D5BE8FF22C2C89750011D90C /* LoginCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BE8FF12C2C89750011D90C /* LoginCardView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -172,6 +173,7 @@
 		77FE29832C25479E007D923C /* HoverTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverTrackerModel.swift; sourceTree = "<group>"; };
 		77FE29852C254AAF007D923C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		A9721674ABFEFC5AF471D38D /* SettingsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		D5BE8FF12C2C89750011D90C /* LoginCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginCardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -400,6 +402,7 @@
 			children = (
 				4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */,
 				4DA375B92C2BA0580094769B /* NewChatCardView.swift */,
+				D5BE8FF12C2C89750011D90C /* LoginCardView.swift */,
 			);
 			path = CardViews;
 			sourceTree = "<group>";
@@ -430,7 +433,6 @@
 				4D885C762B96D969009A1F48 /* SettingsView.swift */,
 				4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */,
 				4DB061BD2BF4A028007CF7DD /* QRView.swift */,
-				D5BE8FED2C2B40700011D90C /* LoginCardView.swift */,
 			);
 			path = SettingsViews;
 			sourceTree = "<group>";
@@ -562,6 +564,7 @@
 				4D93542B2B99A81400C34A63 /* OnboardingManager.swift in Sources */,
 				4DA893B62B54CA6100560DAD /* OnboardingAccountView.swift in Sources */,
 				4D3A15552C13D36300272B84 /* MainWindowViewModel.swift in Sources */,
+				D5BE8FF22C2C89750011D90C /* LoginCardView.swift in Sources */,
 				4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */,
 				4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
@@ -594,7 +597,6 @@
 				4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */,
 				77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */,
-				D5BE8FEE2C2B40700011D90C /* LoginCardView.swift in Sources */,
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
 				4D9ADB7E2C07BBBE00A1EFC7 /* HistoryCardView.swift in Sources */,
 				4DA375BC2C2BAC480094769B /* ChatFieldViewModel.swift in Sources */,
