@@ -83,18 +83,24 @@ final class ChatViewModel: ObservableObject {
 
     @MainActor
     public func addImage(_ data: Data, hide: Bool = false) {
-        items.append(ChatDataItem(data: data, dataType: .jpeg, hide: hide))
+        withAnimation(AppConfig.snappy) {
+            items.append(ChatDataItem(data: data, dataType: .jpeg, hide: hide))
+        }
     }
 
     @MainActor
     public func removeItem(id: UUID) {
-        items.removeAll { $0.id == id }
+        withAnimation(AppConfig.snappy) {
+            items.removeAll { $0.id == id }
+        }
     }
 
     @MainActor
     public func removeAll() {
-        items.removeAll()
-        fileContent = ""
+        withAnimation(AppConfig.snappy) {
+            items.removeAll()
+            fileContent = ""
+        }
     }
 
     @MainActor
@@ -116,6 +122,7 @@ final class ChatViewModel: ObservableObject {
                 user_id: user.id
             )
             _ = MainWindowViewModel.shared.changeView(to: .chat)
+            MessageViewModel.shared.updateMessagesForChat(chat!)
         }
         MessageViewModel.shared.api_chats.append(chat!)
     }

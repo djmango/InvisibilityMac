@@ -148,10 +148,10 @@ class WindowManager {
         window.hasShadow = false // Optional: Disable shadow for a more "overlay" feel
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
-        //window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        // window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .transient, .ignoresCycle]
         window.orderFrontRegardless()
-        
+
         NSApp.activate(ignoringOtherApps: true)
         window.makeKeyAndOrderFront(window)
 
@@ -207,9 +207,6 @@ class WindowManager {
         let menuBarHeight = NSStatusBar.system.thickness
 
         let windowHeight: CGFloat = screen.frame.height - menuBarHeight - 15
-        DispatchQueue.main.async {
-            MessageViewModel.shared.windowHeight = windowHeight
-        }
 
         // Determine the horizontal position
         let xPos: CGFloat = if sideSwitched {

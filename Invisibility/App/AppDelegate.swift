@@ -155,11 +155,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func panelDidBecomeKey(notification _: Notification) {
         // Move the switch logic here
         let hoverType: HoverItemType = HoverTrackerModel.shared.targetType
-        
+
         guard let targetString = HoverTrackerModel.shared.targetItem,
-              let target = UUID(uuidString: targetString) else {
+              let target = UUID(uuidString: targetString)
+        else {
             // Handle the case where the string was nil or not a valid UUID
-            print("Invalid or nil UUID hover target string")
+            logger.debug("Invalid or nil UUID hover target string")
             return
         }
 
@@ -179,10 +180,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Implement menu move functionality
         case .chatImage:
             logger.debug("Handling Chat Image action")
-            // Implement chat image functionality
+            DispatchQueue.main.async {
+                ChatViewModel.shared.removeItem(id: target)
+            }
         case .chatPDF:
             logger.debug("Handling Chat PDF action")
-            // Implement chat PDF functionality
+        // Implement chat PDF functionality
         case .nil_:
             logger.debug("No specific button action")
         }

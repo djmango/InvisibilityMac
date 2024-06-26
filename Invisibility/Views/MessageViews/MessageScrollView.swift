@@ -6,61 +6,23 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
-import ScrollKit
 import SwiftUI
 
 struct MessageScrollView: View {
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
-    @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
-    @ObservedObject private var userManager = UserManager.shared
 
     @State private var scrollProxy: ScrollViewProxy?
 
-    @State private var numMessagesDisplayed = 10
-
-    func calculateHeaderHeight(messageCount: Int, windowHeight: CGFloat) -> CGFloat {
-        let minHeight: CGFloat = 10
-        let maxHeight: CGFloat = max(minHeight, windowHeight - 290)
-
-        // Define the range where the transition occurs
-        let startTransition = 1
-        let endTransition = 7
-
-        if messageCount <= startTransition {
-            return maxHeight
-        } else if messageCount >= endTransition {
-            return minHeight
-        } else {
-            // Calculate the progress of the transition
-            let progress = CGFloat(messageCount - startTransition) / CGFloat(endTransition - startTransition)
-
-            // Interpolate between maxHeight and minHeight
-            return maxHeight - (maxHeight - minHeight)
-        }
-    }
-
     var body: some View {
         ScrollViewReader { proxy in
-            ScrollViewWithStickyHeader(
-                header: {
-                    HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
-                },
-                headerHeight: messageViewModel.api_messages_in_chat.count > 7 ? 50 : max(10, messageViewModel.windowHeight - 205),
-                // headerHeight: calculateHeaderHeight(
-                //     messageCount: messageViewModel.api_messages_in_chat.count,
-                //     windowHeight: messageViewModel.windowHeight
-                // ),
-                headerMinHeight: 0,
-                onScroll: handleOffset
-            ) {
+            ScrollView {
                 MessageListView(
                     messages: messageViewModel.api_messages_in_chat,
-                    numMessagesDisplayed: $numMessagesDisplayed,
-                    canSendMessages: userManager.canSendMessages,
                     isRecording: $screenRecorder.isRunning
                 )
+                .rotationEffect(.degrees(180))
             }
             .mask(
                 LinearGradient(
@@ -76,8 +38,6 @@ struct MessageScrollView: View {
             )
             .scrollIndicators(.never)
             .defaultScrollAnchor(.bottom)
-            .animation(AppConfig.snappy, value: numMessagesDisplayed)
-            .animation(AppConfig.snappy, value: userManager.canSendMessages)
             .onAppear {
                 scrollProxy = proxy
             }
@@ -102,25 +62,36 @@ struct MessageScrollView: View {
             // this also work for BranchManager api_message updates?
             .onChange(of: messageViewModel.shouldScrollToBottom) {
                 if let scrollProxy, messageViewModel.shouldScrollToBottom {
+                    print("scrolling to bottom cuz we should")
                     withAnimation(AppConfig.easeIn) {
                         scrollProxy.scrollTo("bottom", anchor: .bottom)
                         messageViewModel.shouldScrollToBottom = false
                     }
                 }
             }
-        }
-    }
 
-    func handleOffset(_: CGPoint, visibleHeaderRatio _: CGFloat) {
-        // handling offset logic
+            .onChange(of: chatViewModel.chat) {
+                // Wait .8 seconds before scrolling to the bottom to allow the chat to load
+                // DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                print("scrolling to bottom")
+                if let scrollProxy {
+                    withAnimation(AppConfig.easeIn) {
+                        scrollProxy.scrollTo("bottom", anchor: .bottom)
+                    }
+                }
+                // }
+            }
+            .rotationEffect(.degrees(180))
+        }
     }
 }
 
 struct HeaderView: View {
     @Binding var numMessagesDisplayed: Int
+    @State private var whoIsHovering: String?
+
     @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
     @ObservedObject private var chatViewModel: ChatViewModel = ChatViewModel.shared
-    @State private var whoIsHovering: String?
 
     var body: some View {
         HStack {
@@ -153,33 +124,44 @@ struct HeaderView: View {
 
 struct MessageListView: View {
     var messages: [APIMessage]
-    @Binding var numMessagesDisplayed: Int
-    let canSendMessages: Bool
+
+    @State private var numMessagesDisplayed = 10
     @Binding var isRecording: Bool
+
+    @ObservedObject private var userManager = UserManager.shared
 
     private var displayedMessages: [APIMessage] {
         messages.suffix(numMessagesDisplayed)
     }
 
     var body: some View {
-        VStack(spacing: 5) {
-            ForEach(displayedMessages) { message in
-                MessageListItemView(message: message)
-                    .id(message.id)
-                    .sentryTrace("MessageListItemView")
+        VStack {
+            HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
+
+            VStack(spacing: 5) {
+                ForEach(displayedMessages) { message in
+                    MessageListItemView(message: message)
+                        .id(message.id)
+                        .sentryTrace("MessageListItemView")
+                        .onHover{hovered in
+                            HoverTrackerModel.shared.targetItem = message.id.uuidString
+                        }
+                }
             }
+            // .background(Rectangle().fill(Color.white.opacity(0.001)))
+
+            FreeTierCardView()
+                .visible(if: !userManager.canSendMessages, removeCompletely: true)
+
+            CaptureView()
+                .visible(if: isRecording, removeCompletely: true)
+
+            Rectangle()
+                .hidden()
+                .frame(height: 1)
+                .id("bottom")
         }
-        .background(Rectangle().fill(Color.white.opacity(0.001)))
-
-        FreeTierCardView()
-            .visible(if: !canSendMessages, removeCompletely: true)
-
-        CaptureView()
-            .visible(if: isRecording, removeCompletely: true)
-
-        Rectangle()
-            .hidden()
-            .frame(height: 1)
-            .id("bottom")
+        .animation(AppConfig.snappy, value: userManager.canSendMessages)
+        .padding(.top, 10)
     }
 }

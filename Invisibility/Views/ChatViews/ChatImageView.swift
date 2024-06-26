@@ -1,12 +1,12 @@
-import SwiftUI
 import OSLog
+import SwiftUI
 
 struct ChatImageView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
 
     let imageItem: ChatDataItem
     let nsImage: NSImage
-    
+
     @State private var isHovering: Bool = false
 
     init(imageItem: ChatDataItem) {
@@ -19,8 +19,8 @@ struct ChatImageView: View {
             Image(nsImage: nsImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 100, height: 100)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .frame(width: 150, height: 150)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .shadow(radius: isHovering ? 4 : 0)
 
             Button(action: {
@@ -29,13 +29,18 @@ struct ChatImageView: View {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.gray)
                     .font(.title)
-}
+            }
             .opacity(isHovering ? 1 : 0)
-            .buttonStyle(PlainButtonStyle())
-            .onHover{ isHovering in
+            .buttonStyle(.plain)
+            .onHover { isHovering in
                 HoverTrackerModel.shared.targetType = isHovering ? .chatImageDelete : .nil_
                 HoverTrackerModel.shared.targetItem = isHovering ? imageItem.id.uuidString : nil
             }
+            .padding(3)
+            .focusable(false)
+        }
+        .onTapGesture {
+            ChatViewModel.shared.removeItem(id: imageItem.id)
         }
         .padding(.horizontal, 10)
         .onHover { hovering in

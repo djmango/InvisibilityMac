@@ -11,11 +11,11 @@ import SwiftUI
 
 struct MessageContentView: View {
     @ObservedObject var message: APIMessage
+    @ObservedObject var hoverTrackerModel = HoverTrackerModel.shared
     @ObservedObject var branchManagerModel = BranchManagerModel.shared
 
     private let isAssistant: Bool
     private let model_name: String
-    private var isBranch: Bool
     @State private var isHovering = false
     @State private var isEditingWithDelay = false
 
@@ -23,16 +23,15 @@ struct MessageContentView: View {
         self.message = message
         self.isAssistant = message.role == .assistant
         self.model_name = LLMModelRepository.shared.model_id_2_name(message.model_id)
-        self.isBranch = BranchManagerModel.shared.isBranch(message: message)
     }
 
-    private var isEditing : Bool {
+    private var isEditing: Bool {
         guard let editMsg = branchManagerModel.editMsg else {
             return false
         }
         return editMsg.id == message.id
     }
-    
+
     private var isGenerating: Bool {
         MessageViewModel.shared.isGenerating && message.text.isEmpty
     }
@@ -49,14 +48,12 @@ struct MessageContentView: View {
         MessageViewModel.shared.shownImagesFor(message: message)
     }
     
-    private var showEdit: Bool {
-        // Print individual values
-        print("isHovering: \(isHovering)")
-        print("isBranch: \(isBranch)")
-        print("!isEditing: \(!isEditing)")
-        return isHovering && isBranch && !isEditing
+    private var showEditButtons:Bool {
+//        print("showEditButton:")
+ //       print(hoverTrackerModel.targetItem)
+        let ret = !isEditing && (hoverTrackerModel.targetItem == message.id.uuidString) && !isAssistant
+        return ret
     }
-
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -89,26 +86,10 @@ struct MessageContentView: View {
                     .visible(if: !images.isEmpty, removeCompletely: true)
             }
             .visible(if: !images.isEmpty, removeCompletely: true)
-            
-            ZStack {
-               MarkdownWebView(message.text)
-                   .opacity(isEditingWithDelay ? 0 : 1)
-                   .animation(.easeInOut(duration: 0.2), value: isEditingWithDelay)
-                if isEditing {
-                   EditWebInputView()
-                       .opacity(isEditingWithDelay ? 1 : 0)
-                }
-           }
-           .onChange(of: isEditing) { newValue in
-               if newValue {
-                   DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                       isEditingWithDelay = true
-                   }
-               } else {
-                   isEditingWithDelay = false
-               }
-           }
-      
+            MarkdownWebView(message.text)
+                .visible(if: !isEditing, removeCompletely: true)
+            EditWebInputView()
+                .visible(if: isEditing, removeCompletely: true)
             HStack {
                 Image(systemName: "checkmark.circle")
                     .resizable()
@@ -117,32 +98,17 @@ struct MessageContentView: View {
                     .foregroundColor(.chatButtonForeground)
                     .onTapGesture {
                         // cleanup is handled in sendFromChat
-                        Task{
+                        Task {
                             await MessageViewModel.shared.sendFromChat(editMode: true)
                         }
                     }
-                    .onHover{ hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
-
                 Image(systemName: "x.circle")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 15, height: 15)
                     .foregroundColor(.chatButtonForeground)
-                    .onTapGesture{
+                    .onTapGesture {
                         branchManagerModel.clearEdit()
-                    }
-                    .onHover{ hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
                     }
             }
             .visible(if: isEditing, removeCompletely: true)
@@ -151,15 +117,7 @@ struct MessageContentView: View {
         .padding()
         .onHover { hovering in
             isHovering = hovering
-            print(isHovering)
         }
-        .overlay(
-            EditButtonsView(message: message)
-                .offset(y: 38) // Adjust this value to control how much the buttons stick out
-                .offset(x: -100)
-                .frame(width: 100)
-                .visible(if: showEdit, removeCompletely: true)
-        )
+        
     }
 }
-

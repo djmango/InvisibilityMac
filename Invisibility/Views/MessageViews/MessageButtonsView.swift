@@ -1,130 +1,135 @@
-//
-//  MessageButtonsView.swift
-//  Invisibility
-//
-//  Created by Sulaiman Ghori on 4/6/24.
-//  Copyright © 2024 Invisibility Inc. All rights reserved.
-//
-
-import SwiftUI
 import ViewCondition
+import SwiftUI
 
 struct MessageActionButtonsView: View {
-    private let message: APIMessage
-    
-    @State private var whoIsHovering: String?
-    @State private var isCopied: Bool = false
+    let message: APIMessage
     @Binding private var isHovered: Bool
-
-    @AppStorage("shortcutHints") private var shortcutHints = true
+    @State private var isCopied: Bool = false
+    @State private var whoIsHovering: String?
+    
     @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
-    @ObservedObject var hoverTrackerModel: HoverTrackerModel = HoverTrackerModel.shared
     @ObservedObject var branchManagerModel: BranchManagerModel = BranchManagerModel.shared
-   
-    private var isEditing: Bool {
-        branchManagerModel.editMsg != nil
-    }
 
-    private var isAssistant: Bool {
-        message.role == .assistant
-    }
-
-    private var isGenerating: Bool {
-        messageViewModel.isGenerating && (message.text.isEmpty)
-    }
-
-    private var isResizeButtonVisible: Bool {
-        isHovered && isAssistant
-    }
-
-    private var isCopyButtonVisible: Bool {
-        isHovered || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command)) &&  !isEditing
-    }
-
-    private var isRegenerateButtonVisible: Bool {
-        ((isHovered && message.role == .assistant) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))) && !isEditing
-    }
-    
-    private var isEditButtonVisible : Bool {
-        ((isHovered && message.role == .user) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))) && !isEditing
-    }
-
-    private var isDeleteButtonVisible: Bool {
-        isHovered && !isEditing
-    }
-
-    init(
-        message: APIMessage,
-        isHovered: Binding<Bool>
-    ) {
+    init (message: APIMessage, isHovered: Binding<Bool>) {
         self.message = message
         self._isHovered = isHovered
     }
+    
+    private var isBranch: Bool {
+        branchManagerModel.isBranch(message: message)
+    }
+    
+    private var canMoveLeft: Bool {
+        branchManagerModel.canMoveLeft(message: message)
+    }
+    
+    private var canMoveRight: Bool {
+        branchManagerModel.canMoveRight(message: message)
+    }
+    
+    private var isGenerating: Bool {
+        messageViewModel.isGenerating && (message.text.isEmpty)
+    }
+    
+    private var isEditing: Bool {
+        guard let editMsg = branchManagerModel.editMsg else {
+            return false
+        }
+        return editMsg.id == message.id
+    }
+    
+    private var isCopyButtonVisible: Bool {
+        isHovered || (shortcutViewModel.modifierFlags.contains(.command)) && !isEditing
+    }
+
+    private var isRegenerateButtonVisible: Bool {
+        ((isHovered && message.role == .assistant) || (shortcutViewModel.modifierFlags.contains(.command))) && !isEditing
+    }
+    
 
     var body: some View {
-        VStack(alignment: .trailing) {
+        VStack(alignment: .trailing, spacing: 4) {
             Spacer()
-
-            HStack {
-                Spacer()
+            HStack(spacing: 2) {
+                MessageButtonItemView(
+                    label: "Edit",
+                    icon: "pencil",
+                    shortcut_hint: nil,
+                    whoIsHovering: $whoIsHovering,
+                    action: editAction
+                )
+                .visible(if: !isEditing, removeCompletely: true)
+                
+                MessageButtonItemView(
+                    label: nil,
+                    icon: canMoveLeft ? "arrowtriangle.backward.fill" : "arrowtriangle.backward",
+                    shortcut_hint: nil,
+                    whoIsHovering: $whoIsHovering,
+                    action: { branchManagerModel.moveLeft(message: message) }
+                )
+                .visible(if: isBranch, removeCompletely: true)
+                
+                Text("\(branchManagerModel.getCurrBranchIdx(message: message))/\(branchManagerModel.getTotalBranches(message: message))")
+                    .font(.system(size: 8))
+                    .foregroundColor(.chatButtonForeground)
+                    .visible(if: isBranch, removeCompletely: true)
+                
+                MessageButtonItemView(
+                    label: nil,
+                    icon: canMoveRight ? "arrowtriangle.forward.fill" : "arrowtriangle.forward",
+                    shortcut_hint: nil,
+                    whoIsHovering: $whoIsHovering,
+                    action: { branchManagerModel.moveRight(message: message) }
+                )
+                .visible(if: isBranch, removeCompletely: true)
+                
                 MessageButtonItemView(
                     label: "Regenerate",
                     icon: "arrow.clockwise",
                     shortcut_hint: "⌘ ⇧ R",
-                    whoIsHovering: $whoIsHovering
-                ) {
-                    regenerateAction()
-                }
+                    whoIsHovering: $whoIsHovering,
+                    action: regenerateAction
+                )
                 .keyboardShortcut("r", modifiers: [.command, .shift])
-                .onHover { inside in
-                    if inside {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
-                    }
-                }
                 .visible(if: isRegenerateButtonVisible, removeCompletely: true)
-
+                
                 MessageButtonItemView(
                     label: "Copy",
                     icon: isCopied ? "checkmark" : "square.on.square",
                     shortcut_hint: "⌘ ⌥ C",
-                    whoIsHovering: $whoIsHovering
-                ) {
-                    copyAction()
-                }
+                    whoIsHovering: $whoIsHovering,
+                    action: copyAction
+                )
                 .keyboardShortcut("c", modifiers: [.command, .option])
                 .changeEffect(.jump(height: 10), value: isCopied)
-                .onHover { inside in
-                    if inside {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
-                    }
-                }
-                .visible(if: isCopyButtonVisible)
+                .visible(if: isCopyButtonVisible, removeCompletely: true)
             }
-        }
-        .padding(8)
-        .animation(AppConfig.snappy, value: whoIsHovering)
-        .animation(AppConfig.snappy, value: isHovered)
-        .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
-    }
-
-    // MARK: - Actions
-    private func copyAction() {
-        let pasteBoard = NSPasteboard.general
-        pasteBoard.clearContents()
-        pasteBoard.setString(message.text, forType: .string)
-
-        isCopied = true
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            isCopied = false
+            .padding(.horizontal, 8)
+            .padding(.vertical, 4)
+            .background(Color.black.opacity(0.8))
+            .cornerRadius(10)
+            .animation(AppConfig.snappy, value: whoIsHovering)
+            .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         }
     }
     
+    private func editAction() {
+        branchManagerModel.editMsg = message
+        branchManagerModel.editText = message.text
+    }
+    
+    private func copyAction() {
+       let pasteBoard = NSPasteboard.general
+       pasteBoard.clearContents()
+       pasteBoard.setString(message.text, forType: .string)
+
+       isCopied = true
+
+       DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+           isCopied = false
+       }
+    }
 
     private func regenerateAction() {
         Task {
