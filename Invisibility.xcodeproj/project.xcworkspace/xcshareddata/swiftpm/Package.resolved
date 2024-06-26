@@ -1,5 +1,5 @@
 {
-  "originHash" : "fa4d9b492f88f614566a399bbe5122633cf23f6228acd6619ec70e48e8d08ebe",
+  "originHash" : "1d18da73547423a70fc64a8ecbfd85c1f6540a7d01df8fe517540038b009ea8f",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -83,21 +83,12 @@
       }
     },
     {
-      "identity" : "scrollkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/danielsaidi/ScrollKit.git",
-      "state" : {
-        "revision" : "b3142033da3769046770e38d459203756db879b5",
-        "version" : "0.5.1"
-      }
-    },
-    {
       "identity" : "sentry-cocoa",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/getsentry/sentry-cocoa.git",
       "state" : {
-        "revision" : "08862789e1cbba7a9561bed69832a9306f339cd3",
-        "version" : "8.29.1"
+        "revision" : "8fd4e804f2e72e0b9c1b189ce4e8349c4d10b6a2",
+        "version" : "8.30.0"
       }
     },
     {
