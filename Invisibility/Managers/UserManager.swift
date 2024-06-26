@@ -26,16 +26,7 @@ final class UserManager: ObservableObject {
     @Published public var inviteCount: Int = 0
     @Published var isLoggedIn: Bool = false
     
-    @AppStorage("token") public var token: String? {
-        didSet {
-            if token != nil {
-                Task {
-                    logger.debug("token set, thus triggering setup")
-                    await setup()
-                }
-            }
-        }
-    }
+    @AppStorage("token") public var token: String?
     
     // TODO: published somehow
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
