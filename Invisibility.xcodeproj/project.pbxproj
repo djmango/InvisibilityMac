@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2F85C16BD8C8EB6CE992F321 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9721674ABFEFC5AF471D38D /* SettingsViewModel.swift */; };
+		361B8F1430C4598F5FADDA2F /* ChatButtonsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DB1AFBCA2C8D7907842FC01 /* ChatButtonsViewModel.swift */; };
 		4D0B52E22B58FF0B008D975D /* CheckConnectivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */; };
 		4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D116AB42BAAA19C00729BE7 /* ShortcutViewModel.swift */; };
 		4D1773D82B8C1060004C5D13 /* ChatButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D1773D72B8C1060004C5D13 /* ChatButtonsView.swift */; };
@@ -98,6 +99,7 @@
 
 /* Begin PBXFileReference section */
 		27F9CCC3953052C640C77031 /* HistoryCardViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryCardViewModel.swift; sourceTree = "<group>"; };
+		3DB1AFBCA2C8D7907842FC01 /* ChatButtonsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatButtonsViewModel.swift; sourceTree = "<group>"; };
 		4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckConnectivity.swift; sourceTree = "<group>"; };
 		4D116AB42BAAA19C00729BE7 /* ShortcutViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutViewModel.swift; sourceTree = "<group>"; };
 		4D1773D72B8C1060004C5D13 /* ChatButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatButtonsView.swift; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				A9721674ABFEFC5AF471D38D /* SettingsViewModel.swift */,
 				6EC1ACA954F73F48E958AD26 /* HistoryViewModel.swift */,
 				27F9CCC3953052C640C77031 /* HistoryCardViewModel.swift */,
+				3DB1AFBCA2C8D7907842FC01 /* ChatButtonsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -618,6 +621,7 @@
 				2F85C16BD8C8EB6CE992F321 /* SettingsViewModel.swift in Sources */,
 				5AA8059F82659778F21737C5 /* HistoryViewModel.swift in Sources */,
 				C793DBDE17714E9942C18089 /* HistoryCardViewModel.swift in Sources */,
+				361B8F1430C4598F5FADDA2F /* ChatButtonsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
