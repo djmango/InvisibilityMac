@@ -11,40 +11,6 @@ import OSLog
 import PostHog
 import SwiftUI
 
-struct RenameRequest: Codable {
-    let name: String
-}
-
-struct ChatDataItem: Identifiable, Equatable {
-    let id = UUID()
-    let data: Data
-    let dataType: APIFiletype
-    let hide: Bool
-
-    init(data: Data, dataType: APIFiletype, hide: Bool = false) {
-        self.data = data
-        self.dataType = dataType
-        self.hide = hide
-    }
-
-    static func == (lhs: ChatDataItem, rhs: ChatDataItem) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    func toAPI(message: APIMessage) -> APIFile {
-        APIFile(
-            id: UUID(),
-            message_id: message.id,
-            chat_id: message.chat_id,
-            user_id: message.user_id,
-            filetype: dataType,
-            show_to_user: !hide,
-            // Data to base64. Needs the correct prefix for the data type.
-            url: "data:image/jpeg;base64,\(data.base64EncodedString())"
-        )
-    }
-}
-
 final class ChatViewModel: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatViewModel")
 
@@ -53,60 +19,13 @@ final class ChatViewModel: ObservableObject {
     @AppStorage("token") private var token: String?
 
     /// The currently viewed chat.
-    @Published public var chat: APIChat?
-
-    /// A boolean value that indicates whether the text field should be focused.
-    @Published public var shouldFocusTextField: Bool = false
-
-    /// A boolean value that indicates whether the text field should scroll to the bottom.
-    @Published public var shouldScrollToBottom: Bool = false
-
-    /// List of JPEG images and items to be sent with the message
-    @Published public var items: [ChatDataItem] = []
-
-    /// A string representing the file content of PDFs and text files added to the chat.
-    public var fileContent: String = ""
-
-    public var images: [ChatDataItem] {
-        items.filter { $0.dataType == .jpeg }
+    @Published public var chat: APIChat? {
+        didSet {
+            print("ChatViewModel: chat set to \(chat?.name ?? "nil")")
+        }
     }
-
-    public var pdfs: [ChatDataItem] {
-        items.filter { $0.dataType == .pdf }
-    }
-
-    /// The height of the text field.
-    @Published public var textHeight: CGFloat = 52
-    @Published public var lastTextHeight: CGFloat = 0
 
     private init() {}
-
-    @MainActor
-    public func addImage(_ data: Data, hide: Bool = false) {
-        withAnimation(AppConfig.snappy) {
-            items.append(ChatDataItem(data: data, dataType: .jpeg, hide: hide))
-        }
-    }
-
-    @MainActor
-    public func removeItem(id: UUID) {
-        withAnimation(AppConfig.snappy) {
-            items.removeAll { $0.id == id }
-        }
-    }
-
-    @MainActor
-    public func removeAll() {
-        withAnimation(AppConfig.snappy) {
-            items.removeAll()
-            fileContent = ""
-        }
-    }
-
-    @MainActor
-    public func focusTextField() {
-        shouldFocusTextField = true
-    }
 
     @MainActor
     func newChat() {

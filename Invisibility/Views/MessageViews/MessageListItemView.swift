@@ -43,9 +43,6 @@ struct MessageListItemView: View {
                  .offset(x: 130)
                  .frame(width: 200)
                  .visible(if: isHovered || isEditing)
-                 .onHover{ hovered in
-                     print("hovered")
-                 }
             )
     }
 }

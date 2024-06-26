@@ -66,7 +66,7 @@ struct MessageActionButtonsView: View {
                     icon: "pencil",
                     shortcut_hint: nil,
                     whichButtonIsHovered: $whichButtonIsHovered,
-                    action: {editAction()}
+                    action: editAction
                 )
                 .visible(if: !isEditing && !isAssistant, removeCompletely: true)
                 

@@ -9,6 +9,8 @@ struct ChatImageView: View {
 
     @State private var isHovering: Bool = false
 
+    private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
+
     init(imageItem: ChatDataItem) {
         self.imageItem = imageItem
         self.nsImage = NSImage(data: imageItem.data) ?? NSImage()
@@ -24,7 +26,7 @@ struct ChatImageView: View {
                 .shadow(radius: isHovering ? 4 : 0)
 
             Button(action: {
-                ChatViewModel.shared.removeItem(id: imageItem.id)
+                chatFieldViewModel.removeItem(id: imageItem.id)
             }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.gray)
@@ -40,7 +42,7 @@ struct ChatImageView: View {
             .focusable(false)
         }
         .onTapGesture {
-            ChatViewModel.shared.removeItem(id: imageItem.id)
+            chatFieldViewModel.removeItem(id: imageItem.id)
         }
         .padding(.horizontal, 10)
         .onHover { hovering in

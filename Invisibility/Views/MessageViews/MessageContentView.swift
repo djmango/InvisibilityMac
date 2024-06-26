@@ -94,6 +94,5 @@ struct MessageContentView: View {
         .onHover { hovering in
             isHovering = hovering
         }
-        
     }
 }

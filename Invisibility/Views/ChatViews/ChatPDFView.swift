@@ -7,6 +7,8 @@ struct ChatPDFView: View {
 
     @State private var isHovering: Bool = false
 
+    private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
+
     init(pdfItem: ChatDataItem) {
         self.item = pdfItem
     }
@@ -21,7 +23,7 @@ struct ChatPDFView: View {
                 .shadow(radius: isHovering ? 4 : 0)
 
             Button(action: {
-                ChatViewModel.shared.removeItem(id: item.id)
+                chatFieldViewModel.removeItem(id: item.id)
             }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.gray) // Make the button red to highlight it as a delete button

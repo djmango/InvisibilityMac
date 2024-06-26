@@ -18,10 +18,11 @@ struct MessageButtonItemView: View {
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
-    
     @State private var isPressed: Bool = false
     @State private var isHovering: Bool = false
     @Binding private var whichButtonIsHovered: String?
+
+    @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
     init(label: String?,
          icon: String,
@@ -48,7 +49,7 @@ struct MessageButtonItemView: View {
                         .frame(width: 18, height: 18)
                         .foregroundColor(iconColor)
                         .visible(
-                            if: !ShortcutViewModel.shared.modifierFlags.contains(.command) || !shortcutHints || shortcut_hint == nil,
+                            if: !shortcutViewModel.modifierFlags.contains(.command) || !shortcutHints || shortcut_hint == nil,
                             removeCompletely: true
                         )
 
@@ -57,7 +58,7 @@ struct MessageButtonItemView: View {
                             .font(.title3)
                             .foregroundColor(.chatButtonForeground)
                             .visible(
-                                if: ShortcutViewModel.shared.modifierFlags.contains(.command) && shortcutHints,
+                                if: shortcutViewModel.modifierFlags.contains(.command) && shortcutHints,
                                 removeCompletely: true
                             )
                             .truncationMode(.head)
@@ -68,7 +69,7 @@ struct MessageButtonItemView: View {
                     Text(label)
                         .font(.title3)
                         .foregroundColor(.chatButtonForeground)
-                        .visible(if: isHovering && animateButtons && !ShortcutViewModel.shared.modifierFlags.contains(.command), removeCompletely: true)
+                        .visible(if: isHovering && animateButtons && !shortcutViewModel.modifierFlags.contains(.command), removeCompletely: true)
                         .padding(.leading, 8)
                 }
             }
@@ -94,8 +95,7 @@ struct MessageButtonItemView: View {
         }
         .buttonStyle(.plain)
         .animation(AppConfig.snappy, value: label)
-        .animation(AppConfig.snappy, value: isHovering)
-        .animation(AppConfig.snappy, value: ShortcutViewModel.shared.modifierFlags)
+        // .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(.easeInOut(duration: 0.2), value: isPressed)
     }
 
