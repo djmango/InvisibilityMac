@@ -31,10 +31,11 @@ struct SettingsView: View {
     @State private var document: TextDocument = TextDocument(text: "")
 
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject private var userManager = UserManager.shared
-    @ObservedObject private var llmModelRepository = LLMModelRepository.shared
+    @ObservedObject private var settingsViewModel = SettingsViewModel.shared
+    private var userManager = UserManager.shared
     private var mainWindowViewModel = MainWindowViewModel.shared
     private var updaterViewModel = UpdaterViewModel.shared
+    private var llmModelRepository = LLMModelRepository.shared
 
     var body: some View {
         ScrollView {
@@ -42,7 +43,7 @@ struct SettingsView: View {
                 Spacer()
                 // User profile pic and login/logout button
                 SettingsUserCardView()
-                    .visible(if: userManager.user != nil)
+                    .visible(if: settingsViewModel.user != nil)
 
                 Button(action: {
                     UserManager.shared.login()
@@ -50,8 +51,8 @@ struct SettingsView: View {
                     Text("Login")
                 }
                 .buttonStyle(.bordered)
-                .visible(if: userManager.user == nil, removeCompletely: true)
-                .onHover{ hovered in
+                .visible(if: settingsViewModel.user == nil, removeCompletely: true)
+                .onHover { hovered in
                     if hovered {
                         NSCursor.pointingHand.set()
                     } else {
@@ -77,7 +78,7 @@ struct SettingsView: View {
 
                 LaunchAtLogin.Toggle("Launch at Login")
                     .toggleStyle(.switch)
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
@@ -87,18 +88,17 @@ struct SettingsView: View {
 
                 Toggle("Show on Menu Bar", isOn: $showMenuBar)
                     .toggleStyle(.switch)
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
                             NSCursor.arrow.set()
                         }
                     }
-                
 
                 Toggle("Shortcut Hints", isOn: $shortcutHints)
                     .toggleStyle(.switch)
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
@@ -115,7 +115,7 @@ struct SettingsView: View {
                             animateButtons = true
                         }
                     }
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
@@ -130,7 +130,7 @@ struct SettingsView: View {
                 Toggle("Animate Buttons", isOn: $animateButtons)
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
@@ -144,7 +144,7 @@ struct SettingsView: View {
                     .onChange(of: dynamicLLMLoad) {
                         Task { await llmModelRepository.loadDynamicModels() }
                     }
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
@@ -153,7 +153,7 @@ struct SettingsView: View {
                     }
 
                 Picker("", selection: $llmModel) {
-                    ForEach(llmModelRepository.models, id: \.self) { model in
+                    ForEach(settingsViewModel.availableLLMModels, id: \.self) { model in
                         Text(model.human_name).tag(model.human_name)
                     }
                 }
@@ -174,7 +174,7 @@ struct SettingsView: View {
                             OnboardingManager.shared.startOnboarding()
                         }
                         .buttonStyle(.bordered)
-                        .onHover{ hovered in
+                        .onHover { hovered in
                             if hovered {
                                 NSCursor.pointingHand.set()
                             } else {
@@ -190,7 +190,7 @@ struct SettingsView: View {
                             showingExporter = true
                         }
                         .buttonStyle(.bordered)
-                        .onHover{ hovered in
+                        .onHover { hovered in
                             if hovered {
                                 NSCursor.pointingHand.set()
                             } else {
@@ -204,7 +204,7 @@ struct SettingsView: View {
                             updaterViewModel.updater.checkForUpdates()
                         }
                         .buttonStyle(.bordered)
-                        .onHover{ hovered in
+                        .onHover { hovered in
                             if hovered {
                                 NSCursor.pointingHand.set()
                             } else {
@@ -218,7 +218,7 @@ struct SettingsView: View {
                             }
                         }
                         .buttonStyle(.bordered)
-                        .onHover{ hovered in
+                        .onHover { hovered in
                             if hovered {
                                 NSCursor.pointingHand.set()
                             } else {
@@ -237,7 +237,7 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.link)
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {
@@ -251,7 +251,7 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.link)
-                    .onHover{ hovered in
+                    .onHover { hovered in
                         if hovered {
                             NSCursor.pointingHand.set()
                         } else {

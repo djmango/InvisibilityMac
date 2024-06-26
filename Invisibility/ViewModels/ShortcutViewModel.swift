@@ -70,10 +70,12 @@ final class ShortcutViewModel: ObservableObject {
     }
 
     private func updateModifierFlags(isCommandPressed: Bool) {
-        if isCommandPressed {
-            modifierFlags.insert(.command)
-        } else {
-            modifierFlags.remove(.command)
+        withAnimation(AppConfig.snappy) {
+            if isCommandPressed {
+                modifierFlags.insert(.command)
+            } else {
+                modifierFlags.remove(.command)
+            }
         }
     }
 }
@@ -104,7 +106,6 @@ struct AppMenuCommands: Commands {
         CommandMenu("View") {
             Button("Scroll to Bottom") {
                 DispatchQueue.main.async {
-                    print("Scrolling to bottom")
                     MessageViewModel.shared.shouldScrollToBottom = true
                 }
             }
