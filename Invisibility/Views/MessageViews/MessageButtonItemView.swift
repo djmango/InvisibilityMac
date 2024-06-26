@@ -85,17 +85,17 @@ struct MessageButtonItemView: View {
             )
         }
         .onHover { hovering in
-            isHovering = hovering
-              if hovering {
-                  print("hovering over \(label)")
-                  whichButtonIsHovered = label
-              } else {
-                  whichButtonIsHovered = nil
-              }
+            withAnimation(AppConfig.snappy) {
+                isHovering = hovering
+                if hovering {
+                    whichButtonIsHovered = label
+                } else {
+                    whichButtonIsHovered = nil
+                }
+            }
         }
         .buttonStyle(.plain)
         .animation(AppConfig.snappy, value: label)
-        // .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(.easeInOut(duration: 0.2), value: isPressed)
     }
 
