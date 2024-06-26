@@ -22,7 +22,6 @@ final class UserManager: ObservableObject {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "UserManager")
 
     @Published public var user: User?
-    //    @Published public var isPaid: Bool = true
     @Published public var isPaid: Bool = false
     @Published public var confettis: Int = 0
     @Published public var inviteCount: Int = 0
