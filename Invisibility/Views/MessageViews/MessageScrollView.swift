@@ -97,13 +97,13 @@ struct MessageScrollView: View {
             }
 
             .onChange(of: chatViewModel.chat) {
-                // Wait .8 seconds before scrolling to the bottom to allow the chat to load
-                // DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                // print("scrolling to bottom")
-                withAnimation(AppConfig.easeIn) {
-                    proxy.scrollTo("bottom", anchor: .bottom)
+                // Wait before scrolling to the bottom to allow the chat to load
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    // print("scrolling to bottom")
+                    withAnimation(AppConfig.easeIn) {
+                        proxy.scrollTo("bottom", anchor: .bottom)
+                    }
                 }
-                // }
             }
         }
     }

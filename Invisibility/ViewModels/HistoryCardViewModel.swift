@@ -2,9 +2,9 @@ import Combine
 import SwiftUI
 
 class HistoryCardViewModel: ObservableObject {
-    @Published var chat: APIChat
+    @Published private(set) var chat: APIChat
+    @Published private(set) var isEditing: Bool = false
     @Published var editedName: String = ""
-    @Published var isEditing: Bool = false
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -42,7 +42,7 @@ class HistoryCardViewModel: ObservableObject {
         isEditing = true
     }
 
-    func commitEdit() {
+    @MainActor func commitEdit() {
         if !editedName.isEmpty {
             chatViewModel.renameChat(chat, name: editedName)
             chat.name = editedName
@@ -52,12 +52,13 @@ class HistoryCardViewModel: ObservableObject {
         isEditing = false
     }
 
-    func deleteChat() {
+    @MainActor func deleteChat() {
         chatViewModel.deleteChat(chat)
     }
 
     @MainActor func switchChat() {
         chatViewModel.switchChat(chat)
         _ = mainWindowViewModel.changeView(to: .chat)
+        print("switching to chat cuz view model yk")
     }
 }

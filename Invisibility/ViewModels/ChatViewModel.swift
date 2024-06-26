@@ -19,7 +19,7 @@ final class ChatViewModel: ObservableObject {
     @AppStorage("token") private var token: String?
 
     /// The currently viewed chat.
-    @Published public var chat: APIChat? {
+    @Published public private(set) var chat: APIChat? {
         didSet {
             print("ChatViewModel: chat set to \(chat?.name ?? "nil")")
         }
@@ -28,38 +28,51 @@ final class ChatViewModel: ObservableObject {
     private init() {}
 
     @MainActor
-    func newChat() {
+    func newChat() -> APIChat? {
         defer { PostHogSDK.shared.capture("new_chat") }
         guard let user = UserManager.shared.user else {
             logger.error("User not found")
+            return nil
+        }
+
+        chat = APIChat(
+            id: UUID(),
+            user_id: user.id
+        )
+        withAnimation(AppConfig.snappy) {
+            _ = MainWindowViewModel.shared.changeView(to: .chat)
+            if let chat {
+                MessageViewModel.shared.api_chats.append(chat)
+            }
+        }
+        return chat
+    }
+
+    @MainActor
+    func switchChat(_ chat: APIChat?) {
+        defer { PostHogSDK.shared.capture("switch_chat") }
+
+        // Attempt to switch to the chat, or create a new one if none is provided
+        guard let chat else {
+            if let newChat = newChat() {
+                self.chat = newChat
+            }
             return
         }
 
         withAnimation(AppConfig.snappy) {
-            ChatViewModel.shared.chat = APIChat(
-                id: UUID(),
-                user_id: user.id
-            )
-            _ = MainWindowViewModel.shared.changeView(to: .chat)
+            self.chat = chat
         }
-        MessageViewModel.shared.api_chats.append(chat!)
     }
 
     @MainActor
-    func switchChat(_ chat: APIChat) {
-        defer { PostHogSDK.shared.capture("switch_chat") }
-        withAnimation(AppConfig.snappy) {
-            ChatViewModel.shared.chat = chat
-        }
-    }
-
     func deleteChat(_ chat: APIChat) {
         defer { PostHogSDK.shared.capture("delete_chat") }
         withAnimation {
             MessageViewModel.shared.api_chats.removeAll { $0 == chat }
         }
-        if ChatViewModel.shared.chat == chat {
-            ChatViewModel.shared.chat = MessageViewModel.shared.api_chats.first
+        if self.chat == chat {
+            switchChat(MessageViewModel.shared.api_chats.first)
         }
 
         // DELETE chat
@@ -82,6 +95,7 @@ final class ChatViewModel: ObservableObject {
         }
     }
 
+    @MainActor
     func renameChat(_ chat: APIChat, name: String) {
         defer { PostHogSDK.shared.capture("rename_chat", properties: ["name": name]) }
 

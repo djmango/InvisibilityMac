@@ -60,7 +60,7 @@ final class MessageViewModel: ObservableObject {
                 self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
                 self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
                 self.logger.debug("Fetched messages: \(self.api_messages.count)")
-                ChatViewModel.shared.chat = self.api_chats.last
+                ChatViewModel.shared.switchChat(self.api_chats.last)
             }
         }
 
@@ -82,7 +82,7 @@ final class MessageViewModel: ObservableObject {
                 id: UUID(),
                 user_id: user.id
             )
-            ChatViewModel.shared.chat = chat
+            ChatViewModel.shared.switchChat(chat)
             api_chats.append(chat)
         }
         guard let chat else {

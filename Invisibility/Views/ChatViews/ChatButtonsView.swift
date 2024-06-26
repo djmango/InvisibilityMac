@@ -40,9 +40,9 @@ struct ChatButtonsView: View {
                 whoIsHovering: $whoIsHovering
 
             ) {
-                withAnimation(AppConfig.snappy) {
-                    chatViewModel.newChat()
-                }
+                // withAnimation(AppConfig.snappy) {
+                _ = chatViewModel.newChat()
+                // }
             }
             .keyboardShortcut("n", modifiers: [.command])
             .onHover { hovered in
@@ -179,7 +179,7 @@ struct ChatButtonsView: View {
                 }
             }
         }
-        .focusable(false)
+        // .focusable(false)
         .padding(.horizontal, 10)
         .padding(.vertical, 5)
         .background(
@@ -191,7 +191,7 @@ struct ChatButtonsView: View {
         )
         .frame(maxWidth: 380)
         .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
-        .animation(AppConfig.snappy, value: messageViewModel.api_messages_in_chat.count)
+        .animation(AppConfig.snappy, value: messageViewModel.api_messages_in_chat)
         .animation(AppConfig.snappy, value: betaFeatures)
     }
 }

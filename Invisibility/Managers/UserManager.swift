@@ -25,15 +25,7 @@ final class UserManager: ObservableObject {
     @Published public var confettis: Int = 0
     @Published public var inviteCount: Int = 0
 
-    @AppStorage("token") public var token: String? {
-        didSet {
-            if token != nil {
-                Task {
-                    await setup()
-                }
-            }
-        }
-    }
+    @AppStorage("token") public var token: String?
 
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
     @AppStorage("lastResetDate") public var lastResetDate: String = "" {
