@@ -16,7 +16,6 @@ struct RefreshTokenResponse: Decodable {
     let token: String
 }
 
-@MainActor
 final class UserManager: ObservableObject {
     static let shared = UserManager()
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "UserManager")
@@ -36,9 +35,7 @@ final class UserManager: ObservableObject {
         }
     }
 
-    // TODO: published somehow
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
-    //    @AppStorage("lastResetDate") public var lastResetDate: String = ""
     @AppStorage("lastResetDate") public var lastResetDate: String = "" {
         didSet {
             if lastResetDate.isEmpty {
@@ -91,8 +88,8 @@ final class UserManager: ObservableObject {
         logger.debug("Incremented messages sent today: \(numMessagesSentToday)")
     }
 
+    @MainActor
     func setup() async {
-//        numMessagesSentToday = 9
         resetMessagesIfNeeded()
         if await userIsLoggedIn() {
             self.confettis = 1
@@ -129,6 +126,7 @@ final class UserManager: ObservableObject {
         }
     }
 
+    @MainActor
     func getUser() async -> User? {
         guard token != nil else {
             return nil
@@ -144,6 +142,7 @@ final class UserManager: ObservableObject {
         }
     }
 
+    @MainActor
     func fetchUser() async throws -> User? {
         let urlString = AppConfig.invisibility_api_base + "/auth/user"
         guard let jwtToken = self.token else {
@@ -167,6 +166,7 @@ final class UserManager: ObservableObject {
         }
     }
 
+    @MainActor
     func checkPaymentStatus() async -> Bool {
         guard let jwtToken = self.token else {
             logger.warning("No JWT token")
@@ -197,6 +197,7 @@ final class UserManager: ObservableObject {
         }
     }
 
+    @MainActor
     func getInviteCount() {
         // Unwrap the user.firstName safely
         guard let firstName = user?.firstName else {
@@ -241,7 +242,7 @@ final class UserManager: ObservableObject {
 
         if let url = URL(string: AppConfig.invisibility_api_base + "/pay/checkout?email=\(user.email)") {
             NSWorkspace.shared.open(url)
-            Task { WindowManager.shared.hideWindow() }
+            Task { await WindowManager.shared.hideWindow() }
         }
     }
 
@@ -279,7 +280,9 @@ final class UserManager: ObservableObject {
                             // Set the new token from the response
                             Task {
                                 let oldToken = self.token
-                                self.token = refreshTokenResponse.token
+                                DispatchQueue.main.async {
+                                    self.token = refreshTokenResponse.token
+                                }
                                 if await self.userIsLoggedIn() {
                                     self.logger.debug("Token refreshed")
                                     continuation.resume(returning: true)
@@ -301,6 +304,7 @@ final class UserManager: ObservableObject {
         }
     }
 
+    @MainActor
     func logout() {
         defer { PostHogSDK.shared.capture("logout", properties: ["num_messages_left": numMessagesLeft]) }
         self.token = nil
