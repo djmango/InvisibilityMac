@@ -11,7 +11,7 @@ import ScreenCaptureKit
 import SwiftUI
 
 struct CaptureView: View {
-    @ObservedObject var screenRecorder = ScreenRecorder.shared
+    @ObservedObject private var screenRecorder = ScreenRecorder.shared
     // State object might be better here
     @State private var whoIsHovering: String?
     @State private var isHovering: Bool = false

@@ -102,6 +102,7 @@ struct MessageScrollView: View {
                     }
                 }
             }
+            .animation(AppConfig.snappy, value: viewModel.api_messages_in_chat)
         }
     }
 }
