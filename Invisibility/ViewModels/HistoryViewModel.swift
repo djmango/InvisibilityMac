@@ -2,8 +2,6 @@ import Combine
 import Foundation
 
 class HistoryViewModel: ObservableObject {
-    static let shared = HistoryViewModel()
-
     @Published private(set) var groupedChats: [String: [APIChat]] = [:]
 
     let categoryOrder: [String] = [
@@ -16,7 +14,7 @@ class HistoryViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
-    private init() {
+    init() {
         Publishers.CombineLatest(MessageViewModel.shared.$api_chats, MessageViewModel.shared.$api_messages)
             .map { [weak self] chats, messages in
                 self?.groupChats(chats: chats, messages: messages) ?? [:]

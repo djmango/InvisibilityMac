@@ -10,32 +10,17 @@ import MarkdownWebView
 import SwiftUI
 
 struct MessageContentView: View {
-    @ObservedObject var message: APIMessage
+    @StateObject private var viewModel: MessageContentViewModel
 
     private let isAssistant: Bool
     private let model_name: String
+
     @State private var isHovering = false
 
     init(message: APIMessage) {
-        self.message = message
         self.isAssistant = message.role == .assistant
         self.model_name = LLMModelRepository.shared.model_id_2_name(message.model_id)
-    }
-
-    private var isGenerating: Bool {
-        MessageViewModel.shared.isGenerating && message.text.isEmpty
-    }
-
-    private var isLastMessage: Bool {
-        message.id == MessageViewModel.shared.api_messages.last?.id
-    }
-
-    private var showLoading: Bool {
-        isGenerating && isLastMessage
-    }
-
-    private var images: [APIFile] {
-        MessageViewModel.shared.shownImagesFor(message: message)
+        self._viewModel = StateObject(wrappedValue: MessageContentViewModel(message: message))
     }
 
     var body: some View {
@@ -62,15 +47,15 @@ struct MessageContentView: View {
 
             ProgressView()
                 .controlSize(.small)
-                .visible(if: isGenerating && isLastMessage, removeCompletely: true)
+                .visible(if: viewModel.isGenerating && viewModel.isLastMessage, removeCompletely: true)
 
             HStack {
-                MessageImagesView(images: images)
-                    .visible(if: !images.isEmpty, removeCompletely: true)
+                MessageImagesView(images: viewModel.images)
+                    .visible(if: !viewModel.images.isEmpty, removeCompletely: true)
             }
-            .visible(if: !images.isEmpty, removeCompletely: true)
+            .visible(if: !viewModel.images.isEmpty, removeCompletely: true)
 
-            MarkdownWebView(message.text)
+            MarkdownWebView(viewModel.message.text)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()

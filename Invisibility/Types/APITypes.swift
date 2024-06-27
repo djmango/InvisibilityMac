@@ -62,7 +62,7 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
     enum CodingKeys: CodingKey {
         case id, chat_id, user_id, text, role, regenerated, model_id, created_at, updated_at
     }
- 
+
     /// Conforms to `CustomStringConvertible` for debugging output.
     var description: String {
         "\(role): \(text)"
@@ -125,7 +125,7 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
             lhs.user_id == rhs.user_id &&
             lhs.text == rhs.text &&
             lhs.role == rhs.role &&
-            lhs.model_id == rhs.model_id && 
+            lhs.model_id == rhs.model_id &&
             lhs.regenerated == rhs.regenerated &&
             lhs.created_at == rhs.created_at &&
             lhs.updated_at == rhs.updated_at

@@ -23,13 +23,9 @@ extension KeyboardShortcuts.Name {
 final class ShortcutViewModel: ObservableObject {
     static let shared = ShortcutViewModel()
 
-    @Published public var modifierFlags: NSEvent.ModifierFlags = []
+    @Published public var isCommandPressed: Bool = false
 
-    private var cancellables: Set<AnyCancellable> = []
-
-    private init() {
-        setupCommandKeyObserver()
-    }
+    private init() {}
 
     @MainActor
     /// Set up the global keyboard shortcuts
@@ -58,26 +54,6 @@ final class ShortcutViewModel: ObservableObject {
             ScreenRecorder.shared.toggleRecording()
         }
     }
-
-    private func setupCommandKeyObserver() {
-        NotificationCenter.default.publisher(for: .commandKeyPressed)
-            .sink { [weak self] notification in
-                if let isPressed = notification.userInfo?["isPressed"] as? Bool {
-                    self?.updateModifierFlags(isCommandPressed: isPressed)
-                }
-            }
-            .store(in: &cancellables)
-    }
-
-    private func updateModifierFlags(isCommandPressed: Bool) {
-        withAnimation(AppConfig.snappy) {
-            if isCommandPressed {
-                modifierFlags.insert(.command)
-            } else {
-                modifierFlags.remove(.command)
-            }
-        }
-    }
 }
 
 /// The app specific shortcuts, non-global
@@ -86,7 +62,7 @@ struct AppMenuCommands: Commands {
         CommandMenu("File") {
             Button("New") {
                 DispatchQueue.main.async {
-                    ChatViewModel.shared.newChat()
+                    _ = ChatViewModel.shared.newChat()
                 }
             }
             .keyboardShortcut("n")
@@ -98,7 +74,7 @@ struct AppMenuCommands: Commands {
             .keyboardShortcut("o")
 
             Button("Send Message") {
-                Task { await MessageViewModel.shared.sendFromChat() }
+                Task { @MainActor in await MessageViewModel.shared.sendFromChat() }
             }
             .keyboardShortcut(.return, modifiers: [.command])
         }

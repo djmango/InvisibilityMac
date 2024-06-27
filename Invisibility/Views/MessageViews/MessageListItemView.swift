@@ -3,8 +3,6 @@ import SwiftUI
 struct MessageListItemView: View {
     let message: APIMessage
 
-    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
-
     @State private var isHovered: Bool = false
 
     var body: some View {

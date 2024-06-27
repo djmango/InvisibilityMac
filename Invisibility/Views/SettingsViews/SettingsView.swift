@@ -31,11 +31,7 @@ struct SettingsView: View {
     @State private var document: TextDocument = TextDocument(text: "")
 
     @Environment(\.colorScheme) var colorScheme
-    @ObservedObject private var settingsViewModel = SettingsViewModel.shared
-    private var userManager = UserManager.shared
-    private var mainWindowViewModel = MainWindowViewModel.shared
-    private var updaterViewModel = UpdaterViewModel.shared
-    private var llmModelRepository = LLMModelRepository.shared
+    @StateObject private var viewModel: SettingsViewModel = SettingsViewModel()
 
     var body: some View {
         ScrollView {
@@ -43,15 +39,15 @@ struct SettingsView: View {
                 Spacer()
                 // User profile pic and login/logout button
                 SettingsUserCardView()
-                    .visible(if: settingsViewModel.user != nil)
+                    .visible(if: viewModel.user != nil)
 
                 Button(action: {
-                    UserManager.shared.login()
+                    viewModel.login()
                 }) {
                     Text("Login")
                 }
                 .buttonStyle(.bordered)
-                .visible(if: settingsViewModel.user == nil, removeCompletely: true)
+                .visible(if: viewModel.user == nil, removeCompletely: true)
                 .onHover { hovered in
                     if hovered {
                         NSCursor.pointingHand.set()
@@ -142,7 +138,7 @@ struct SettingsView: View {
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
                     .onChange(of: dynamicLLMLoad) {
-                        Task { await llmModelRepository.loadDynamicModels() }
+                        Task { @MainActor in await viewModel.loadDynamicModels() }
                     }
                     .onHover { hovered in
                         if hovered {
@@ -153,7 +149,7 @@ struct SettingsView: View {
                     }
 
                 Picker("", selection: $llmModel) {
-                    ForEach(settingsViewModel.availableLLMModels, id: \.self) { model in
+                    ForEach(viewModel.availableLLMModels, id: \.self) { model in
                         Text(model.human_name).tag(model.human_name)
                     }
                 }
@@ -170,8 +166,7 @@ struct SettingsView: View {
                 Grid {
                     GridRow {
                         Button("Reset Onboarding") {
-                            onboardingViewed = false
-                            OnboardingManager.shared.startOnboarding()
+                            viewModel.startOnboarding()
                         }
                         .buttonStyle(.bordered)
                         .onHover { hovered in
@@ -183,9 +178,7 @@ struct SettingsView: View {
                         }
 
                         Button("Export Chat") {
-                            let text = MessageViewModel.shared.api_messages_in_chat.map { message in
-                                "\(message.role.rawValue.capitalized): \(message.text)"
-                            }.joined(separator: "\n")
+                            let text = viewModel.getExportChatText()
                             document = TextDocument(text: text)
                             showingExporter = true
                         }
@@ -201,7 +194,7 @@ struct SettingsView: View {
 
                     GridRow {
                         Button("Check for Updates") {
-                            updaterViewModel.updater.checkForUpdates()
+                            viewModel.checkForUpdates()
                         }
                         .buttonStyle(.bordered)
                         .onHover { hovered in
@@ -332,7 +325,7 @@ struct SettingsView: View {
             VStack {
                 HStack {
                     Button(action: {
-                        _ = mainWindowViewModel.changeView(to: .chat)
+                        _ = viewModel.changeView(to: .chat)
                     }) {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.chatButtonForeground)
