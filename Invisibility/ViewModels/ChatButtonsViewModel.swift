@@ -14,8 +14,8 @@ class ChatButtonsViewModel: ObservableObject {
     private let messageViewModel: MessageViewModel = .shared
     private let screenRecorder: ScreenRecorder = .shared
     private let screenshotManager: ScreenshotManager = .shared
-    private let windowManager: WindowManager = .shared
     private let shortcutViewModel: ShortcutViewModel = .shared
+    private let windowManager: WindowManager = .shared
 
     var isShowingHistory: Bool {
         whoIsVisible == .history
@@ -40,7 +40,7 @@ class ChatButtonsViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: \.isGenerating, on: self)
             .store(in: &cancellables)
-            
+
         shortcutViewModel.$isCommandPressed
             .receive(on: DispatchQueue.main)
             .assign(to: \.isCommandPressed, on: self)

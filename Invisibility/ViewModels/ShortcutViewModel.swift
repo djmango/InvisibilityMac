@@ -25,9 +25,7 @@ final class ShortcutViewModel: ObservableObject {
 
     @Published public var isCommandPressed: Bool = false
 
-    private var cancellables: Set<AnyCancellable> = []
-
-    private init() { }
+    private init() {}
 
     @MainActor
     /// Set up the global keyboard shortcuts
