@@ -101,7 +101,7 @@ struct MainView: View {
             if sideSwitched {
                 xOffset = xOffset * -1
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 withAnimation(.snappy(duration: 0.3)) {
                     xOffset = 0
                 }

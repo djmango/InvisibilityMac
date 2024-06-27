@@ -12,21 +12,11 @@ import SwiftUI
 struct ChatButtonsView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatButtonsView")
 
+    @StateObject private var viewModel: ChatButtonsViewModel = ChatButtonsViewModel()
+
     @AppStorage("animateButtons") private var animateButtons: Bool = true
-    @AppStorage("betaFeatures") private var betaFeatures: Bool = false
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
-
-    @ObservedObject private var messageViewModel: MessageViewModel = MessageViewModel.shared
-    @ObservedObject private var screenRecorder: ScreenRecorder = ScreenRecorder.shared
-    private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
-    private var chatViewModel: ChatViewModel = ChatViewModel.shared
-    private var windowManager: WindowManager = WindowManager.shared
-    private let screenshotManager = ScreenshotManager.shared
-
-    private var isShowingHistory: Bool {
-        mainWindowViewModel.whoIsVisible == .history
-    }
 
     @State private var whoIsHovering: String?
 
@@ -40,9 +30,7 @@ struct ChatButtonsView: View {
                 whoIsHovering: $whoIsHovering
 
             ) {
-                // withAnimation(AppConfig.snappy) {
-                _ = chatViewModel.newChat()
-                // }
+                _ = viewModel.newChat()
             }
             .keyboardShortcut("n", modifiers: [.command])
             .onHover { hovered in
@@ -61,10 +49,10 @@ struct ChatButtonsView: View {
                 whoIsHovering: $whoIsHovering
 
             ) {
-                Task { await screenshotManager.capture() }
+                viewModel.captureScreenshot()
             }
             .keyboardShortcut("1", modifiers: [.command, .shift])
-            .visible(if: !isShowingHistory, removeCompletely: true)
+            .visible(if: !viewModel.isShowingHistory, removeCompletely: true)
             .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
@@ -75,16 +63,16 @@ struct ChatButtonsView: View {
 
             // Video
             MessageButtonItemView(
-                label: screenRecorder.isRunning ? "Stop Sidekick" : "Start Sidekick",
+                label: viewModel.isRecording ? "Stop Sidekick" : "Start Sidekick",
                 icon: "shared.with.you",
                 shortcut_hint: "⌘ ⇧ 2",
                 whoIsHovering: $whoIsHovering,
-                iconColor: screenRecorder.isRunning ? .purple : .chatButtonForeground
+                iconColor: viewModel.isRecording ? .purple : .chatButtonForeground
             ) {
-                screenRecorder.toggleRecording()
+                viewModel.toggleRecording()
             }
             .keyboardShortcut("2", modifiers: [.command, .shift])
-            .visible(if: !isShowingHistory, removeCompletely: true)
+            .visible(if: !viewModel.isShowingHistory, removeCompletely: true)
             .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
@@ -99,12 +87,12 @@ struct ChatButtonsView: View {
                 icon: "magnifyingglass",
                 shortcut_hint: "⌘ F",
                 whoIsHovering: $whoIsHovering,
-                iconColor: isShowingHistory ? .history : .chatButtonForeground
+                iconColor: viewModel.isShowingHistory ? .history : .chatButtonForeground
             ) {
-                if isShowingHistory {
-                    _ = mainWindowViewModel.changeView(to: .chat)
+                if viewModel.isShowingHistory {
+                    _ = viewModel.changeView(to: .chat)
                 } else {
-                    _ = mainWindowViewModel.changeView(to: .history)
+                    _ = viewModel.changeView(to: .history)
                 }
             }
             .keyboardShortcut("f", modifiers: [.command])
@@ -124,10 +112,10 @@ struct ChatButtonsView: View {
                 whoIsHovering: $whoIsHovering
 
             ) {
-                if mainWindowViewModel.whoIsVisible == .settings {
-                    _ = mainWindowViewModel.changeView(to: .chat)
+                if viewModel.whoIsVisible == .settings {
+                    _ = viewModel.changeView(to: .chat)
                 } else {
-                    _ = mainWindowViewModel.changeView(to: .settings)
+                    _ = viewModel.changeView(to: .settings)
                 }
             }
             .keyboardShortcut(",", modifiers: [.command])
@@ -148,11 +136,11 @@ struct ChatButtonsView: View {
 
             ) {
                 logger.info("Stop generating")
-                messageViewModel.stopGenerating()
+                viewModel.stopGenerating()
             }
             .keyboardShortcut("p", modifiers: [.command])
-            .visible(if: messageViewModel.isGenerating, removeCompletely: true)
-            .visible(if: !isShowingHistory, removeCompletely: true)
+            .visible(if: viewModel.isGenerating, removeCompletely: true)
+            .visible(if: !viewModel.isShowingHistory, removeCompletely: true)
             .onHover { hovered in
                 if hovered {
                     NSCursor.pointingHand.set()
@@ -168,7 +156,7 @@ struct ChatButtonsView: View {
                 shortcut_hint: "⌘ ⇧ S",
                 whoIsHovering: $whoIsHovering
             ) {
-                windowManager.switchSide()
+                viewModel.switchSide()
             }
             .keyboardShortcut("s", modifiers: [.command, .shift])
             .onHover { hovered in
@@ -190,8 +178,6 @@ struct ChatButtonsView: View {
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
         )
         .frame(maxWidth: 380)
-        .animation(AppConfig.snappy, value: messageViewModel.isGenerating)
-        .animation(AppConfig.snappy, value: messageViewModel.api_messages_in_chat)
-        .animation(AppConfig.snappy, value: betaFeatures)
+        .animation(AppConfig.snappy, value: viewModel.isGenerating)
     }
 }

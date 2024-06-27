@@ -170,9 +170,7 @@ final class MessageViewModel: ObservableObject {
         )
         }
 
-        withAnimation(AppConfig.snappy) {
-            api_messages.append(contentsOf: [user_message, assistant_message])
-        }
+        api_messages.append(contentsOf: [user_message, assistant_message])
 
         chatTask = Task {
             let lastMessageId = assistant_message.id
@@ -192,7 +190,7 @@ final class MessageViewModel: ObservableObject {
         logger.debug("Chat complete")
         if api_messages_in_chat.last?.id == lastMessageId {
             // Only update isGenerating if the last message is the chat we are responsible for
-            self.isGenerating = false
+            isGenerating = false
         }
 
         // PUT request to autorename if the chat is named New Chat

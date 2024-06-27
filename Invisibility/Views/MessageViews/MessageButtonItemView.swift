@@ -50,7 +50,7 @@ struct MessageButtonItemView: View {
                         .frame(width: 18, height: 18)
                         .foregroundColor(iconColor)
                         .visible(
-                            if: !shortcutViewModel.modifierFlags.contains(.command) || !shortcutHints || shortcut_hint == nil,
+                            if: !shortcutViewModel.isCommandPressed || !shortcutHints || shortcut_hint == nil,
                             removeCompletely: true
                         )
 
@@ -59,7 +59,7 @@ struct MessageButtonItemView: View {
                             .font(.title3)
                             .foregroundColor(.chatButtonForeground)
                             .visible(
-                                if: shortcutViewModel.modifierFlags.contains(.command) && shortcutHints,
+                                if: shortcutViewModel.isCommandPressed && shortcutHints,
                                 removeCompletely: true
                             )
                             .truncationMode(.head)
@@ -70,7 +70,7 @@ struct MessageButtonItemView: View {
                     Text(label)
                         .font(.title3)
                         .foregroundColor(.chatButtonForeground)
-                        .visible(if: isHovering && animateButtons && !shortcutViewModel.modifierFlags.contains(.command), removeCompletely: true)
+                        .visible(if: isHovering && animateButtons && !shortcutViewModel.isCommandPressed, removeCompletely: true)
                         .padding(.leading, 8)
                 }
             }
