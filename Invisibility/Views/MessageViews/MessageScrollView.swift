@@ -12,43 +12,18 @@ struct MessageScrollView: View {
     @ObservedObject private var viewModel: MessageScrollViewModel = .shared
 
     @State private var numMessagesDisplayed = 10
-    
+
     private var displayedMessages: [APIMessage] {
         viewModel.api_messages_in_chat.suffix(numMessagesDisplayed)
     }
-    
-    var body: some View {
-        Group {
-            if userManager.isLoggedIn {
-                LoggedInView(
-                    displayedMessages: displayedMessages,
-                    numMessagesDisplayed: $numMessagesDisplayed,
-                    messageViewModel: messageViewModel,
-                    chatViewModel: chatViewModel,
-                    screenRecorder: screenRecorder,
-                    userManager: userManager
-                )
-            } else {
-                LoginCardView()
-            }
-        }
-    }
-}
 
-struct LoggedInView: View {
-    var displayedMessages: [APIMessage]
-    @Binding var numMessagesDisplayed: Int
-    @ObservedObject var messageViewModel: MessageViewModel
-    @ObservedObject var chatViewModel: ChatViewModel
-    @ObservedObject var screenRecorder: ScreenRecorder
-    @ObservedObject var userManager: UserManager
-    
     var body: some View {
+        // let _ = Self._printChanges()
         ScrollViewReader { proxy in
             ScrollView {
                 VStack {
                     HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
-                    
+
                     Spacer()
 
                     VStack(spacing: 5) {
@@ -57,10 +32,10 @@ struct LoggedInView: View {
                                 .id(message.id)
                         }
                     }
-                    
+
                     NewChatCardView()
                         .visible(if: displayedMessages.isEmpty, removeCompletely: true)
-                    
+
                     FreeTierCardView()
                         .visible(if: !viewModel.canSendMessages, removeCompletely: true)
 
@@ -121,6 +96,7 @@ struct LoggedInView: View {
             .onChange(of: viewModel.chat) {
                 // Wait before scrolling to the bottom to allow the chat to load
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                    // print("scrolling to bottom")
                     withAnimation(AppConfig.easeIn) {
                         proxy.scrollTo("bottom", anchor: .bottom)
                     }
