@@ -21,12 +21,14 @@ struct ChatImageView: View {
             Image(nsImage: nsImage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 150, height: 150)
+                .frame(width: 125, height: 125)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .shadow(radius: isHovering ? 4 : 0)
 
             Button(action: {
-                chatFieldViewModel.removeItem(id: imageItem.id)
+                withAnimation(AppConfig.snappy) {
+                    chatFieldViewModel.removeItem(id: imageItem.id)
+                }
             }) {
                 Image(systemName: "xmark.circle.fill")
                     .foregroundColor(.gray)
@@ -34,21 +36,16 @@ struct ChatImageView: View {
             }
             .opacity(isHovering ? 1 : 0)
             .buttonStyle(.plain)
-            .onHover { isHovering in
-                HoverTrackerModel.shared.targetType = isHovering ? .chatImageDelete : .nil_
-                HoverTrackerModel.shared.targetItem = isHovering ? imageItem.id.uuidString : nil
+            .onHover { hovering in
+                HoverTrackerModel.shared.targetType = hovering ? .chatImageDelete : .nil_
+                HoverTrackerModel.shared.targetItem = hovering ? imageItem.id.uuidString : nil
             }
             .padding(3)
             .focusable(false)
         }
-        .onTapGesture {
-            chatFieldViewModel.removeItem(id: imageItem.id)
-        }
         .padding(.horizontal, 10)
         .onHover { hovering in
             isHovering = hovering
-            HoverTrackerModel.shared.targetType = hovering ? .chatImage : .nil_
-            HoverTrackerModel.shared.targetItem = hovering ? imageItem.id.uuidString : nil
         }
     }
 }

@@ -35,7 +35,8 @@ struct MessageScrollView: View {
 
                     NewChatCardView()
                         .visible(if: displayedMessages.isEmpty, removeCompletely: true)
-
+                        
+                    // TODO: this shows up in every chat, despite not appearing
                     FreeTierCardView()
                         .visible(if: !viewModel.canSendMessages, removeCompletely: true)
 

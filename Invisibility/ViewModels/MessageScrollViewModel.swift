@@ -48,12 +48,11 @@ final class MessageScrollViewModel: ObservableObject {
             .assign(to: \.chat, on: self)
             .store(in: &cancellables)
 
-        /// TODO: fix this, wont update the card for free user expired yet
-        // userManager.$numMessagesSentToday
-        //     .receive(on: DispatchQueue.main)
-        //     .map { $0 < AppConfig.maxMessagesPerDay }
-        //     .assign(to: \.canSendMessages, on: self)
-        //     .store(in: &cancellables)
+        // Subscribe to changes in canSendMessages from UserManager
+         userManager.$canSendMessages
+             .receive(on: DispatchQueue.main)
+             .assign(to: \.canSendMessages, on: self)
+             .store(in: &cancellables)
     }
 
     @MainActor

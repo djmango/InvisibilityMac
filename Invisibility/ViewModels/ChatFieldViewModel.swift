@@ -35,26 +35,27 @@ final class ChatFieldViewModel: ObservableObject {
     public func focusTextField() {
         shouldFocusTextField = true
     }
-
+    
+    // NOTE: animation causes flickering glitch, off for now
     @MainActor
     public func addImage(_ data: Data, hide: Bool = false) {
-        withAnimation(AppConfig.snappy) {
+        //withAnimation(AppConfig.snappy) {
             items.append(ChatDataItem(data: data, dataType: .jpeg, hide: hide))
-        }
+        //}
     }
 
     @MainActor
     public func removeItem(id: UUID) {
-        withAnimation(AppConfig.snappy) {
+        //withAnimation(AppConfig.snappy) {
             items.removeAll { $0.id == id }
-        }
+        //}
     }
 
     @MainActor
     public func removeAll() {
-        withAnimation(AppConfig.snappy) {
+//        withAnimation(AppConfig.snappy) {
             items.removeAll()
             fileContent = ""
-        }
+ //       }
     }
 }
