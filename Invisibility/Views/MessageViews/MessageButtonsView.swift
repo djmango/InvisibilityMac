@@ -33,11 +33,11 @@ struct MessageActionButtonsView: View {
     }
 
     private var isCopyButtonVisible: Bool {
-        isHovered || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
+        isHovered || (shortcutHints && shortcutViewModel.isCommandPressed)
     }
 
     private var isRegenerateButtonVisible: Bool {
-        (isHovered && message.role == .assistant) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
+        (isHovered && message.role == .assistant) || (shortcutHints && shortcutViewModel.isCommandPressed)
     }
 
     init(
@@ -95,7 +95,6 @@ struct MessageActionButtonsView: View {
         }
         .padding(8)
         .animation(AppConfig.snappy, value: whoIsHovering)
-        .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
     }
 
     // MARK: - Actions

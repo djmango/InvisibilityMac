@@ -29,6 +29,7 @@ class OnboardingManager {
 
     @MainActor
     public func startOnboarding() {
+        onboardingViewed = false
         defer { PostHogSDK.shared.capture("start_onboarding") }
         WindowManager.shared.hideWindow()
         setupWindow()
