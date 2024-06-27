@@ -1,5 +1,5 @@
 //
-//  MessageButtonsView.swift
+//  MessageActionButtonsView.swift
 //  Invisibility
 //
 //  Created by Sulaiman Ghori on 4/6/24.
@@ -12,20 +12,21 @@ import ViewCondition
 struct MessageActionButtonsView: View {
     private let message: APIMessage
 
+    @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
+    @StateObject private var viewModel: MessageActionButtonViewModel
+
     @State private var whoIsHovering: String?
     @State private var isCopied: Bool = false
     @Binding private var isHovered: Bool
 
     @AppStorage("shortcutHints") private var shortcutHints = true
-    @ObservedObject var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
-    @ObservedObject var messageViewModel: MessageViewModel = MessageViewModel.shared
 
     private var isAssistant: Bool {
         message.role == .assistant
     }
 
     private var isGenerating: Bool {
-        messageViewModel.isGenerating && (message.text.isEmpty)
+        viewModel.isGenerating && (message.text.isEmpty)
     }
 
     private var isResizeButtonVisible: Bool {
@@ -33,11 +34,11 @@ struct MessageActionButtonsView: View {
     }
 
     private var isCopyButtonVisible: Bool {
-        isHovered || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
+        isHovered || (shortcutHints && shortcutViewModel.isCommandPressed)
     }
 
     private var isRegenerateButtonVisible: Bool {
-        (isHovered && message.role == .assistant) || (shortcutHints && shortcutViewModel.modifierFlags.contains(.command))
+        (isHovered && message.role == .assistant) || (shortcutHints && shortcutViewModel.isCommandPressed)
     }
 
     init(
@@ -46,6 +47,7 @@ struct MessageActionButtonsView: View {
     ) {
         self.message = message
         self._isHovered = isHovered
+        self._viewModel = StateObject(wrappedValue: MessageActionButtonViewModel(message: message))
     }
 
     var body: some View {
@@ -61,7 +63,7 @@ struct MessageActionButtonsView: View {
                     shortcut_hint: "⌘ ⇧ R",
                     whoIsHovering: $whoIsHovering
                 ) {
-                    regenerateAction()
+                    viewModel.regenerate()
                 }
                 .keyboardShortcut("r", modifiers: [.command, .shift])
                 .onHover { inside in
@@ -95,7 +97,6 @@ struct MessageActionButtonsView: View {
         }
         .padding(8)
         .animation(AppConfig.snappy, value: whoIsHovering)
-        .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
     }
 
     // MARK: - Actions
@@ -109,12 +110,6 @@ struct MessageActionButtonsView: View {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             isCopied = false
-        }
-    }
-
-    private func regenerateAction() {
-        Task {
-            await messageViewModel.regenerate(message: message)
         }
     }
 }

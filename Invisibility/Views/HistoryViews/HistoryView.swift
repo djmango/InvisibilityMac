@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 struct HistoryView: View {
-    @ObservedObject private var viewModel: HistoryViewModel = HistoryViewModel.shared
+    @StateObject private var viewModel: HistoryViewModel = HistoryViewModel()
 
     var body: some View {
         ScrollView {
