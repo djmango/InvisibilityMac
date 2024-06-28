@@ -168,9 +168,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             ChatFieldViewModel.shared.removeItem(id: target)
         case .chatPDFDelete:
             logger.debug("Performing Chat PDF Delete action")
-            DispatchQueue.main.async {
-                ChatFieldViewModel.shared.removeItem(id: target)
-            }
+            ChatFieldViewModel.shared.removeItem(id: target)
         case .menuItem:
             logger.debug("Opening Menu Settings")
         // Implement menu move functionality

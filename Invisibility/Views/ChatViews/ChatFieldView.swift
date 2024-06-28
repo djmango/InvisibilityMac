@@ -36,7 +36,7 @@ struct ChatFieldView: View {
     var body: some View {
         // let _ = Self._printChanges()
         VStack {
-            LazyVGrid(columns: columns, spacing: 20) {
+            LazyVGrid(columns: columns, spacing: 10) {
                 ForEach(chatFieldViewModel.images) { imageItem in
                     ChatImageView(imageItem: imageItem)
                 }

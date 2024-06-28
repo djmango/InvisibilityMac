@@ -39,23 +39,23 @@ final class ChatFieldViewModel: ObservableObject {
     // NOTE: animation causes flickering glitch, off for now
     @MainActor
     public func addImage(_ data: Data, hide: Bool = false) {
-        //withAnimation(AppConfig.snappy) {
-            items.append(ChatDataItem(data: data, dataType: .jpeg, hide: hide))
-        //}
+        AnimationManager.shared.animate {
+            self.items.append(ChatDataItem(data: data, dataType: .jpeg, hide: hide))
+        }
     }
 
     @MainActor
     public func removeItem(id: UUID) {
-        //withAnimation(AppConfig.snappy) {
-            items.removeAll { $0.id == id }
-        //}
+        AnimationManager.shared.animate {
+            self.items.removeAll{$0.id == id}
+        }
     }
 
     @MainActor
     public func removeAll() {
-//        withAnimation(AppConfig.snappy) {
-            items.removeAll()
-            fileContent = ""
- //       }
+        AnimationManager.shared.animate {
+            self.items.removeAll()
+            self.fileContent = ""
+        }
     }
 }
