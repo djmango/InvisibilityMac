@@ -148,7 +148,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
-
+    
+    @MainActor
     @objc func panelDidBecomeKey(notification _: Notification) {
         // Move the switch logic here
         let hoverType: HoverItemType = HoverTrackerModel.shared.targetType
@@ -164,9 +165,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         switch hoverType {
         case .chatImageDelete:
             logger.debug("Performing Chat Image Delete action")
-            DispatchQueue.main.async {
-                ChatFieldViewModel.shared.removeItem(id: target)
-            }
+            ChatFieldViewModel.shared.removeItem(id: target)
         case .chatPDFDelete:
             logger.debug("Performing Chat PDF Delete action")
             DispatchQueue.main.async {

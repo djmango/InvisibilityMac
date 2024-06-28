@@ -22,6 +22,12 @@ struct ChatFieldView: View {
     }
 
     @State private var whoIsHovering: UUID?
+    
+    let columns = [
+          GridItem(.flexible()),
+          GridItem(.flexible()),
+          GridItem(.flexible())
+   ]
 
     init() {
         promptFocused = true
@@ -30,16 +36,13 @@ struct ChatFieldView: View {
     var body: some View {
         // let _ = Self._printChanges()
         VStack {
-            HStack {
+            LazyVGrid(columns: columns, spacing: 20) {
                 ForEach(chatFieldViewModel.images) { imageItem in
                     ChatImageView(imageItem: imageItem)
                 }
-
                 ForEach(chatFieldViewModel.pdfs) { pdfItem in
                     ChatPDFView(pdfItem: pdfItem)
                 }
-
-                Spacer()
             }
             .padding(.horizontal, 10)
             .padding(.top, 10)

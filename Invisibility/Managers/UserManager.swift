@@ -24,8 +24,18 @@ final class UserManager: ObservableObject {
     @Published public var isPaid: Bool = false
     @Published public var confettis: Int = 0
     @Published public var inviteCount: Int = 0
+
     @Published var isLoggedIn: Bool = false
     
+
+    @Published private(set) var canSendMessages: Bool = true {
+        didSet {
+               if canSendMessages != oldValue {
+                   logger.debug("canSendMessages changed from \(oldValue) to \(canSendMessages)")
+               }
+           }
+    }
+
     @AppStorage("token") public var token: String?
     
     // TODO: published somehow
@@ -54,14 +64,14 @@ final class UserManager: ObservableObject {
         return max(0, numMessagesAllowed - numMessagesSentToday)
     }
 
-    var canSendMessages: Bool {
-        isPaid || numMessagesLeft > 0
-    }
-
     private init() {
         resetMessagesIfNeeded()
     }
-
+    
+    private func updateCanSendMessages() {
+        canSendMessages = isPaid || numMessagesLeft > 0
+    }
+    
     private func resetMessagesIfNeeded() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -74,11 +84,13 @@ final class UserManager: ObservableObject {
         if lastResetDate != today {
             numMessagesSentToday = 0
             lastResetDate = today
+            updateCanSendMessages()
         }
     }
 
     func incrementMessagesSentToday() {
         numMessagesSentToday += 1
+        updateCanSendMessages()
         logger.debug("Incremented messages sent today: \(numMessagesSentToday)")
     }
 

@@ -32,13 +32,10 @@ struct MessageScrollView: View {
                                 .id(message.id)
                         }
                     }
-
-                    NewChatCardView()
-                        .visible(if: displayedMessages.isEmpty, removeCompletely: true)
-
+                    
                     FreeTierCardView()
                         .visible(if: !viewModel.canSendMessages, removeCompletely: true)
-
+                    
                     CaptureView()
                         .visible(if: viewModel.isRecording, removeCompletely: true)
 

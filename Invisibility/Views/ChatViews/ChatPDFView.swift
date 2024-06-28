@@ -18,7 +18,7 @@ struct ChatPDFView: View {
             Image("PDFIcon") // Ensure this image is included in your assets
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 100, height: 100)
+                .frame(width: 125, height: 125)
                 .clipShape(RoundedRectangle(cornerRadius: 16))
                 .shadow(radius: isHovering ? 4 : 0)
 
