@@ -233,3 +233,14 @@ struct UserInvite: Decodable {
         case createdAt = "created_at"
     }
 }
+
+struct APIMemory: Identifiable {
+    let id: UUID
+    let userId: String
+    let content: String
+    let emoji: String
+    let createdAt: Date
+    let updatedAt: Date
+    let deletedAt: Date?
+    let memoryPromptId: UUID?
+}

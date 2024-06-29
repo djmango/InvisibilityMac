@@ -120,6 +120,7 @@ final class UserManager: ObservableObject {
         getInviteCount()
     }
 
+    @MainActor
     func userIsLoggedIn() async -> Bool {
         guard token != nil else {
             isLoggedIn = false

@@ -33,13 +33,6 @@ struct ChatButtonsView: View {
                 _ = viewModel.newChat()
             }
             .keyboardShortcut("n", modifiers: [.command])
-            .onHover { hovered in
-                if hovered {
-                    NSCursor.pointingHand.set()
-                } else {
-                    NSCursor.arrow.set()
-                }
-            }
 
             // Screenshot
             MessageButtonItemView(
@@ -53,13 +46,6 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("1", modifiers: [.command, .shift])
             .visible(if: !viewModel.isShowingHistory, removeCompletely: true)
-            .onHover { hovered in
-                if hovered {
-                    NSCursor.pointingHand.set()
-                } else {
-                    NSCursor.arrow.set()
-                }
-            }
 
             // Video
             MessageButtonItemView(
@@ -73,13 +59,6 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("2", modifiers: [.command, .shift])
             .visible(if: !viewModel.isShowingHistory, removeCompletely: true)
-            .onHover { hovered in
-                if hovered {
-                    NSCursor.pointingHand.set()
-                } else {
-                    NSCursor.arrow.set()
-                }
-            }
 
             // Search Chat History
             MessageButtonItemView(
@@ -96,13 +75,22 @@ struct ChatButtonsView: View {
                 }
             }
             .keyboardShortcut("f", modifiers: [.command])
-            .onHover { hovered in
-                if hovered {
-                    NSCursor.pointingHand.set()
+
+            // Memory
+            MessageButtonItemView(
+                label: "Memory",
+                icon: "memorychip",
+                shortcut_hint: "⌘ M",
+                whoIsHovering: $whoIsHovering,
+                iconColor: viewModel.isShowingMemory ? .history : .chatButtonForeground
+            ) {
+                if viewModel.isShowingMemory {
+                    _ = viewModel.changeView(to: .chat)
                 } else {
-                    NSCursor.arrow.set()
+                    _ = viewModel.changeView(to: .memory)
                 }
             }
+            .keyboardShortcut("m", modifiers: [.command])
 
             // Settings
             MessageButtonItemView(
@@ -119,13 +107,6 @@ struct ChatButtonsView: View {
                 }
             }
             .keyboardShortcut(",", modifiers: [.command])
-            .onHover { hovered in
-                if hovered {
-                    NSCursor.pointingHand.set()
-                } else {
-                    NSCursor.arrow.set()
-                }
-            }
 
             // Stop generating
             MessageButtonItemView(
@@ -141,13 +122,6 @@ struct ChatButtonsView: View {
             .keyboardShortcut("p", modifiers: [.command])
             .visible(if: viewModel.isGenerating, removeCompletely: true)
             .visible(if: !viewModel.isShowingHistory, removeCompletely: true)
-            .onHover { hovered in
-                if hovered {
-                    NSCursor.pointingHand.set()
-                } else {
-                    NSCursor.arrow.set()
-                }
-            }
 
             // Switch Sides
             MessageButtonItemView(
@@ -159,15 +133,7 @@ struct ChatButtonsView: View {
                 viewModel.switchSide()
             }
             .keyboardShortcut("s", modifiers: [.command, .shift])
-            .onHover { hovered in
-                if hovered {
-                    NSCursor.pointingHand.set()
-                } else {
-                    NSCursor.arrow.set()
-                }
-            }
         }
-        // .focusable(false)
         .padding(.horizontal, 10)
         .padding(.vertical, 5)
         .background(
@@ -177,7 +143,6 @@ struct ChatButtonsView: View {
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 21)
         )
-        .frame(maxWidth: 380)
         .animation(AppConfig.snappy, value: viewModel.isGenerating)
     }
 }

@@ -14,12 +14,13 @@ class HistoryViewModel: ObservableObject {
 
     private var cancellables = Set<AnyCancellable>()
 
+    private let messageViewModel: MessageViewModel = .shared
+
     init() {
-        Publishers.CombineLatest(MessageViewModel.shared.$api_chats, MessageViewModel.shared.$api_messages)
+        Publishers.CombineLatest(messageViewModel.$api_chats, messageViewModel.$api_messages)
             .map { [weak self] chats, messages in
                 self?.groupChats(chats: chats, messages: messages) ?? [:]
             }
-            .receive(on: RunLoop.main)
             .assign(to: \.groupedChats, on: self)
             .store(in: &cancellables)
     }

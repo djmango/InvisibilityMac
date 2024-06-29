@@ -72,7 +72,7 @@ final class MessageViewModel: ObservableObject {
 
     @MainActor
     func sendFromChat() async {
-        var text = TextViewModel.shared.text
+        var text = ChatWebInputViewModel.shared.text
         guard let user = userManager.user else {
             logger.error("No user to send message as")
             return
@@ -157,7 +157,7 @@ final class MessageViewModel: ObservableObject {
 
         api_files.append(contentsOf: images)
 
-        TextViewModel.shared.clearText()
+        ChatWebInputViewModel.shared.clearText()
         ChatFieldViewModel.shared.removeAll()
 
         isGenerating = true

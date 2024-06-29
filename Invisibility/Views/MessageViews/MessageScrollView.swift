@@ -10,7 +10,6 @@ import SwiftUI
 
 struct MessageScrollView: View {
     @ObservedObject private var viewModel: MessageScrollViewModel = .shared
-    @ObservedObject private var userManager: UserManager = .shared
 
     @State private var numMessagesDisplayed = 10
 
@@ -33,10 +32,10 @@ struct MessageScrollView: View {
                                 .id(message.id)
                         }
                     }
-                    
+
                     FreeTierCardView()
-                        .visible(if: !userManager.canSendMessages, removeCompletely: true)
-                    
+                        .visible(if: !viewModel.canSendMessages, removeCompletely: true)
+                  
                     CaptureView()
                         .visible(if: viewModel.isRecording, removeCompletely: true)
 
@@ -101,6 +100,7 @@ struct MessageScrollView: View {
                 }
             }
             .animation(AppConfig.snappy, value: viewModel.api_messages_in_chat)
+            .background(Rectangle().fill(Color.white.opacity(0.001)))
         }
     }
 }

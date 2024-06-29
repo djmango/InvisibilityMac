@@ -15,73 +15,65 @@ struct LoginCardView: View {
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                Spacer().frame(height: geometry.size.height * 0.85)
-                
-                VStack(spacing: 15) {
-                    Text("Welcome to Invisibility 💙")
-                        .font(.title3)
-                        .fontWeight(.bold)
+        VStack {
+            Spacer().frame(height: geometry.size.height * 0.85)
 
-                    Text("Please log in to continue")
-                        .font(.body)
-                        .foregroundColor(.gray)
+            VStack(spacing: 15) {
+                Text("Welcome to Invisibility 💙")
+                    .font(.title3)
+                    .fontWeight(.bold)
 
-                    Button(action: {
-                        isLoggingIn = true
-                        UserManager.shared.login()
-                    }) {
-                        Text("Log In")
-                            .font(.system(size: 25, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding(.vertical, 8)
-                            .padding(.horizontal, 28)
-                            .background(Color.blue)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color(nsColor: .separatorColor))
-                            )
-                            .cornerRadius(8)
-                    }
-                    .buttonStyle(.plain)
-                    .shadow(radius: 2)
-                    .disabled(isLoggingIn)
-                    .onHover { hovering in
-                        isHovering = hovering
-                        if hovering {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
+                Text("Please log in to continue")
+                    .font(.body)
+                    .foregroundColor(.gray)
 
-                    if isLoggingIn {
-                        ProgressView()
-                            .scaleEffect(0.5)
-                            .frame(height: 20)
-                    }
-
-                    
+                Button(action: {
+                    isLoggingIn = true
+                    UserManager.shared.login()
+                }) {
+                    Text("Log In")
+                        .font(.system(size: 25, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 28)
+                        .background(Color.blue)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(nsColor: .separatorColor))
+                        )
+                        .cornerRadius(8)
                 }
-                .padding(20)
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color(nsColor: .separatorColor))
-                )
-                .background(
-                    VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
-                )
-                .cornerRadius(16)
-                .frame(width: geometry.size.width * 0.8)
-                
-                Spacer()
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-        }
-    }
-}
+                .buttonStyle(.plain)
+                .shadow(radius: 2)
+                .disabled(isLoggingIn)
+                .onHover { hovering in
+                    isHovering = hovering
+                    if hovering {
+                        NSCursor.pointingHand.set()
+                    } else {
+                        NSCursor.arrow.set()
+                    }
+                }
 
-#Preview {
-    LoginCardView()
+                if isLoggingIn {
+                    ProgressView()
+                        .scaleEffect(0.5)
+                        .frame(height: 20)
+                }
+            }
+            .padding(20)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .stroke(Color(nsColor: .separatorColor))
+            )
+            .background(
+                VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+            )
+            .cornerRadius(16)
+            .frame(width: geometry.size.width * 0.8)
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
 }
