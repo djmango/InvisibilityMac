@@ -16,12 +16,12 @@ struct ChatFieldView: View {
     @ObservedObject private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
     @AppStorage("width") private var windowWidth: Int = WindowManager.defaultWidth
     
-    private let spacing: CGFloat = 5
+    private let spacing: CGFloat = 10
     private let itemWidth: CGFloat = 150
 
     private var columns: [GridItem] {
         let availableWidth = CGFloat(windowWidth)
-        let numColumns = max(1, Int((availableWidth / (itemWidth + spacing * 2)).rounded(.down)))
+        let numColumns = min(chatFieldViewModel.images.count, Int((availableWidth / (itemWidth + spacing * 2)).rounded(.down)))
         return Array(repeating: GridItem(.fixed(itemWidth), spacing: spacing), count: numColumns)
     }
 
@@ -34,7 +34,7 @@ struct ChatFieldView: View {
 
     var body: some View {
         VStack {
-            LazyVGrid(columns: columns, spacing: spacing) {
+            LazyVGrid(columns: columns, alignment: .leading, spacing: spacing) {
                 ForEach(chatFieldViewModel.images, id: \.self) { imageItem in
                     ChatImageView(imageItem: imageItem, itemSpacing: spacing, itemWidth: itemWidth, whoIsHovering: $whoIsHovering)
                         .whenHovered{ hovering in
