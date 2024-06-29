@@ -32,23 +32,26 @@ struct MainView: View {
         // let _ = Self._printChanges()
         VStack(alignment: .center, spacing: 0) {
             ZStack {
-                MessageScrollView()
-                    .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-
-                HistoryView()
-                    .offset(x: 0, y: isShowingHistory ? 0 : -1000)
-                    .opacity(isShowingHistory ? 1 : 0)
-
-                MemoryView()
+                if userManager.isLoginStatusChecked {
+                    if userManager.isLoggedIn {
+                        MessageScrollView()
+                            .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                        
+                        HistoryView()
+                            .offset(x: 0, y: isShowingHistory ? 0 : -1000)
+                            .opacity(isShowingHistory ? 1 : 0)
+                      
+                       MemoryView()
                     .offset(x: 0, y: isShowingMemory ? 0 : -1000)
                     .opacity(isShowingMemory ? 1 : 0)
-
-                SettingsView()
-                    .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                    .opacity(isShowingSettings ? 1 : 0)
-
-                LoginCardView()
-                    .visible(if: !userManager.isLoggedIn, removeCompletely: true)
+                        
+                        SettingsView()
+                            .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                            .opacity(isShowingSettings ? 1 : 0)
+                    } else {
+                        LoginCardView()
+                    }
+                }
             }
             .mask(
                 LinearGradient(

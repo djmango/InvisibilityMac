@@ -14,34 +14,48 @@ struct ChatFieldView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatFieldView")
 
     @ObservedObject private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
+    @AppStorage("width") private var windowWidth: Int = WindowManager.defaultWidth
+    
+    private let spacing: CGFloat = 10
+    private let itemWidth: CGFloat = 150
 
-    @FocusState private var promptFocused: Bool {
-        didSet {
-            // logger.debug("Prompt focused: \(promptFocused)")
-        }
+    private var columns: [GridItem] {
+        let availableWidth = CGFloat(windowWidth)
+        let numColumns = min(chatFieldViewModel.images.count, Int((availableWidth / (itemWidth + spacing * 2)).rounded(.down)))
+        return Array(repeating: GridItem(.fixed(itemWidth), spacing: spacing), count: numColumns)
     }
 
-    @State private var whoIsHovering: UUID?
+    @FocusState private var promptFocused: Bool
+    @State private var whoIsHovering: UUID? = nil
     
-    let columns = [
-          GridItem(.flexible()),
-          GridItem(.flexible()),
-          GridItem(.flexible())
-   ]
-
     init() {
         promptFocused = true
     }
 
     var body: some View {
-        // let _ = Self._printChanges()
         VStack {
-            LazyVGrid(columns: columns, spacing: 10) {
-                ForEach(chatFieldViewModel.images) { imageItem in
-                    ChatImageView(imageItem: imageItem)
+            LazyVGrid(columns: columns, alignment: .leading, spacing: spacing) {
+                ForEach(chatFieldViewModel.images, id: \.self) { imageItem in
+                    ChatImageView(imageItem: imageItem, itemSpacing: spacing, itemWidth: itemWidth, whoIsHovering: $whoIsHovering)
+                        .whenHovered{ hovering in
+                            if hovering {
+                                whoIsHovering = imageItem.id
+                            }
+                            if !hovering && whoIsHovering == imageItem.id {
+                                whoIsHovering = nil
+                            }
+                        }
                 }
                 ForEach(chatFieldViewModel.pdfs) { pdfItem in
-                    ChatPDFView(pdfItem: pdfItem)
+                    ChatPDFView(pdfItem: pdfItem, itemSpacing: spacing, itemWidth: itemWidth,  whoIsHovering: $whoIsHovering)
+                        .whenHovered{ hovering in
+                            if hovering {
+                                whoIsHovering = pdfItem.id
+                            }
+                            if !hovering && whoIsHovering == pdfItem.id {
+                                whoIsHovering = nil
+                            }
+                        }
                 }
             }
             .padding(.horizontal, 10)

@@ -1,16 +1,21 @@
 import SwiftUI
 
 struct ChatPDFView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
+    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatPDF")
 
     let item: ChatDataItem
-
-    @State private var isHovering: Bool = false
+    let itemSpacing: CGFloat
+    let itemWidth: CGFloat
+    @Binding var whoIsHovering: UUID?
+    @State private var isHovering = false
 
     private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
 
-    init(pdfItem: ChatDataItem) {
+    init(pdfItem: ChatDataItem, itemSpacing: CGFloat, itemWidth: CGFloat, whoIsHovering: Binding<UUID?>) {
         self.item = pdfItem
+        self.itemWidth = itemWidth
+        self.itemSpacing = itemSpacing
+        self._whoIsHovering = whoIsHovering
     }
 
     var body: some View {
@@ -18,8 +23,8 @@ struct ChatPDFView: View {
             Image("PDFIcon") // Ensure this image is included in your assets
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 125, height: 125)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
+                .frame(width: itemWidth, height: itemWidth)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 .shadow(radius: isHovering ? 4 : 0)
 
             Button(action: {
@@ -29,17 +34,18 @@ struct ChatPDFView: View {
                     .foregroundColor(.gray) // Make the button red to highlight it as a delete button
                     .font(.title) // Adjust the font size as needed
             }
-            .opacity(isHovering ? 1 : 0) // Button is only visible when hovering
             .buttonStyle(PlainButtonStyle())
             .onHover { isHovering in
                 HoverTrackerModel.shared.targetType = isHovering ? .chatPDFDelete : .nil_
                 HoverTrackerModel.shared.targetItem = isHovering ? item.id.uuidString : nil
             }
+            .padding(3)
+            .focusable(false)
+            .visible(if: isHovering, removeCompletely: true)
         }
-        .onHover { hovering in
-            isHovering = hovering
-            HoverTrackerModel.shared.targetType = hovering ? .chatPDF : .nil_
-            HoverTrackerModel.shared.targetItem = hovering ? item.id.uuidString : nil
+        .padding(.horizontal, itemSpacing)
+        .onChange(of: whoIsHovering) {
+            isHovering = $0 == item.id
         }
     }
 }
