@@ -31,7 +31,6 @@ struct MainView: View {
     var body: some View {
         // let _ = Self._printChanges()
         VStack(alignment: .center, spacing: 0) {
-            Spacer()
             ZStack {
                 MessageScrollView()
                     .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)

@@ -9,15 +9,21 @@ struct MemoryView: View {
                 MemoryHeader(title: "My Memories", onSearch: {}, onClose: {})
                 MemoryGrid(memories: viewModel.memories)
             }
-            .padding(.vertical, 32)
-            .padding(.horizontal, 10)
         }
-        // .frame(width: 400, height: 815, alignment: .top)
-        .background(.white)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .scrollIndicators(.never)
+        .defaultScrollAnchor(.bottom)
         .onAppear {
             viewModel.fetchMemories()
         }
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(nsColor: .separatorColor))
+        )
+        .background(
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+        )
+        .padding(.horizontal, 10)
+        .padding(.vertical, 10)
     }
 }
 
@@ -32,7 +38,6 @@ struct MemoryHeader: View {
                 Image(systemName: "magnifyingglass")
                     .font(.system(size: 18, weight: .regular))
                     .foregroundColor(.black)
-                // .frame(width: 44, height: 44)
             }
             Spacer()
             Text(title)
@@ -44,11 +49,10 @@ struct MemoryHeader: View {
                 Image(systemName: "xmark")
                     .font(.system(size: 18, weight: .regular))
                     .foregroundColor(.black)
-                // .frame(width: 44, height: 44)
             }
         }
         .padding(.horizontal, 4)
-        // .frame(maxWidth: .infinity, alignment: .center)
+        .padding(.top, 12)
     }
 }
 
@@ -61,20 +65,19 @@ struct MemoryGrid: View {
                 MemoryCard(memory: memory)
             }
         }
+        .padding(8)
     }
 }
 
 struct MemoryCard: View {
     let memory: APIMemory
+    @State var isHovering: Bool = false
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .fill(Color.white)
-                .shadow(color: Color(hex: 0x2E2E3F, alpha: 0.04), radius: 4, x: 2, y: 3)
-                .shadow(color: Color(hex: 0x2E2E45, alpha: 0.04), radius: 3, x: 1, y: 2)
-                .shadow(color: Color(hex: 0x2A3345, alpha: 0.04), radius: 2, x: 0, y: 1)
-                .shadow(color: Color(hex: 0x0E3F7E, alpha: 0.04), radius: 2, x: 0, y: 0)
+                .shadow(radius: isHovering ? 8 : 2)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(formatDate(memory.createdAt))
@@ -99,9 +102,12 @@ struct MemoryCard: View {
             }
             .padding(12)
         }
-        // .frame(width: 164, height: 231)
-        .rotation3DEffect(.degrees(Double.random(in: -5 ... 5)), axis: (x: 0, y: 1, z: 0), perspective: 0.5)
-        .rotation3DEffect(.degrees(Double.random(in: -2 ... 2)), axis: (x: 0, y: 0, z: 1), perspective: 0.5)
+        .scaleEffect(isHovering ? 1.02 : 1)
+        .onHover { hovering in
+            withAnimation(AppConfig.snappy) {
+                isHovering = hovering
+            }
+        }
     }
 
     private func formatDate(_ date: Date) -> String {
