@@ -1,4 +1,3 @@
-import SentrySwiftUI
 import SwiftUI
 
 struct MainView: View {
@@ -7,7 +6,7 @@ struct MainView: View {
     @State private var xOffset: Int = 10000
 
     @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
-    
+
     @ObservedObject private var userManager: UserManager = UserManager.shared
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
@@ -25,24 +24,32 @@ struct MainView: View {
         mainWindowViewModel.whoIsVisible == .settings
     }
 
+    var isShowingMemory: Bool {
+        mainWindowViewModel.whoIsVisible == .memory
+    }
+
     var body: some View {
         // let _ = Self._printChanges()
         VStack(alignment: .center, spacing: 0) {
+            Spacer()
             ZStack {
-                if userManager.isLoggedIn {
-                    MessageScrollView()
-                        .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                    
-                    HistoryView()
-                        .offset(x: 0, y: isShowingHistory ? 0 : -1000)
-                        .opacity(isShowingHistory ? 1 : 0)
-                    
-                    SettingsView()
-                        .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                        .opacity(isShowingSettings ? 1 : 0)
-                } else {
-                    LoginCardView()
-                }
+                MessageScrollView()
+                    .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+
+                HistoryView()
+                    .offset(x: 0, y: isShowingHistory ? 0 : -1000)
+                    .opacity(isShowingHistory ? 1 : 0)
+
+                MemoryView()
+                    .offset(x: 0, y: isShowingMemory ? 0 : -1000)
+                    .opacity(isShowingMemory ? 1 : 0)
+
+                SettingsView()
+                    .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                    .opacity(isShowingSettings ? 1 : 0)
+
+                LoginCardView()
+                    .visible(if: !userManager.isLoggedIn, removeCompletely: true)
             }
             .mask(
                 LinearGradient(
@@ -56,27 +63,16 @@ struct MainView: View {
                     endPoint: .bottom
                 )
             )
-
-            Spacer()
+            .padding(.bottom, 5)
 
             // Action Icons
             ChatButtonsView()
                 .frame(maxHeight: 40)
-
-            Spacer()
+                .padding(.bottom, 10)
 
             ChatFieldView()
-                .padding(.top, 4)
                 .padding(.bottom, 10)
         }
-        // .gesture(
-        //     DragGesture()
-        //         .onChanged { value in
-        //             withAnimation(AppConfig.snappy) {
-        //                 WindowManager.shared.width = max(WindowManager.defaultWidth, min(WindowManager.shared.maxWidth, width - Int(value.translation.width)))
-        //             }
-        //         }
-        // )
         .overlay(
             ChatDragResizeView(isDragging: $isDraggingResize)
                 .gesture(

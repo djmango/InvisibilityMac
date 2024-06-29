@@ -19,13 +19,11 @@ class InteractivePanel: NSPanel {
     }
 
     override func flagsChanged(with event: NSEvent) {
+        super.flagsChanged(with: event)
+
         DispatchQueue.main.async {
             withAnimation(AppConfig.snappy) {
-                if event.modifierFlags.contains(.command) {
-                    ShortcutViewModel.shared.isCommandPressed = true
-                } else {
-                    ShortcutViewModel.shared.isCommandPressed = false
-                }
+                ShortcutViewModel.shared.isCommandPressed = event.modifierFlags.contains(.command)
             }
         }
     }

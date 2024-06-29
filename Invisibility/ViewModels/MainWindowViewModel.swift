@@ -14,6 +14,7 @@ enum mainWindowView {
     case chat
     case settings
     case history
+    case memory
 }
 
 import OSLog
@@ -41,6 +42,8 @@ final class MainWindowViewModel: ObservableObject {
                 PostHogSDK.shared.capture("to_settings_view")
             } else if view == .history {
                 PostHogSDK.shared.capture("to_history_view")
+            } else if view == .memory {
+                PostHogSDK.shared.capture("to_memory_view")
             }
         }
 

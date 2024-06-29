@@ -32,10 +32,10 @@ struct MessageScrollView: View {
                                 .id(message.id)
                         }
                     }
-                    
+
                     FreeTierCardView()
                         .visible(if: !viewModel.canSendMessages, removeCompletely: true)
-                    
+
                     CaptureView()
                         .visible(if: viewModel.isRecording, removeCompletely: true)
 
@@ -100,6 +100,7 @@ struct MessageScrollView: View {
                 }
             }
             .animation(AppConfig.snappy, value: viewModel.api_messages_in_chat)
+            .background(Rectangle().fill(Color.white.opacity(0.001)))
         }
     }
 }

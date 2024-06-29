@@ -21,6 +21,10 @@ class ChatButtonsViewModel: ObservableObject {
         whoIsVisible == .history
     }
 
+    var isShowingMemory: Bool {
+        whoIsVisible == .memory
+    }
+
     init() {
         Task { @MainActor in
             screenRecorder.$isRunning

@@ -12,21 +12,22 @@ import WebKit
 // TODO: fix scrollbars on this, currently they are disabled due to white background bug
 
 struct ChatWebInputView: View {
-    @ObservedObject private var inputHeightViewModel = InputHeightViewModel.shared
+    @ObservedObject private var viewModel = ChatWebInputViewModel.shared
 
     static let minTextHeight: CGFloat = 40
     static let maxTextHeight: CGFloat = 500
 
     var body: some View {
         ChatWebInputViewRepresentable()
-            .frame(height: max(ChatWebInputView.minTextHeight, min(inputHeightViewModel.height, ChatWebInputView.maxTextHeight)))
+            .frame(height: max(ChatWebInputView.minTextHeight, min(viewModel.height, ChatWebInputView.maxTextHeight)))
     }
 }
 
 struct ChatWebInputViewRepresentable: NSViewRepresentable {
     private var messageViewModel = MessageViewModel.shared
-    private var inputHeightViewModel = InputHeightViewModel.shared
-    @ObservedObject private var textViewModel = TextViewModel.shared
+    // private var inputHeightViewModel = InputHeightViewModel.shared
+    // @ObservedObject private var textViewModel = TextViewModel.shared
+    @ObservedObject private var viewModel = ChatWebInputViewModel.shared
 
     func makeNSView(context: Context) -> WKWebView {
         let webView = CustomWebView()
@@ -47,7 +48,7 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: WKWebView, context _: Context) {
-        nsView.evaluateJavaScript("updateEditorContent(`\(textViewModel.text.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
+        nsView.evaluateJavaScript("updateEditorContent(`\(viewModel.text.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
     }
 
     private func setFocus(_ webView: WKWebView) {
@@ -70,7 +71,7 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
             case "textChanged":
                 if let text = message.body as? String {
                     DispatchQueue.main.async {
-                        self.parent.textViewModel.text = text
+                        self.parent.viewModel.text = text
                     }
                     // print("Text changed: \(text)")
                 }
@@ -78,14 +79,12 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
                 if let height = message.body as? CGFloat {
                     DispatchQueue.main.async {
                         withAnimation(AppConfig.snappy) {
-                            self.parent.inputHeightViewModel.height = height
+                            self.parent.viewModel.height = height
                         }
                     }
-                    // print("Text height changed: \(height)")
                 }
             case "submit":
                 DispatchQueue.main.async {
-                    // print("Text submitted: \(self.parent.textViewModel.text)")
                     Task { await self.parent.messageViewModel.sendFromChat() }
                 }
             default:
@@ -261,14 +260,30 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
         }
 
         // detect command
+        // override func flagsChanged(with event: NSEvent) {
+        //     super.flagsChanged(with: event)
+        //     NotificationCenter.default.post(name: .commandKeyPressed, object: nil, userInfo: ["isPressed": event.modifierFlags.contains(.command)])
+        // }
         override func flagsChanged(with event: NSEvent) {
             super.flagsChanged(with: event)
+
+            // Forward the event to the window
+            if let window = self.window {
+                window.flagsChanged(with: event)
+            }
+
+            // Post notification for command key state
             NotificationCenter.default.post(name: .commandKeyPressed, object: nil, userInfo: ["isPressed": event.modifierFlags.contains(.command)])
         }
 
         override func performKeyEquivalent(with event: NSEvent) -> Bool {
             if event.modifierFlags.contains(.command) {
                 NotificationCenter.default.post(name: .commandKeyPressed, object: nil, userInfo: ["isPressed": false])
+
+                // Forward the event to the window
+                if let window = self.window {
+                    window.flagsChanged(with: event)
+                }
 
                 switch event.charactersIgnoringModifiers {
                 case "x":
