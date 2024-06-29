@@ -12,7 +12,7 @@ struct RenameRequest: Codable {
     let name: String
 }
 
-struct ChatDataItem: Identifiable, Equatable {
+struct ChatDataItem: Identifiable, Equatable, Hashable {
     let id = UUID()
     let data: Data
     let dataType: APIFiletype
