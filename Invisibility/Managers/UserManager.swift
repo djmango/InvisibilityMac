@@ -24,11 +24,11 @@ final class UserManager: ObservableObject {
     @Published public var isPaid: Bool = false
     @Published public var confettis: Int = 0
     @Published public var inviteCount: Int = 0
-
-    @Published var isLoggedIn: Bool = false
     
+    @Published var isLoginStatusChecked: Bool = false
+    @Published var isLoggedIn: Bool = false
 
-    @Published private(set) var canSendMessages: Bool = true {
+    @Published private(set) var canSendMessages: Bool = false {
         didSet {
                if canSendMessages != oldValue {
                    logger.debug("canSendMessages changed from \(oldValue) to \(canSendMessages)")
@@ -69,6 +69,7 @@ final class UserManager: ObservableObject {
     }
     
     private func updateCanSendMessages() {
+        print("isPaid: \(isPaid)")
         canSendMessages = isPaid || numMessagesLeft > 0
     }
     
@@ -113,6 +114,7 @@ final class UserManager: ObservableObject {
                 self.isPaid = false
             }
         }
+        updateCanSendMessages()
         LLMManager.shared.setup()
         await MessageViewModel.shared.fetchAPI()
         getInviteCount()
@@ -122,15 +124,18 @@ final class UserManager: ObservableObject {
         guard token != nil else {
             isLoggedIn = false
             logger.debug("User is not logged in")
+            isLoginStatusChecked = true
             return false
         }
         if await getUser() != nil {
             isLoggedIn = true
             logger.debug("User is logged in")
+            isLoginStatusChecked = true
             return true
         } else {
             isLoggedIn = false
             logger.debug("User is not logged in")
+            isLoginStatusChecked = true
             return false
         }
     }

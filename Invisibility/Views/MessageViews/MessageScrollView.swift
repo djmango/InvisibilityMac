@@ -10,6 +10,7 @@ import SwiftUI
 
 struct MessageScrollView: View {
     @ObservedObject private var viewModel: MessageScrollViewModel = .shared
+    @ObservedObject private var userManager: UserManager = .shared
 
     @State private var numMessagesDisplayed = 10
 
@@ -34,7 +35,7 @@ struct MessageScrollView: View {
                     }
                     
                     FreeTierCardView()
-                        .visible(if: !viewModel.canSendMessages, removeCompletely: true)
+                        .visible(if: !userManager.canSendMessages, removeCompletely: true)
                     
                     CaptureView()
                         .visible(if: viewModel.isRecording, removeCompletely: true)
@@ -44,7 +45,7 @@ struct MessageScrollView: View {
                         .frame(height: 1)
                         .id("bottom")
                 }
-                .animation(AppConfig.snappy, value: viewModel.canSendMessages)
+                .animation(AppConfig.snappy, value: userManager.canSendMessages)
                 .padding(.top, 10)
             }
             .mask(

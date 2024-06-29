@@ -5,6 +5,7 @@ import PostHog
 import SwiftUI
 
 final class MessageViewModel: ObservableObject {
+    @ObservedObject private var userManager : UserManager = .shared
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
 
     static let shared = MessageViewModel()
@@ -72,7 +73,7 @@ final class MessageViewModel: ObservableObject {
     @MainActor
     func sendFromChat() async {
         var text = TextViewModel.shared.text
-        guard let user = UserManager.shared.user else {
+        guard let user = userManager.user else {
             logger.error("No user to send message as")
             return
         }
@@ -92,11 +93,11 @@ final class MessageViewModel: ObservableObject {
 
         _ = MainWindowViewModel.shared.changeView(to: .chat)
 
-        logger.debug("Can send messages: \(UserManager.shared.canSendMessages)")
-        logger.debug("Messages left: \(UserManager.shared.numMessagesLeft)")
+        logger.debug("Can send messages: \(userManager.canSendMessages)")
+        logger.debug("Messages left: \(userManager.numMessagesLeft)")
 
         // If the user has exceeded the daily message limit, don't send the message and pop up an alert
-        if !(UserManager.shared.canSendMessages) {
+        if !(userManager.canSendMessages) {
             ToastViewModel.shared.showToast(
                 title: "Daily message limit reached"
             )
@@ -231,7 +232,7 @@ final class MessageViewModel: ObservableObject {
             logger.error("No chat to regenerate")
             return
         }
-        guard let user = UserManager.shared.user else {
+        guard let user = userManager.user else {
             logger.error("No user to regenerate as")
             return
         }
