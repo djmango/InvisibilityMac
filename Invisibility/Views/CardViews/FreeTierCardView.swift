@@ -86,6 +86,7 @@ struct FreeTierCardView: View {
 
             Spacer()
         }
+        .padding()
         .cornerRadius(16)
         .background(
             RoundedRectangle(cornerRadius: 16)

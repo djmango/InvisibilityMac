@@ -35,7 +35,8 @@ struct MessageScrollView: View {
 
                     FreeTierCardView()
                         .visible(if: !viewModel.canSendMessages, removeCompletely: true)
-                  
+                        .padding(.top, 10)
+
                     CaptureView()
                         .visible(if: viewModel.isRecording, removeCompletely: true)
 
@@ -44,7 +45,7 @@ struct MessageScrollView: View {
                         .frame(height: 1)
                         .id("bottom")
                 }
-                .animation(AppConfig.snappy, value: userManager.canSendMessages)
+                .animation(AppConfig.snappy, value: viewModel.canSendMessages)
                 .padding(.top, 10)
             }
             .mask(

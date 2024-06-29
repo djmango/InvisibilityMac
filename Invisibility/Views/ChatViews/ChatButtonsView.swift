@@ -77,20 +77,20 @@ struct ChatButtonsView: View {
             .keyboardShortcut("f", modifiers: [.command])
 
             // Memory
-            MessageButtonItemView(
-                label: "Memory",
-                icon: "memorychip",
-                shortcut_hint: "⌘ M",
-                whoIsHovering: $whoIsHovering,
-                iconColor: viewModel.isShowingMemory ? .history : .chatButtonForeground
-            ) {
-                if viewModel.isShowingMemory {
-                    _ = viewModel.changeView(to: .chat)
-                } else {
-                    _ = viewModel.changeView(to: .memory)
-                }
-            }
-            .keyboardShortcut("m", modifiers: [.command])
+            // MessageButtonItemView(
+            //     label: "Memory",
+            //     icon: "memorychip",
+            //     shortcut_hint: "⌘ M",
+            //     whoIsHovering: $whoIsHovering,
+            //     iconColor: viewModel.isShowingMemory ? .history : .chatButtonForeground
+            // ) {
+            //     if viewModel.isShowingMemory {
+            //         _ = viewModel.changeView(to: .chat)
+            //     } else {
+            //         _ = viewModel.changeView(to: .memory)
+            //     }
+            // }
+            // .keyboardShortcut("m", modifiers: [.command])
 
             // Settings
             MessageButtonItemView(
