@@ -13,7 +13,6 @@ final class MessageScrollViewModel: ObservableObject {
     static let shared = MessageScrollViewModel()
 
     /// A boolean value that indicates whether the text field should scroll to the bottom.
-    @Published private(set) var canSendMessages: Bool = true
     @Published private(set) var chat: APIChat?
     @Published private(set) var isGenerating: Bool = false
     @Published private(set) var isRecording: Bool = false
@@ -47,13 +46,6 @@ final class MessageScrollViewModel: ObservableObject {
             .receive(on: DispatchQueue.main)
             .assign(to: \.chat, on: self)
             .store(in: &cancellables)
-
-        /// TODO: fix this, wont update the card for free user expired yet
-        // userManager.$numMessagesSentToday
-        //     .receive(on: DispatchQueue.main)
-        //     .map { $0 < AppConfig.maxMessagesPerDay }
-        //     .assign(to: \.canSendMessages, on: self)
-        //     .store(in: &cancellables)
     }
 
     @MainActor

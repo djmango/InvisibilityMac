@@ -7,6 +7,8 @@ struct MainView: View {
     @State private var xOffset: Int = 10000
 
     @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
+    
+    @ObservedObject private var userManager: UserManager = UserManager.shared
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
     @AppStorage("width") private var width: Int = Int(WindowManager.defaultWidth)
@@ -27,16 +29,22 @@ struct MainView: View {
         // let _ = Self._printChanges()
         VStack(alignment: .center, spacing: 0) {
             ZStack {
-                MessageScrollView()
-                    .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-
-                HistoryView()
-                    .offset(x: 0, y: isShowingHistory ? 0 : -1000)
-                    .opacity(isShowingHistory ? 1 : 0)
-
-                SettingsView()
-                    .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                    .opacity(isShowingSettings ? 1 : 0)
+                if userManager.isLoginStatusChecked {
+                    if userManager.isLoggedIn {
+                        MessageScrollView()
+                            .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                        
+                        HistoryView()
+                            .offset(x: 0, y: isShowingHistory ? 0 : -1000)
+                            .opacity(isShowingHistory ? 1 : 0)
+                        
+                        SettingsView()
+                            .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                            .opacity(isShowingSettings ? 1 : 0)
+                    } else {
+                        LoginCardView()
+                    }
+                }
             }
             .mask(
                 LinearGradient(

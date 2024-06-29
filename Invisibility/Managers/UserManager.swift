@@ -24,9 +24,21 @@ final class UserManager: ObservableObject {
     @Published public var isPaid: Bool = false
     @Published public var confettis: Int = 0
     @Published public var inviteCount: Int = 0
+    
+    @Published var isLoginStatusChecked: Bool = false
+    @Published var isLoggedIn: Bool = false
+
+    @Published private(set) var canSendMessages: Bool = false {
+        didSet {
+               if canSendMessages != oldValue {
+                   logger.debug("canSendMessages changed from \(oldValue) to \(canSendMessages)")
+               }
+           }
+    }
 
     @AppStorage("token") public var token: String?
-
+    
+    // TODO: published somehow
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
     @AppStorage("lastResetDate") public var lastResetDate: String = "" {
         didSet {
@@ -52,14 +64,15 @@ final class UserManager: ObservableObject {
         return max(0, numMessagesAllowed - numMessagesSentToday)
     }
 
-    var canSendMessages: Bool {
-        isPaid || numMessagesLeft > 0
-    }
-
     private init() {
         resetMessagesIfNeeded()
     }
-
+    
+    private func updateCanSendMessages() {
+        print("isPaid: \(isPaid)")
+        canSendMessages = isPaid || numMessagesLeft > 0
+    }
+    
     private func resetMessagesIfNeeded() {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -72,11 +85,13 @@ final class UserManager: ObservableObject {
         if lastResetDate != today {
             numMessagesSentToday = 0
             lastResetDate = today
+            updateCanSendMessages()
         }
     }
 
     func incrementMessagesSentToday() {
         numMessagesSentToday += 1
+        updateCanSendMessages()
         logger.debug("Incremented messages sent today: \(numMessagesSentToday)")
     }
 
@@ -99,6 +114,7 @@ final class UserManager: ObservableObject {
                 self.isPaid = false
             }
         }
+        updateCanSendMessages()
         LLMManager.shared.setup()
         await MessageViewModel.shared.fetchAPI()
         getInviteCount()
@@ -106,14 +122,20 @@ final class UserManager: ObservableObject {
 
     func userIsLoggedIn() async -> Bool {
         guard token != nil else {
+            isLoggedIn = false
             logger.debug("User is not logged in")
+            isLoginStatusChecked = true
             return false
         }
         if await getUser() != nil {
+            isLoggedIn = true
             logger.debug("User is logged in")
+            isLoginStatusChecked = true
             return true
         } else {
+            isLoggedIn = false
             logger.debug("User is not logged in")
+            isLoginStatusChecked = true
             return false
         }
     }
@@ -299,6 +321,7 @@ final class UserManager: ObservableObject {
     @MainActor
     func logout() {
         defer { PostHogSDK.shared.capture("logout", properties: ["num_messages_left": numMessagesLeft]) }
+        self.isLoggedIn = false
         self.token = nil
         self.user = nil
         MessageViewModel.shared.clearAll()
