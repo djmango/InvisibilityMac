@@ -11,7 +11,7 @@ import SwiftUI
 struct HistoryCardView: View {
     @StateObject private var viewModel: HistoryCardViewModel
     @FocusState private var isFocused: Bool
-    @State private var isHovered: Bool = false
+    @State private var isHovering: Bool = false
     @State var isNameHovered: Bool = false
 
     init(chat: APIChat) {
@@ -102,9 +102,13 @@ struct HistoryCardView: View {
                 }
                 Spacer()
             }
-            .visible(if: isHovered)
+            .visible(if: isHovering)
         )
-        .onHover { isHovered = $0 }
+        .whenHovered { hovering in
+            withAnimation(AppConfig.snappy) {
+                isHovering = hovering
+            }
+        }
         .onTapGesture {
             viewModel.switchChat()
         }

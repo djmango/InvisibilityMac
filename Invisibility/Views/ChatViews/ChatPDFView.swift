@@ -6,16 +6,14 @@ struct ChatPDFView: View {
     let item: ChatDataItem
     let itemSpacing: CGFloat
     let itemWidth: CGFloat
-    @Binding var whoIsHovering: UUID?
     @State private var isHovering = false
 
     private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
 
-    init(pdfItem: ChatDataItem, itemSpacing: CGFloat, itemWidth: CGFloat, whoIsHovering: Binding<UUID?>) {
+    init(pdfItem: ChatDataItem, itemSpacing: CGFloat, itemWidth: CGFloat) {
         self.item = pdfItem
         self.itemWidth = itemWidth
         self.itemSpacing = itemSpacing
-        self._whoIsHovering = whoIsHovering
     }
 
     var body: some View {
@@ -35,17 +33,18 @@ struct ChatPDFView: View {
                     .font(.title) // Adjust the font size as needed
             }
             .buttonStyle(PlainButtonStyle())
-            .onHover { isHovering in
-                HoverTrackerModel.shared.targetType = isHovering ? .chatPDFDelete : .nil_
-                HoverTrackerModel.shared.targetItem = isHovering ? item.id.uuidString : nil
-            }
             .padding(3)
             .focusable(false)
             .visible(if: isHovering, removeCompletely: true)
         }
-        .padding(.horizontal, itemSpacing)
-        .onChange(of: whoIsHovering) {
-            isHovering = $0 == item.id
+        .whenHovered { hovering in
+            withAnimation(AppConfig.snappy) {
+                isHovering = hovering
+            }
         }
+        .onTapGesture {
+            chatFieldViewModel.removeItem(id: item.id)
+        }
+        .padding(.horizontal, itemSpacing)
     }
 }

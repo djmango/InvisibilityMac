@@ -49,8 +49,8 @@ struct OnboardingAccountView: View {
                 )
             )
             .conditionalEffect(.repeat(.jump(height: 10), every: .seconds(3)), condition: true)
-            .onHover { inside in
-                if inside {
+            .whenHovered { hovered in
+                if hovered {
                     NSCursor.pointingHand.push()
                 } else {
                     NSCursor.pop()
@@ -101,8 +101,8 @@ struct OnboardingAccountView: View {
             )
         )
         .conditionalEffect(.repeat(.jump(height: 10), every: .seconds(3)), condition: true)
-        .onHover { inside in
-            if inside {
+        .whenHovered { hovered in
+            if hovered {
                 NSCursor.pointingHand.push()
             } else {
                 NSCursor.pop()

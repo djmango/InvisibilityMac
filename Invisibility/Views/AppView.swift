@@ -27,8 +27,5 @@ struct AppView: View {
                 .padding()
                 .shadow(radius: 2)
             }
-            .onHover{ _ in
-                HoverTrackerModel.shared.targetType = .nil_
-            }
     }
 }

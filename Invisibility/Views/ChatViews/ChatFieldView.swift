@@ -15,7 +15,7 @@ struct ChatFieldView: View {
 
     @ObservedObject private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
     @AppStorage("width") private var windowWidth: Int = WindowManager.defaultWidth
-    
+
     private let spacing: CGFloat = 10
     private let itemWidth: CGFloat = 150
 
@@ -26,8 +26,7 @@ struct ChatFieldView: View {
     }
 
     @FocusState private var promptFocused: Bool
-    @State private var whoIsHovering: UUID? = nil
-    
+
     init() {
         promptFocused = true
     }
@@ -36,26 +35,10 @@ struct ChatFieldView: View {
         VStack {
             LazyVGrid(columns: columns, alignment: .leading, spacing: spacing) {
                 ForEach(chatFieldViewModel.images, id: \.self) { imageItem in
-                    ChatImageView(imageItem: imageItem, itemSpacing: spacing, itemWidth: itemWidth, whoIsHovering: $whoIsHovering)
-                        .whenHovered{ hovering in
-                            if hovering {
-                                whoIsHovering = imageItem.id
-                            }
-                            if !hovering && whoIsHovering == imageItem.id {
-                                whoIsHovering = nil
-                            }
-                        }
+                    ChatImageView(imageItem: imageItem, itemSpacing: spacing, itemWidth: itemWidth)
                 }
                 ForEach(chatFieldViewModel.pdfs) { pdfItem in
-                    ChatPDFView(pdfItem: pdfItem, itemSpacing: spacing, itemWidth: itemWidth,  whoIsHovering: $whoIsHovering)
-                        .whenHovered{ hovering in
-                            if hovering {
-                                whoIsHovering = pdfItem.id
-                            }
-                            if !hovering && whoIsHovering == pdfItem.id {
-                                whoIsHovering = nil
-                            }
-                        }
+                    ChatPDFView(pdfItem: pdfItem, itemSpacing: spacing, itemWidth: itemWidth)
                 }
             }
             .padding(.horizontal, 10)

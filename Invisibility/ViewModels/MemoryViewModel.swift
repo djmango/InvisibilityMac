@@ -11,6 +11,8 @@ import Foundation
 class MemoryViewModel: ObservableObject {
     @Published var memories: [APIMemory] = []
 
+    private let mainWindowViewModel: MainWindowViewModel = .shared
+
     func fetchMemories() {
         // TODO: Implement API call to fetch memories
         // For now, we'll use sample data
@@ -27,5 +29,9 @@ class MemoryViewModel: ObservableObject {
         if let index = memories.firstIndex(where: { $0.id == memory.id }) {
             memories.remove(at: index)
         }
+    }
+
+    @MainActor func closeView() {
+        _ = mainWindowViewModel.changeView(to: .chat)
     }
 }

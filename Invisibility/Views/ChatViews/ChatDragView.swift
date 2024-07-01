@@ -28,7 +28,7 @@ struct ChatDragResizeView: View {
                 // .fill(Color.white.opacity(0.1))
                 .fill(Color.clear)
                 .frame(width: 25)
-                .onHover { hovering in
+                .whenHovered { hovering in
                     isDragging = hovering
                     // Set cursor to side to side drag resize icon
                     NSCursor.resizeLeftRight.set()

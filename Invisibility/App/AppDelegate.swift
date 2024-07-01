@@ -148,41 +148,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
-    
+
     @MainActor
     @objc func panelDidBecomeKey(notification _: Notification) {
-        // Move the switch logic here
-        let hoverType: HoverItemType = HoverTrackerModel.shared.targetType
-
-        guard let targetString = HoverTrackerModel.shared.targetItem,
-              let target = UUID(uuidString: targetString)
-        else {
-            // Handle the case where the string was nil or not a valid UUID
-            // logger.debug("Invalid or nil UUID hover target string")
-            return
-        }
-
-        switch hoverType {
-        case .chatImageDelete:
-            logger.debug("Performing Chat Image Delete action")
-            ChatFieldViewModel.shared.removeItem(id: target)
-        case .chatPDFDelete:
-            logger.debug("Performing Chat PDF Delete action")
-            ChatFieldViewModel.shared.removeItem(id: target)
-        case .menuItem:
-            logger.debug("Opening Menu Settings")
-        // Implement menu move functionality
-        case .chatImage:
-            logger.debug("Handling Chat Image action")
-            DispatchQueue.main.async {
-                ChatFieldViewModel.shared.removeItem(id: target)
-            }
-        case .chatPDF:
-            logger.debug("Handling Chat PDF action")
-        // Implement chat PDF functionality
-        case .nil_:
-            logger.debug("No specific button action")
-        }
+        ChatFieldViewModel.shared.focusTextField()
     }
 
     @objc func appDidResignActive(notification _: NSNotification) {

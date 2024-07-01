@@ -21,21 +21,18 @@ struct MessageButtonItemView: View {
 
     @State private var isPressed: Bool = false
     @State private var isHovering: Bool = false
-    @Binding private var whoIsHovering: String?
 
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
 
     init(label: String?,
          icon: String,
          shortcut_hint: String?,
-         whoIsHovering: Binding<String?>,
          iconColor: Color = .chatButtonForeground,
          action: @escaping () -> Void)
     {
         self.label = label
         self.icon = icon
         self.shortcut_hint = shortcut_hint
-        self._whoIsHovering = whoIsHovering
         self.iconColor = iconColor
         self.action = action
     }
@@ -85,20 +82,13 @@ struct MessageButtonItemView: View {
                     .fill(Color(.chatButtonBackground))
             )
         }
-        .onHover { hovering in
+        .whenHovered { hovering in
             withAnimation(AppConfig.snappy) {
-                if hovering {
-                    isHovering = true
-                    whoIsHovering = label
-                } else {
-                    isHovering = false
-                    whoIsHovering = nil
-                }
+                isHovering = hovering
             }
         }
         .buttonStyle(.plain)
         .animation(AppConfig.snappy, value: label)
-        // .animation(AppConfig.snappy, value: shortcutViewModel.modifierFlags)
         .animation(.easeInOut(duration: 0.2), value: isPressed)
     }
 

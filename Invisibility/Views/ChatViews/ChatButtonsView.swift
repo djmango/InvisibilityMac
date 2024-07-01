@@ -18,16 +18,13 @@ struct ChatButtonsView: View {
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
 
-    @State private var whoIsHovering: String?
-
     var body: some View {
         HStack(alignment: .center) {
             // New Chat
             MessageButtonItemView(
                 label: "New Chat",
                 icon: "plus",
-                shortcut_hint: "⌘ N",
-                whoIsHovering: $whoIsHovering
+                shortcut_hint: "⌘ N"
 
             ) {
                 _ = viewModel.newChat()
@@ -38,8 +35,7 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: "Screenshot",
                 icon: "text.viewfinder",
-                shortcut_hint: "⌘ ⇧ 1",
-                whoIsHovering: $whoIsHovering
+                shortcut_hint: "⌘ ⇧ 1"
 
             ) {
                 viewModel.captureScreenshot()
@@ -52,7 +48,6 @@ struct ChatButtonsView: View {
                 label: viewModel.isRecording ? "Stop Sidekick" : "Start Sidekick",
                 icon: "shared.with.you",
                 shortcut_hint: "⌘ ⇧ 2",
-                whoIsHovering: $whoIsHovering,
                 iconColor: viewModel.isRecording ? .purple : .chatButtonForeground
             ) {
                 viewModel.toggleRecording()
@@ -65,7 +60,6 @@ struct ChatButtonsView: View {
                 label: "History",
                 icon: "magnifyingglass",
                 shortcut_hint: "⌘ F",
-                whoIsHovering: $whoIsHovering,
                 iconColor: viewModel.isShowingHistory ? .history : .chatButtonForeground
             ) {
                 if viewModel.isShowingHistory {
@@ -77,27 +71,25 @@ struct ChatButtonsView: View {
             .keyboardShortcut("f", modifiers: [.command])
 
             // Memory
-            // MessageButtonItemView(
-            //     label: "Memory",
-            //     icon: "memorychip",
-            //     shortcut_hint: "⌘ M",
-            //     whoIsHovering: $whoIsHovering,
-            //     iconColor: viewModel.isShowingMemory ? .history : .chatButtonForeground
-            // ) {
-            //     if viewModel.isShowingMemory {
-            //         _ = viewModel.changeView(to: .chat)
-            //     } else {
-            //         _ = viewModel.changeView(to: .memory)
-            //     }
-            // }
-            // .keyboardShortcut("m", modifiers: [.command])
+            MessageButtonItemView(
+                label: "Memory",
+                icon: "memorychip",
+                shortcut_hint: "⌘ M",
+                iconColor: viewModel.isShowingMemory ? .history : .chatButtonForeground
+            ) {
+                if viewModel.isShowingMemory {
+                    _ = viewModel.changeView(to: .chat)
+                } else {
+                    _ = viewModel.changeView(to: .memory)
+                }
+            }
+            .keyboardShortcut("m", modifiers: [.command])
 
             // Settings
             MessageButtonItemView(
                 label: "Settings",
                 icon: "gearshape",
-                shortcut_hint: "⌘ ,",
-                whoIsHovering: $whoIsHovering
+                shortcut_hint: "⌘ ,"
 
             ) {
                 if viewModel.whoIsVisible == .settings {
@@ -112,8 +104,7 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: "Stop",
                 icon: "stop.circle.fill",
-                shortcut_hint: "⌘ P",
-                whoIsHovering: $whoIsHovering
+                shortcut_hint: "⌘ P"
 
             ) {
                 logger.info("Stop generating")
@@ -127,8 +118,7 @@ struct ChatButtonsView: View {
             MessageButtonItemView(
                 label: sideSwitched ? "Left" : "Right",
                 icon: sideSwitched ? "arrow.left" : "arrow.right",
-                shortcut_hint: "⌘ ⇧ S",
-                whoIsHovering: $whoIsHovering
+                shortcut_hint: "⌘ ⇧ S"
             ) {
                 viewModel.switchSide()
             }

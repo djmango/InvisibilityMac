@@ -7,15 +7,19 @@ struct MessageListItemView: View {
 
     var body: some View {
         MessageContentView(message: message)
-            .onHover {
-                if $0 {
-                    isHovered = true
-                } else {
-                    withAnimation(AppConfig.snappy) {
-                        isHovered = false
-                    }
+            .whenHovered { hovering in
+                withAnimation(AppConfig.snappy) {
+                    isHovered = hovering
                 }
+                // if hovering {
+                //     isHovered = true
+                // } else {
+                //     withAnimation(AppConfig.snappy) {
+                //         isHovered = false
+                //     }
+                // }
             }
+
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color(nsColor: .separatorColor))

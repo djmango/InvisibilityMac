@@ -98,7 +98,6 @@
 		644F9A6DD98AABA0C1576B62 /* MessageScrollHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96977A082A12FF90493A184 /* MessageScrollHeaderViewModel.swift */; };
 		771397F22C2E74440048B3B5 /* AnimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771397F12C2E74440048B3B5 /* AnimationManager.swift */; };
 		7758D5782C2F7EAB0013CCED /* Hover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758D5772C2F7EAB0013CCED /* Hover.swift */; };
-		77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29832C25479E007D923C /* HoverTrackerModel.swift */; };
 		77FE29862C254AAF007D923C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29852C254AAF007D923C /* Buttons.swift */; };
 		84544C03F40FD34E26F88D72 /* MessageScrollHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A94109FA33EDC8B61558970 /* MessageScrollHeaderView.swift */; };
 		C15A8C2EDB35F055B83324A3 /* MessageActionButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F56D59CFACC23B3F4A1583B /* MessageActionButtonViewModel.swift */; };
@@ -187,7 +186,6 @@
 		6EC1ACA954F73F48E958AD26 /* HistoryViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		771397F12C2E74440048B3B5 /* AnimationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationManager.swift; sourceTree = "<group>"; };
 		7758D5772C2F7EAB0013CCED /* Hover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hover.swift; sourceTree = "<group>"; };
-		77FE29832C25479E007D923C /* HoverTrackerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverTrackerModel.swift; sourceTree = "<group>"; };
 		77FE29852C254AAF007D923C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		9F56D59CFACC23B3F4A1583B /* MessageActionButtonViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MessageActionButtonViewModel.swift; sourceTree = "<group>"; };
 		A9721674ABFEFC5AF471D38D /* SettingsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
@@ -287,7 +285,6 @@
 				4DB061B42BF2B82D007CF7DD /* CaptureViewModel.swift */,
 				4DB061BF2BF4A9D2007CF7DD /* ToastViewModel.swift */,
 				4D3A15542C13D36300272B84 /* MainWindowViewModel.swift */,
-				77FE29832C25479E007D923C /* HoverTrackerModel.swift */,
 				4DA375BB2C2BAC480094769B /* ChatFieldViewModel.swift */,
 				4DA375BD2C2BAD1B0094769B /* MessageScrollViewModel.swift */,
 				A9721674ABFEFC5AF471D38D /* SettingsViewModel.swift */,
@@ -633,7 +630,6 @@
 				4DA375C02C2BB09A0094769B /* ChatTypes.swift in Sources */,
 				4D4DB2492B913E2E003B9D53 /* ChatViewModel.swift in Sources */,
 				4D116AB52BAAA19C00729BE7 /* ShortcutViewModel.swift in Sources */,
-				77FE29842C25479E007D923C /* HoverTrackerModel.swift in Sources */,
 				4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */,
 				4D911BAF2BC1DDB30034B1A8 /* MessageContentView.swift in Sources */,
 				4D9ADB7E2C07BBBE00A1EFC7 /* HistoryCardView.swift in Sources */,

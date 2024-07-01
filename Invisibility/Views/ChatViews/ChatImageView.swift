@@ -1,8 +1,6 @@
 import OSLog
 import SwiftUI
 
-
-
 struct ChatImageView: View {
     private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
 
@@ -10,17 +8,15 @@ struct ChatImageView: View {
     let itemWidth: CGFloat
     let itemSpacing: CGFloat
     let nsImage: NSImage
-    @Binding var whoIsHovering: UUID?
     @State private var isHovering = false
 
     private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
 
-    init(imageItem: ChatDataItem, itemSpacing: CGFloat, itemWidth: CGFloat, whoIsHovering: Binding<UUID?>) {
+    init(imageItem: ChatDataItem, itemSpacing: CGFloat, itemWidth: CGFloat) {
         self.imageItem = imageItem
         self.nsImage = NSImage(data: imageItem.data) ?? NSImage()
         self.itemWidth = itemWidth
         self.itemSpacing = itemSpacing
-        self._whoIsHovering = whoIsHovering
     }
 
     var body: some View {
@@ -31,7 +27,6 @@ struct ChatImageView: View {
                 .frame(width: itemWidth, height: itemWidth)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .shadow(radius: isHovering ? 4 : 0)
-          
 
             Button(action: {
                 chatFieldViewModel.removeItem(id: imageItem.id)
@@ -41,17 +36,18 @@ struct ChatImageView: View {
                     .font(.title)
             }
             .buttonStyle(.plain)
-            .onHover { hovering in
-                HoverTrackerModel.shared.targetType = hovering ? .chatImageDelete : .nil_
-                HoverTrackerModel.shared.targetItem = hovering ? imageItem.id.uuidString : nil
-            }
             .padding(3)
             .focusable(false)
             .visible(if: isHovering, removeCompletely: true)
         }
-        .padding(.horizontal, itemSpacing)
-        .onChange(of: whoIsHovering) {
-            isHovering = $0 == imageItem.id
+        .whenHovered { hovering in
+            withAnimation(AppConfig.snappy) {
+                isHovering = hovering
+            }
         }
+        .onTapGesture {
+            chatFieldViewModel.removeItem(id: imageItem.id)
+        }
+        .padding(.horizontal, itemSpacing)
     }
 }
