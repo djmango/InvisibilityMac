@@ -7,11 +7,14 @@
 //
 
 import SwiftUI
+import Cocoa
 
 struct FreeTierCardView: View {
     @ObservedObject private var userManager = UserManager.shared
     @State private var isRefreshAnimating = false
     @State private var isCopied = false
+    @State private var whoIsHovering: String?
+    @State private var shareButtonView: NSView?
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
 
     var friendsInvitedText: String {
@@ -63,6 +66,30 @@ struct FreeTierCardView: View {
                         NSCursor.arrow.set()
                     }
                 }
+                
+                HStack {
+                    MessageButtonItemView(
+                        label: "Copy",
+                        icon: isCopied ? "checkmark" : "square.on.square",
+                        shortcut_hint: .none,
+                        whoIsHovering: $whoIsHovering
+                    ) {
+                        onCopyReferralLink()
+                    }
+                                        
+                    MessageButtonItemView(
+                        label: "Share",
+                        icon: "square.and.arrow.up",
+                        shortcut_hint: .none,
+                        whoIsHovering: $whoIsHovering
+                    ) {
+                        if let view = shareButtonView {
+                            onShareButtonClicked(sender: view)
+                        }
+                    }
+                    .background(ShareButtonView(nsView: $shareButtonView))
+                    .padding(.leading, 20)
+                }
             }
 
             Spacer()
@@ -104,7 +131,8 @@ struct FreeTierCardView: View {
                 }
             }
         }
-        .padding()
+        .frame(width: 360)
+        .padding(.vertical)
         .cornerRadius(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
@@ -157,4 +185,23 @@ struct FreeTierCardView: View {
             isCopied = false
         }
     }
+    
+    func onShareButtonClicked(sender: NSView) {
+        let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
+        picker.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
+    }
+}
+
+struct ShareButtonView: NSViewRepresentable {
+    @Binding var nsView: NSView?
+
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        DispatchQueue.main.async {
+            self.nsView = view
+        }
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
 }

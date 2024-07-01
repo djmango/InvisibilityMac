@@ -17,12 +17,14 @@ struct LoginCardView: View {
     var body: some View {
         VStack {
             VStack {
-                Text("Welcome to Invisibility 💙")
-                    .font(.system(size: 24, weight: .bold))
-                
-                Text("Please log in to continue")
-                    .font(.body)
-                    .foregroundColor(.gray)
+                VStack(spacing: 2) {
+                    Text("Welcome to Invisibility 💙")
+                        .font(.system(size: 24, weight: .semibold))
+                    
+                    Text("Log in to continue")
+                        .font(.title3)
+                        .foregroundColor(.gray)
+                }
                 
                 Spacer()
                 
@@ -60,8 +62,8 @@ struct LoginCardView: View {
                         .frame(height: 20)
                 }
             }
-            .frame(height: 200)
-            .padding(20)
+            .frame(width: 360, height: 128)
+            .padding(.vertical, 20)
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color(nsColor: .separatorColor))
