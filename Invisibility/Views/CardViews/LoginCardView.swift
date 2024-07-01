@@ -16,21 +16,22 @@ struct LoginCardView: View {
     
     var body: some View {
         VStack {
-            VStack(spacing: 15) {
+            VStack {
                 Text("Welcome to Invisibility 💙")
-                    .font(.title3)
-                    .fontWeight(.bold)
+                    .font(.system(size: 24, weight: .bold))
                 
                 Text("Please log in to continue")
                     .font(.body)
                     .foregroundColor(.gray)
+                
+                Spacer()
                 
                 Button(action: {
                     isLoggingIn = true
                     UserManager.shared.login()
                 }) {
                     Text("Log In")
-                        .font(.system(size: 25, weight: .bold))
+                        .font(.system(size: 20, weight: .bold))
                         .foregroundColor(.white)
                         .padding(.vertical, 8)
                         .padding(.horizontal, 28)
@@ -59,6 +60,7 @@ struct LoginCardView: View {
                         .frame(height: 20)
                 }
             }
+            .frame(height: 200)
             .padding(20)
             .background(
                 RoundedRectangle(cornerRadius: 16)
