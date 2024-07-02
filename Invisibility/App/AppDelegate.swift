@@ -8,11 +8,11 @@
 import Foundation
 import OSLog
 import PostHog
-import Sentry
+import RollbarNotifier
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AppDelegate")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "AppDelegate")
 
     private var shouldResumeRecording = false
     private var eventMonitor: Any?
@@ -20,13 +20,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
     func applicationDidFinishLaunching(_: Notification) {
-        SentrySDK.start { options in
-            options.dsn = AppConfig.sentry_dsn
-            options.tracesSampleRate = 0.05 // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-            options.profilesSampleRate = 0.05
-            options.swiftAsyncStacktraces = true
-            options.enableMetricKit = true
-        }
+        let config = RollbarConfig.mutableConfig(withAccessToken: AppConfig.rollbar_key)
+        Rollbar.initWithConfiguration(config)
+
         PostHogSDK.shared.setup(PostHogConfig(apiKey: AppConfig.posthog_api_key))
 
         // Send an event with metadata on app launch
@@ -71,7 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil // Replace with your actual NSPanel instance
         )
 
-        Task {
+        Task { @MainActor in
             await UserManager.shared.setup()
             let refresh_status = await UserManager.shared.refresh_jwt()
             if !refresh_status {
@@ -79,13 +75,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        let windowSuccess = WindowManager.shared.setupWindow()
-
-        guard windowSuccess else {
-            logger.error("Failed to set up window")
-            return
-        }
-        // logger.debug("Window set up successfully")
+        WindowManager.shared.setupWindow()
 
         if !onboardingViewed {
             OnboardingManager.shared.startOnboarding()
@@ -139,12 +129,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func appDidBecomeActive(notification _: NSNotification) {
         logger.debug("App did become active")
         // If the window is visible and on the screen with the cursor, don't show it again
-        Task {
-            if await WindowManager.shared.windowIsVisible, await WindowManager.shared.windowIsOnScreenWithCursor {
+        Task { @MainActor in
+            if WindowManager.shared.windowIsVisible, WindowManager.shared.windowIsOnScreenWithCursor {
                 return
             } else {
                 // Otherwise, show the window on the screen with the cursor
-                await WindowManager.shared.showWindow()
+                ChatFieldViewModel.shared.focusTextField()
+                WindowManager.shared.showWindow()
             }
         }
     }

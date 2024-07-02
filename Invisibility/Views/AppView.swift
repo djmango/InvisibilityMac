@@ -3,7 +3,7 @@ import Sparkle
 import SwiftUI
 
 struct AppView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AppView")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "AppView")
 
     @ObservedObject private var toastViewModel = ToastViewModel.shared
     @AppStorage("onboardingViewed") private var onboardingViewed = false

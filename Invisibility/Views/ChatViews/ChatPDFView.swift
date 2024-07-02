@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ChatPDFView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatPDF")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ChatPDF")
 
     let item: ChatDataItem
     let itemSpacing: CGFloat

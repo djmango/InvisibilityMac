@@ -10,7 +10,7 @@ import OSLog
 import SwiftUI
 
 struct ChatButtonsView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatButtonsView")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ChatButtonsView")
 
     @StateObject private var viewModel: ChatButtonsViewModel = ChatButtonsViewModel()
 

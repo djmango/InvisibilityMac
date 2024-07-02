@@ -39,7 +39,7 @@ class InteractivePanel: NSPanel {
 
 @MainActor
 class WindowManager {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "WindowManager")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "WindowManager")
 
     static let shared = WindowManager()
 
@@ -107,7 +107,6 @@ class WindowManager {
         // Animate opacity
         window.alphaValue = 0
         positionWindowOnCursorScreen()
-        ChatFieldViewModel.shared.focusTextField()
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = animationDuration
             window.animator().alphaValue = 1
@@ -135,9 +134,7 @@ class WindowManager {
         PostHogSDK.shared.capture("switch_side", properties: ["sideSwitched": sideSwitched])
     }
 
-    public func setupWindow() -> Bool {
-        logger.debug("Setting up panel")
-
+    public func setupWindow() {
         // Actually do a panel
         let window = InteractivePanel(
             contentRect: NSRect(x: 0, y: 0, width: 0, height: 0),
@@ -146,22 +143,21 @@ class WindowManager {
             defer: false
         )
         window.contentView = NSHostingView(rootView: contentView)
-        window.level = .mainMenu // Make the window float above all windows
+        window.level = .floating // Make the window float above all windows except other floating windows (raycast, iterm, etc)
         window.isOpaque = false // Enable transparency
         window.backgroundColor = NSColor.clear // Set background color to clear
-        window.hasShadow = false // Optional: Disable shadow for a more "overlay" feel
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
-        // window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .transient, .ignoresCycle]
+        window.hasShadow = false
+        window.isFloatingPanel = true // https://developer.apple.com/documentation/appkit/nspanel/1531901-isfloatingpanel
+
         window.orderFrontRegardless()
 
         NSApp.activate(ignoringOtherApps: true)
-        window.makeKeyAndOrderFront(window)
+        // window.makeKeyAndOrderFront(window)
 
         self.window = window
-        logger.debug("Panel set up")
-        return true
     }
 
     func resizeWindowToMouseX(_ mouseX: CGFloat) {

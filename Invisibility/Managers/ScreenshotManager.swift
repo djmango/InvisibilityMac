@@ -15,7 +15,7 @@ import Vision
 
 @MainActor
 class ScreenshotManager {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ScreenshotManager")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ScreenshotManager")
 
     static let shared = ScreenshotManager()
 

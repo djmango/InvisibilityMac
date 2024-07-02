@@ -6,7 +6,7 @@ import SwiftUI
 
 final class MessageViewModel: ObservableObject {
     @ObservedObject private var userManager : UserManager = .shared
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
 
     static let shared = MessageViewModel()
 

@@ -30,7 +30,8 @@
 		4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */; };
 		4D4DB2472B91384D003B9D53 /* ChatImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4DB2462B91384D003B9D53 /* ChatImageView.swift */; };
 		4D4DB2492B913E2E003B9D53 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */; };
-		4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5328332BB1244A00D25FFF /* SentryLogger.swift */; };
+		4D5298942C349E8500DBFBEE /* RollbarNotifier in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5298932C349E8500DBFBEE /* RollbarNotifier */; };
+		4D5328342BB1244A00D25FFF /* InvisibilityLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5328332BB1244A00D25FFF /* InvisibilityLogger.swift */; };
 		4D5819AD2B8E668500BF07FF /* ScreenshotManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */; };
 		4D596AA22B5F2B3E00B9E765 /* ChatFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D596A9C2B5F2B3E00B9E765 /* ChatFieldView.swift */; };
 		4D5A9EA22B8C65D40018F6E4 /* MessageButtonItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */; };
@@ -88,8 +89,6 @@
 		4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */ = {isa = PBXBuildFile; productRef = 4DE6734C2B17F46B00A5F9AE /* ViewCondition */; };
 		4DEA4ADF2B70689B00393858 /* MenubarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DEA4ADE2B70689B00393858 /* MenubarView.swift */; };
 		4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */; };
-		4DF2D8FA2BA628530093CA3E /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8F92BA628530093CA3E /* Sentry */; };
-		4DF2D8FC2BA628530093CA3E /* SentrySwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */; };
 		4DF2D8FF2BA683280093CA3E /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF2D8FE2BA683280093CA3E /* PostHog */; };
 		4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF2D9002BA689220093CA3E /* AppConfig.swift */; };
 		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
@@ -127,7 +126,7 @@
 		4D3BA0D42B99D472007020D2 /* invis_launch.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = invis_launch.mp3; sourceTree = "<group>"; };
 		4D4DB2462B91384D003B9D53 /* ChatImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatImageView.swift; sourceTree = "<group>"; };
 		4D4DB2482B913E2E003B9D53 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
-		4D5328332BB1244A00D25FFF /* SentryLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryLogger.swift; sourceTree = "<group>"; };
+		4D5328332BB1244A00D25FFF /* InvisibilityLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InvisibilityLogger.swift; sourceTree = "<group>"; };
 		4D5819AC2B8E668500BF07FF /* ScreenshotManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotManager.swift; sourceTree = "<group>"; };
 		4D596A9C2B5F2B3E00B9E765 /* ChatFieldView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatFieldView.swift; sourceTree = "<group>"; };
 		4D5A9EA12B8C65D40018F6E4 /* MessageButtonItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageButtonItemView.swift; sourceTree = "<group>"; };
@@ -199,18 +198,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D6185692B9A25D300E550D2 /* AVKit.framework in Frameworks */,
-				4DF2D8FC2BA628530093CA3E /* SentrySwiftUI in Frameworks */,
 				4D9354292B99851E00C34A63 /* Alamofire in Frameworks */,
 				4D37F2CA2BDAD5B400F2FC93 /* CachedAsyncImage in Frameworks */,
 				4DB061C32BF4ACC2007CF7DD /* SimpleToast in Frameworks */,
 				4DF2D8FF2BA683280093CA3E /* PostHog in Frameworks */,
 				4DC20D0E2B97E71E00FCB4E2 /* FluidGradient in Frameworks */,
+				4D5298942C349E8500DBFBEE /* RollbarNotifier in Frameworks */,
 				4D3BA0D82B99DA70007020D2 /* ConfettiSwiftUI in Frameworks */,
 				4D219F922B847B67006FF8E5 /* OpenAI in Frameworks */,
 				4DD282E82B4E3C4A0041690B /* LaunchAtLogin in Frameworks */,
 				4DE6736F2B17F46B00A5F9AE /* ViewCondition in Frameworks */,
 				4DD282DF2B4DF7050041690B /* KeyboardShortcuts in Frameworks */,
-				4DF2D8FA2BA628530093CA3E /* Sentry in Frameworks */,
 				4DDCE8532B50BA0900A22B1E /* Sparkle in Frameworks */,
 				4D7AB4242B4CB469007F025B /* Pow in Frameworks */,
 				4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */,
@@ -332,7 +330,7 @@
 				4D5B4BC42B48F3320067C543 /* ImageUtils.swift */,
 				4D0B52E12B58FF0B008D975D /* CheckConnectivity.swift */,
 				4DD5E3692B6243D300C35B1C /* AppPrompts.swift */,
-				4D5328332BB1244A00D25FFF /* SentryLogger.swift */,
+				4D5328332BB1244A00D25FFF /* InvisibilityLogger.swift */,
 				4D9ADB782BFEE05400A1EFC7 /* Decoder.swift */,
 			);
 			path = Utils;
@@ -512,12 +510,11 @@
 				4DC20D0D2B97E71E00FCB4E2 /* FluidGradient */,
 				4D9354282B99851E00C34A63 /* Alamofire */,
 				4D3BA0D72B99DA70007020D2 /* ConfettiSwiftUI */,
-				4DF2D8F92BA628530093CA3E /* Sentry */,
-				4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */,
 				4DF2D8FE2BA683280093CA3E /* PostHog */,
 				4DF46B352BBE1A2700846217 /* MarkdownWebView */,
 				4D37F2C92BDAD5B400F2FC93 /* CachedAsyncImage */,
 				4DB061C22BF4ACC2007CF7DD /* SimpleToast */,
+				4D5298932C349E8500DBFBEE /* RollbarNotifier */,
 			);
 			productName = Ollamac;
 			productReference = 4DE673792B17F46B00A5F9AE /* Invisibility.app */;
@@ -553,11 +550,11 @@
 				4DC20D0C2B97E71E00FCB4E2 /* XCRemoteSwiftPackageReference "FluidGradient" */,
 				4D9354272B99851E00C34A63 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */,
-				4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 				4DF2D8FD2BA683280093CA3E /* XCRemoteSwiftPackageReference "posthog-ios" */,
 				4DF46B342BBE1A2700846217 /* XCRemoteSwiftPackageReference "markdown-webview" */,
 				4D37F2C82BDAD5B400F2FC93 /* XCRemoteSwiftPackageReference "swiftui-cached-async-image" */,
 				4DB061C12BF4ACC2007CF7DD /* XCRemoteSwiftPackageReference "SimpleToast" */,
+				4D5298922C349E8500DBFBEE /* XCRemoteSwiftPackageReference "rollbar-apple" */,
 			);
 			productRefGroup = 0A4D35822AF541D900846890 /* Products */;
 			projectDirPath = "";
@@ -636,7 +633,7 @@
 				4DA375BC2C2BAC480094769B /* ChatFieldViewModel.swift in Sources */,
 				4D8E05632B2516DE00B60D0D /* MainView.swift in Sources */,
 				4D885C7C2B96E53E009A1F48 /* UserManager.swift in Sources */,
-				4D5328342BB1244A00D25FFF /* SentryLogger.swift in Sources */,
+				4D5328342BB1244A00D25FFF /* InvisibilityLogger.swift in Sources */,
 				4DA82A4E2B508E400093905A /* UpdaterViewModel.swift in Sources */,
 				4D2428D32BC6031100BE444C /* MessageScrollView.swift in Sources */,
 				4DA893B02B54C45300560DAD /* OnboardingView.swift in Sources */,
@@ -928,6 +925,14 @@
 				minimumVersion = 1.1.0;
 			};
 		};
+		4D5298922C349E8500DBFBEE /* XCRemoteSwiftPackageReference "rollbar-apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rollbar/rollbar-apple";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.3.0;
+			};
+		};
 		4D7AB4222B4CB469007F025B /* XCRemoteSwiftPackageReference "Pow" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/EmergeTools/Pow.git";
@@ -984,14 +989,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.21.0;
-			};
-		};
 		4DF2D8FD2BA683280093CA3E /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/PostHog/posthog-ios.git";
@@ -1025,6 +1022,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D3BA0D62B99DA70007020D2 /* XCRemoteSwiftPackageReference "ConfettiSwiftUI" */;
 			productName = ConfettiSwiftUI;
+		};
+		4D5298932C349E8500DBFBEE /* RollbarNotifier */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D5298922C349E8500DBFBEE /* XCRemoteSwiftPackageReference "rollbar-apple" */;
+			productName = RollbarNotifier;
 		};
 		4D7AB4232B4CB469007F025B /* Pow */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1065,16 +1067,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4DE6734D2B17F46B00A5F9AE /* XCRemoteSwiftPackageReference "ViewCondition" */;
 			productName = ViewCondition;
-		};
-		4DF2D8F92BA628530093CA3E /* Sentry */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
-			productName = Sentry;
-		};
-		4DF2D8FB2BA628530093CA3E /* SentrySwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4DF2D8F82BA628530093CA3E /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
-			productName = SentrySwiftUI;
 		};
 		4DF2D8FE2BA683280093CA3E /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;

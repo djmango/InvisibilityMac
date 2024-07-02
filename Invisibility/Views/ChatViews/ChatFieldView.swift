@@ -11,7 +11,7 @@ import SwiftUI
 
 /// A view that displays an editable text interface for chat purposes.
 struct ChatFieldView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatFieldView")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ChatFieldView")
 
     @ObservedObject private var chatFieldViewModel: ChatFieldViewModel = ChatFieldViewModel.shared
     @AppStorage("width") private var windowWidth: Int = WindowManager.defaultWidth

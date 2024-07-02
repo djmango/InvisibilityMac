@@ -30,7 +30,7 @@ class ScreenRecorder: NSObject,
 
     // private let logger = Logger()
 
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ScreenRecorder")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ScreenRecorder")
 
     @Published var isRunning = false
 

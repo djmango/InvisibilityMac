@@ -22,7 +22,7 @@ import OSLog
 final class MainWindowViewModel: ObservableObject {
     static let shared = MainWindowViewModel()
 
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "MainWindowViewModel")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MainWindowViewModel")
 
     @Published var whoIsVisible: mainWindowView = .chat
 

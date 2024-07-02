@@ -13,7 +13,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct SettingsView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "SettingsView")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "SettingsView")
     let bundleVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
 
     @AppStorage("animateButtons") private var animateButtons = true

@@ -17,7 +17,7 @@ typealias VisionContent = ChatQuery.ChatCompletionMessageParam.ChatCompletionUse
 
 class LLMModelRepository: ObservableObject {
     static let shared = LLMModelRepository()
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "LLMModelRepository")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "LLMModelRepository")
 
     @Published public var models: [LLMModel] = []
 
@@ -89,7 +89,7 @@ class LLMModelRepository: ObservableObject {
 final class LLMManager {
     static let shared = LLMManager()
 
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "LLMManager")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "LLMManager")
 
     private var ai: OpenAI
 

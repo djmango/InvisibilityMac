@@ -2,7 +2,7 @@ import OSLog
 import SwiftUI
 
 struct ChatImageView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ChatImage")
 
     let imageItem: ChatDataItem
     let itemWidth: CGFloat
