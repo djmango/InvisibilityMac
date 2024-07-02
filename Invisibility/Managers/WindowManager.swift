@@ -148,15 +148,10 @@ class WindowManager {
         window.backgroundColor = NSColor.clear // Set background color to clear
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
-        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .transient, .ignoresCycle]
-        window.hasShadow = false
-        window.isFloatingPanel = true // https://developer.apple.com/documentation/appkit/nspanel/1531901-isfloatingpanel
-
-        window.orderFrontRegardless()
-
-        NSApp.activate(ignoringOtherApps: true)
-        // window.makeKeyAndOrderFront(window)
-
+        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .transient, .ignoresCycle] // https://developer.apple.com/documentation/appkit/nswindow/collectionbehavior
+        window.hasShadow = false // This causes visual artifacts if true
+        // window.isFloatingPanel = true // https://developer.apple.com/documentation/appkit/nspanel/1531901-isfloatingpanel
+        // NSApp.activate(ignoringOtherApps: true)
         self.window = window
     }
 

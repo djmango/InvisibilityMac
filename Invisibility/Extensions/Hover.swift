@@ -61,7 +61,8 @@ struct MouseInsideModifier: ViewModifier {
             let options: NSTrackingArea.Options = [
                 .mouseEnteredAndExited,
                 .inVisibleRect,
-                .activeAlways,
+                .activeInKeyWindow,
+                // .activeAlways
             ]
 
             let trackingArea = NSTrackingArea(rect: frame,

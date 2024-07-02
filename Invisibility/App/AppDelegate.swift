@@ -19,6 +19,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
+    deinit {
+        NSWorkspace.shared.notificationCenter.removeObserver(self)
+    }
+
     func applicationDidFinishLaunching(_: Notification) {
         let config = RollbarConfig.mutableConfig(withAccessToken: AppConfig.rollbar_key)
         Rollbar.initWithConfiguration(config)
@@ -37,12 +41,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
 
         // Set up the observer for when the app resigns active
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appDidResignActive),
-            name: NSApplication.didResignActiveNotification,
-            object: nil
-        )
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(appDidResignActive),
+//            name: NSApplication.didResignActiveNotification,
+//            object: nil
+//        )
 
         // Set up the observer for when the system will sleep
         NSWorkspace.shared.notificationCenter.addObserver(
@@ -143,10 +147,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @MainActor
     @objc func panelDidBecomeKey(notification _: Notification) {
         ChatFieldViewModel.shared.focusTextField()
-    }
-
-    @objc func appDidResignActive(notification _: NSNotification) {
-        logger.debug("App did resign active")
     }
 
     @objc private func sleepListener(_ notification: Notification) {

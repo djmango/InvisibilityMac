@@ -13,21 +13,28 @@ import WebKit
 
 struct ChatWebInputView: View {
     @ObservedObject private var viewModel = ChatWebInputViewModel.shared
+    @State public var clearTrigger: Bool = false
 
     static let minTextHeight: CGFloat = 40
     static let maxTextHeight: CGFloat = 500
 
     var body: some View {
-        ChatWebInputViewRepresentable()
+        ChatWebInputViewRepresentable(clearTrigger: $clearTrigger)
             .frame(height: max(ChatWebInputView.minTextHeight, min(viewModel.height, ChatWebInputView.maxTextHeight)))
+            .onReceive(viewModel.$clearToggle) { _ in
+                clearTrigger.toggle()
+            }
     }
 }
 
 struct ChatWebInputViewRepresentable: NSViewRepresentable {
     private var messageViewModel = MessageViewModel.shared
-    // private var inputHeightViewModel = InputHeightViewModel.shared
-    // @ObservedObject private var textViewModel = TextViewModel.shared
-    @ObservedObject private var viewModel = ChatWebInputViewModel.shared
+    private var viewModel = ChatWebInputViewModel.shared
+    @Binding var clearTrigger: Bool
+
+    init(clearTrigger: Binding<Bool>) {
+        self._clearTrigger = clearTrigger
+    }
 
     func makeNSView(context: Context) -> WKWebView {
         let webView = CustomWebView()
@@ -73,12 +80,11 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
                     DispatchQueue.main.async {
                         self.parent.viewModel.text = text
                     }
-                    // print("Text changed: \(text)")
                 }
             case "heightChanged":
                 if let height = message.body as? CGFloat {
                     DispatchQueue.main.async {
-                        withAnimation(AppConfig.snappy) {
+                        withAnimation(.smooth(duration: 0.15)) {
                             self.parent.viewModel.height = height
                         }
                     }
@@ -259,11 +265,7 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
             menu.items.removeAll { $0.identifier == .init("WKMenuItemIdentifierReload") }
         }
 
-        // detect command
-        // override func flagsChanged(with event: NSEvent) {
-        //     super.flagsChanged(with: event)
-        //     NotificationCenter.default.post(name: .commandKeyPressed, object: nil, userInfo: ["isPressed": event.modifierFlags.contains(.command)])
-        // }
+        // Command forwarding
         override func flagsChanged(with event: NSEvent) {
             super.flagsChanged(with: event)
 
