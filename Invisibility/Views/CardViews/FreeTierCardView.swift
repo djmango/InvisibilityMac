@@ -7,11 +7,14 @@
 //
 
 import SwiftUI
+import Cocoa
 
 struct FreeTierCardView: View {
     @ObservedObject private var userManager = UserManager.shared
     @State private var isRefreshAnimating = false
     @State private var isCopied = false
+    @State private var whoIsHovering: String?
+    @State private var shareButtonView: NSView?
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
 
     var friendsInvitedText: String {
@@ -23,70 +26,113 @@ struct FreeTierCardView: View {
     }
 
     var body: some View {
-        VStack(spacing: 15) {
+        VStack {
+            VStack {
+                Text("Daily Limit Reached")
+                    .font(.system(size: 24, weight: .bold))
+                
+                Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
+                    .font(.body)
+                    .foregroundColor(.gray)
+            }
+            
             Spacer()
-
-            Text("Invite friends to Invisibility 💙")
-                .font(.title3)
-                .fontWeight(.bold)
-
-            Text("Earn 20 messages for every friend you invite! 🎉")
-                .font(.body)
-                .foregroundColor(.gray)
-
-            // Link is invite.i.inc/firstName
-            Button(action: {
-                if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
-                    NSWorkspace.shared.open(url)
+            
+            VStack {
+                Text("Invite friends to unlock more messages!")
+                    .padding(.top, 12)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                
+                
+                QRView(string: userManager.inviteLink)
+                    .frame(width: 100, height: 100)
+                    .shadow(radius: 2)
+                
+                // Link is invite.i.inc/firstName
+                Button(action: {
+                    if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }) {
+                    Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
+                        .font(.title2)
                 }
-            }) {
-                Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
-                    .font(.title2)
+                .buttonStyle(.link)
+                .onHover { hovering in
+                    if hovering {
+                        NSCursor.pointingHand.set()
+                    } else {
+                        NSCursor.arrow.set()
+                    }
+                }
+                
+                HStack {
+                    MessageButtonItemView(
+                        label: "Copy",
+                        icon: isCopied ? "checkmark" : "square.on.square",
+                        shortcut_hint: .none,
+                        whoIsHovering: $whoIsHovering
+                    ) {
+                        onCopyReferralLink()
+                    }
+                                        
+                    MessageButtonItemView(
+                        label: "Share",
+                        icon: "square.and.arrow.up",
+                        shortcut_hint: .none,
+                        whoIsHovering: $whoIsHovering
+                    ) {
+                        if let view = shareButtonView {
+                            onShareButtonClicked(sender: view)
+                        }
+                    }
+                    .background(ShareButtonView(nsView: $shareButtonView))
+                    .padding(.leading, 20)
+                }
             }
-            .buttonStyle(.link)
-
-            QRView(string: userManager.inviteLink)
-                .frame(width: 80, height: 80)
-                .shadow(radius: 2)
-
-            Text(friendsInvitedText)
-                .font(.callout)
-                .foregroundColor(.gray)
-
-            Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
-                .font(.callout)
-                .foregroundColor(.gray)
-
-            Text("Or")
-                .font(.title3)
-                .fontWeight(.bold)
-
-            Button(action: {
-                UserManager.shared.pay()
-            }) {
-                Text("Get Free Trial")
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundColor(.white)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 28)
-                    .background(Color.blue)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(nsColor: .separatorColor))
-                    )
-                    .cornerRadius(8)
-            }
-            .buttonStyle(.plain)
-            .shadow(radius: 2)
-
-            Text("Unlimited messages, early access, and more!")
-                .font(.body)
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.center)
 
             Spacer()
+            
+            Text("Or")
+                .font(.body)
+
+            Spacer()
+            
+            VStack {
+                Text("Unlock unlimited access!")
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .multilineTextAlignment(.center)
+                
+                Button(action: {
+                    UserManager.shared.pay()
+                }) {
+                    Text("Start Free Trial")
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 8)
+                        .padding(.horizontal, 28)
+                        .background(Color.blue)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(nsColor: .separatorColor))
+                        )
+                        .cornerRadius(8)
+                }
+                .buttonStyle(.plain)
+                .shadow(radius: 2)
+                .onHover { hovering in
+                    if hovering {
+                        NSCursor.pointingHand.set()
+                    } else {
+                        NSCursor.arrow.set()
+                    }
+                }
+            }
         }
-        .padding()
+        .frame(width: 360)
+        .padding(.vertical)
         .cornerRadius(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
@@ -111,7 +157,7 @@ struct FreeTierCardView: View {
         .onTapGesture {
             onTap()
         }
-        .padding(.horizontal, 10)
+        .padding(.horizontal, 20)
         .frame(maxWidth: .infinity)
         .padding(.bottom, 3)
     }
@@ -139,4 +185,23 @@ struct FreeTierCardView: View {
             isCopied = false
         }
     }
+    
+    func onShareButtonClicked(sender: NSView) {
+        let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
+        picker.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
+    }
+}
+
+struct ShareButtonView: NSViewRepresentable {
+    @Binding var nsView: NSView?
+
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        DispatchQueue.main.async {
+            self.nsView = view
+        }
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: Context) {}
 }
