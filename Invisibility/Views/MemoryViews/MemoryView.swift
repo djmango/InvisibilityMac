@@ -6,9 +6,11 @@ struct MemoryView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
             VStack(spacing: 24) {
-                MemoryHeader(title: "My Memories", onSearch: {}, onClose: {})
+                MemoryHeader(title: "My Memories", onSearch: {}, onClose: viewModel.closeView)
                 MemoryGrid(memories: viewModel.memories)
             }
+            .padding(.horizontal, 8)
+            .padding(.top, 25)
         }
         .scrollIndicators(.never)
         .defaultScrollAnchor(.bottom)
@@ -20,10 +22,11 @@ struct MemoryView: View {
                 .stroke(Color(nsColor: .separatorColor))
         )
         .background(
-            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+            Rectangle()
+                .fill(.background)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
         )
-        .padding(.horizontal, 10)
-        .padding(.vertical, 10)
+        .padding(15)
     }
 }
 
@@ -39,6 +42,8 @@ struct MemoryHeader: View {
                     .font(.system(size: 18, weight: .regular))
                     .foregroundColor(.black)
             }
+            .buttonStyle(.plain)
+
             Spacer()
             Text(title)
                 .font(.system(size: 24, weight: .bold))
@@ -50,22 +55,31 @@ struct MemoryHeader: View {
                     .font(.system(size: 18, weight: .regular))
                     .foregroundColor(.black)
             }
+            .buttonStyle(.plain)
         }
+        .padding(14)
         .padding(.horizontal, 4)
-        .padding(.top, 12)
     }
 }
 
 struct MemoryGrid: View {
     let memories: [APIMemory]
 
+    private let minWidth: CGFloat = 150
+    private let maxWidth: CGFloat = 350
+    private let spacing: CGFloat = 16
+
+    private var columns: [GridItem] {
+        [GridItem(.adaptive(minimum: minWidth, maximum: maxWidth), spacing: spacing)]
+    }
+
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+        LazyVGrid(columns: columns, spacing: spacing) {
             ForEach(memories) { memory in
                 MemoryCard(memory: memory)
             }
         }
-        .padding(8)
+        .padding(.horizontal, spacing)
     }
 }
 
@@ -103,7 +117,7 @@ struct MemoryCard: View {
             .padding(12)
         }
         .scaleEffect(isHovering ? 1.02 : 1)
-        .onHover { hovering in
+        .whenHovered { hovering in
             withAnimation(AppConfig.snappy) {
                 isHovering = hovering
             }

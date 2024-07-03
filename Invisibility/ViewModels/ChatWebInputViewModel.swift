@@ -1,5 +1,5 @@
 //
-//  TextViewModel.swift
+//  ChatWebInputViewModel.swift
 //  Invisibility
 //
 //  Created by Sulaiman Ghori on 4/9/24.

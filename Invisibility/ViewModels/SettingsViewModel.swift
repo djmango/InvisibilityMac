@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 class SettingsViewModel: ObservableObject {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "SettingsViewModel")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "SettingsViewModel")
 
     @Published private(set) var availableLLMModels: [LLMModel] = []
     @Published private(set) var user: User?

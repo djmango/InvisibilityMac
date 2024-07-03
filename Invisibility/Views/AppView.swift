@@ -3,7 +3,7 @@ import Sparkle
 import SwiftUI
 
 struct AppView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AppView")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "AppView")
 
     @ObservedObject private var toastViewModel = ToastViewModel.shared
     @AppStorage("onboardingViewed") private var onboardingViewed = false
@@ -26,9 +26,6 @@ struct AppView: View {
                 .cornerRadius(16)
                 .padding()
                 .shadow(radius: 2)
-            }
-            .onHover{ _ in
-                HoverTrackerModel.shared.targetType = .nil_
             }
     }
 }

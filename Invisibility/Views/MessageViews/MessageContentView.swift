@@ -15,8 +15,6 @@ struct MessageContentView: View {
     private let isAssistant: Bool
     private let model_name: String
 
-    @State private var isHovering = false
-
     init(message: APIMessage) {
         self.isAssistant = message.role == .assistant
         self.model_name = LLMModelRepository.shared.model_id_2_name(message.model_id)
@@ -59,8 +57,5 @@ struct MessageContentView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .onHover { hovering in
-            isHovering = hovering
-        }
     }
 }
