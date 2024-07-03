@@ -1,34 +1,5 @@
 import SwiftUI
 
-struct MemoryView: View {
-    @StateObject private var viewModel = MemoryViewModel()
-    // NOTE: Search is refresh for now
-
-    var body: some View {
-        ScrollView(.vertical, showsIndicators: true) {
-            VStack(spacing: 24) {
-                MemoryHeader(title: "My Memories", onSearch: viewModel.fetchAPISync, onClose: viewModel.closeView, isRefreshing: viewModel.isRefreshing)
-                MemoryGrid(memories: viewModel.memories)
-            }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 25)
-        }
-        .scrollIndicators(.never)
-        .defaultScrollAnchor(.top)
-        .onAppear { viewModel.fetchAPISync() }
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color(nsColor: .separatorColor))
-        )
-        .background(
-            Rectangle()
-                .fill(.background)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-        )
-        .padding(15)
-    }
-}
-
 struct MemoryHeader: View {
     let title: String
     let onSearch: () -> Void
@@ -65,93 +36,144 @@ struct MemoryHeader: View {
     }
 }
 
-struct MemoryGrid: View {
-    let memories: [APIMemory]
-
-    private let minWidth: CGFloat = 150
-    private let maxWidth: CGFloat = 350
-    private let spacing: CGFloat = 16
-
-    @State private var groups_expanded: [String] = []
-
-    private var columns: [GridItem] {
-        [GridItem(.adaptive(minimum: minWidth, maximum: maxWidth), spacing: spacing)]
-    }
+struct MemoryView: View {
+    @StateObject private var viewModel = MemoryViewModel()
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: spacing) {
-            ForEach(memories) { memory in
-                MemoryCard(memory: memory, groups_expanded: $groups_expanded)
-                    .visible(if: groups_expanded.contains(memory.grouping ?? "") ||
-                        memories.first(where: { $0.grouping == memory.grouping })?.id == memory.id, removeCompletely: true)
+        ScrollView(.vertical, showsIndicators: true) {
+            VStack(spacing: 24) {
+                MemoryHeader(title: "My Memories", onSearch: viewModel.fetchAPISync, onClose: viewModel.closeView, isRefreshing: viewModel.isRefreshing)
+                ForEach(groupedMemories, id: \.0) { group, memories in
+                    ExpandableMemoryGroup(groupName: group, emoji: memories.first?.emoji ?? "", date: memories.first?.updated_at ?? Date(), memories: memories)
+                }
             }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 25)
         }
-        .padding(.horizontal, spacing)
+        // .scrollIndicators(.never)
+        // .defaultScrollAnchor(.top)
+        .onAppear { viewModel.fetchAPISync() }
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(nsColor: .separatorColor))
+        )
+        .background(
+            Rectangle()
+                .fill(.background)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+        )
+        .padding(15)
+    }
+
+    var groupedMemories: [(String, [APIMemory])] {
+        Dictionary(grouping: viewModel.memories, by: { $0.grouping ?? "Ungrouped" })
+            .sorted(by: { $0.key < $1.key })
     }
 }
 
-struct MemoryCard: View {
-    let memory: APIMemory
-    @State var isHovering: Bool = false
-    @Binding var groups_expanded: [String]
-
-    init(memory: APIMemory, groups_expanded: Binding<[String]>) {
-        self.memory = memory
-        self._groups_expanded = groups_expanded
-    }
+struct ExpandableMemoryGroup: View {
+    let groupName: String
+    let emoji: String
+    let date: Date
+    @State var memories: [APIMemory]
+    @State private var isExpanded = false
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(.windowBackground)
-                .shadow(radius: isHovering ? 6 : 1)
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(formatDate(memory.updated_at))
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(.secondary)
-
-                Text(memory.emoji ?? "")
-                    .font(.system(size: 40))
-
-                Text(memory.content)
-                    .font(.system(size: 14, weight: .regular))
-                    .multilineTextAlignment(.leading)
-                    .lineSpacing(4)
-                    .lineLimit(5)
-                    .foregroundColor(.primary)
-
+        VStack(spacing: 0) {
+            HStack {
+                Text(emoji).font(.system(size: 40))
+                VStack(alignment: .leading) {
+                    Text(groupName).font(.headline)
+                    Text(formatDate(date)).font(.subheadline)
+                }
                 Spacer()
+                ExpandButton(isExpanded: $isExpanded)
+            }
+            .padding()
+            .background(Color.secondary.opacity(0.1))
+            // .clipShape(RoundedRectangle(cornerRadius: 16))
 
-                HStack {
-                    Spacer()
-                    Text(memory.grouping ?? "")
-                        .font(.system(size: 14))
-                        .foregroundColor(.history)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 6)
-                        .background(.history.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .circular))
-                    Spacer()
-                }
-            }
-            .padding(12)
-        }
-        .scaleEffect(isHovering ? 1.02 : 1)
-        .whenHovered { hovering in
-            withAnimation(AppConfig.snappy) {
-                isHovering = hovering
-            }
-        }
-        .onTapGesture {
-            withAnimation(AppConfig.snappy) {
-                if groups_expanded.contains(memory.grouping ?? "") {
-                    groups_expanded.removeAll(where: { $0 == memory.grouping })
-                } else {
-                    groups_expanded.append(memory.grouping ?? "")
+            if isExpanded {
+                ForEach($memories) { $memory in
+                    MemoryCardSimplified(memory: $memory, onDelete: { deleteMemory(memory) })
+                        .transition(.opacity.combined(with: .move(edge: .top)))
                 }
             }
         }
+        .animation(.spring(), value: isExpanded)
+    }
+
+    private func deleteMemory(_ memory: APIMemory) {
+        withAnimation {
+            memories.removeAll { $0.id == memory.id }
+        }
+        // Here you would also call your API to delete the memory from the backend
+    }
+}
+
+struct ExpandButton: View {
+    @Binding var isExpanded: Bool
+
+    var body: some View {
+        Button(action: {
+            withAnimation(.spring()) {
+                isExpanded.toggle()
+            }
+        }) {
+            Image(systemName: "chevron.right")
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(.primary)
+                .frame(width: 30, height: 30)
+                .background(Color.secondary.opacity(0.2))
+                .clipShape(Circle())
+                .rotationEffect(.degrees(isExpanded ? 90 : 0))
+        }
+        .buttonStyle(PlainButtonStyle())
+    }
+}
+
+struct MemoryCardSimplified: View {
+    @Binding var memory: APIMemory
+    let onDelete: () -> Void
+
+    @State private var isEditing = false
+    @State private var editedContent: String = ""
+
+    var body: some View {
+        HStack {
+            if isEditing {
+                TextField("Memory", text: $editedContent, onCommit: {
+                    memory.content = editedContent
+                    isEditing = false
+                    // Here you would also call your API to update the memory on the backend
+                })
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+            } else {
+                Text(memory.content)
+                    .lineLimit(3)
+            }
+
+            Spacer()
+
+            HStack {
+                Button(action: {
+                    isEditing.toggle()
+                    if isEditing {
+                        editedContent = memory.content
+                    }
+                }) {
+                    Image(systemName: isEditing ? "checkmark" : "pencil")
+                }
+
+                Button(action: onDelete) {
+                    Image(systemName: "trash")
+                        .foregroundColor(.red)
+                }
+            }
+        }
+        .padding()
+        .frame(height: 60) // Fixed height for uniformity
+        .background(Color.secondary.opacity(0.05))
+        // .cornerRadius(8)
     }
 }

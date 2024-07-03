@@ -197,7 +197,7 @@ struct APIFile: Codable, Equatable {
 struct APIMemory: Encodable, Decodable, Identifiable {
     let id: UUID
     let user_id: String
-    let content: String
+    var content: String
     let created_at: Date
     let updated_at: Date
     let deleted_at: Date?
