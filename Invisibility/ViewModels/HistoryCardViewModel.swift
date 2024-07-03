@@ -22,13 +22,6 @@ class HistoryCardViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
-    func formattedDate(_ date: Date) -> String {
-        let dateTimeFormatter = DateFormatter()
-        dateTimeFormatter.dateStyle = .short
-        dateTimeFormatter.timeStyle = .short
-        return dateTimeFormatter.string(from: date)
-    }
-
     var lastMessageDate: Date {
         messageViewModel.lastMessageWithTextFor(chat: chat)?.created_at ?? chat.created_at
     }

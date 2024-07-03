@@ -194,11 +194,23 @@ struct APIFile: Codable, Equatable {
     }
 }
 
-// Define a struct for the response
+struct APIMemory: Encodable, Decodable, Identifiable {
+    let id: UUID
+    let user_id: String
+    let content: String
+    let created_at: Date
+    let updated_at: Date
+    let deleted_at: Date?
+    let memory_prompt_id: UUID?
+    let grouping: String?
+    let emoji: String?
+}
+
 struct APISyncResponse: Codable {
     let chats: [APIChat]
     let messages: [APIMessage]
     let files: [APIFile]
+    let memories: [APIMemory]
 }
 
 struct User: Decodable {
@@ -232,15 +244,4 @@ struct UserInvite: Decodable {
         case code
         case createdAt = "created_at"
     }
-}
-
-struct APIMemory: Identifiable {
-    let id: UUID
-    let userId: String
-    let content: String
-    let emoji: String
-    let createdAt: Date
-    let updatedAt: Date
-    let deletedAt: Date?
-    let memoryPromptId: UUID?
 }

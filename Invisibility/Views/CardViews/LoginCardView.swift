@@ -13,21 +13,21 @@ struct LoginCardView: View {
     @State private var isLoggingIn = false
     @State private var isHovering = false
     @AppStorage("onboardingViewed") private var onboardingViewed = false
-    
+
     var body: some View {
         VStack {
             VStack {
                 VStack(spacing: 2) {
                     Text("Welcome to Invisibility 💙")
                         .font(.system(size: 24, weight: .semibold))
-                    
+
                     Text("Log in to continue")
                         .font(.title3)
                         .foregroundColor(.gray)
                 }
-                
+
                 Spacer()
-                
+
                 Button(action: {
                     isLoggingIn = true
                     UserManager.shared.login()
@@ -55,7 +55,7 @@ struct LoginCardView: View {
                         NSCursor.arrow.set()
                     }
                 }
-                
+
                 if isLoggingIn {
                     ProgressView()
                         .scaleEffect(0.5)
@@ -70,11 +70,12 @@ struct LoginCardView: View {
             )
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+                    .shadow(radius: 2)
             )
             .cornerRadius(16)
             .frame(maxWidth: 400)
             .frame(maxHeight: .infinity, alignment: .bottom)
-            
+
             Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

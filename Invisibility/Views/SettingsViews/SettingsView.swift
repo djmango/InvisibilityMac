@@ -196,7 +196,7 @@ struct SettingsView: View {
 
                 Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                     .padding(.bottom, 5)
             }
             .animation(.easeIn, value: betaFeatures)
@@ -215,8 +215,9 @@ struct SettingsView: View {
                     Button(action: {
                         _ = viewModel.changeView(to: .chat)
                     }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.chatButtonForeground)
+                        Image(systemName: "xmark")
+                            .font(.system(size: 18, weight: .regular))
+                            .foregroundColor(.primary)
                     }
                     .buttonStyle(.plain)
                     .padding()

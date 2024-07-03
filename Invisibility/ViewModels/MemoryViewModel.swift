@@ -7,21 +7,42 @@
 //
 
 import Foundation
+import SwiftUI
 
 class MemoryViewModel: ObservableObject {
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MemoryViewModel")
+
     @Published var memories: [APIMemory] = []
 
     private let mainWindowViewModel: MainWindowViewModel = .shared
 
-    func fetchMemories() {
-        // TODO: Implement API call to fetch memories
-        // For now, we'll use sample data
-        memories = [
-            APIMemory(id: UUID(), userId: "user1", content: "Invisibility was featured in an article and you were personally mentioned!", emoji: "📰", createdAt: Date(), updatedAt: Date(), deletedAt: nil, memoryPromptId: nil),
-            APIMemory(id: UUID(), userId: "user1", content: "You discovered the Bukk E-Motorcycle as your new pick for best looking bike of the year", emoji: "🏍️", createdAt: Date(), updatedAt: Date(), deletedAt: nil, memoryPromptId: nil),
-            APIMemory(id: UUID(), userId: "user1", content: "Your brand's colors are a mix of different shades of Blue", emoji: "🎨", createdAt: Date(), updatedAt: Date(), deletedAt: nil, memoryPromptId: nil),
-            APIMemory(id: UUID(), userId: "user1", content: "You stayed in SF for a couple weeks while building at the WeWork office during the Pioneer Summit!", emoji: "🌉", createdAt: Date(), updatedAt: Date(), deletedAt: nil, memoryPromptId: nil),
-        ]
+    @AppStorage("token") private var token: String?
+
+    func fetchAPISync() { Task { await fetchAPI() } }
+
+    func fetchAPI() async {
+        let url = URL(string: AppConfig.invisibility_api_base + "/memories/")!
+
+        guard let token else {
+            logger.warning("No token for fetch")
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+        do {
+            let (data, _) = try await URLSession.shared.data(for: request)
+            let decoder = iso8601Decoder()
+            let fetched = try decoder.decode([APIMemory].self, from: data)
+            DispatchQueue.main.async {
+                self.memories = fetched.sorted(by: { $0.created_at < $1.created_at })
+                self.logger.debug("Fetched memories \(self.memories.count)")
+            }
+        } catch {
+            logger.error("Failed to fetch memories from API: \(error)")
+        }
     }
 
     func deleteMemory(_ memory: APIMemory) {

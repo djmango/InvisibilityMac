@@ -50,16 +50,16 @@ struct HistoryCardView: View {
 
                     Spacer()
 
-                    Text(viewModel.formattedDate(viewModel.lastMessageDate))
+                    Text(timeAgo(viewModel.lastMessageDate))
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.secondary)
                 }
 
                 Spacer()
 
                 Text(viewModel.lastMessageText)
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                     .lineLimit(2)
                     .padding(.bottom, 5)
             }

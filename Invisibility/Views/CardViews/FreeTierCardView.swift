@@ -71,8 +71,7 @@ struct FreeTierCardView: View {
                     MessageButtonItemView(
                         label: "Copy",
                         icon: isCopied ? "checkmark" : "square.on.square",
-                        shortcut_hint: .none,
-                        whoIsHovering: $whoIsHovering
+                        shortcut_hint: .none
                     ) {
                         onCopyReferralLink()
                     }
@@ -80,8 +79,7 @@ struct FreeTierCardView: View {
                     MessageButtonItemView(
                         label: "Share",
                         icon: "square.and.arrow.up",
-                        shortcut_hint: .none,
-                        whoIsHovering: $whoIsHovering
+                        shortcut_hint: .none
                     ) {
                         if let view = shareButtonView {
                             onShareButtonClicked(sender: view)

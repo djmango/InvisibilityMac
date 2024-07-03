@@ -5,10 +5,11 @@ import PostHog
 import SwiftUI
 
 final class MessageViewModel: ObservableObject {
-    @ObservedObject private var userManager : UserManager = .shared
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MessageViewModel")
 
     static let shared = MessageViewModel()
+
+    private let userManager: UserManager = .shared
 
     private var chatTask: Task<Void, Error>?
 
@@ -35,6 +36,8 @@ final class MessageViewModel: ObservableObject {
             await fetchAPI()
         }
     }
+
+    func fetchAPISync() { Task { await fetchAPI() } }
 
     func fetchAPI() async {
         let url = URL(string: AppConfig.invisibility_api_base + "/sync/all")!
