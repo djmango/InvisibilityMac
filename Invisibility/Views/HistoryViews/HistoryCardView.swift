@@ -11,7 +11,7 @@ import SwiftUI
 struct HistoryCardView: View {
     @StateObject private var viewModel: HistoryCardViewModel
     @FocusState private var isFocused: Bool
-    @State private var isHovered: Bool = false
+    @State private var isHovering: Bool = false
     @State var isNameHovered: Bool = false
 
     init(chat: APIChat) {
@@ -50,16 +50,16 @@ struct HistoryCardView: View {
 
                     Spacer()
 
-                    Text(viewModel.formattedDate(viewModel.lastMessageDate))
+                    Text(timeAgo(viewModel.lastMessageDate))
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.secondary)
                 }
 
                 Spacer()
 
                 Text(viewModel.lastMessageText)
                     .font(.subheadline)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                     .lineLimit(2)
                     .padding(.bottom, 5)
             }
@@ -102,9 +102,13 @@ struct HistoryCardView: View {
                 }
                 Spacer()
             }
-            .visible(if: isHovered)
+            .visible(if: isHovering)
         )
-        .onHover { isHovered = $0 }
+        .whenHovered { hovering in
+            withAnimation(AppConfig.snappy) {
+                isHovering = hovering
+            }
+        }
         .onTapGesture {
             viewModel.switchChat()
         }

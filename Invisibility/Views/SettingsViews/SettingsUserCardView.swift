@@ -61,15 +61,8 @@ struct SettingsUserCardView: View {
                 }
                 .buttonStyle(.bordered)
                 .visible(if: isHoveringUserDetails, removeCompletely: true)
-                .onHover{ hovered in
-                    if hovered {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
-                    }
-                }
             }
-            .onHover { hovering in
+            .whenHovered { hovering in
                 withAnimation(AppConfig.snappy) {
                     isHoveringUserDetails = hovering
                 }
@@ -125,13 +118,6 @@ struct SettingsUserCardView: View {
             .buttonStyle(.plain)
             .shadow(radius: 2)
             .visible(if: !userManager.isPaid, removeCompletely: true)
-            .onHover{ hovered in
-                if hovered {
-                    NSCursor.pointingHand.set()
-                } else {
-                    NSCursor.arrow.set()
-                }
-            }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 15)

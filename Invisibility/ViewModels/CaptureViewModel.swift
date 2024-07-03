@@ -10,7 +10,7 @@ import Foundation
 
 @MainActor
 final class CaptureViewModel: ObservableObject {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "CaptureViewModel")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "CaptureViewModel")
 
     static let shared = CaptureViewModel()
 

@@ -1,5 +1,5 @@
 //
-//  SentryLogger.swift
+//  InvisibilityLogger.swift
 //  Invisibility
 //
 //  Created by Sulaiman Ghori on 3/24/24.
@@ -8,12 +8,19 @@
 
 import Foundation
 import OSLog
-import Sentry
+import RollbarNotifier
 
-struct SentryLogger {
+struct InvisibilityLogger {
     private let logger: Logger
     private let subsystem: String
     private let category: String
+
+    enum Level {
+        case debug
+        case info
+        case warning
+        case error
+    }
 
     init(subsystem: String, category: String) {
         logger = Logger(subsystem: subsystem, category: category)
@@ -21,27 +28,20 @@ struct SentryLogger {
         self.category = category
     }
 
-    private func log(_ message: String, level: SentryLevel, file: String, function: String, line: Int) {
-        let breadcrumb = Breadcrumb(level: level, category: category)
-        let formattedMessage = "\(file):\(line) \(function) - \(message)"
-        breadcrumb.message = formattedMessage
-        SentrySDK.addBreadcrumb(breadcrumb)
-
+    private func log(_ message: String, level: Level, file _: String, function _: String, line _: Int) {
         switch level {
         case .debug:
             logger.debug("\(message)")
+        // Rollbar.debugMessage(message)
         case .info:
             logger.info("\(message)")
+            Rollbar.infoMessage(message)
         case .warning:
             logger.warning("\(message)")
+            Rollbar.warningMessage(message)
         case .error:
             logger.error("\(message)")
-            SentrySDK.capture(message: message)
-        case .fatal:
-            logger.fault("\(message)")
-            SentrySDK.capture(message: message)
-        default:
-            logger.info("\(message)")
+            Rollbar.errorMessage(message)
         }
     }
 
@@ -59,9 +59,5 @@ struct SentryLogger {
 
     func error(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
         log(message, level: .error, file: file, function: function, line: line)
-    }
-
-    func fault(_ message: String, file: String = #file, function: String = #function, line: Int = #line) {
-        log(message, level: .fatal, file: file, function: function, line: line)
     }
 }

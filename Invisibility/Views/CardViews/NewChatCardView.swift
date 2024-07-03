@@ -34,7 +34,7 @@ struct NewChatCardView: View {
 
             Text("Earn 20 messages for every friend you invite! 🎉")
                 .font(.body)
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
 
             // Link is invite.i.inc/firstName
             Button(action: {
@@ -53,11 +53,11 @@ struct NewChatCardView: View {
 
             Text(friendsInvitedText)
                 .font(.callout)
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
 
             Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
                 .font(.callout)
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
 
             Text("Or")
                 .font(.title3)
@@ -68,7 +68,7 @@ struct NewChatCardView: View {
             }) {
                 Text("Get Free Trial")
                     .font(.system(size: 25, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(.primary)
                     .padding(.vertical, 8)
                     .padding(.horizontal, 28)
                     .background(Color.blue)
@@ -83,7 +83,7 @@ struct NewChatCardView: View {
 
             Text("Unlimited messages, early access, and more!")
                 .font(.body)
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
 
             Spacer()

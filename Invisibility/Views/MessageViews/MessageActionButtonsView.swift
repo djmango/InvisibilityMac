@@ -15,7 +15,6 @@ struct MessageActionButtonsView: View {
     @ObservedObject private var shortcutViewModel: ShortcutViewModel = ShortcutViewModel.shared
     @StateObject private var viewModel: MessageActionButtonViewModel
 
-    @State private var whoIsHovering: String?
     @State private var isCopied: Bool = false
     @Binding private var isHovered: Bool
 
@@ -60,43 +59,26 @@ struct MessageActionButtonsView: View {
                 MessageButtonItemView(
                     label: "Regenerate",
                     icon: "arrow.clockwise",
-                    shortcut_hint: "⌘ ⇧ R",
-                    whoIsHovering: $whoIsHovering
+                    shortcut_hint: "⌘ ⇧ R"
                 ) {
                     viewModel.regenerate()
                 }
                 .keyboardShortcut("r", modifiers: [.command, .shift])
-                .onHover { inside in
-                    if inside {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
-                    }
-                }
                 .visible(if: isRegenerateButtonVisible, removeCompletely: true)
 
                 MessageButtonItemView(
                     label: "Copy",
                     icon: isCopied ? "checkmark" : "square.on.square",
-                    shortcut_hint: "⌘ ⌥ C",
-                    whoIsHovering: $whoIsHovering
+                    shortcut_hint: "⌘ ⌥ C"
                 ) {
                     copyAction()
                 }
                 .keyboardShortcut("c", modifiers: [.command, .option])
                 .changeEffect(.jump(height: 10), value: isCopied)
-                .onHover { inside in
-                    if inside {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
-                    }
-                }
                 .visible(if: isCopyButtonVisible)
             }
         }
         .padding(8)
-        .animation(AppConfig.snappy, value: whoIsHovering)
     }
 
     // MARK: - Actions

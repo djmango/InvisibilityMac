@@ -48,3 +48,15 @@ extension DateFormatter {
         return formatter
     }()
 }
+
+func formatDate(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "MM/dd/yy"
+    return formatter.string(from: date)
+}
+
+func timeAgo(_ date: Date) -> String {
+    let formatter = RelativeDateTimeFormatter()
+    formatter.unitsStyle = .abbreviated
+    return formatter.localizedString(for: date, relativeTo: Date())
+}

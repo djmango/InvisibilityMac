@@ -8,25 +8,25 @@
 import Foundation
 import OSLog
 import PostHog
-import Sentry
+import RollbarNotifier
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "AppDelegate")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "AppDelegate")
 
     private var shouldResumeRecording = false
     private var eventMonitor: Any?
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
 
+    deinit {
+        NSWorkspace.shared.notificationCenter.removeObserver(self)
+    }
+
     func applicationDidFinishLaunching(_: Notification) {
-        SentrySDK.start { options in
-            options.dsn = AppConfig.sentry_dsn
-            options.tracesSampleRate = 0.05 // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-            options.profilesSampleRate = 0.05
-            options.swiftAsyncStacktraces = true
-            options.enableMetricKit = true
-        }
+        let config = RollbarConfig.mutableConfig(withAccessToken: AppConfig.rollbar_key)
+        Rollbar.initWithConfiguration(config)
+
         PostHogSDK.shared.setup(PostHogConfig(apiKey: AppConfig.posthog_api_key))
 
         // Send an event with metadata on app launch
@@ -41,12 +41,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
 
         // Set up the observer for when the app resigns active
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appDidResignActive),
-            name: NSApplication.didResignActiveNotification,
-            object: nil
-        )
+//        NotificationCenter.default.addObserver(
+//            self,
+//            selector: #selector(appDidResignActive),
+//            name: NSApplication.didResignActiveNotification,
+//            object: nil
+//        )
 
         // Set up the observer for when the system will sleep
         NSWorkspace.shared.notificationCenter.addObserver(
@@ -71,7 +71,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil // Replace with your actual NSPanel instance
         )
 
-        Task {
+        Task { @MainActor in
             await UserManager.shared.setup()
             let refresh_status = await UserManager.shared.refresh_jwt()
             if !refresh_status {
@@ -79,13 +79,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
 
-        let windowSuccess = WindowManager.shared.setupWindow()
-
-        guard windowSuccess else {
-            logger.error("Failed to set up window")
-            return
-        }
-        // logger.debug("Window set up successfully")
+        WindowManager.shared.setupWindow()
 
         if !onboardingViewed {
             OnboardingManager.shared.startOnboarding()
@@ -139,54 +133,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func appDidBecomeActive(notification _: NSNotification) {
         logger.debug("App did become active")
         // If the window is visible and on the screen with the cursor, don't show it again
-        Task {
-            if await WindowManager.shared.windowIsVisible, await WindowManager.shared.windowIsOnScreenWithCursor {
+        Task { @MainActor in
+            if WindowManager.shared.windowIsVisible, WindowManager.shared.windowIsOnScreenWithCursor {
                 return
             } else {
                 // Otherwise, show the window on the screen with the cursor
-                await WindowManager.shared.showWindow()
+                ChatFieldViewModel.shared.focusTextField()
+                WindowManager.shared.showWindow()
             }
         }
     }
-    
+
     @MainActor
     @objc func panelDidBecomeKey(notification _: Notification) {
-        // Move the switch logic here
-        let hoverType: HoverItemType = HoverTrackerModel.shared.targetType
-
-        guard let targetString = HoverTrackerModel.shared.targetItem,
-              let target = UUID(uuidString: targetString)
-        else {
-            // Handle the case where the string was nil or not a valid UUID
-            // logger.debug("Invalid or nil UUID hover target string")
-            return
-        }
-
-        switch hoverType {
-        case .chatImageDelete:
-            logger.debug("Performing Chat Image Delete action")
-            ChatFieldViewModel.shared.removeItem(id: target)
-        case .chatPDFDelete:
-            logger.debug("Performing Chat PDF Delete action")
-            ChatFieldViewModel.shared.removeItem(id: target)
-        case .menuItem:
-            logger.debug("Opening Menu Settings")
-        // Implement menu move functionality
-        case .chatImage:
-            logger.debug("Handling Chat Image action")
-            DispatchQueue.main.async {
-                ChatFieldViewModel.shared.removeItem(id: target)
-            }
-        case .chatPDF:
-            logger.debug("Handling Chat PDF action")
-        // Implement chat PDF functionality
-        case .nil_:
-            logger.debug("No specific button action")
-        }
-    }
-
-    @objc func appDidResignActive(notification _: NSNotification) {
-        logger.debug("App did resign active")
+        ChatFieldViewModel.shared.focusTextField()
     }
 
     @objc private func sleepListener(_ notification: Notification) {

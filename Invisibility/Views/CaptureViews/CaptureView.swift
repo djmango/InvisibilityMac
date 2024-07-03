@@ -13,7 +13,6 @@ import SwiftUI
 struct CaptureView: View {
     @ObservedObject private var screenRecorder = ScreenRecorder.shared
     // State object might be better here
-    @State private var whoIsHovering: String?
     @State private var isHovering: Bool = false
     @State private var minimized: Bool = false
 
@@ -44,8 +43,7 @@ struct CaptureView: View {
                         MessageButtonItemView(
                             label: "Minimize",
                             icon: "minus",
-                            shortcut_hint: nil,
-                            whoIsHovering: $whoIsHovering
+                            shortcut_hint: nil
                         ) {
                             withAnimation(AppConfig.snappy) {
                                 minimized.toggle()
@@ -64,8 +62,7 @@ struct CaptureView: View {
                         MessageButtonItemView(
                             label: "Open Picker",
                             icon: "rectangle.inset.filled.and.person.filled",
-                            shortcut_hint: nil,
-                            whoIsHovering: $whoIsHovering
+                            shortcut_hint: nil
                         ) {
                             screenRecorder.presentPicker()
                         }
@@ -79,11 +76,12 @@ struct CaptureView: View {
                 }
                 .visible(if: isHovering, removeCompletely: true)
             )
-            .onHover { hovering in
-                isHovering = hovering
+            .whenHovered { hovering in
+                withAnimation(AppConfig.snappy) {
+                    isHovering = hovering
+                }
             }
             .visible(if: !minimized, removeCompletely: true)
-            .animation(.easeInOut(duration: 0.2), value: whoIsHovering)
             .animation(.easeInOut(duration: 0.2), value: isHovering)
             .padding(.horizontal, 10)
             .frame(width: 400, height: 250)

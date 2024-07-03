@@ -17,7 +17,7 @@ import SwiftUI
 class OnboardingManager {
     static let shared = OnboardingManager()
 
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "OnboardingManager")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "OnboardingManager")
 
     private var contentView = OnboardingView()
     private var window: NSWindow?

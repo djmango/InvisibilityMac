@@ -1,5 +1,5 @@
 {
-  "originHash" : "1d18da73547423a70fc64a8ecbfd85c1f6540a7d01df8fe517540038b009ea8f",
+  "originHash" : "594b8b8d8061cff493d196ed285fd9ad284803960fc2537b6c33a8a2931f604a",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "f455c2975872ccd2d9c81594c658af65716e9b9a",
         "version" : "5.9.1"
+      }
+    },
+    {
+      "identity" : "cocoalumberjack",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
+      "state" : {
+        "revision" : "4b8714a7fb84d42393314ce897127b3939885ec3",
+        "version" : "3.8.5"
       }
     },
     {
@@ -52,7 +61,7 @@
       "location" : "https://github.com/djmango/markdown-webview.git",
       "state" : {
         "branch" : "master",
-        "revision" : "6e9f777249cd319e15451e256da97df87d05c82a"
+        "revision" : "8c7806944dcba8ab33b439b1d6e1ac24d4c11669"
       }
     },
     {
@@ -83,12 +92,12 @@
       }
     },
     {
-      "identity" : "sentry-cocoa",
+      "identity" : "rollbar-apple",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/getsentry/sentry-cocoa.git",
+      "location" : "https://github.com/rollbar/rollbar-apple",
       "state" : {
-        "revision" : "8fd4e804f2e72e0b9c1b189ce4e8349c4d10b6a2",
-        "version" : "8.30.0"
+        "revision" : "2dce6849ca1ecb2154578eed87c48709edd502ff",
+        "version" : "3.3.0"
       }
     },
     {
@@ -107,6 +116,15 @@
       "state" : {
         "revision" : "0ef1ee0220239b3776f433314515fd849025673f",
         "version" : "2.6.4"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log",
+      "state" : {
+        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
+        "version" : "1.6.1"
       }
     },
     {

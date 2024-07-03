@@ -10,6 +10,7 @@ import Alamofire
 import Foundation
 import OSLog
 import PostHog
+import RollbarNotifier
 import SwiftUI
 
 struct RefreshTokenResponse: Decodable {
@@ -18,7 +19,7 @@ struct RefreshTokenResponse: Decodable {
 
 final class UserManager: ObservableObject {
     static let shared = UserManager()
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "UserManager")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "UserManager")
 
     @Published public var user: User?
     @Published public var isPaid: Bool = false
@@ -100,10 +101,16 @@ final class UserManager: ObservableObject {
         if await userIsLoggedIn() {
             self.confettis = 1
             if let user {
+                // Identify for logs
                 PostHogSDK.shared.identify(
                     user.email,
                     userProperties: ["name": "\(user.firstName ?? "") \(user.lastName ?? "")", "email": user.email, "id": user.id]
                 )
+
+                // And crash reporting
+                let config = RollbarConfig.mutableConfig(withAccessToken: AppConfig.rollbar_key)
+                config.setPersonId(user.id, username: "\(user.firstName ?? "") \(user.lastName ?? "")", email: user.email)
+                Rollbar.initWithConfiguration(config)
             }
             if await checkPaymentStatus() {
                 self.isPaid = true

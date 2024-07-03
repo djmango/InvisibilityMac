@@ -13,7 +13,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct SettingsView: View {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "SettingsView")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "SettingsView")
     let bundleVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
 
     @AppStorage("animateButtons") private var animateButtons = true
@@ -48,13 +48,6 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.bordered)
                 .visible(if: viewModel.user == nil, removeCompletely: true)
-                .onHover { hovered in
-                    if hovered {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
-                    }
-                }
 
                 Spacer()
 
@@ -74,33 +67,12 @@ struct SettingsView: View {
 
                 LaunchAtLogin.Toggle("Launch at Login")
                     .toggleStyle(.switch)
-                    .onHover { hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
 
                 Toggle("Show on Menu Bar", isOn: $showMenuBar)
                     .toggleStyle(.switch)
-                    .onHover { hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
 
                 Toggle("Shortcut Hints", isOn: $shortcutHints)
                     .toggleStyle(.switch)
-                    .onHover { hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
 
                 Toggle("Beta Features", isOn: $betaFeatures)
                     .toggleStyle(.switch)
@@ -111,13 +83,6 @@ struct SettingsView: View {
                             animateButtons = true
                         }
                     }
-                    .onHover { hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
 
                 Divider()
                     .padding(.horizontal, 150)
@@ -126,26 +91,12 @@ struct SettingsView: View {
                 Toggle("Animate Buttons", isOn: $animateButtons)
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
-                    .onHover { hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
 
                 Toggle("All LLMs", isOn: $dynamicLLMLoad)
                     .toggleStyle(.switch)
                     .visible(if: betaFeatures, removeCompletely: true)
                     .onChange(of: dynamicLLMLoad) {
                         Task { @MainActor in await viewModel.loadDynamicModels() }
-                    }
-                    .onHover { hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
                     }
 
                 Picker("", selection: $llmModel) {
@@ -169,13 +120,6 @@ struct SettingsView: View {
                             viewModel.startOnboarding()
                         }
                         .buttonStyle(.bordered)
-                        .onHover { hovered in
-                            if hovered {
-                                NSCursor.pointingHand.set()
-                            } else {
-                                NSCursor.arrow.set()
-                            }
-                        }
 
                         Button("Export Chat") {
                             let text = viewModel.getExportChatText()
@@ -183,13 +127,6 @@ struct SettingsView: View {
                             showingExporter = true
                         }
                         .buttonStyle(.bordered)
-                        .onHover { hovered in
-                            if hovered {
-                                NSCursor.pointingHand.set()
-                            } else {
-                                NSCursor.arrow.set()
-                            }
-                        }
                     }
 
                     GridRow {
@@ -197,13 +134,6 @@ struct SettingsView: View {
                             viewModel.checkForUpdates()
                         }
                         .buttonStyle(.bordered)
-                        .onHover { hovered in
-                            if hovered {
-                                NSCursor.pointingHand.set()
-                            } else {
-                                NSCursor.arrow.set()
-                            }
-                        }
 
                         Button("Feedback") {
                             if let url = URL(string: "mailto:support@i.inc") {
@@ -211,13 +141,6 @@ struct SettingsView: View {
                             }
                         }
                         .buttonStyle(.bordered)
-                        .onHover { hovered in
-                            if hovered {
-                                NSCursor.pointingHand.set()
-                            } else {
-                                NSCursor.arrow.set()
-                            }
-                        }
                     }
                 }
 
@@ -230,13 +153,6 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.link)
-                    .onHover { hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
 
                     Button("Privacy") {
                         if let url = URL(string: "https://i.inc/privacy") {
@@ -244,13 +160,6 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.link)
-                    .onHover { hovered in
-                        if hovered {
-                            NSCursor.pointingHand.set()
-                        } else {
-                            NSCursor.arrow.set()
-                        }
-                    }
                 }
 
                 Image("MenuBarIcon")
@@ -258,13 +167,6 @@ struct SettingsView: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 18, height: 18)
                     .padding(.bottom, -5)
-                    .onHover { inside in
-                        if inside {
-                            NSCursor.pointingHand.push()
-                        } else {
-                            NSCursor.pop()
-                        }
-                    }
                     .onTapGesture {
                         if let url = URL(string: "https://invisibility.so") {
                             NSWorkspace.shared.open(url)
@@ -276,13 +178,6 @@ struct SettingsView: View {
                         .font(.headline)
                     Text("Sulaiman Ghori")
                         .font(.headline)
-                        .onHover { inside in
-                            if inside {
-                                NSCursor.pointingHand.push()
-                            } else {
-                                NSCursor.pop()
-                            }
-                        }
                         .onTapGesture {
                             if let url = URL(string: "https://x.com/sulaimanghori") {
                                 NSWorkspace.shared.open(url)
@@ -292,13 +187,6 @@ struct SettingsView: View {
                         .font(.headline)
                     Text("Tye Daniel")
                         .font(.headline)
-                        .onHover { inside in
-                            if inside {
-                                NSCursor.pointingHand.push()
-                            } else {
-                                NSCursor.pop()
-                            }
-                        }
                         .onTapGesture {
                             if let url = URL(string: "https://x.com/TyeDan") {
                                 NSWorkspace.shared.open(url)
@@ -308,7 +196,7 @@ struct SettingsView: View {
 
                 Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(.secondary)
                     .padding(.bottom, 5)
             }
             .animation(.easeIn, value: betaFeatures)
@@ -327,8 +215,9 @@ struct SettingsView: View {
                     Button(action: {
                         _ = viewModel.changeView(to: .chat)
                     }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.chatButtonForeground)
+                        Image(systemName: "xmark")
+                            .font(.system(size: 18, weight: .regular))
+                            .foregroundColor(.primary)
                     }
                     .buttonStyle(.plain)
                     .padding()

@@ -12,7 +12,7 @@ import PostHog
 import SwiftUI
 
 final class ChatViewModel: ObservableObject {
-    private let logger = SentryLogger(subsystem: AppConfig.subsystem, category: "ChatViewModel")
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ChatViewModel")
 
     static let shared = ChatViewModel()
 
