@@ -7,7 +7,7 @@ struct MemoryView: View {
     var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
             VStack(spacing: 24) {
-                MemoryHeader(title: "My Memories", onSearch: viewModel.fetchAPISync, onClose: viewModel.closeView)
+                MemoryHeader(title: "My Memories", onSearch: viewModel.fetchAPISync, onClose: viewModel.closeView, isRefreshing: viewModel.isRefreshing)
                 MemoryGrid(memories: viewModel.memories)
             }
             .padding(.horizontal, 8)
@@ -33,6 +33,7 @@ struct MemoryHeader: View {
     let title: String
     let onSearch: () -> Void
     let onClose: () -> Void
+    var isRefreshing: Bool
 
     var body: some View {
         HStack(spacing: 8) {
@@ -40,13 +41,15 @@ struct MemoryHeader: View {
                 Image(systemName: "arrow.clockwise")
                     .font(.system(size: 18, weight: .regular))
                     .foregroundColor(.primary)
+
+                ProgressView()
+                    .visible(if: isRefreshing)
             }
             .buttonStyle(.plain)
 
             Spacer()
             Text(title)
                 .font(.system(size: 24, weight: .bold))
-                .tracking(-0.40)
                 .foregroundColor(.primary)
 
             Spacer()
@@ -69,6 +72,8 @@ struct MemoryGrid: View {
     private let maxWidth: CGFloat = 350
     private let spacing: CGFloat = 16
 
+    @State private var groups_expanded: [String] = []
+
     private var columns: [GridItem] {
         [GridItem(.adaptive(minimum: minWidth, maximum: maxWidth), spacing: spacing)]
     }
@@ -76,7 +81,9 @@ struct MemoryGrid: View {
     var body: some View {
         LazyVGrid(columns: columns, spacing: spacing) {
             ForEach(memories) { memory in
-                MemoryCard(memory: memory)
+                MemoryCard(memory: memory, groups_expanded: $groups_expanded)
+                    .visible(if: groups_expanded.contains(memory.grouping ?? "") ||
+                        memories.first(where: { $0.grouping == memory.grouping })?.id == memory.id, removeCompletely: true)
             }
         }
         .padding(.horizontal, spacing)
@@ -86,23 +93,23 @@ struct MemoryGrid: View {
 struct MemoryCard: View {
     let memory: APIMemory
     @State var isHovering: Bool = false
+    @Binding var groups_expanded: [String]
+
+    init(memory: APIMemory, groups_expanded: Binding<[String]>) {
+        self.memory = memory
+        self._groups_expanded = groups_expanded
+    }
 
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(.cardBackground)
-                .shadow(radius: isHovering ? 8 : 2)
+                .fill(.windowBackground)
+                .shadow(radius: isHovering ? 6 : 1)
 
             VStack(alignment: .leading, spacing: 8) {
-                Text(formatDate(memory.created_at))
+                Text(formatDate(memory.updated_at))
                     .font(.system(size: 12, weight: .medium))
-                    .tracking(0.15)
                     .foregroundColor(.secondary)
-
-                // Text(timeAgo(memory.created_at))
-                //     .font(.system(size: 12, weight: .medium))
-                //     .tracking(0.15)
-                //     .foregroundColor(.secondary)
 
                 Text(memory.emoji ?? "")
                     .font(.system(size: 40))
@@ -135,6 +142,15 @@ struct MemoryCard: View {
         .whenHovered { hovering in
             withAnimation(AppConfig.snappy) {
                 isHovering = hovering
+            }
+        }
+        .onTapGesture {
+            withAnimation(AppConfig.snappy) {
+                if groups_expanded.contains(memory.grouping ?? "") {
+                    groups_expanded.removeAll(where: { $0 == memory.grouping })
+                } else {
+                    groups_expanded.append(memory.grouping ?? "")
+                }
             }
         }
     }
