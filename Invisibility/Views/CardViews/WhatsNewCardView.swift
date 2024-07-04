@@ -2,7 +2,7 @@
 //  WhatsNewCardView.swift
 //  Invisibility
 //
-//  Created by Braeden Hall on 2024-07-03.
+//  Created by Braeden Hall on 7/3/24.
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
@@ -10,13 +10,7 @@ import SwiftUI
 
 struct WhatsNewCardView: View {
     @State private var isHovering = false
-
-    private let features = [
-           Feature(iconName: "memorychip.fill", iconColor: .blue, title: "Memories", description: "Now Invisibility learns your preferences as you chat and remembers them."),
-           Feature(iconName: "person.fill.checkmark", iconColor: .green, title: "Tailored Responses", description: "The AI will tailor its responses to you based on your preferences."),
-           Feature(iconName: "waveform", iconColor: .cyan, title: "Wow New", description: "Now Invisibility learns your preferences as you chat and remembers them."),
-           // Add more features here
-       ]
+    
     var body: some View {
         VStack {
             Spacer()
@@ -29,7 +23,7 @@ struct WhatsNewCardView: View {
                 VStack (alignment: .center, spacing: 16) {
                     LazyVGrid(columns: [GridItem(.fixed(32), alignment: .center), GridItem(.flexible(minimum: 100, maximum: 400))], alignment: .leading, spacing: 20) {
                         
-                        ForEach(features, id: \.self) { feature in
+                        ForEach(AppConfig.whats_new_features, id: \.self) { feature in
                             Image(systemName: feature.iconName)
                                 .foregroundColor(feature.iconColor)
                                 .font(.system(size: 32))
@@ -93,10 +87,3 @@ struct WhatsNewCardView: View {
     WhatsNewCardView()
 }
 
-struct Feature: Identifiable, Hashable {
-    let id = UUID()
-    let iconName: String
-    let iconColor: Color
-    let title: String
-    let description: String
-}

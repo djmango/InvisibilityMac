@@ -25,7 +25,7 @@ final class MainWindowViewModel: ObservableObject {
 
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MainWindowViewModel")
 
-    @Published var whoIsVisible: mainWindowView = .whatsNew
+    @Published var whoIsVisible: mainWindowView = .chat
 
     private init() {}
 
