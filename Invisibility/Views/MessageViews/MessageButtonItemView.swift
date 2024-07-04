@@ -40,29 +40,28 @@ struct MessageButtonItemView: View {
     var body: some View {
         Button(action: actionWrapped) {
             HStack(spacing: 0) {
-                HStack {
-                    Image(systemName: icon)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 18, height: 18)
-                        .foregroundColor(iconColor)
+                Image(systemName: icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 18, height: 18)
+                    .foregroundColor(iconColor)
+                    .visible(
+                        if: !shortcutViewModel.isCommandPressed || !shortcutHints || shortcut_hint == nil,
+                        removeCompletely: true
+                    )
+
+                if let shortcut_hint {
+                    Text(shortcut_hint)
+                        .font(.title3)
+                        .foregroundColor(.chatButtonForeground)
                         .visible(
-                            if: !shortcutViewModel.isCommandPressed || !shortcutHints || shortcut_hint == nil,
+                            if: shortcutViewModel.isCommandPressed && shortcutHints,
                             removeCompletely: true
                         )
-
-                    if let shortcut_hint {
-                        Text(shortcut_hint)
-                            .font(.title3)
-                            .foregroundColor(.chatButtonForeground)
-                            .visible(
-                                if: shortcutViewModel.isCommandPressed && shortcutHints,
-                                removeCompletely: true
-                            )
-                            .truncationMode(.head)
-                            .kerning(-1)
-                    }
+                        .truncationMode(.head)
+                        .kerning(-1)
                 }
+
                 if let label {
                     Text(label)
                         .font(.title3)
@@ -71,6 +70,7 @@ struct MessageButtonItemView: View {
                         .padding(.leading, 8)
                 }
             }
+            .frame(height: 18)
             .padding(8)
             .contentShape(RoundedRectangle(cornerRadius: 100))
             .background(

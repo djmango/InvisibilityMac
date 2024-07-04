@@ -6,8 +6,8 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
-import SwiftUI
 import Cocoa
+import SwiftUI
 
 struct FreeTierCardView: View {
     @ObservedObject private var userManager = UserManager.shared
@@ -30,25 +30,24 @@ struct FreeTierCardView: View {
             VStack {
                 Text("Daily Limit Reached")
                     .font(.system(size: 24, weight: .bold))
-                
+
                 Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
                     .font(.body)
                     .foregroundColor(.gray)
             }
-            
+
             Spacer()
-            
+
             VStack {
                 Text("Invite friends to unlock more messages!")
                     .padding(.top, 12)
                     .font(.title3)
                     .fontWeight(.semibold)
-                
-                
+
                 QRView(string: userManager.inviteLink)
                     .frame(width: 100, height: 100)
                     .shadow(radius: 2)
-                
+
                 // Link is invite.i.inc/firstName
                 Button(action: {
                     if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
@@ -66,7 +65,7 @@ struct FreeTierCardView: View {
                         NSCursor.arrow.set()
                     }
                 }
-                
+
                 HStack {
                     MessageButtonItemView(
                         label: "Copy",
@@ -75,7 +74,7 @@ struct FreeTierCardView: View {
                     ) {
                         onCopyReferralLink()
                     }
-                                        
+
                     MessageButtonItemView(
                         label: "Share",
                         icon: "square.and.arrow.up",
@@ -91,18 +90,18 @@ struct FreeTierCardView: View {
             }
 
             Spacer()
-            
+
             Text("Or")
                 .font(.body)
 
             Spacer()
-            
+
             VStack {
                 Text("Unlock unlimited access!")
                     .font(.title3)
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
-                
+
                 Button(action: {
                     UserManager.shared.pay()
                 }) {
@@ -139,22 +138,21 @@ struct FreeTierCardView: View {
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
         )
+        .onTapGesture {
+            onTap()
+        }
         .overlay(
             VStack {
                 HStack {
                     Spacer()
-                    Image(systemName: "arrow.clockwise")
-                        .rotationEffect(.degrees(isRefreshAnimating ? 360 : 0))
-                        .frame(width: 10, height: 10)
-                        .opacity(isRefreshAnimating ? 1 : 0)
-                        .padding(10)
+                    ProgressView()
+                        .visible(if: isRefreshAnimating)
+                        .padding(.vertical, 15)
+                        .padding(.trailing, 12)
                 }
                 Spacer()
             }
         )
-        .onTapGesture {
-            onTap()
-        }
         .padding(.horizontal, 20)
         .frame(maxWidth: .infinity)
         .padding(.bottom, 3)
@@ -183,7 +181,7 @@ struct FreeTierCardView: View {
             isCopied = false
         }
     }
-    
+
     func onShareButtonClicked(sender: NSView) {
         let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
         picker.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
@@ -193,7 +191,7 @@ struct FreeTierCardView: View {
 struct ShareButtonView: NSViewRepresentable {
     @Binding var nsView: NSView?
 
-    func makeNSView(context: Context) -> NSView {
+    func makeNSView(context _: Context) -> NSView {
         let view = NSView()
         DispatchQueue.main.async {
             self.nsView = view
@@ -201,5 +199,5 @@ struct ShareButtonView: NSViewRepresentable {
         return view
     }
 
-    func updateNSView(_ nsView: NSView, context: Context) {}
+    func updateNSView(_: NSView, context _: Context) {}
 }

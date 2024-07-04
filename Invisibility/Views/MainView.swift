@@ -36,15 +36,15 @@ struct MainView: View {
                     if userManager.isLoggedIn {
                         MessageScrollView()
                             .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                        
+
                         HistoryView()
                             .offset(x: 0, y: isShowingHistory ? 0 : -1000)
                             .opacity(isShowingHistory ? 1 : 0)
-                      
-                       MemoryView()
-                    .offset(x: 0, y: isShowingMemory ? 0 : -1000)
-                    .opacity(isShowingMemory ? 1 : 0)
-                        
+
+                        MemoryView()
+                            .offset(x: 0, y: isShowingMemory ? 0 : -1000)
+                            .opacity(isShowingMemory ? 1 : 0)
+
                         SettingsView()
                             .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
                             .opacity(isShowingSettings ? 1 : 0)
@@ -69,7 +69,6 @@ struct MainView: View {
 
             // Action Icons
             ChatButtonsView()
-                .frame(maxHeight: 40)
                 .padding(.bottom, 10)
 
             ChatFieldView()
