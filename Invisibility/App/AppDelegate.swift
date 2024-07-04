@@ -18,6 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var eventMonitor: Any?
 
     @AppStorage("onboardingViewed") private var onboardingViewed = false
+    @AppStorage("lastUsedBuild") private var lastUsedBuild: String = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
 
     deinit {
         NSWorkspace.shared.notificationCenter.removeObserver(self)
@@ -84,6 +85,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if !onboardingViewed {
             OnboardingManager.shared.startOnboarding()
         } else {
+            // If the user has updated the app, show the whats new card
+            let currentBuild = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
+            if lastUsedBuild != currentBuild {
+                let _ = MainWindowViewModel.shared.changeView(to: .whatsNew)
+                lastUsedBuild = currentBuild
+            }
+
             WindowManager.shared.showWindow()
         }
     }

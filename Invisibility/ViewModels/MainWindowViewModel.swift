@@ -15,6 +15,7 @@ enum mainWindowView {
     case settings
     case history
     case memory
+    case whatsNew
 }
 
 import OSLog
@@ -24,7 +25,7 @@ final class MainWindowViewModel: ObservableObject {
 
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MainWindowViewModel")
 
-    @Published var whoIsVisible: mainWindowView = .chat
+    @Published var whoIsVisible: mainWindowView = .whatsNew
 
     private init() {}
 
