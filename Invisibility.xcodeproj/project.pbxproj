@@ -94,6 +94,8 @@
 		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
 		5AA8059F82659778F21737C5 /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1ACA954F73F48E958AD26 /* HistoryViewModel.swift */; };
+		5ADB74A52C35CF30004F5A78 /* WhatsNewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADB74A42C35CF30004F5A78 /* WhatsNewCardView.swift */; };
+		5ADB74A92C36DAFA004F5A78 /* WhatsNewFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADB74A82C36DAFA004F5A78 /* WhatsNewFeature.swift */; };
 		644F9A6DD98AABA0C1576B62 /* MessageScrollHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B96977A082A12FF90493A184 /* MessageScrollHeaderViewModel.swift */; };
 		771397F22C2E74440048B3B5 /* AnimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771397F12C2E74440048B3B5 /* AnimationManager.swift */; };
 		7758D5782C2F7EAB0013CCED /* Hover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758D5772C2F7EAB0013CCED /* Hover.swift */; };
@@ -181,6 +183,8 @@
 		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
 		4DF2D9002BA689220093CA3E /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
+		5ADB74A42C35CF30004F5A78 /* WhatsNewCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewCardView.swift; sourceTree = "<group>"; };
+		5ADB74A82C36DAFA004F5A78 /* WhatsNewFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewFeature.swift; sourceTree = "<group>"; };
 		6142BEC69B0A286E2D7C2ED3 /* MessageContentViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MessageContentViewModel.swift; sourceTree = "<group>"; };
 		6EC1ACA954F73F48E958AD26 /* HistoryViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		771397F12C2E74440048B3B5 /* AnimationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationManager.swift; sourceTree = "<group>"; };
@@ -412,6 +416,7 @@
 		4D9ADB852C07E5B500A1EFC7 /* Types */ = {
 			isa = PBXGroup;
 			children = (
+				5ADB74A82C36DAFA004F5A78 /* WhatsNewFeature.swift */,
 				4D9ADB832C07E59700A1EFC7 /* APITypes.swift */,
 				77FE29852C254AAF007D923C /* Buttons.swift */,
 				4DE4ACDE2C257CC3002D8156 /* LLMTypes.swift */,
@@ -426,6 +431,7 @@
 				4DB061BB2BF3FF94007CF7DD /* FreeTierCardView.swift */,
 				4DA375B92C2BA0580094769B /* NewChatCardView.swift */,
 				D5BE8FF32C2E14E80011D90C /* LoginCardView.swift */,
+				5ADB74A42C35CF30004F5A78 /* WhatsNewCardView.swift */,
 			);
 			path = CardViews;
 			sourceTree = "<group>";
@@ -598,6 +604,7 @@
 				4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */,
 				4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
+				5ADB74A92C36DAFA004F5A78 /* WhatsNewFeature.swift in Sources */,
 				4D12BB9F2C2F755C00EF8970 /* MemoryViewModel.swift in Sources */,
 				4D8E054E2B2516DE00B60D0D /* MessageViewModel.swift in Sources */,
 				4DB061BC2BF3FF94007CF7DD /* FreeTierCardView.swift in Sources */,
@@ -613,6 +620,7 @@
 				771397F22C2E74440048B3B5 /* AnimationManager.swift in Sources */,
 				D5BE8FF42C2E14E80011D90C /* LoginCardView.swift in Sources */,
 				4DF195032B91B47F0017365F /* VisualEffectsBlur.swift in Sources */,
+				5ADB74A52C35CF30004F5A78 /* WhatsNewCardView.swift in Sources */,
 				4DB061B52BF2B82D007CF7DD /* CaptureViewModel.swift in Sources */,
 				77FE29862C254AAF007D923C /* Buttons.swift in Sources */,
 				4DB061AD2BF2B031007CF7DD /* ScreenRecorder.swift in Sources */,
@@ -803,7 +811,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 116;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = U854WW4U2R;
+				DEVELOPMENT_TEAM = RZGG54T5AS;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;
@@ -838,7 +846,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 116;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = U854WW4U2R;
+				DEVELOPMENT_TEAM = RZGG54T5AS;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Invisibility/Resources/Info.plist;
