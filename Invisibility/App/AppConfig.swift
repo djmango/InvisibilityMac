@@ -15,6 +15,7 @@ enum AppConfig {
     static let snappy: Animation = .snappy(duration: 0.4)
     static let easeIn: Animation = .easeIn(duration: 0.2)
     static let easeOut: Animation = .easeOut(duration: 0.2)
+    static let easeInOut: Animation = .easeInOut(duration: 0.2)
     static let posthog_api_key = "phc_aVzM8zKxuKj8BzbIDO7ByvmSH90WwB1vCZ1zPCZw9Y3"
     static let rollbar_key = "01fc4a7df060464191fa79bf3e6ecb0d"
 

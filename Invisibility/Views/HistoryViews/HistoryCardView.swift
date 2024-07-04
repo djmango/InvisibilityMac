@@ -10,9 +10,7 @@ import SwiftUI
 
 struct HistoryCardView: View {
     @StateObject private var viewModel: HistoryCardViewModel
-    @FocusState private var isFocused: Bool
     @State private var isHovering: Bool = false
-    @State var isNameHovered: Bool = false
 
     init(chat: APIChat) {
         _viewModel = StateObject(wrappedValue: HistoryCardViewModel(chat: chat))
@@ -27,26 +25,30 @@ struct HistoryCardView: View {
 
             VStack(alignment: .leading) {
                 HStack {
-                    if viewModel.isEditing {
-                        TextField("Enter new name", text: $viewModel.editedName, onCommit: viewModel.commitEdit)
-                            .font(.title3)
-                            .textFieldStyle(.plain)
-                            .focused($isFocused)
-                            .onAppear { isFocused = true }
-                    } else {
-                        HStack {
-                            Text(viewModel.chat.name)
-                                .font(.title3)
-
-                            Image(systemName: "pencil")
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                                .foregroundColor(.chatButtonForeground)
-                                .visible(if: isNameHovered)
+                    TextField("Enter new name", text: $viewModel.editedName)
+                        .onSubmit {
+                            viewModel.commitEdit()
                         }
-                        .onHover { isNameHovered = $0 }
-                        .onTapGesture(perform: viewModel.startEditing)
+                        .font(.title3)
+                        .textFieldStyle(.plain)
+
+                    Button(action: viewModel.cancelEdit) {
+                        Image(systemName: "xmark")
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.chatButtonForeground)
+                            .visible(if: viewModel.isEditing)
                     }
+                    .buttonStyle(.plain)
+
+                    Button(action: viewModel.commitEdit) {
+                        Image(systemName: "checkmark")
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.chatButtonForeground)
+                            .visible(if: viewModel.isEditing)
+                    }
+                    .buttonStyle(.plain)
 
                     Spacer()
 
@@ -80,7 +82,7 @@ struct HistoryCardView: View {
                     Button(action: viewModel.deleteChat) {
                         Image(systemName: "xmark")
                             .resizable()
-                            .padding(5)
+                            .padding(6)
                             .foregroundColor(.chatButtonForeground)
                             .clipShape(Circle())
                             .overlay(
@@ -105,12 +107,63 @@ struct HistoryCardView: View {
             .visible(if: isHovering)
         )
         .whenHovered { hovering in
-            withAnimation(AppConfig.snappy) {
-                isHovering = hovering
+            if hovering {
+                withAnimation(.easeIn(duration: 0.2)) {
+                    isHovering = true
+                }
+            } else {
+                withAnimation(.easeOut(duration: 0.2)) {
+                    isHovering = false
+                }
             }
         }
         .onTapGesture {
             viewModel.switchChat()
+        }
+    }
+}
+
+struct CustomTextField: NSViewRepresentable {
+    @Binding var text: String
+    var placeholder: String
+    var onEditingChanged: (Bool) -> Void
+    var onCommit: () -> Void
+
+    func makeNSView(context: Context) -> NSTextField {
+        let textField = NSTextField()
+        textField.placeholderString = placeholder
+        textField.delegate = context.coordinator
+        return textField
+    }
+
+    func updateNSView(_ nsView: NSTextField, context _: Context) {
+        nsView.stringValue = text
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, NSTextFieldDelegate {
+        var parent: CustomTextField
+
+        init(_ parent: CustomTextField) {
+            self.parent = parent
+        }
+
+        func controlTextDidChange(_ obj: Notification) {
+            if let textField = obj.object as? NSTextField {
+                parent.text = textField.stringValue
+            }
+        }
+
+        func controlTextDidBeginEditing(_: Notification) {
+            parent.onEditingChanged(true)
+        }
+
+        func controlTextDidEndEditing(_: Notification) {
+            parent.onEditingChanged(false)
+            parent.onCommit()
         }
     }
 }
