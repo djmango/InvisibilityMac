@@ -37,6 +37,9 @@ struct MessageScrollView: View {
                         .visible(if: !viewModel.canSendMessages, removeCompletely: true)
                         .padding(.top, 10)
 
+                    NewChatCardView()
+                        .visible(if: displayedMessages.isEmpty && viewModel.canSendMessages, removeCompletely: true)
+
                     CaptureView()
                         .visible(if: viewModel.isRecording, removeCompletely: true)
 

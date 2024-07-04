@@ -16,78 +16,26 @@ struct NewChatCardView: View {
     @State private var isCopied = false
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
 
-    var friendsInvitedText: String {
-        if userManager.inviteCount == 0 {
-            "No friends invited yet :("
-        } else {
-            "\(userManager.inviteCount) friend" + (userManager.inviteCount > 1 ? "s invited!" : " invited!")
-        }
-    }
-
     var body: some View {
-        VStack(spacing: 15) {
-            Spacer()
-
-            Text("Invite friends to Invisibility 💙")
+        VStack (alignment: .leading) {
+            Text("Start a new chat with Invisibility")
+                .font(.title2)
+                .fontWeight(.semibold)
+            
+            Text("Tips:")
                 .font(.title3)
-                .fontWeight(.bold)
-
-            Text("Earn 20 messages for every friend you invite! 🎉")
-                .font(.body)
-                .foregroundColor(.secondary)
-
-            // Link is invite.i.inc/firstName
-            Button(action: {
-                if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
-                    NSWorkspace.shared.open(url)
-                }
-            }) {
-                Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
-                    .font(.title2)
+                .fontWeight(.medium)
+                .padding(.top, 12)
+                .padding(.bottom, 2)
+            
+            VStack (alignment: .leading, spacing: 4) {
+                BulletPoint(text: "Turn on Sidekick (`⌘ ⇧ 2`) to share your screen with Invisibility.")
+                BulletPoint(text: "Enter Setting (`⌘ ,`) to change which LLM Invisibility uses to generate responses.")
+                BulletPoint(text: "Use the Memory tab (`⌘ M`) to view and edit what Invisibility remembers about you.")
             }
-            .buttonStyle(.link)
-
-            QRView(string: userManager.inviteLink)
-                .frame(width: 80, height: 80)
-                .shadow(radius: 2)
-
-            Text(friendsInvitedText)
-                .font(.callout)
-                .foregroundColor(.secondary)
-
-            Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
-                .font(.callout)
-                .foregroundColor(.secondary)
-
-            Text("Or")
-                .font(.title3)
-                .fontWeight(.bold)
-
-            Button(action: {
-                UserManager.shared.pay()
-            }) {
-                Text("Get Free Trial")
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundColor(.primary)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 28)
-                    .background(Color.blue)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(nsColor: .separatorColor))
-                    )
-                    .cornerRadius(8)
-            }
-            .buttonStyle(.plain)
-            .shadow(radius: 2)
-
-            Text("Unlimited messages, early access, and more!")
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-
-            Spacer()
         }
+        .padding(.vertical, 32)
+        .padding(.horizontal, 24)
         .cornerRadius(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
@@ -139,4 +87,22 @@ struct NewChatCardView: View {
             isCopied = false
         }
     }
+}
+
+struct BulletPoint: View {
+    var text: String
+    
+    var body: some View {
+        HStack(alignment: .top, spacing: 4) {
+            Text("•")
+            
+            Text(text)
+                .multilineTextAlignment(.leading)
+        }
+        .padding(.leading, 8)
+    }
+}
+
+#Preview {
+    NewChatCardView()
 }
