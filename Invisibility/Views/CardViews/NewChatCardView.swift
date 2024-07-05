@@ -81,7 +81,7 @@ struct NewChatCardView: View {
                 }
             }
         }
-        .padding(.vertical, 32)
+        .padding(.vertical, 24)
         .padding(.horizontal, 24)
         .cornerRadius(16)
         .background(
