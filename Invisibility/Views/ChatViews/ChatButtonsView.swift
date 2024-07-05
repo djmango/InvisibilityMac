@@ -30,6 +30,17 @@ struct ChatButtonsView: View {
                 _ = viewModel.newChat()
             }
             .keyboardShortcut("n", modifiers: [.command])
+            
+            // Transcribe Voice
+            MessageButtonItemView(
+                label: viewModel.isTranscribing ? "Stop" :  "Capture Voice",
+                icon: viewModel.isTranscribing ? "stop.circle" :  "mic.fill" ,
+                shortcut_hint: "⌘ T"
+
+            ) {
+                viewModel.toggleTranscribing()
+            }
+            .keyboardShortcut("t", modifiers: [.command])
 
             // Screenshot
             MessageButtonItemView(
@@ -135,4 +146,8 @@ struct ChatButtonsView: View {
         )
         .animation(AppConfig.snappy, value: viewModel.isGenerating)
     }
+}
+
+#Preview {
+    ChatButtonsView()
 }
