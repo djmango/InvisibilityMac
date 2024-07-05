@@ -7,87 +7,83 @@
 //
 
 import SwiftUI
-
-import SwiftUI
+import MarkdownWebView
 
 struct NewChatCardView: View {
     @ObservedObject private var userManager = UserManager.shared
     @State private var isRefreshAnimating = false
     @State private var isCopied = false
-    @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
+    @State private var shareButtonView: NSView?
+    @State private var currentTip: String = ""
 
-    var friendsInvitedText: String {
-        if userManager.inviteCount == 0 {
-            "No friends invited yet :("
-        } else {
-            "\(userManager.inviteCount) friend" + (userManager.inviteCount > 1 ? "s invited!" : " invited!")
-        }
+    @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
+    
+    private let tips: [String] = [
+        "Turn on Sidekick (`⌘ ⇧ 2`) to share your screen with Invisibility.",
+        "Enter Setting (`⌘ ,`) to change which LLM Invisibility uses to generate responses.",
+        "Use the Memory tab (`⌘ M`) to view and edit what Invisibility remembers about you.",
+        "You can explore your chat history in the History tab (`⌘ F`).",
+        "Press `⌥ Space` to easily open and close Invisibility.",
+        "Easily start a new chat by pression `⌘ N`."
+    ]
+    
+    init() {
+        _currentTip = State(initialValue: getRandomTip())
     }
 
+    private func getRandomTip() -> String {
+        let randomIndex = Int.random(in: 0..<tips.count)
+        return tips[randomIndex]
+    }
+    
+
     var body: some View {
-        VStack(spacing: 15) {
-            Spacer()
-
-            Text("Invite friends to Invisibility 💙")
-                .font(.title3)
-                .fontWeight(.bold)
-
-            Text("Earn 20 messages for every friend you invite! 🎉")
-                .font(.body)
-                .foregroundColor(.secondary)
-
-            // Link is invite.i.inc/firstName
-            Button(action: {
-                if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
-                    NSWorkspace.shared.open(url)
+        VStack (alignment: .leading) {
+            Text("New Chat")
+                .font(.title)
+                .fontWeight(.semibold)
+            
+            VStack (alignment: .leading) {
+                HStack (alignment: .center) {
+                    Image(systemName: "lightbulb.max.fill")
+                        .font(.title3)
+                        .foregroundColor(.yellow)
+                    
+                    Text("Pro Tip:")
+                        .font(.title3)
+                        .fontWeight(.semibold)
                 }
+                
+                MarkdownWebView(currentTip)
+                    .font(.system(size: 14))
+                    .padding(.leading, 16)
+                    .padding(.top, -6)
+            }
+            .padding(.top, 8)
+            
+            Button(action: {
+                if let view = shareButtonView {
+                    let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
+                    picker.show(relativeTo: view.bounds, of: view, preferredEdge: .minY)
+                }
+
             }) {
-                Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
+                Text("Share Invisibility with a friend!")
                     .font(.title2)
             }
+            .padding(.top, 16)
             .buttonStyle(.link)
-
-            QRView(string: userManager.inviteLink)
-                .frame(width: 80, height: 80)
-                .shadow(radius: 2)
-
-            Text(friendsInvitedText)
-                .font(.callout)
-                .foregroundColor(.secondary)
-
-            Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
-                .font(.callout)
-                .foregroundColor(.secondary)
-
-            Text("Or")
-                .font(.title3)
-                .fontWeight(.bold)
-
-            Button(action: {
-                UserManager.shared.pay()
-            }) {
-                Text("Get Free Trial")
-                    .font(.system(size: 25, weight: .bold))
-                    .foregroundColor(.primary)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 28)
-                    .background(Color.blue)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(nsColor: .separatorColor))
-                    )
-                    .cornerRadius(8)
+            .background(ShareButtonView(nsView: $shareButtonView))
+            .onHover { hovering in
+                if hovering {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
             }
-            .buttonStyle(.plain)
-            .shadow(radius: 2)
-
-            Text("Unlimited messages, early access, and more!")
-                .font(.body)
-                .foregroundColor(.secondary)
-                .multilineTextAlignment(.center)
-
-            Spacer()
         }
+        .padding(.vertical, 24)
+        .padding(.horizontal, 24)
         .cornerRadius(16)
         .background(
             RoundedRectangle(cornerRadius: 16)
@@ -139,4 +135,9 @@ struct NewChatCardView: View {
             isCopied = false
         }
     }
+}
+
+
+#Preview {
+    NewChatCardView()
 }

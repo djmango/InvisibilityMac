@@ -143,7 +143,7 @@ class WindowManager {
             defer: false
         )
         window.contentView = NSHostingView(rootView: contentView)
-        window.level = .floating // Make the window float above all windows except other floating windows (raycast, iterm, etc)
+        window.level = .mainMenu // Make the window float above all windows
         window.isOpaque = false // Enable transparency
         window.backgroundColor = NSColor.clear // Set background color to clear
         window.titlebarAppearsTransparent = true

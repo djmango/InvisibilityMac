@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum HoverItemType {
     case nil_
@@ -18,4 +19,18 @@ enum HoverItemType {
     case chatPDFDelete
     
     case menuItem
+}
+
+struct ShareButtonView: NSViewRepresentable {
+    @Binding var nsView: NSView?
+
+    func makeNSView(context _: Context) -> NSView {
+        let view = NSView()
+        DispatchQueue.main.async {
+            self.nsView = view
+        }
+        return view
+    }
+
+    func updateNSView(_: NSView, context _: Context) {}
 }

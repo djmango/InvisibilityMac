@@ -13,6 +13,7 @@ class MemoryViewModel: ObservableObject {
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MemoryViewModel")
 
     @Published var memories: [APIMemory] = []
+    @Published var isRefreshing: Bool = false
 
     private let mainWindowViewModel: MainWindowViewModel = .shared
 
@@ -21,6 +22,8 @@ class MemoryViewModel: ObservableObject {
     func fetchAPISync() { Task { await fetchAPI() } }
 
     func fetchAPI() async {
+        DispatchQueue.main.async { self.isRefreshing = true }
+        defer { DispatchQueue.main.async { self.isRefreshing = false } }
         let url = URL(string: AppConfig.invisibility_api_base + "/memories/")!
 
         guard let token else {
@@ -37,7 +40,7 @@ class MemoryViewModel: ObservableObject {
             let decoder = iso8601Decoder()
             let fetched = try decoder.decode([APIMemory].self, from: data)
             DispatchQueue.main.async {
-                self.memories = fetched.sorted(by: { $0.created_at < $1.created_at })
+                self.memories = fetched.sorted(by: { $0.grouping ?? "" < $1.grouping ?? "" })
                 self.logger.debug("Fetched memories \(self.memories.count)")
             }
         } catch {

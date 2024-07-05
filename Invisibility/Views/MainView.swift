@@ -11,7 +11,7 @@ struct MainView: View {
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
     @AppStorage("width") private var width: Int = Int(WindowManager.defaultWidth)
-
+    
     var isShowingMessages: Bool {
         mainWindowViewModel.whoIsVisible == .chat
     }
@@ -27,6 +27,10 @@ struct MainView: View {
     var isShowingMemory: Bool {
         mainWindowViewModel.whoIsVisible == .memory
     }
+    
+    var isShowingWhatsNew: Bool {
+        mainWindowViewModel.whoIsVisible == .whatsNew
+    }
 
     var body: some View {
         // let _ = Self._printChanges()
@@ -36,18 +40,22 @@ struct MainView: View {
                     if userManager.isLoggedIn {
                         MessageScrollView()
                             .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                        
+
                         HistoryView()
                             .offset(x: 0, y: isShowingHistory ? 0 : -1000)
                             .opacity(isShowingHistory ? 1 : 0)
-                      
-                       MemoryView()
-                    .offset(x: 0, y: isShowingMemory ? 0 : -1000)
-                    .opacity(isShowingMemory ? 1 : 0)
-                        
+
+                        MemoryView()
+                            .offset(x: 0, y: isShowingMemory ? 0 : -1000)
+                            .opacity(isShowingMemory ? 1 : 0)
+
                         SettingsView()
                             .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
                             .opacity(isShowingSettings ? 1 : 0)
+
+                        WhatsNewCardView()
+                            .offset(x: isShowingWhatsNew ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                            .opacity(isShowingWhatsNew ? 1 : 0)
                     } else {
                         LoginCardView()
                     }
@@ -69,7 +77,6 @@ struct MainView: View {
 
             // Action Icons
             ChatButtonsView()
-                .frame(maxHeight: 40)
                 .padding(.bottom, 10)
 
             ChatFieldView()

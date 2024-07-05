@@ -4,7 +4,7 @@ import SwiftUI
 class HistoryCardViewModel: ObservableObject {
     @Published private(set) var chat: APIChat
     @Published private(set) var isEditing: Bool = false
-    @Published var editedName: String = ""
+    @Published var editedName: String
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -14,10 +14,18 @@ class HistoryCardViewModel: ObservableObject {
 
     init(chat: APIChat) {
         self.chat = chat
+        self.editedName = chat.name
 
         messageViewModel.$api_messages
             .sink { [weak self] _ in
                 self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+
+        $editedName
+            .sink { [weak self] _ in
+                // If name is not chat.name, we are editing
+                self?.isEditing = self?.editedName != self?.chat.name
             }
             .store(in: &cancellables)
     }
@@ -30,23 +38,25 @@ class HistoryCardViewModel: ObservableObject {
         messageViewModel.lastMessageWithTextFor(chat: chat)?.text ?? ""
     }
 
-    func startEditing() {
-        editedName = chat.name != "New Chat" ? chat.name : ""
-        isEditing = true
-    }
-
-    @MainActor func commitEdit() {
+    func commitEdit() {
+        isEditing = false
+        NSApplication.shared.keyWindow?.makeFirstResponder(nil)
         if !editedName.isEmpty {
-            chatViewModel.renameChat(chat, name: editedName)
+            DispatchQueue.main.async { self.chatViewModel.renameChat(self.chat, name: self.editedName) }
             chat.name = editedName
         } else {
             editedName = chat.name
         }
-        isEditing = false
     }
 
-    @MainActor func deleteChat() {
-        chatViewModel.deleteChat(chat)
+    func cancelEdit() {
+        isEditing = false
+        editedName = chat.name
+        NSApplication.shared.keyWindow?.makeFirstResponder(nil)
+    }
+
+    func deleteChat() {
+        DispatchQueue.main.async { self.chatViewModel.deleteChat(self.chat) }
     }
 
     @MainActor func switchChat() {
