@@ -4,6 +4,7 @@ import Foundation
 class ChatButtonsViewModel: ObservableObject {
     @Published private(set) var isGenerating: Bool = false
     @Published private(set) var isRecording: Bool = false
+    @Published private(set) var isTranscribing: Bool = false
     @Published private(set) var isCommandPressed: Bool = false
     @Published private(set) var whoIsVisible: mainWindowView = .chat
 
@@ -13,6 +14,7 @@ class ChatButtonsViewModel: ObservableObject {
     private let mainWindowViewModel: MainWindowViewModel = .shared
     private let messageViewModel: MessageViewModel = .shared
     private let screenRecorder: ScreenRecorder = .shared
+    private let voiceRecorder: VoiceRecorder = .shared
     private let screenshotManager: ScreenshotManager = .shared
     private let shortcutViewModel: ShortcutViewModel = .shared
     private let windowManager: WindowManager = .shared
@@ -30,6 +32,11 @@ class ChatButtonsViewModel: ObservableObject {
             screenRecorder.$isRunning
                 .receive(on: DispatchQueue.main)
                 .assign(to: \.isRecording, on: self)
+                .store(in: &cancellables)
+            
+            voiceRecorder.$isRunning
+                .receive(on: DispatchQueue.main)
+                .assign(to: \.isTranscribing, on: self)
                 .store(in: &cancellables)
         }
 
@@ -53,6 +60,10 @@ class ChatButtonsViewModel: ObservableObject {
 
     @MainActor func toggleRecording() {
         screenRecorder.toggleRecording()
+    }
+    
+    @MainActor func toggleTranscribing() {
+        voiceRecorder.toggleRecording()
     }
 
     @MainActor func newChat() {
