@@ -23,7 +23,8 @@ struct NewChatCardView: View {
         "Enter Setting (`⌘ ,`) to change which LLM Invisibility uses to generate responses.",
         "Use the Memory tab (`⌘ M`) to view and edit what Invisibility remembers about you.",
         "You can explore your chat history in the History tab (`⌘ F`).",
-        "Press `⌥ Space` to easily open and close Invisibility",
+        "Press `⌥ Space` to easily open and close Invisibility.",
+        "Easily start a new chat by pression `⌘ N`."
     ]
     
     init() {
