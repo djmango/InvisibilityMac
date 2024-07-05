@@ -7,31 +7,78 @@
 //
 
 import SwiftUI
-
-import SwiftUI
+import MarkdownWebView
 
 struct NewChatCardView: View {
     @ObservedObject private var userManager = UserManager.shared
     @State private var isRefreshAnimating = false
     @State private var isCopied = false
+    @State private var shareButtonView: NSView?
+    @State private var currentTip: String = ""
+
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
+    
+    private let tips: [String] = [
+        "Turn on Sidekick (`⌘ ⇧ 2`) to share your screen with Invisibility.",
+        "Enter Setting (`⌘ ,`) to change which LLM Invisibility uses to generate responses.",
+        "Use the Memory tab (`⌘ M`) to view and edit what Invisibility remembers about you.",
+        "You can explore your chat history in the History tab (`⌘ F`).",
+        "Press `⌥ Space` to easily open and close Invisibility",
+    ]
+    
+    init() {
+        _currentTip = State(initialValue: getRandomTip())
+    }
+
+    private func getRandomTip() -> String {
+        let randomIndex = Int.random(in: 0..<tips.count)
+        return tips[randomIndex]
+    }
+    
 
     var body: some View {
         VStack (alignment: .leading) {
-            Text("Start a new chat with Invisibility")
-                .font(.title2)
+            Text("New Chat")
+                .font(.title)
                 .fontWeight(.semibold)
             
-            Text("Tips:")
-                .font(.title3)
-                .fontWeight(.medium)
-                .padding(.top, 12)
-                .padding(.bottom, 2)
+            VStack (alignment: .leading) {
+                HStack (alignment: .center) {
+                    Image(systemName: "lightbulb.max.fill")
+                        .font(.title3)
+                        .foregroundColor(.yellow)
+                    
+                    Text("Pro Tip:")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                }
+                
+                MarkdownWebView(currentTip)
+                    .font(.system(size: 14))
+                    .padding(.leading, 16)
+                    .padding(.top, -6)
+            }
+            .padding(.top, 8)
             
-            VStack (alignment: .leading, spacing: 4) {
-                BulletPoint(text: "Turn on Sidekick (`⌘ ⇧ 2`) to share your screen with Invisibility.")
-                BulletPoint(text: "Enter Setting (`⌘ ,`) to change which LLM Invisibility uses to generate responses.")
-                BulletPoint(text: "Use the Memory tab (`⌘ M`) to view and edit what Invisibility remembers about you.")
+            Button(action: {
+                if let view = shareButtonView {
+                    let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
+                    picker.show(relativeTo: view.bounds, of: view, preferredEdge: .minY)
+                }
+
+            }) {
+                Text("Share Invisibility with a friend!")
+                    .font(.title2)
+            }
+            .padding(.top, 16)
+            .buttonStyle(.link)
+            .background(ShareButtonView(nsView: $shareButtonView))
+            .onHover { hovering in
+                if hovering {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
             }
         }
         .padding(.vertical, 32)
@@ -89,19 +136,6 @@ struct NewChatCardView: View {
     }
 }
 
-struct BulletPoint: View {
-    var text: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 4) {
-            Text("•")
-            
-            Text(text)
-                .multilineTextAlignment(.leading)
-        }
-        .padding(.leading, 8)
-    }
-}
 
 #Preview {
     NewChatCardView()
