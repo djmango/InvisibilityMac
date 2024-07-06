@@ -6,6 +6,7 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import Combine
 import SwiftUI
 import WebKit
 
@@ -30,6 +31,8 @@ struct ChatWebInputView: View {
 struct ChatWebInputViewRepresentable: NSViewRepresentable {
     private var messageViewModel = MessageViewModel.shared
     private var viewModel = ChatWebInputViewModel.shared
+    private var voiceRecorder: VoiceRecorder = .shared
+
     @Binding var clearTrigger: Bool
 
     init(clearTrigger: Binding<Bool>) {
@@ -51,6 +54,15 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
         contentController.add(context.coordinator, name: "submit")
 
         webView.loadHTMLString(htmlContent, baseURL: nil)
+
+        // Observe changes to transcribedText
+        voiceRecorder.$transcribedText.sink { newText in
+            DispatchQueue.main.async {
+                self.viewModel.text = newText
+                webView.evaluateJavaScript("updateEditorContent(`\(newText.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
+            }
+        }.store(in: &context.coordinator.cancellables)
+        
         return webView
     }
 
@@ -68,6 +80,8 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
 
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler, WKUIDelegate {
         var parent: ChatWebInputViewRepresentable
+        var cancellables = Set<AnyCancellable>()
+
 
         init(_ parent: ChatWebInputViewRepresentable) {
             self.parent = parent
@@ -91,7 +105,10 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
                 }
             case "submit":
                 DispatchQueue.main.async {
-                    Task { await self.parent.messageViewModel.sendFromChat() }
+                    Task {
+                        await self.parent.messageViewModel.sendFromChat()
+                        await self.parent.voiceRecorder.stop(shouldClearText: true)
+                    }
                 }
             default:
                 break

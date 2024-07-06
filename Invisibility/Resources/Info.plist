@@ -19,6 +19,8 @@
     <string>Enable accessibility for keyboard shortcuts and screen recording.</string>
     <key>NSCalendarsFullAccessUsageDescription</key>
     <string>Enable reading calendar for meeting recording reminders and quick-join.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Enable speech recognition for voice transcription.</string>
     <key>SUAllowsAutomaticUpdates</key>
     <true />
     <key>SUAutomaticallyUpdate</key>

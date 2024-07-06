@@ -188,17 +188,3 @@ struct FreeTierCardView: View {
         picker.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
     }
 }
-
-struct ShareButtonView: NSViewRepresentable {
-    @Binding var nsView: NSView?
-
-    func makeNSView(context _: Context) -> NSView {
-        let view = NSView()
-        DispatchQueue.main.async {
-            self.nsView = view
-        }
-        return view
-    }
-
-    func updateNSView(_: NSView, context _: Context) {}
-}
