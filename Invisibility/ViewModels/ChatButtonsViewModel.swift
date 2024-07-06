@@ -2,6 +2,8 @@ import Combine
 import Foundation
 
 class ChatButtonsViewModel: ObservableObject {
+    static let shared = ChatButtonsViewModel()
+
     @Published private(set) var isGenerating: Bool = false
     @Published private(set) var isRecording: Bool = false
     @Published private(set) var isTranscribing: Bool = false
