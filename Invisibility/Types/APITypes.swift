@@ -11,7 +11,7 @@ import Foundation
 import OpenAI
 import SwiftUI
 
-struct APIChat: Codable, Identifiable, Hashable {
+struct APIChat: Codable, Identifiable, Hashable, Equatable {
     let id: UUID
     let user_id: String
     let parent_message_id: UUID?
@@ -33,6 +33,10 @@ struct APIChat: Codable, Identifiable, Hashable {
         self.name = name
         self.created_at = created_at
         self.updated_at = updated_at
+    }
+    
+    static func == (lhs: APIChat, rhs: APIChat) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 
