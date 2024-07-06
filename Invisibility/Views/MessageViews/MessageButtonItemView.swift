@@ -15,6 +15,7 @@ struct MessageButtonItemView: View {
     private let icon: String
     private let shortcut_hint: String?
     private let iconColor: Color
+    private let size: CGFloat
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
@@ -28,6 +29,7 @@ struct MessageButtonItemView: View {
          icon: String,
          shortcut_hint: String?,
          iconColor: Color = .chatButtonForeground,
+         size: CGFloat = 18,
          action: @escaping () -> Void)
     {
         self.label = label
@@ -35,6 +37,7 @@ struct MessageButtonItemView: View {
         self.shortcut_hint = shortcut_hint
         self.iconColor = iconColor
         self.action = action
+        self.size = size
     }
 
     var body: some View {
@@ -43,7 +46,7 @@ struct MessageButtonItemView: View {
                 Image(systemName: icon)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
+                    .frame(width: size, height: size)
                     .foregroundColor(iconColor)
                     .visible(
                         if: !shortcutViewModel.isCommandPressed || !shortcutHints || shortcut_hint == nil,
@@ -70,7 +73,7 @@ struct MessageButtonItemView: View {
                         .padding(.leading, 8)
                 }
             }
-            .frame(height: 18)
+            .frame(height: size)
             .padding(8)
             .contentShape(RoundedRectangle(cornerRadius: 100))
             .background(
