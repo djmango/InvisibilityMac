@@ -106,8 +106,8 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
             case "submit":
                 DispatchQueue.main.async {
                     Task {
-                        await self.parent.voiceRecorder.stop()
                         await self.parent.messageViewModel.sendFromChat()
+                        await self.parent.voiceRecorder.stop(shouldClearText: true)
                     }
                 }
             default:
