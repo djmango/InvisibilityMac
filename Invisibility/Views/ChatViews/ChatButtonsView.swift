@@ -12,7 +12,7 @@ import SwiftUI
 struct ChatButtonsView: View {
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ChatButtonsView")
 
-    @StateObject private var viewModel: ChatButtonsViewModel = ChatButtonsViewModel()
+    @StateObject private var viewModel: ChatButtonsViewModel = .shared
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true

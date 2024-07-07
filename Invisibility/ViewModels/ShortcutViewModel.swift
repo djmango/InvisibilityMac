@@ -95,6 +95,55 @@ struct AppMenuCommands: Commands {
             }
             .keyboardShortcut("b", modifiers: [.command, .shift])
         }
+        
+        CommandMenu("Chat") {
+            Button("Microphone") {
+                DispatchQueue.main.async {
+                    ChatButtonsViewModel.shared.toggleTranscribing()
+                }
+            }
+            .keyboardShortcut("t", modifiers: [.command])
+            
+            Button("Chat History") {
+                DispatchQueue.main.async {
+                    if ChatButtonsViewModel.shared.isShowingHistory {
+                        _ = ChatButtonsViewModel.shared.changeView(to: .chat)
+                    } else {
+                        _ = ChatButtonsViewModel.shared.changeView(to: .history)
+                    }
+                }
+            }
+            .keyboardShortcut("f", modifiers: [.command])
+            
+            Button("Memory") {
+                DispatchQueue.main.async {
+                    if ChatButtonsViewModel.shared.isShowingMemory {
+                        _ = ChatButtonsViewModel.shared.changeView(to: .chat)
+                    } else {
+                        _ = ChatButtonsViewModel.shared.changeView(to: .memory)
+                    }
+                }
+            }
+            .keyboardShortcut("m", modifiers: [.command])
+            
+            Button("Settings") {
+                DispatchQueue.main.async {
+                    if ChatButtonsViewModel.shared.whoIsVisible == .settings {
+                        _ = ChatButtonsViewModel.shared.changeView(to: .chat)
+                    } else {
+                        _ = ChatButtonsViewModel.shared.changeView(to: .settings)
+                    }
+                }
+            }
+            .keyboardShortcut(",", modifiers: [.command])
+            
+            Button("Switch Sides") {
+                DispatchQueue.main.async {
+                    ChatButtonsViewModel.shared.switchSide()
+                }
+            }
+            .keyboardShortcut("s", modifiers: [.command, .shift])
+        }
 
         CommandGroup(replacing: CommandGroupPlacement.help) {
             Button("Invisibility Help") {

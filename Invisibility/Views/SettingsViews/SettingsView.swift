@@ -18,7 +18,6 @@ struct SettingsView: View {
 
     @AppStorage("animateButtons") private var animateButtons = true
     @AppStorage("autoLaunch") private var autoLaunch: Bool = false
-    @AppStorage("betaFeatures") private var betaFeatures = false
     @AppStorage("onboardingViewed") private var onboardingViewed = false
     @AppStorage("shortcutHints") private var shortcutHints = true
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
@@ -155,11 +154,9 @@ struct SettingsView: View {
                                 
                                 Toggle("Animate Buttons", isOn: $animateButtons)
                                     .toggleStyle(.checkbox)
-                                    .visible(if: betaFeatures, removeCompletely: true)
                                 
                                 Toggle("All LLMs", isOn: $dynamicLLMLoad)
                                     .toggleStyle(.checkbox)
-                                    .visible(if: betaFeatures, removeCompletely: true)
                                     .onChange(of: dynamicLLMLoad) {
                                         Task { @MainActor in await viewModel.loadDynamicModels() }
                                     }
@@ -260,7 +257,6 @@ struct SettingsView: View {
                     .foregroundColor(.secondary)
                     .padding(.bottom, 5)
             }
-            .animation(.easeIn, value: betaFeatures)
         }
         .scrollIndicators(.never)
         .background(
