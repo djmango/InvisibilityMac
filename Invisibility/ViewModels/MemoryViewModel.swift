@@ -23,7 +23,7 @@ class MemoryViewModel: ObservableObject {
 
     func fetchAPI() async {
         DispatchQueue.main.async { self.isRefreshing = true }
-        defer { DispatchQueue.main.async { self.isRefreshing = false } }
+        defer { DispatchQueue.main.async { withAnimation { self.isRefreshing = false } } }
         let url = URL(string: AppConfig.invisibility_api_base + "/memories/")!
 
         guard let token else {

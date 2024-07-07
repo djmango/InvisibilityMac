@@ -34,9 +34,9 @@ struct APIChat: Codable, Identifiable, Hashable, Equatable {
         self.created_at = created_at
         self.updated_at = updated_at
     }
-    
+
     static func == (lhs: APIChat, rhs: APIChat) -> Bool {
-        return lhs.id == rhs.id
+        lhs.id == rhs.id
     }
 }
 
@@ -214,7 +214,7 @@ struct APISyncResponse: Codable {
     let chats: [APIChat]
     let messages: [APIMessage]
     let files: [APIFile]
-    let memories: [APIMemory]
+    // let memories: [APIMemory]
 }
 
 struct User: Decodable {

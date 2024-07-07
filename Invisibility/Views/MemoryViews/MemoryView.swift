@@ -9,17 +9,20 @@ struct MemoryHeader: View {
     var isRefreshing: Bool
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack {
             Button(action: onSearch) {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 18, weight: .regular))
-                    .foregroundColor(.primary)
+                if isRefreshing {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle())
+                        .scaleEffect(0.6)
+                } else {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 18, weight: .regular))
+                        .foregroundColor(.primary)
+                }
             }
             .buttonStyle(.plain)
-
-            ProgressView()
-                .controlSize(.small)
-                .visible(if: isRefreshing)
+            .frame(width: 24, height: 24)
 
             Spacer()
             Text(title)
