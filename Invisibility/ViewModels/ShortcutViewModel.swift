@@ -58,6 +58,10 @@ final class ShortcutViewModel: ObservableObject {
 
 /// The app specific shortcuts, non-global
 struct AppMenuCommands: Commands {
+    private let voiceRecorder: VoiceRecorder = .shared
+    private let mainWindowViewModel: MainWindowViewModel = .shared
+    private let windowManager: WindowManager = .shared
+
     var body: some Commands {
         CommandMenu("File") {
             Button("New") {
@@ -94,6 +98,55 @@ struct AppMenuCommands: Commands {
                 }
             }
             .keyboardShortcut("b", modifiers: [.command, .shift])
+        }
+
+        CommandMenu("Chat") {
+            Button("Microphone") {
+                DispatchQueue.main.async {
+                    voiceRecorder.toggleRecording()
+                }
+            }
+            .keyboardShortcut("t", modifiers: [.command])
+
+            Button("Chat History") {
+                DispatchQueue.main.async {
+                    if mainWindowViewModel.whoIsVisible == .history {
+                        _ = mainWindowViewModel.changeView(to: .chat)
+                    } else {
+                        _ = mainWindowViewModel.changeView(to: .history)
+                    }
+                }
+            }
+            .keyboardShortcut("f", modifiers: [.command])
+
+            Button("Memory") {
+                DispatchQueue.main.async {
+                    if mainWindowViewModel.whoIsVisible == .memory {
+                        _ = mainWindowViewModel.changeView(to: .chat)
+                    } else {
+                        _ = mainWindowViewModel.changeView(to: .memory)
+                    }
+                }
+            }
+            .keyboardShortcut("m", modifiers: [.command])
+
+            Button("Settings") {
+                DispatchQueue.main.async {
+                    if mainWindowViewModel.whoIsVisible == .settings {
+                        _ = mainWindowViewModel.changeView(to: .chat)
+                    } else {
+                        _ = mainWindowViewModel.changeView(to: .settings)
+                    }
+                }
+            }
+            .keyboardShortcut(",", modifiers: [.command])
+
+            Button("Switch Sides") {
+                DispatchQueue.main.async {
+                    windowManager.switchSide()
+                }
+            }
+            .keyboardShortcut("s", modifiers: [.command, .shift])
         }
 
         CommandGroup(replacing: CommandGroupPlacement.help) {

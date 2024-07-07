@@ -49,7 +49,11 @@ struct Collapsible<Content: View>: View {
 
     var body: some View {
         VStack {
-            Button(action: { self.collapsed.toggle() }) {
+            Button(action: { 
+                withAnimation(AppConfig.easeInOut) {
+                    self.collapsed.toggle()
+                } 
+            }) {
                 HStack {
                     Text(self.label)
                     
@@ -73,7 +77,6 @@ struct Collapsible<Content: View>: View {
                     .frame(width: 300)
             }
         }
-        .animation(AppConfig.easeInOut)
         .padding(.bottom, collapsed ? 0 : 8)
         .frame(width: 300)
         .background(Color.cardBackground)
