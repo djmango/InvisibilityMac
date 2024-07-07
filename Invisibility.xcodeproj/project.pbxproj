@@ -827,6 +827,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © Invisiblity Inc. All rights reserved.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Invisibility requires access to your microphone for input during recordings.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Enable speech recognition for voice transcription.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -862,6 +863,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © Invisiblity Inc. All rights reserved.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Invisibility requires access to your microphone for input during recordings.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "Enable speech recognition for voice transcription.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
