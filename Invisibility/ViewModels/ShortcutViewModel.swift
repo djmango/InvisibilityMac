@@ -58,6 +58,10 @@ final class ShortcutViewModel: ObservableObject {
 
 /// The app specific shortcuts, non-global
 struct AppMenuCommands: Commands {
+    private let voiceRecorder: VoiceRecorder = .shared
+    private let mainWindowViewModel: MainWindowViewModel = .shared
+    private let windowManager: WindowManager = .shared
+
     var body: some Commands {
         CommandMenu("File") {
             Button("New") {
@@ -95,51 +99,51 @@ struct AppMenuCommands: Commands {
             }
             .keyboardShortcut("b", modifiers: [.command, .shift])
         }
-        
+
         CommandMenu("Chat") {
             Button("Microphone") {
                 DispatchQueue.main.async {
-                    ChatButtonsViewModel.shared.toggleTranscribing()
+                    voiceRecorder.toggleRecording()
                 }
             }
             .keyboardShortcut("t", modifiers: [.command])
-            
+
             Button("Chat History") {
                 DispatchQueue.main.async {
-                    if ChatButtonsViewModel.shared.isShowingHistory {
-                        _ = ChatButtonsViewModel.shared.changeView(to: .chat)
+                    if mainWindowViewModel.whoIsVisible == .history {
+                        _ = mainWindowViewModel.changeView(to: .chat)
                     } else {
-                        _ = ChatButtonsViewModel.shared.changeView(to: .history)
+                        _ = mainWindowViewModel.changeView(to: .history)
                     }
                 }
             }
             .keyboardShortcut("f", modifiers: [.command])
-            
+
             Button("Memory") {
                 DispatchQueue.main.async {
-                    if ChatButtonsViewModel.shared.isShowingMemory {
-                        _ = ChatButtonsViewModel.shared.changeView(to: .chat)
+                    if mainWindowViewModel.whoIsVisible == .memory {
+                        _ = mainWindowViewModel.changeView(to: .chat)
                     } else {
-                        _ = ChatButtonsViewModel.shared.changeView(to: .memory)
+                        _ = mainWindowViewModel.changeView(to: .memory)
                     }
                 }
             }
             .keyboardShortcut("m", modifiers: [.command])
-            
+
             Button("Settings") {
                 DispatchQueue.main.async {
-                    if ChatButtonsViewModel.shared.whoIsVisible == .settings {
-                        _ = ChatButtonsViewModel.shared.changeView(to: .chat)
+                    if mainWindowViewModel.whoIsVisible == .settings {
+                        _ = mainWindowViewModel.changeView(to: .chat)
                     } else {
-                        _ = ChatButtonsViewModel.shared.changeView(to: .settings)
+                        _ = mainWindowViewModel.changeView(to: .settings)
                     }
                 }
             }
             .keyboardShortcut(",", modifiers: [.command])
-            
+
             Button("Switch Sides") {
                 DispatchQueue.main.async {
-                    ChatButtonsViewModel.shared.switchSide()
+                    windowManager.switchSide()
                 }
             }
             .keyboardShortcut("s", modifiers: [.command, .shift])

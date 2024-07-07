@@ -12,12 +12,12 @@ import SwiftUI
 struct ChatButtonsView: View {
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ChatButtonsView")
 
-    @StateObject private var viewModel: ChatButtonsViewModel = .shared
+    @StateObject private var viewModel = ChatButtonsViewModel()
 
     @AppStorage("animateButtons") private var animateButtons: Bool = true
     @AppStorage("shortcutHints") private var shortcutHints: Bool = true
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
-    
+
     // Selected Shortcuts
     @AppStorage("showNewChat") private var showNewChat: Bool = true
     @AppStorage("showScreenshot") private var showScreenshot: Bool = false
@@ -27,7 +27,7 @@ struct ChatButtonsView: View {
     @AppStorage("showSettings") private var showSettings: Bool = true
     @AppStorage("showMicrophone") private var showMicrophone: Bool = true
     @AppStorage("showSwitchSides") private var showSwitchSides: Bool = false
-    
+
     var body: some View {
         HStack(alignment: .center) {
             // New Chat
@@ -41,11 +41,11 @@ struct ChatButtonsView: View {
             }
             .keyboardShortcut("n", modifiers: [.command])
             .visible(if: showNewChat, removeCompletely: true)
-            
+
             // Audio
             MessageButtonItemView(
-                label: viewModel.isTranscribing ? "Stop" :  "Capture Voice",
-                icon: viewModel.isTranscribing ? "stop.circle" :  "mic.fill" ,
+                label: viewModel.isTranscribing ? "Stop" : "Capture Voice",
+                icon: viewModel.isTranscribing ? "stop.circle" : "mic.fill",
                 shortcut_hint: "⌘ T"
 
             ) {

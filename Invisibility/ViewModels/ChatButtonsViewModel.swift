@@ -2,8 +2,6 @@ import Combine
 import Foundation
 
 class ChatButtonsViewModel: ObservableObject {
-    static let shared = ChatButtonsViewModel()
-
     @Published private(set) var isGenerating: Bool = false
     @Published private(set) var isRecording: Bool = false
     @Published private(set) var isTranscribing: Bool = false
@@ -35,7 +33,7 @@ class ChatButtonsViewModel: ObservableObject {
                 .receive(on: DispatchQueue.main)
                 .assign(to: \.isRecording, on: self)
                 .store(in: &cancellables)
-            
+
             voiceRecorder.$isRunning
                 .receive(on: DispatchQueue.main)
                 .assign(to: \.isTranscribing, on: self)
@@ -63,7 +61,7 @@ class ChatButtonsViewModel: ObservableObject {
     @MainActor func toggleRecording() {
         screenRecorder.toggleRecording()
     }
-    
+
     @MainActor func toggleTranscribing() {
         voiceRecorder.toggleRecording()
     }
