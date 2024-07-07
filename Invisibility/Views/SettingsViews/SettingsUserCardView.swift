@@ -14,6 +14,8 @@ struct SettingsUserCardView: View {
 
     @Environment(\.colorScheme) var colorScheme
     @State private var isHoveringUserDetails = false
+    @State private var isCopied = false
+    @State private var shareButtonView: NSView?
 
     var friendsInvitedText: String {
         if userManager.inviteCount == 0 {
@@ -58,9 +60,26 @@ struct SettingsUserCardView: View {
                     UserManager.shared.logout()
                 }) {
                     Text("Logout")
+                        .font(.system(size: 13, weight: .light))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 2)
+                        .padding(.horizontal, 14)
+                        .background(Color.blue)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(nsColor: .separatorColor))
+                        )
+                        .cornerRadius(8)
                 }
-                .buttonStyle(.bordered)
+                .buttonStyle(.plain)
                 .visible(if: isHoveringUserDetails, removeCompletely: true)
+                .onHover { hovering in
+                    if hovering {
+                        NSCursor.pointingHand.set()
+                    } else {
+                        NSCursor.arrow.set()
+                    }
+                }
             }
             .whenHovered { hovering in
                 withAnimation(AppConfig.snappy) {
@@ -70,7 +89,7 @@ struct SettingsUserCardView: View {
 
             // QR Code for the link
             QRView(string: userManager.inviteLink)
-                .frame(width: 50, height: 50)
+                .frame(width: 80, height: 80)
                 .shadow(radius: 2)
                 .padding(.top, 10)
 
@@ -82,45 +101,93 @@ struct SettingsUserCardView: View {
                 }
             }) {
                 Text("invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")")
-                    .font(.caption)
+                    .font(.body)
             }
             .buttonStyle(.link)
-
-            Text(friendsInvitedText)
-                .font(.caption)
-                .padding(.bottom, 10)
-
-            Button(action: {
-                UserManager.shared.manage()
-            }) {
-                Text("Manage")
-                    .foregroundColor(userManager.isPaid ? .primary : .blue)
+            .onHover { hovering in
+                if hovering {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
             }
-            .buttonStyle(.bordered)
-            .visible(if: userManager.isPaid, removeCompletely: true)
 
-            // Upgrade
-            Button(action: {
-                UserManager.shared.pay()
-            }) {
-                Text("Upgrade")
-                    .font(.system(size: 13, weight: .light))
-                    .foregroundColor(.white)
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, 28)
-                    .background(Color.blue)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(nsColor: .separatorColor))
-                    )
-                    .cornerRadius(8)
+            HStack {
+                MessageButtonItemView(
+                    label: "Copy",
+                    icon: isCopied ? "checkmark" : "square.on.square",
+                    shortcut_hint: .none,
+                    size: 12
+                ) {
+                    onCopyReferralLink()
+                }
+
+                MessageButtonItemView(
+                    label: "Share",
+                    icon: "square.and.arrow.up",
+                    shortcut_hint: .none,
+                    size: 12
+                ) {
+                    if let view = shareButtonView {
+                        onShareButtonClicked(sender: view)
+                    }
+                }
+                .background(ShareButtonView(nsView: $shareButtonView))
+                .padding(.leading, 20)
             }
-            .buttonStyle(.plain)
-            .shadow(radius: 2)
-            .visible(if: !userManager.isPaid, removeCompletely: true)
+
+
+            VStack {
+                Button(action: {
+                    UserManager.shared.manage()
+                }) {
+                    Text("Manage")
+                        .font(.system(size: 13, weight: .light))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 28)
+                        .background(Color.blue)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(nsColor: .separatorColor))
+                        )
+                        .cornerRadius(8)
+                }
+                .buttonStyle(.plain)
+                .shadow(radius: 2)
+                .visible(if: userManager.isPaid, removeCompletely: true)
+                
+                // Upgrade
+                Button(action: {
+                    UserManager.shared.pay()
+                }) {
+                    Text("Upgrade")
+                        .font(.system(size: 13, weight: .light))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, 28)
+                        .background(Color.blue)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(nsColor: .separatorColor))
+                        )
+                        .cornerRadius(8)
+                }
+                .buttonStyle(.plain)
+                .shadow(radius: 2)
+                .visible(if: !userManager.isPaid, removeCompletely: true)
+            }
+            .onHover { hovering in
+                if hovering {
+                    NSCursor.pointingHand.set()
+                } else {
+                    NSCursor.arrow.set()
+                }
+            }
+            .padding(.top, 8)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 15)
+        .frame(width: 256)
+        .padding(.vertical, 20)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color(.chatButtonBackground))
@@ -128,4 +195,25 @@ struct SettingsUserCardView: View {
         )
         .visible(if: userManager.user != nil)
     }
+    
+    func onCopyReferralLink() {
+        // Copy the invite link to the clipboard
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString("https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")", forType: .string)
+        isCopied = true
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            isCopied = false
+        }
+    }
+
+    func onShareButtonClicked(sender: NSView) {
+        let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
+        picker.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
+    }
+}
+
+#Preview {
+    SettingsUserCardView()
 }

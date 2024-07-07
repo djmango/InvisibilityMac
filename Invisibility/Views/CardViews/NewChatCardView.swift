@@ -24,7 +24,7 @@ struct NewChatCardView: View {
         "Use the Memory tab (`⌘ M`) to view and edit what Invisibility remembers about you.",
         "You can explore your chat history in the History tab (`⌘ F`).",
         "Press `⌥ Space` to easily open and close Invisibility.",
-        "Easily start a new chat by pression `⌘ N`."
+        "Easily start a new chat by pressing `⌘ N`."
     ]
     
     init() {
@@ -39,7 +39,7 @@ struct NewChatCardView: View {
 
     var body: some View {
         VStack (alignment: .leading) {
-            Text("New Chat")
+            Text("Chat with Invisibility")
                 .font(.title)
                 .fontWeight(.semibold)
             
@@ -49,17 +49,23 @@ struct NewChatCardView: View {
                         .font(.title3)
                         .foregroundColor(.yellow)
                     
+                    
                     Text("Pro Tip:")
-                        .font(.title3)
+                        .font(.title2)
                         .fontWeight(.semibold)
+                        .padding(.top, 3)
                 }
                 
                 MarkdownWebView(currentTip)
                     .font(.system(size: 14))
-                    .padding(.leading, 16)
+                    .padding(.leading, 2)
                     .padding(.top, -6)
             }
             .padding(.top, 8)
+//            .background(
+//                RoundedRectangle(cornerRadius: 16)
+//                    .stroke(Color(nsColor: .separatorColor))
+//            )
             
             Button(action: {
                 if let view = shareButtonView {

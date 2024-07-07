@@ -12,9 +12,7 @@ struct WhatsNewCardView: View {
     @State private var isHovering = false
     
     var body: some View {
-        VStack {
-            Spacer()
-            
+        ScrollView {            
             VStack {
                 Text("What's New in Invisibility")
                     .font(.title)
