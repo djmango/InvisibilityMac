@@ -51,7 +51,7 @@ struct HistoryCardView: View {
                     .buttonStyle(.plain)
 
                     Spacer()
-
+                    MessageButtonItemView(label: "Rename", icon: "pencil.and.scribble", shortcut_hint: "", action: viewModel.autoRename)
                     Text(timeAgo(viewModel.lastMessageDate))
                         .font(.subheadline)
                         .foregroundColor(.secondary)

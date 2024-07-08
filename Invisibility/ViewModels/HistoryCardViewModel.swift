@@ -48,6 +48,19 @@ class HistoryCardViewModel: ObservableObject {
             editedName = chat.name
         }
     }
+    
+    @MainActor
+    func autoRename() {
+        Task {
+            isEditing = true
+            // Call the autoRename async method and await its result
+            let newName = await self.chatViewModel.autoRename(self.chat, body: self.lastMessageText)
+            self.editedName = newName
+            // Rename the chat with the new name
+            self.chatViewModel.renameChat(self.chat, name: newName)
+            
+        }
+    }
 
     func cancelEdit() {
         isEditing = false
