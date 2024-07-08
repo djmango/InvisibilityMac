@@ -185,9 +185,6 @@ final class ChatViewModel: ObservableObject {
             resultName = resultChat.name
             logger.debug("Response Data: \(resultName)")
             
-//            let responseString = String(data: responseData, encoding: .utf8) ?? "No data"
-//            logger.debug("Response Data: \(responseString)")
-            
         } catch {
             logger.error("Request failed: \(error)")
         }
