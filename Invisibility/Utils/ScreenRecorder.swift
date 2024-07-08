@@ -203,7 +203,7 @@ class ScreenRecorder: NSObject,
                 frameSize = CGSize(width: window.frame.width * 2, height: window.frame.height * 2)
             }
 
-            let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("captured_video2.mp4")
+            let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("captured_video0.mp4")
             logger.info("\(outputURL)")
 
             videoWriterQueue.async {
@@ -221,14 +221,17 @@ class ScreenRecorder: NSObject,
                     // Update the content size if it changed.
                     self.contentSize = frame.size
                 }
-            
+
                 videoWriterQueue.async {
-                    if let image = self.getCurrentFrameAsCGImage() {
-                        let currentFrameTime = CMTime(value: frameIndex, timescale: 60)
-                        self.videoWriter.appendFrameToVideo(image, at: currentFrameTime)
-                        frameIndex += 1
+                    if (frameIndex % 20 == 0) {
+                        if let image = self.getCurrentFrameAsCGImage() {
+                            let currentFrameTime = CMTime(value: frameIndex / 20, timescale: 3)
+                            self.videoWriter.appendFrameToVideo(image, at: currentFrameTime)
+                        }
                     }
                 }
+                
+                frameIndex += 1
             }
         } catch {
             self.logger.error("\(error.localizedDescription)")

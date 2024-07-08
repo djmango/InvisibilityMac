@@ -5,9 +5,9 @@
 //  Created by Braeden Hall on 7/8/24.
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
-
-import Foundation
+import Alamofire
 import AVFoundation
+import Foundation
 import ScreenCaptureKit
 
 class VideoWriter {
@@ -18,6 +18,32 @@ class VideoWriter {
     private var videoWriter: AVAssetWriter?
     private var videoWriterInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
+    
+    
+    private let userManager: UserManager = .shared
+
+    private func getPresignedUrl() async throws -> String? {
+        let urlString = AppConfig.invisibility_api_base + "/storage/sidekick/presigned_url"
+        guard let jwtToken = userManager.token else {
+            logger.warning("No JWT token")
+            return nil
+        }
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            AF.request(urlString, method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
+                .validate()
+                .responseString() { response in
+                    switch response.result {
+                    case let .success(presigned_url):
+                        self.logger.debug("Generated presigned url: \(presigned_url)")
+                        continuation.resume(returning: presigned_url)
+                    case let .failure(error):
+                        self.logger.error("Error fetching user: \(error)")
+                        continuation.resume(throwing: error)
+                    }
+                }
+        }
+    }
     
     func setupVideoWriter(outputURL: URL, frameSize: CGSize) {
         do {
@@ -65,6 +91,14 @@ class VideoWriter {
         videoWriterInput?.markAsFinished()
         videoWriter?.finishWriting {
             completion()
+            Task {
+                do {
+                    let presigned_url = try await self.getPresignedUrl()
+                } catch {
+                    self.logger.error("Error fetching the presigned URL: \(error)")
+                    return
+                }
+            }
         }
 
         videoWriter = nil
