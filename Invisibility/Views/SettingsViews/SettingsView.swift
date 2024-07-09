@@ -227,27 +227,6 @@ struct SettingsView: View {
                         }
                     }
 
-                HStack(spacing: 0) {
-                    Text("Founded by ")
-                        .font(.headline)
-                    Text("Sulaiman Ghori")
-                        .font(.headline)
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/sulaimanghori") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                    Text(" and ")
-                        .font(.headline)
-                    Text("Tye Daniel")
-                        .font(.headline)
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/TyeDan") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                }
-
                 Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
                     .font(.caption)
                     .foregroundColor(.secondary)

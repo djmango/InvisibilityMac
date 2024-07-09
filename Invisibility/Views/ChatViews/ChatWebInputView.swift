@@ -14,17 +14,14 @@ import WebKit
 
 struct ChatWebInputView: View {
     @ObservedObject private var viewModel = ChatWebInputViewModel.shared
-    @State public var clearTrigger: Bool = false
 
     static let minTextHeight: CGFloat = 40
     static let maxTextHeight: CGFloat = 500
 
     var body: some View {
-        ChatWebInputViewRepresentable(clearTrigger: $clearTrigger)
+        let _ = Self._printChanges()
+        ChatWebInputViewRepresentable()
             .frame(height: max(ChatWebInputView.minTextHeight, min(viewModel.height, ChatWebInputView.maxTextHeight)))
-            .onReceive(viewModel.$clearToggle) { _ in
-                clearTrigger.toggle()
-            }
     }
 }
 
@@ -32,12 +29,6 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
     private var messageViewModel = MessageViewModel.shared
     private var viewModel = ChatWebInputViewModel.shared
     private var voiceRecorder: VoiceRecorder = .shared
-
-    @Binding var clearTrigger: Bool
-
-    init(clearTrigger: Binding<Bool>) {
-        self._clearTrigger = clearTrigger
-    }
 
     func makeNSView(context: Context) -> WKWebView {
         let webView = CustomWebView()
@@ -67,14 +58,7 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
     }
 
     func updateNSView(_ nsView: WKWebView, context _: Context) {
-        if clearTrigger {
-            nsView.evaluateJavaScript("resetEditor()", completionHandler: nil)
-            DispatchQueue.main.async {
-                self.clearTrigger = false
-            }
-        } else {
-            nsView.evaluateJavaScript("updateEditorContent(`\(viewModel.text.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
-        }
+        nsView.evaluateJavaScript("updateEditorContent(`\(viewModel.text.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
     }
 
     private func setFocus(_ webView: WKWebView) {
@@ -104,9 +88,7 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
             case "heightChanged":
                 if let height = message.body as? CGFloat {
                     DispatchQueue.main.async {
-                        withAnimation(.smooth(duration: 0.15)) {
-                            self.parent.viewModel.height = height
-                        }
+                        self.parent.viewModel.height = height
                     }
                 }
             case "submit":

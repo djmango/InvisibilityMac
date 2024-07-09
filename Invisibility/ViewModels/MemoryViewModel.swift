@@ -6,6 +6,7 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import Combine
 import Foundation
 import SwiftUI
 
@@ -13,39 +14,32 @@ class MemoryViewModel: ObservableObject {
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MemoryViewModel")
 
     @Published var memories: [APIMemory] = []
+    @Published var memory_groups: [APIMemoryGroup] = []
     @Published var isRefreshing: Bool = false
 
     private let mainWindowViewModel: MainWindowViewModel = .shared
+    private let messageViewModel: MessageViewModel = .shared
+
+    private var cancellables = Set<AnyCancellable>()
 
     @AppStorage("token") private var token: String?
+
+    init() {
+        Publishers.CombineLatest(messageViewModel.$api_memories, messageViewModel.$api_memory_groups)
+            .map { [weak self] memories, memory_groups in
+                self?.memories = memories
+                self?.memory_groups = memory_groups
+            }
+            .sink { _ in }
+            .store(in: &cancellables)
+    }
 
     func fetchAPISync() { Task { await fetchAPI() } }
 
     func fetchAPI() async {
         DispatchQueue.main.async { self.isRefreshing = true }
         defer { DispatchQueue.main.async { withAnimation { self.isRefreshing = false } } }
-        let url = URL(string: AppConfig.invisibility_api_base + "/memories/")!
-
-        guard let token else {
-            logger.warning("No token for fetch")
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let decoder = iso8601Decoder()
-            let fetched = try decoder.decode([APIMemory].self, from: data)
-            DispatchQueue.main.async {
-                self.memories = fetched.sorted(by: { $0.grouping ?? "" < $1.grouping ?? "" })
-                self.logger.debug("Fetched memories \(self.memories.count)")
-            }
-        } catch {
-            logger.error("Failed to fetch memories from API: \(error)")
-        }
+        await messageViewModel.fetchAPI()
     }
 
     func deleteMemory(_ memory: APIMemory) {

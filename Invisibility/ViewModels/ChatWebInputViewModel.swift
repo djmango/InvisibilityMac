@@ -15,9 +15,6 @@ final class ChatWebInputViewModel: ObservableObject {
     // The text content of the chat field
     public var text: String = ""
 
-    /// This is a hack to update the text field rendering when the text is cleared
-    @Published public var clearToggle: Bool = false
-
     /// The height of the text field.
     @Published public var height: CGFloat = 52
 
@@ -25,6 +22,5 @@ final class ChatWebInputViewModel: ObservableObject {
 
     func clearText() {
         self.text = ""
-        self.clearToggle.toggle()
     }
 }
