@@ -148,7 +148,7 @@ final class ChatViewModel: ObservableObject {
         var resultName = ""
         let limit = 4000
         let firstMessagePrefix = String((MessageViewModel.shared.firstMessageWithTextFor(chat: chat)?.text.prefix(limit)) ?? "")
-        let lastMessagePrefix = String(body?.prefix(limit) ?? "")
+        let lastMessagePrefix = String(body?.suffix(limit) ?? "")
         let bodyText = firstMessagePrefix + lastMessagePrefix
         
         guard let url = URL(string: AppConfig.invisibility_api_base + "/chats/\(chat.id)/autorename") else {
