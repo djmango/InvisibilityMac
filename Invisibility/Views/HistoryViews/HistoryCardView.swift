@@ -31,6 +31,11 @@ struct HistoryCardView: View {
                         }
                         .font(.title3)
                         .textFieldStyle(.plain)
+                    
+                    if viewModel.isRenaming {
+                        ProgressView()
+                            .scaleEffect(0.5)
+                    }
 
                     Button(action: viewModel.cancelEdit) {
                         Image(systemName: "xmark")
@@ -51,7 +56,14 @@ struct HistoryCardView: View {
                     .buttonStyle(.plain)
 
                     Spacer()
-                    MessageButtonItemView(label: "Rename", icon: "pencil.and.scribble", shortcut_hint: "", action: viewModel.autoRename)
+                    Button(action: viewModel.autoRename) {
+                        Image(systemName: "pencil.circle.fill")
+                            .resizable()
+                            .frame(width: 12, height: 12)
+                            .foregroundColor(.chatButtonForeground)
+                    }
+                    .buttonStyle(.plain)
+                    
                     Text(timeAgo(viewModel.lastMessageDate))
                         .font(.subheadline)
                         .foregroundColor(.secondary)

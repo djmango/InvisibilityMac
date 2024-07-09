@@ -4,6 +4,7 @@ import SwiftUI
 class HistoryCardViewModel: ObservableObject {
     @Published private(set) var chat: APIChat
     @Published private(set) var isEditing: Bool = false
+    @Published private(set) var isRenaming: Bool = false
     @Published var editedName: String
 
     private var cancellables = Set<AnyCancellable>()
@@ -52,10 +53,12 @@ class HistoryCardViewModel: ObservableObject {
     func autoRename() {
         Task {
             // Call the autoRename async method and await its result
+            self.isRenaming = true
             let newName = await self.chatViewModel.autoRename(self.chat, body: self.lastMessageText)
             // Update the UI on the main thread
             DispatchQueue.main.async {
                 withAnimation(.interactiveSpring) {
+                    self.isRenaming = false
                     self.editedName = newName
                     self.chat.name = newName
                     self.chatViewModel.renameChat(self.chat, name: self.editedName)
