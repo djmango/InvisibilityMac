@@ -25,44 +25,15 @@ struct HistoryCardView: View {
 
             VStack(alignment: .leading) {
                 HStack {
-                    TextField("Enter new name", text: $viewModel.editedName)
-                        .onSubmit {
-                            viewModel.commitEdit()
-                        }
-                        .font(.title3)
-                        .textFieldStyle(.plain)
-
-                    Button(action: viewModel.cancelEdit) {
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                            .foregroundColor(.chatButtonForeground)
-                            .visible(if: viewModel.isEditing)
-                    }
-                    .buttonStyle(.plain)
-
-                    Button(action: viewModel.commitEdit) {
-                        Image(systemName: "checkmark")
-                            .resizable()
-                            .frame(width: 12, height: 12)
-                            .foregroundColor(.chatButtonForeground)
-                            .visible(if: viewModel.isEditing)
-                    }
-                    .buttonStyle(.plain)
-
+                    Editabletitle
+                    cancelButton
+                    confirmButton
                     Spacer()
-
-                    Text(timeAgo(viewModel.lastMessageDate))
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
+                    timeCreated
                 }
 
                 Spacer()
-
-                Text(viewModel.lastMessageText)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-                    .lineLimit(2)
+                subContent
                     .padding(.bottom, 5)
             }
         }
@@ -77,34 +48,8 @@ struct HistoryCardView: View {
                 .shadow(radius: 2)
         )
         .overlay(
-            VStack {
-                HStack {
-                    Button(action: viewModel.deleteChat) {
-                        Image(systemName: "xmark")
-                            .resizable()
-                            .padding(6)
-                            .foregroundColor(.chatButtonForeground)
-                            .clipShape(Circle())
-                            .overlay(
-                                Circle()
-                                    .stroke(Color(NSColor.separatorColor), lineWidth: 1)
-                            )
-                            .background(
-                                Circle()
-                                    .fill(Color.cardBackground)
-                                    .shadow(radius: 2)
-                            )
-                    }
-                    .buttonStyle(.plain)
-                    .frame(width: 21, height: 21)
-                    .padding(.leading, -5)
-                    .padding(.top, -5)
-
-                    Spacer()
-                }
-                Spacer()
-            }
-            .visible(if: isHovering)
+            deleteCardButton
+                .visible(if: isHovering)
         )
         .whenHovered { hovering in
             if hovering {
@@ -119,6 +64,83 @@ struct HistoryCardView: View {
         }
         .onTapGesture {
             viewModel.switchChat()
+        }
+    }
+    
+    // MARK: - Information
+    var Editabletitle: some View {
+        TextField("Enter new name", text: $viewModel.editedName)
+            .onSubmit {
+                viewModel.commitEdit()
+            }
+            .font(.title3)
+            .textFieldStyle(.plain)
+    }
+    
+    var subContent: some View {
+        Text(viewModel.lastMessageText)
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+            .lineLimit(2)
+    }
+    
+    var timeCreated: some View {
+        Text(timeAgo(viewModel.lastMessageDate))
+            .font(.subheadline)
+            .foregroundColor(.secondary)
+    }
+    
+    
+    // MARK: - Buttons
+    var confirmButton: some View {
+        Button(action: viewModel.commitEdit) {
+            Image(systemName: "checkmark")
+                .resizable()
+                .frame(width: 12, height: 12)
+                .foregroundColor(.chatButtonForeground)
+                .visible(if: viewModel.isEditing)
+        }
+        .buttonStyle(.plain)
+    }
+    
+    var cancelButton: some View {
+        Button(action: viewModel.cancelEdit) {
+            Image(systemName: "xmark")
+                .resizable()
+                .frame(width: 12, height: 12)
+                .foregroundColor(.chatButtonForeground)
+                .visible(if: viewModel.isEditing)
+        }
+        .buttonStyle(.plain)
+    }
+    
+    var deleteCardButton: some View {
+        VStack {
+            HStack {
+                Button(action: viewModel.deleteChat) {
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .padding(6)
+                        .foregroundColor(.chatButtonForeground)
+                        .clipShape(Circle())
+                        .overlay(
+                            Circle()
+                                .stroke(Color(NSColor.separatorColor), lineWidth: 1)
+                        )
+                        .background(
+                            Circle()
+                                .fill(Color.cardBackground)
+                                .shadow(radius: 2)
+                        )
+                }
+                .buttonStyle(.plain)
+                .frame(width: 21, height: 21)
+                .padding(.leading, -5)
+                .padding(.top, -5)
+
+                Spacer()
+            }
+            Spacer()
         }
     }
 }

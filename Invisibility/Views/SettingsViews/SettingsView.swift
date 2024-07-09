@@ -80,89 +80,9 @@ struct SettingsView: View {
                     .padding(.horizontal, 30)
                 
                 VStack (spacing: 12) {
-                    // General Settings
-                    Collapsible(collapsed: true, label: "General Settings", content: {
-                            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
-
-                                Text("Toggle Invisibility:")
-                                KeyboardShortcuts.Recorder(for: .summon)
-                            
-                                Text("Screenshot:")
-                                KeyboardShortcuts.Recorder(for: .screenshot)
-                            
-                                LaunchAtLogin.Toggle("Launch at Login")
-                                    .toggleStyle(.checkbox)
-                                    .padding(.top, 12)
-                                
-                                Toggle("Show on Menu Bar", isOn: $showMenuBar)
-                                    .toggleStyle(.checkbox)
-                                    .padding(.top, 12)
-                            })
-                    })
-                    
-                    // Shortcuts
-                    Collapsible(collapsed: true, label: "Shortcuts", content: {
-                        VStack (alignment: .leading) {
-                            Text("Choose which shortcuts appear in you chat menu bar")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding(.bottom, 6)
-                            
-                            LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
-                                Toggle("New Chat", isOn: $showNewChat)
-                                    .toggleStyle(.checkbox)
-                                
-                                // Maybe move
-                                Toggle("Microphone", isOn: $showMicrophone)
-                                    .toggleStyle(.checkbox)
-                                
-                                Toggle("Screenshot", isOn: $showScreenshot)
-                                    .toggleStyle(.checkbox)
-                                
-                                Toggle("Sidekick", isOn: $showSidekick)
-                                    .toggleStyle(.checkbox)
-                                
-                                Toggle("Chat History", isOn: $showHistory)
-                                    .toggleStyle(.checkbox)
-                                
-                                Toggle("Memory", isOn: $showMemory)
-                                    .toggleStyle(.checkbox)
-                                
-                                Toggle("Settings", isOn: $showSettings)
-                                    .toggleStyle(.checkbox)
-                                
-                                Toggle("Switch Sides", isOn: $showSwitchSides)
-                                    .toggleStyle(.checkbox)
-                            })
-                            
-                            Toggle("Show Shortcut Hints", isOn: $shortcutHints)
-                                .toggleStyle(.switch)
-                                .gridCellColumns(2)
-                                .padding(.top, 12)
-                        }
-                    })
-                    
-                    // Beta features
-                    Collapsible(collapsed: true, label: "Beta Features", content: {
-                        VStack (alignment: .leading) {
-                            Text("Turn on beta fatures")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding(.bottom, 6)
-                            
-                            LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
-                                
-                                Toggle("Animate Buttons", isOn: $animateButtons)
-                                    .toggleStyle(.checkbox)
-                                
-                                Toggle("All LLMs", isOn: $dynamicLLMLoad)
-                                    .toggleStyle(.checkbox)
-                                    .onChange(of: dynamicLLMLoad) {
-                                        Task { @MainActor in await viewModel.loadDynamicModels() }
-                                    }
-                            })
-                        }
-                    })
+                    generalSettingsMenu
+                    shortcutsMenu
+                    betaFeaturesMenu
                 }
                 .padding(.vertical, 20)
 
@@ -300,6 +220,96 @@ struct SettingsView: View {
                 logger.error(error.localizedDescription)
             }
         }
+    }
+    
+    // General Settings
+    var generalSettingsMenu: some View {
+        Collapsible(collapsed: true, label: "General Settings", content: {
+            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                
+                Text("Toggle Invisibility:")
+                KeyboardShortcuts.Recorder(for: .summon)
+                
+                Text("Screenshot:")
+                KeyboardShortcuts.Recorder(for: .screenshot)
+                
+                LaunchAtLogin.Toggle("Launch at Login")
+                    .toggleStyle(.checkbox)
+                    .padding(.top, 12)
+                
+                Toggle("Show on Menu Bar", isOn: $showMenuBar)
+                    .toggleStyle(.checkbox)
+                    .padding(.top, 12)
+            })
+        })
+    }
+    
+    // Shortcuts
+    var shortcutsMenu: some View {
+        Collapsible(collapsed: true, label: "Shortcuts", content: {
+            VStack (alignment: .leading) {
+                Text("Choose which shortcuts appear in you chat menu bar")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 6)
+                
+                LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                    Toggle("New Chat", isOn: $showNewChat)
+                        .toggleStyle(.checkbox)
+                    
+                    // Maybe move
+                    Toggle("Microphone", isOn: $showMicrophone)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Screenshot", isOn: $showScreenshot)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Sidekick", isOn: $showSidekick)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Chat History", isOn: $showHistory)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Memory", isOn: $showMemory)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Settings", isOn: $showSettings)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Switch Sides", isOn: $showSwitchSides)
+                        .toggleStyle(.checkbox)
+                })
+                
+                Toggle("Show Shortcut Hints", isOn: $shortcutHints)
+                    .toggleStyle(.switch)
+                    .gridCellColumns(2)
+                    .padding(.top, 12)
+            }
+        })
+    }
+    
+    // Beta Features
+    var betaFeaturesMenu: some View {
+        Collapsible(collapsed: true, label: "Beta Features", content: {
+            VStack (alignment: .leading) {
+                Text("Turn on beta fatures")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 6)
+                
+                LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                    
+                    Toggle("Animate Buttons", isOn: $animateButtons)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("All LLMs", isOn: $dynamicLLMLoad)
+                        .toggleStyle(.checkbox)
+                        .onChange(of: dynamicLLMLoad) {
+                            Task { @MainActor in await viewModel.loadDynamicModels() }
+                        }
+                })
+            }
+        })
     }
 }
 
