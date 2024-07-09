@@ -14,13 +14,20 @@ class VideoWriter {
 
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "VideoWriter")
 
+    let fileManager = FileManager.default
+    let outputFileUrl: URL
+    
     // Tools for saving video recordings
     private var videoWriter: AVAssetWriter?
     private var videoWriterInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     
-    
     private let userManager: UserManager = .shared
+    
+    init() {
+       outputFileUrl = FileManager.default.temporaryDirectory.appendingPathComponent("captured_video.mp4")
+        logger.info("saving sidekick videos to \(outputFileUrl)")
+    }
 
     private func getPresignedUrl() async throws -> String? {
         let urlString = AppConfig.invisibility_api_base + "/storage/sidekick/presigned_url"
@@ -34,9 +41,8 @@ class VideoWriter {
                 .validate()
                 .responseString() { response in
                     switch response.result {
-                    case let .success(presigned_url):
-                        self.logger.debug("Generated presigned url: \(presigned_url)")
-                        continuation.resume(returning: presigned_url)
+                    case let .success(presignedUrl):
+                        continuation.resume(returning: presignedUrl)
                     case let .failure(error):
                         self.logger.error("Error fetching user: \(error)")
                         continuation.resume(throwing: error)
@@ -45,14 +51,50 @@ class VideoWriter {
         }
     }
     
-    func setupVideoWriter(outputURL: URL, frameSize: CGSize) {
+    private func uploadVideoToS3() async -> Bool {
         do {
-            videoWriter = try AVAssetWriter(outputURL: outputURL, fileType: .mp4)
+            guard let presignedUrl = try await self.getPresignedUrl() else { return false }
+            guard fileManager.fileExists(atPath: outputFileUrl.path) else { return false }
+            
+            let headers: HTTPHeaders = [
+                "Content-Type": "video/mp4"
+            ]
+            
+            let success =  try await withCheckedThrowingContinuation { continuation in
+                AF.upload(outputFileUrl, to: presignedUrl, method: .put, headers: headers)
+                    .validate(statusCode: 200..<300)
+                    .response { response in
+                        switch response.result {
+                        case .success:
+                            self.logger.info("File uploaded successfully")
+                            continuation.resume(returning: true)
+                        case .failure(let error):
+                            self.logger.error("Upload failed with error: \(error.localizedDescription)")
+                            continuation.resume(returning: true)
+                        }
+                    }
+            }
+            
+            try fileManager.removeItem(at: outputFileUrl)
+            
+            return success
+        } catch {
+            self.logger.error("Error fetching the presigned URL: \(error)")
+            return false
+        }
+    }
+    
+    func setupVideoWriter(frameSize: CGSize) {
+        do {
+            videoWriter = try AVAssetWriter(outputURL: outputFileUrl, fileType: .mp4)
             
             let videoSettings: [String: Any] = [
-                AVVideoCodecKey: AVVideoCodecType.h264,
+                AVVideoCodecKey: AVVideoCodecType.hevc,
                 AVVideoWidthKey: frameSize.width,
-                AVVideoHeightKey: frameSize.height
+                AVVideoHeightKey: frameSize.height,
+                AVVideoCompressionPropertiesKey: [
+                    AVVideoAverageBitRateKey: 1_000_000
+                ]
             ]
             
             videoWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
@@ -92,12 +134,7 @@ class VideoWriter {
         videoWriter?.finishWriting {
             completion()
             Task {
-                do {
-                    let presigned_url = try await self.getPresignedUrl()
-                } catch {
-                    self.logger.error("Error fetching the presigned URL: \(error)")
-                    return
-                }
+                await self.uploadVideoToS3()
             }
         }
 

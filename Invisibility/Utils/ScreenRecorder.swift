@@ -203,11 +203,8 @@ class ScreenRecorder: NSObject,
                 frameSize = CGSize(width: window.frame.width * 2, height: window.frame.height * 2)
             }
 
-            let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent("captured_video0.mp4")
-            logger.info("\(outputURL)")
-
             videoWriterQueue.async {
-                self.videoWriter.setupVideoWriter(outputURL: outputURL, frameSize: frameSize)
+                self.videoWriter.setupVideoWriter(frameSize: frameSize)
                 self.videoWriter.startWritingVideo()
             }
             
@@ -223,9 +220,9 @@ class ScreenRecorder: NSObject,
                 }
 
                 videoWriterQueue.async {
-                    if (frameIndex % 20 == 0) {
+                    if (frameIndex % 6 == 0) {
                         if let image = self.getCurrentFrameAsCGImage() {
-                            let currentFrameTime = CMTime(value: frameIndex / 20, timescale: 3)
+                            let currentFrameTime = CMTime(value: frameIndex / 6, timescale: 10)
                             self.videoWriter.appendFrameToVideo(image, at: currentFrameTime)
                         }
                     }
