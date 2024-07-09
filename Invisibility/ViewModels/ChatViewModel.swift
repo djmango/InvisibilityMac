@@ -146,9 +146,10 @@ final class ChatViewModel: ObservableObject {
     @MainActor
     func autoRename(_ chat: APIChat, body: String? = nil) async -> String {
         var resultName = ""
-        let firstMessagePrefix = String((MessageViewModel.shared.firstMessageWithTextFor(chat: chat)?.text.prefix(4000)) ?? "")
-        let lastMessagePrefix = String(body?.prefix(4000) ?? "")
-        let bodyText = lastMessagePrefix.isEmpty ? firstMessagePrefix : lastMessagePrefix
+        let limit = 4000
+        let firstMessagePrefix = String((MessageViewModel.shared.firstMessageWithTextFor(chat: chat)?.text.prefix(limit)) ?? "")
+        let lastMessagePrefix = String(body?.prefix(limit) ?? "")
+        let bodyText = firstMessagePrefix + lastMessagePrefix
         
         guard let url = URL(string: AppConfig.invisibility_api_base + "/chats/\(chat.id)/autorename") else {
             return resultName
