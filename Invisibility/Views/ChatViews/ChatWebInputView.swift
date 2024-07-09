@@ -62,12 +62,19 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
                 webView.evaluateJavaScript("updateEditorContent(`\(newText.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
             }
         }.store(in: &context.coordinator.cancellables)
-        
+
         return webView
     }
 
     func updateNSView(_ nsView: WKWebView, context _: Context) {
-        nsView.evaluateJavaScript("updateEditorContent(`\(viewModel.text.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
+        if clearTrigger {
+            nsView.evaluateJavaScript("resetEditor()", completionHandler: nil)
+            DispatchQueue.main.async {
+                self.clearTrigger = false
+            }
+        } else {
+            nsView.evaluateJavaScript("updateEditorContent(`\(viewModel.text.replacingOccurrences(of: "`", with: "\\`"))`)", completionHandler: nil)
+        }
     }
 
     private func setFocus(_ webView: WKWebView) {
@@ -81,7 +88,6 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
     class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler, WKUIDelegate {
         var parent: ChatWebInputViewRepresentable
         var cancellables = Set<AnyCancellable>()
-
 
         init(_ parent: ChatWebInputViewRepresentable) {
             self.parent = parent
@@ -168,100 +174,94 @@ struct ChatWebInputViewRepresentable: NSViewRepresentable {
         <body>
             <div id="editor" contenteditable="true" placeholder="Message Invisibility"></div>
             <script>
-                const editor = document.getElementById('editor');
-                let lastHeight = 0;
+            const editor = document.getElementById('editor');
+            let lastHeight = 0;
 
-                function updateHeight() {
-                    const newHeight = editor.scrollHeight;
-                    if (newHeight !== lastHeight) {
-                        lastHeight = newHeight;
-                        webkit.messageHandlers.heightChanged.postMessage(newHeight);
-                    }
+            function updateHeight() {
+                const newHeight = editor.scrollHeight;
+                if (newHeight !== lastHeight) {
+                    lastHeight = newHeight;
+                    webkit.messageHandlers.heightChanged.postMessage(newHeight);
                 }
+            }
 
-                function updateEditorContent(content) {
-                    if (editor.innerText !== content) {
-                        editor.innerText = content;
-                        updateHeight();
-                        placeCaretAtEnd();
-                    }
-                }
-
-                function placeCaretAtEnd() {
-                    const range = document.createRange();
-                    const selection = window.getSelection();
-                    range.selectNodeContents(editor);
-                    range.collapse(false);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                    editor.focus();
-                }
-
-                editor.addEventListener('input', function() {
-                    if (editor.innerHTML === '<br>') {
-                        editor.innerHTML = '';
-                    }
-                    webkit.messageHandlers.textChanged.postMessage(editor.innerText);
+            function updateEditorContent(content) {
+                if (editor.innerText !== content) {
+                    editor.innerText = content;
                     updateHeight();
-                });
+                    placeCaretAtEnd();
+                }
+            }
 
-                editor.addEventListener('paste', function(e) {
-                    e.preventDefault();
-                    const text = e.clipboardData.getData('text/plain');
-                    const selection = window.getSelection();
-                    const range = selection.getRangeAt(0);
+            function placeCaretAtEnd() {
+                const range = document.createRange();
+                const selection = window.getSelection();
+                range.selectNodeContents(editor);
+                range.collapse(false);
+                selection.removeAllRanges();
+                selection.addRange(range);
+                editor.focus();
+            }
 
-                    range.deleteContents();
+            function resetEditor() {
+                editor.innerText = '';
+                updateHeight();
+            }
 
-                    const textNode = document.createTextNode(text);
-                    range.insertNode(textNode);
+            editor.addEventListener('input', function() {
+                if (editor.innerHTML === '<br>') {
+                    editor.innerHTML = '';
+                }
+                webkit.messageHandlers.textChanged.postMessage(editor.innerText);
+                updateHeight();
+            });
 
-                    range.setStartAfter(textNode);
-                    range.setEndAfter(textNode);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
+            editor.addEventListener('paste', function(e) {
+                e.preventDefault();
+                const text = e.clipboardData.getData('text/plain');
+                document.execCommand('insertText', false, text);
+                webkit.messageHandlers.textChanged.postMessage(editor.innerText);
+                updateHeight();
+            });
 
-                    webkit.messageHandlers.textChanged.postMessage(editor.textContent);
-                    updateHeight();
-                });
-
-
-                editor.addEventListener('keydown', function(e) {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
+            editor.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault(); // Prevent default more aggressively
+                    if (!e.shiftKey) {
                         webkit.messageHandlers.submit.postMessage('');
-                    } else if (e.key === 'Enter' && e.shiftKey) {
-                        e.preventDefault();
+                        resetEditor();
+                    } else {
                         document.execCommand('insertLineBreak');
                         updateHeight();
                     }
-                });
+                }
+            });
 
-                // Ensure editor always has content
-                editor.addEventListener('blur', function() {
-                    if (editor.innerHTML === '') {
-                        editor.innerHTML = '<br>';
+            // Ensure editor always has content
+            editor.addEventListener('blur', function() {
+                if (editor.innerHTML === '') {
+                    editor.innerHTML = '<br>';
+                }
+            });
+
+            new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'childList') {
+                        const br = editor.querySelector('br');
+                        if (br && br.parentNode === editor) {
+                            br.remove();
+                        }
                     }
                 });
-
-                new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        if (mutation.type === 'childList') {
-                            const br = editor.querySelector('br');
-                            if (br && br.parentNode === editor) {
-                                br.remove();
-                            }
-                        }
-                    });
-                    updateHeight();
-                }).observe(editor, {
-                    attributes: true,
-                    childList: true,
-                    subtree: true,
-                    characterData: true
-                });
-
                 updateHeight();
+            }).observe(editor, {
+                attributes: true,
+                childList: true,
+                subtree: true,
+                characterData: true
+            });
+
+            updateHeight();
             </script>
         </body>
         </html>

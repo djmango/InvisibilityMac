@@ -11,7 +11,7 @@ struct MainView: View {
 
     @AppStorage("sideSwitched") private var sideSwitched: Bool = false
     @AppStorage("width") private var width: Int = Int(WindowManager.defaultWidth)
-    
+
     var isShowingMessages: Bool {
         mainWindowViewModel.whoIsVisible == .chat
     }
@@ -26,10 +26,6 @@ struct MainView: View {
 
     var isShowingMemory: Bool {
         mainWindowViewModel.whoIsVisible == .memory
-    }
-    
-    var isShowingWhatsNew: Bool {
-        mainWindowViewModel.whoIsVisible == .whatsNew
     }
 
     var body: some View {
@@ -52,10 +48,6 @@ struct MainView: View {
                         SettingsView()
                             .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
                             .opacity(isShowingSettings ? 1 : 0)
-
-                        WhatsNewCardView()
-                            .offset(x: isShowingWhatsNew ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                            .opacity(isShowingWhatsNew ? 1 : 0)
                     } else {
                         LoginCardView()
                     }

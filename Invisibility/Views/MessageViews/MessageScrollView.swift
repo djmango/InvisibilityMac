@@ -31,20 +31,24 @@ struct MessageScrollView: View {
                             }
                         )
                 }
+                .defaultScrollAnchor(.bottom)
+                .background(Rectangle().fill(Color.white.opacity(0.001)))
                 .frame(height: min(max(contentHeight, 100), outsideProxy.size.height))
-                .onChange(of: viewModel.isGenerating) { newValue in
-                    if newValue { scrollToBottom(proxy: scrollProxy) }
+                .onChange(of: viewModel.isGenerating) {
+                    if viewModel.isGenerating { scrollToBottom(proxy: scrollProxy) }
                 }
-                .onChange(of: viewModel.isRecording) { newValue in
-                    if newValue { scrollToBottom(proxy: scrollProxy) }
+                .onChange(of: viewModel.isRecording) {
+                    if viewModel.isRecording { scrollToBottom(proxy: scrollProxy) }
                 }
-                .onChange(of: viewModel.shouldScrollToBottom) { newValue in
-                    if newValue {
+                .onChange(of: viewModel.shouldScrollToBottom) {
+                    if viewModel.shouldScrollToBottom {
                         scrollToBottom(proxy: scrollProxy)
                         viewModel.shouldScrollToBottom = false
                     }
                 }
-                .onChange(of: viewModel.chat) { _ in
+                .onChange(of: viewModel.chat) {
+                    numMessagesDisplayed = 10
+                    print("Chat changed, numMessagesDisplayed reset to 10")
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                         scrollToBottom(proxy: scrollProxy)
                     }
@@ -52,31 +56,20 @@ struct MessageScrollView: View {
             }
             .onAppear {
                 outsideHeight = outsideProxy.size.height
-                print("Outside height: \(outsideHeight)")
+                // print("Outside height: \(outsideHeight)")
             }
+            // .animation(AppConfig.easeInOut, value: contentHeight)
         }
         .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
             self.contentHeight = height
-            print("Content height updated: \(height)")
+            // print("Content height updated: \(height)")
         }
-        .mask(
-            LinearGradient(
-                gradient: Gradient(stops: [
-                    .init(color: .clear, location: 0),
-                    .init(color: .black, location: 0.005),
-                    .init(color: .black, location: 0.995),
-                    .init(color: .clear, location: 1.0),
-                ]),
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        )
-        .animation(AppConfig.snappy, value: viewModel.api_messages_in_chat)
-        .background(Rectangle().fill(Color.white.opacity(0.001)))
     }
 
     private var contentView: some View {
         VStack {
+            HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
+
             VStack(spacing: 5) {
                 ForEach(displayedMessages) { message in
                     MessageListItemView(message: message)
@@ -89,17 +82,22 @@ struct MessageScrollView: View {
                 .padding(.top, 10)
 
             NewChatCardView()
-                .visible(if: displayedMessages.isEmpty && viewModel.canSendMessages, removeCompletely: true)
+                .visible(if: displayedMessages.isEmpty && viewModel.canSendMessages && !viewModel.isShowingWhatsNew, removeCompletely: true)
 
             CaptureView()
                 .visible(if: viewModel.isRecording, removeCompletely: true)
+
+            WhatsNewCardView()
+                .visible(if: viewModel.isShowingWhatsNew, removeCompletely: true)
 
             Rectangle()
                 .hidden()
                 .frame(height: 1)
                 .id("bottom")
         }
-        .animation(AppConfig.snappy, value: viewModel.canSendMessages)
+        // .animation(AppConfig.snappy, value: viewModel.canSendMessages)
+        // .animation(AppConfig.snappy, value: viewModel.isShowingWhatsNew)
+        // .animation(AppConfig.snappy, value: viewModel.api_messages_in_chat)
         .padding(.top, 10)
     }
 

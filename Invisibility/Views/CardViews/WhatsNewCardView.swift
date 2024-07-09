@@ -10,23 +10,22 @@ import SwiftUI
 
 struct WhatsNewCardView: View {
     @State private var isHovering = false
-    
+
     var body: some View {
-        ScrollView {            
+        ScrollView {
             VStack {
                 Text("What's New in Invisibility")
                     .font(.title)
                     .fontWeight(.bold)
-                
-                VStack (alignment: .center, spacing: 16) {
+
+                VStack(alignment: .center, spacing: 16) {
                     LazyVGrid(columns: [GridItem(.fixed(32), alignment: .center), GridItem(.flexible(minimum: 100, maximum: 400))], alignment: .leading, spacing: 20) {
-                        
                         ForEach(AppConfig.whats_new_features, id: \.self) { feature in
                             Image(systemName: feature.iconName)
                                 .foregroundColor(feature.iconColor)
                                 .font(.system(size: 32))
-                            
-                            VStack (alignment: .leading) {
+
+                            VStack(alignment: .leading) {
                                 Text(feature.title)
                                     .font(.system(size: 14))
                                     .fontWeight(.bold)
@@ -38,9 +37,9 @@ struct WhatsNewCardView: View {
                     }
                 }
                 .padding(.top, 32)
-                
+
                 Button(action: {
-                    let _ = MainWindowViewModel.shared.changeView(to: .chat)
+                    MessageScrollViewModel.shared.hideWhatsNew()
                 }) {
                     Text("Continue")
                         .frame(maxWidth: .infinity)
@@ -76,7 +75,7 @@ struct WhatsNewCardView: View {
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
             )
-            .padding(15)
+            .padding(.horizontal, 10)
         }
     }
 }
@@ -84,4 +83,3 @@ struct WhatsNewCardView: View {
 #Preview {
     WhatsNewCardView()
 }
-
