@@ -36,6 +36,7 @@ struct MainView: View {
                     if userManager.isLoggedIn {
                         MessageScrollView()
                             .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
+                            .opacity(isShowingMessages ? 1 : 0)
 
                         HistoryView()
                             .offset(x: 0, y: isShowingHistory ? 0 : -1000)

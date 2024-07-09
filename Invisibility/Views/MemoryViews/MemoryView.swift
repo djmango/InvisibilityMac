@@ -2,6 +2,25 @@ import SwiftUI
 
 import SwiftUI
 
+struct MemoryView: View {
+    @StateObject private var viewModel = MemoryViewModel()
+
+    var body: some View {
+        ScrollView(.vertical, showsIndicators: true) {
+            VStack(spacing: 24) {
+                MemoryHeader(title: "My Memories", onSearch: viewModel.fetchAPISync, onClose: viewModel.closeView, isRefreshing: viewModel.isRefreshing)
+                MemoryGrid(memory_groups: viewModel.memory_groups, memories: viewModel.memories)
+            }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 25)
+        }
+        .scrollIndicators(.never)
+        .defaultScrollAnchor(.top)
+        .onAppear { viewModel.fetchAPISync() }
+        .background(Rectangle().fill(Color.white.opacity(0.001)))
+    }
+}
+
 struct MemoryHeader: View {
     let title: String
     let onSearch: () -> Void
@@ -18,55 +37,31 @@ struct MemoryHeader: View {
                 } else {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 18, weight: .regular))
-                        .foregroundColor(.primary)
+                        .foregroundColor(.white)
                 }
             }
             .buttonStyle(.plain)
+            .shadow(color: Color.black.opacity(0.7), radius: 2)
             .frame(width: 24, height: 24)
 
             Spacer()
             Text(title)
-                .font(.system(size: 24, weight: .bold))
-                .foregroundColor(.primary)
+                .font(.title2)
+                .bold()
+                .foregroundColor(.white)
+                .shadow(color: Color.black.opacity(0.7), radius: 2)
 
             Spacer()
             Button(action: onClose) {
                 Image(systemName: "xmark")
                     .font(.system(size: 18, weight: .regular))
-                    .foregroundColor(.primary)
+                    .foregroundColor(.white)
             }
             .buttonStyle(.plain)
+            .shadow(color: Color.black.opacity(0.7), radius: 2)
         }
         .padding(14)
         .padding(.horizontal, 4)
-    }
-}
-
-struct MemoryView: View {
-    @StateObject private var viewModel = MemoryViewModel()
-
-    var body: some View {
-        ScrollView(.vertical, showsIndicators: true) {
-            VStack(spacing: 24) {
-                MemoryHeader(title: "My Memories", onSearch: viewModel.fetchAPISync, onClose: viewModel.closeView, isRefreshing: viewModel.isRefreshing)
-                MemoryGrid(memory_groups: viewModel.memory_groups, memories: viewModel.memories)
-            }
-            .padding(.horizontal, 8)
-            .padding(.vertical, 25)
-        }
-        .scrollIndicators(.never)
-        .defaultScrollAnchor(.top)
-        .onAppear { viewModel.fetchAPISync() }
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color(nsColor: .separatorColor))
-        )
-        .background(
-            Rectangle()
-                .fill(.background)
-                .clipShape(RoundedRectangle(cornerRadius: 16))
-        )
-        .padding(15)
     }
 }
 
@@ -75,40 +70,61 @@ struct MemoryGroupCard: View {
     let latestMemory: APIMemory?
     @Binding var expandedGroups: Set<UUID>
     let childCount: Int
+    @State private var isHovering: Bool = false
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(.windowBackground)
-                .shadow(radius: isExpanded ? 6 : 1)
-
+        HStack {
+            Spacer()
             VStack(alignment: .center) {
-                Text("\(memoryGroup.emoji) \(memoryGroup.name)")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(.primary)
+                Text("\(memoryGroup.emoji)")
+                    .font(.title2)
+                    .shadow(radius: 1)
 
-                Spacer()
+                Text("\(memoryGroup.name)")
+                    .font(.title3)
+                    .bold()
+                    .padding(.top, 2)
 
                 if let latestMemory {
                     Text(latestMemory.content)
-                        .font(.system(size: 14, weight: .regular))
+                        .font(.body)
                         .foregroundColor(.secondary)
                         .lineLimit(2)
-                        .padding(.top, 4)
+                        .padding(.top, 2)
                 }
-
                 Spacer()
-
+            }
+            Spacer()
+        }
+        .overlay(
+            VStack {
+                Spacer()
                 HStack {
                     Spacer()
                     ExpandButton(isExpanded: isExpanded, count: childCount)
+                        .visible(if: isHovering || isExpanded)
+                        .shadow(radius: 1)
                 }
             }
-            .padding(12)
-        }
+        )
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
+        )
+        .background(
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+                .shadow(radius: isHovering ? 3 : 0)
+        )
+        .scaleEffect(isHovering ? 1.02 : 1)
         .onTapGesture {
             withAnimation(AppConfig.snappy) {
                 toggleExpansion()
+            }
+        }
+        .whenHovered { hovering in
+            withAnimation(AppConfig.snappy) {
+                isHovering = hovering
             }
         }
     }
@@ -145,11 +161,6 @@ struct ExpandButton: View {
                     Text("+\(count)")
                         .foregroundColor(.white)
                         .font(.system(size: 12, weight: .bold))
-
-                    // Image(systemName: "plus")
-                    //     .foregroundColor(.white)
-                    //     .font(.system(size: 10, weight: .bold))
-                    //     .offset(x: 5, y: -5)
                 }
             }
         }
@@ -158,30 +169,36 @@ struct ExpandButton: View {
 
 struct MemoryCard: View {
     let memory: APIMemory
+    let memory_group: APIMemoryGroup?
     @State private var isHovering: Bool = false
 
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
-                .fill(.windowBackground)
-                .shadow(radius: isHovering ? 6 : 1)
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text(memory.content)
-                    .font(.system(size: 14, weight: .regular))
-                    .multilineTextAlignment(.leading)
-                    .lineSpacing(4)
-                    .lineLimit(5)
-                    .foregroundColor(.primary)
-
-                Spacer()
-
-                Text(formatDate(memory.updated_at))
-                    .font(.system(size: 12, weight: .medium))
+        VStack(alignment: .center) {
+            if let memory_group {
+                Text("\(memory_group.emoji) \(memory_group.name)")
+                    .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.secondary)
             }
-            .padding(12)
+
+            Spacer()
+
+            Text(memory.content)
+                .font(.headline)
+                .multilineTextAlignment(.leading)
+                .lineSpacing(4)
+                .lineLimit(5)
+                .foregroundColor(.primary)
+            Spacer()
         }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(nsColor: .separatorColor), lineWidth: 1)
+        )
+        .background(
+            VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
+                .shadow(radius: isHovering ? 3 : 0)
+        )
         .scaleEffect(isHovering ? 1.02 : 1)
         .whenHovered { hovering in
             withAnimation(AppConfig.snappy) {
@@ -203,7 +220,7 @@ struct MemoryGrid: View {
     }
 
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 200, maximum: 300))], spacing: 16) {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 150, maximum: 350))], spacing: 16) {
             ForEach(memory_groups_with_memories, id: \.id) { group in
                 MemoryGroupCard(
                     memoryGroup: group,
@@ -211,18 +228,20 @@ struct MemoryGrid: View {
                     expandedGroups: $expandedGroups,
                     childCount: memories.filter { $0.group_id == group.id }.count
                 )
+                .frame(height: 170)
 
                 if expandedGroups.contains(group.id) {
                     ForEach(memories.filter { $0.group_id == group.id }, id: \.id) { memory in
-                        MemoryCard(memory: memory)
+                        MemoryCard(memory: memory, memory_group: group)
+                            .frame(height: 170)
                     }
                 }
             }
 
             ForEach(memories.filter { $0.group_id == nil }, id: \.id) { memory in
-                MemoryCard(memory: memory)
+                MemoryCard(memory: memory, memory_group: nil)
+                    .frame(height: 170)
             }
         }
-        .padding()
     }
 }
