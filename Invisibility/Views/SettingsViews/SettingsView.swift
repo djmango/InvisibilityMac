@@ -45,137 +45,29 @@ struct SettingsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .center) {
-                VStack {
-                    // User profile pic and login/logout button
-                    SettingsUserCardView()
-                        .visible(if: viewModel.user != nil)
-                    
-                    Button(action: {
-                        viewModel.login()
-                    }) {
-                        Text("Login")
-                    }
-                    .buttonStyle(.bordered)
-                    .visible(if: viewModel.user == nil, removeCompletely: true)
-                }
-                .padding(.top, 20)
+                header
+                    .padding(.top, 20)
 
-                
-                HStack {
-                    Text("Model:")
-                    
-                    Picker("", selection: $llmModel) {
-                        ForEach(viewModel.availableLLMModels, id: \.self) { model in
-                            Text(model.human_name).tag(model.human_name)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                }
-                .frame(maxWidth: 300)
-                .padding(.top, 32)
-                .padding(.bottom, 8)
-
+                modelsPicker
+                    .frame(maxWidth: 300)
+                    .padding(.top, 32)
+                    .padding(.bottom, 8)
                 
                 Divider()
                     .padding(.horizontal, 30)
                 
-                VStack (spacing: 12) {
-                    generalSettingsMenu
-                    shortcutsMenu
-                    betaFeaturesMenu
-                }
-                .padding(.vertical, 20)
+                settingsSection
+                    .padding(.vertical, 20)
 
                 Divider()
                     .padding(.horizontal, 30)
                     .padding(.bottom, 12)
 
-                // Account
-                Grid {
-                    GridRow {
-                        Button("Reset Onboarding") {
-                            viewModel.startOnboarding()
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button("Export Chat") {
-                            let text = viewModel.getExportChatText()
-                            document = TextDocument(text: text)
-                            showingExporter = true
-                        }
-                        .buttonStyle(.bordered)
-                    }
-
-                    GridRow {
-                        Button("Check for Updates") {
-                            viewModel.checkForUpdates()
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button("Feedback") {
-                            if let url = URL(string: "mailto:support@i.inc") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                }
-
+                accountMenu
+                
                 Spacer()
-
-                // Footer
-                HStack {
-                    Button("Acknowledgments") {
-                        if let url = URL(string: "https://github.com/InvisibilityInc/Invisibility/tree/master/LICENSES") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                    .buttonStyle(.link)
-
-                    Button("Privacy") {
-                        if let url = URL(string: "https://i.inc/privacy") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                    .buttonStyle(.link)
-                }
-
-                Image("MenuBarIcon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
-                    .padding(.bottom, -5)
-                    .onTapGesture {
-                        if let url = URL(string: "https://invisibility.so") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-
-                HStack(spacing: 0) {
-                    Text("Founded by ")
-                        .font(.headline)
-                    Text("Sulaiman Ghori")
-                        .font(.headline)
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/sulaimanghori") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                    Text(" and ")
-                        .font(.headline)
-                    Text("Tye Daniel")
-                        .font(.headline)
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/TyeDan") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                }
-
-                Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.bottom, 5)
+                
+                footer
             }
         }
         .scrollIndicators(.never)
@@ -219,6 +111,49 @@ struct SettingsView: View {
             case let .failure(error):
                 logger.error(error.localizedDescription)
             }
+        }
+    }
+    
+    // MARK: - Header
+    var header: some View {
+        VStack {
+            // User profile pic and login/logout button
+            SettingsUserCardView()
+                .visible(if: viewModel.user != nil)
+            loginButton
+                .visible(if: viewModel.user == nil, removeCompletely: true)
+        }
+    }
+    
+    var loginButton: some View {
+        Button(action: {
+            viewModel.login()
+        }) {
+            Text("Login")
+        }
+        .buttonStyle(.bordered)
+    }
+    
+    // MARK: - Model Picker
+    var modelsPicker: some View {
+        HStack {
+            Text("Model:")
+            
+            Picker("", selection: $llmModel) {
+                ForEach(viewModel.availableLLMModels, id: \.self) { model in
+                    Text(model.human_name).tag(model.human_name)
+                }
+            }
+            .pickerStyle(.menu)
+        }
+    }
+    
+    // MARK: - Settings Section
+    var settingsSection: some View {
+        VStack (spacing: 12) {
+            generalSettingsMenu
+            shortcutsMenu
+            betaFeaturesMenu
         }
     }
     
@@ -311,6 +246,98 @@ struct SettingsView: View {
             }
         })
     }
+    
+    // MARK: - Account Setting
+    var accountMenu: some View {
+        Grid {
+            GridRow {
+                Button("Reset Onboarding") {
+                    viewModel.startOnboarding()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("Export Chat") {
+                    let text = viewModel.getExportChatText()
+                    document = TextDocument(text: text)
+                    showingExporter = true
+                }
+                .buttonStyle(.bordered)
+            }
+            
+            GridRow {
+                Button("Check for Updates") {
+                    viewModel.checkForUpdates()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("Feedback") {
+                    if let url = URL(string: "mailto:support@i.inc") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+    }
+    
+    // MARK: - Footer
+    var footer: some View {
+        Group {
+            HStack {
+                Button("Acknowledgments") {
+                    if let url = URL(string: "https://github.com/InvisibilityInc/Invisibility/tree/master/LICENSES") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.link)
+
+                Button("Privacy") {
+                    if let url = URL(string: "https://i.inc/privacy") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.link)
+            }
+
+            Image("MenuBarIcon")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 18, height: 18)
+                .padding(.bottom, -5)
+                .onTapGesture {
+                    if let url = URL(string: "https://invisibility.so") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+
+            HStack(spacing: 0) {
+                Text("Founded by ")
+                    .font(.headline)
+                Text("Sulaiman Ghori")
+                    .font(.headline)
+                    .onTapGesture {
+                        if let url = URL(string: "https://x.com/sulaimanghori") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                Text(" and ")
+                    .font(.headline)
+                Text("Tye Daniel")
+                    .font(.headline)
+                    .onTapGesture {
+                        if let url = URL(string: "https://x.com/TyeDan") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+            }
+
+            Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.bottom, 5)
+        }
+    }
+    
 }
 
 struct TextDocument: FileDocument {
