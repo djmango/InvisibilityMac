@@ -82,16 +82,12 @@ struct MemoryGroupCard: View {
                 .fill(.windowBackground)
                 .shadow(radius: isExpanded ? 6 : 1)
 
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("\(memoryGroup.emoji) \(memoryGroup.name)")
-                        .font(.system(size: 16, weight: .semibold))
-                        .foregroundColor(.primary)
+            VStack(alignment: .center) {
+                Text("\(memoryGroup.emoji) \(memoryGroup.name)")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.primary)
 
-                    Spacer()
-
-                    ExpandButton(isExpanded: isExpanded, count: childCount)
-                }
+                Spacer()
 
                 if let latestMemory {
                     Text(latestMemory.content)
@@ -103,9 +99,10 @@ struct MemoryGroupCard: View {
 
                 Spacer()
 
-                Text(formatDate(memoryGroup.updated_at))
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundColor(.secondary)
+                HStack {
+                    Spacer()
+                    ExpandButton(isExpanded: isExpanded, count: childCount)
+                }
             }
             .padding(12)
         }
@@ -145,14 +142,14 @@ struct ExpandButton: View {
                     .font(.system(size: 12, weight: .bold))
             } else {
                 Group {
-                    Text("\(count)")
+                    Text("+\(count)")
                         .foregroundColor(.white)
                         .font(.system(size: 12, weight: .bold))
 
-                    Image(systemName: "plus")
-                        .foregroundColor(.white)
-                        .font(.system(size: 10, weight: .bold))
-                        .offset(x: 5, y: -5)
+                    // Image(systemName: "plus")
+                    //     .foregroundColor(.white)
+                    //     .font(.system(size: 10, weight: .bold))
+                    //     .offset(x: 5, y: -5)
                 }
             }
         }
@@ -199,9 +196,15 @@ struct MemoryGrid: View {
     let memory_groups: [APIMemoryGroup]
     let memories: [APIMemory]
 
+    var memory_groups_with_memories: [APIMemoryGroup] {
+        memory_groups.filter { group in
+            memories.contains(where: { $0.group_id == group.id })
+        }
+    }
+
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 250))], spacing: 16) {
-            ForEach(memory_groups, id: \.id) { group in
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 200, maximum: 300))], spacing: 16) {
+            ForEach(memory_groups_with_memories, id: \.id) { group in
                 MemoryGroupCard(
                     memoryGroup: group,
                     latestMemory: memories.first(where: { $0.group_id == group.id }),
