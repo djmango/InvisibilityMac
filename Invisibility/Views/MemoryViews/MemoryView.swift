@@ -9,7 +9,7 @@ struct MemoryView: View {
         ScrollView(.vertical, showsIndicators: true) {
             VStack(spacing: 24) {
                 MemoryHeader(title: "My Memories", onSearch: viewModel.fetchAPISync, onClose: viewModel.closeView, isRefreshing: viewModel.isRefreshing)
-                MemoryGrid(memory_groups: viewModel.memory_groups, memories: viewModel.memories)
+                MemoryGrid(memories: viewModel.memories)
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 25)
@@ -208,13 +208,17 @@ struct MemoryCard: View {
     }
 }
 
+struct MemoryGroup {
+    let memories: [APIMemory]
+    let group: 
+}
+
 struct MemoryGrid: View {
     @State private var expandedGroups: Set<UUID> = []
-    let memory_groups: [APIMemoryGroup]
     let memories: [APIMemory]
 
     var memory_groups_with_memories: [APIMemoryGroup] {
-        memory_groups.filter { group in
+        memories.filter { group in
             memories.contains(where: { $0.group_id == group.id })
         }
     }

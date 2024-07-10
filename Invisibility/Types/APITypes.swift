@@ -206,16 +206,7 @@ struct APIMemory: Encodable, Decodable, Identifiable {
     let updated_at: Date
     let deleted_at: Date?
     let memory_prompt_id: UUID?
-    let group_id: UUID?
-}
-
-struct APIMemoryGroup: Encodable, Decodable, Identifiable {
-    let id: UUID
-    let name: String
-    let emoji: String
-    let created_at: Date
-    let updated_at: Date
-    let deleted_at: Date?
+    let group: String?
 }
 
 struct APISyncResponse: Codable {
@@ -223,7 +214,6 @@ struct APISyncResponse: Codable {
     let messages: [APIMessage]
     let files: [APIFile]
     let memories: [APIMemory]
-    let memory_groups: [APIMemoryGroup]
 }
 
 struct User: Decodable {
