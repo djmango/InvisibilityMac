@@ -11,13 +11,6 @@ struct MessageListItemView: View {
                 withAnimation(AppConfig.snappy) {
                     isHovered = hovering
                 }
-                // if hovering {
-                //     isHovered = true
-                // } else {
-                //     withAnimation(AppConfig.snappy) {
-                //         isHovered = false
-                //     }
-                // }
             }
 
             .background(

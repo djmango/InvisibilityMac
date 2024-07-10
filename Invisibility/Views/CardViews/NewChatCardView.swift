@@ -40,46 +40,12 @@ struct NewChatCardView: View {
             Text("Chat with Invisibility")
                 .font(.title)
                 .fontWeight(.semibold)
-
-            VStack(alignment: .leading) {
-                HStack(alignment: .center) {
-                    Image(systemName: "lightbulb.max.fill")
-                        .font(.title3)
-                        .foregroundColor(.yellow)
-
-                    Text("Pro Tip:")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .padding(.top, 3)
-                }
-
-                MarkdownWebView(currentTip)
-                    .font(.system(size: 14))
-                    .padding(.leading, 2)
-                    .padding(.top, -6)
-            }
-            .padding(.top, 8)
-
-            Button(action: {
-                if let view = shareButtonView {
-                    let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
-                    picker.show(relativeTo: view.bounds, of: view, preferredEdge: .minY)
-                }
-
-            }) {
-                Text("Share Invisibility with a friend!")
-                    .font(.title2)
-            }
-            .padding(.top, 16)
-            .buttonStyle(.link)
-            .background(ShareButtonView(nsView: $shareButtonView))
-            .onHover { hovering in
-                if hovering {
-                    NSCursor.pointingHand.set()
-                } else {
-                    NSCursor.arrow.set()
-                }
-            }
+          
+            tipMessage
+                .padding(.top, 8)
+            
+            shareAppLink
+                .padding(.top, 16)
         }
         .padding(.vertical, 24)
         .padding(.horizontal, 24)
@@ -93,6 +59,42 @@ struct NewChatCardView: View {
         )
         .padding(.horizontal, 10)
         .padding(.bottom, 3)
+    }
+    
+    var tipMessage: some View {
+        VStack (alignment: .leading) {
+            HStack (alignment: .center) {
+                Image(systemName: "lightbulb.max.fill")
+                    .font(.title3)
+                    .foregroundColor(.yellow)
+                
+                
+                Text("Pro Tip:")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .padding(.top, 3)
+            }
+            
+            MarkdownWebView(currentTip)
+                .font(.system(size: 14))
+                .padding(.leading, 2)
+                .padding(.top, -6)
+        }
+    }
+    
+    var shareAppLink: some View {
+        Button(action: {
+            if let view = shareButtonView {
+                let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
+                picker.show(relativeTo: view.bounds, of: view, preferredEdge: .minY)
+            }
+
+        }) {
+            Text("Share Invisibility with a friend!")
+                .font(.title2)
+        }
+        .buttonStyle(.link)
+        .background(ShareButtonView(nsView: $shareButtonView))
     }
 
     func onCopyReferralLink() {

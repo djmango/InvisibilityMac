@@ -45,192 +45,29 @@ struct SettingsView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .center) {
-                VStack {
-                    // User profile pic and login/logout button
-                    SettingsUserCardView()
-                        .visible(if: viewModel.user != nil)
+                header
+                    .padding(.top, 20)
 
-                    Button(action: {
-                        viewModel.login()
-                    }) {
-                        Text("Login")
-                    }
-                    .buttonStyle(.bordered)
-                    .visible(if: viewModel.user == nil, removeCompletely: true)
-                }
-                .padding(.top, 20)
-
-                HStack {
-                    Text("Model:")
-
-                    Picker("", selection: $llmModel) {
-                        ForEach(viewModel.availableLLMModels, id: \.self) { model in
-                            Text(model.human_name).tag(model.human_name)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                }
-                .frame(maxWidth: 300)
-                .padding(.top, 32)
-                .padding(.bottom, 8)
-
+                modelsPicker
+                    .frame(maxWidth: 300)
+                    .padding(.top, 32)
+                    .padding(.bottom, 8)
+                
                 Divider()
                     .padding(.horizontal, 30)
-
-                VStack(spacing: 12) {
-                    // General Settings
-                    Collapsible(collapsed: true, label: "General Settings", content: {
-                        LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
-                            Text("Toggle Invisibility:")
-                            KeyboardShortcuts.Recorder(for: .summon)
-
-                            Text("Screenshot:")
-                            KeyboardShortcuts.Recorder(for: .screenshot)
-
-                            LaunchAtLogin.Toggle("Launch at Login")
-                                .toggleStyle(.checkbox)
-                                .padding(.top, 12)
-
-                            Toggle("Show on Menu Bar", isOn: $showMenuBar)
-                                .toggleStyle(.checkbox)
-                                .padding(.top, 12)
-                        })
-                    })
-
-                    // Shortcuts
-                    Collapsible(collapsed: true, label: "Shortcuts", content: {
-                        VStack(alignment: .leading) {
-                            Text("Choose which shortcuts appear in you chat menu bar")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding(.bottom, 6)
-
-                            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
-                                Toggle("New Chat", isOn: $showNewChat)
-                                    .toggleStyle(.checkbox)
-
-                                // Maybe move
-                                Toggle("Microphone", isOn: $showMicrophone)
-                                    .toggleStyle(.checkbox)
-
-                                Toggle("Screenshot", isOn: $showScreenshot)
-                                    .toggleStyle(.checkbox)
-
-                                Toggle("Sidekick", isOn: $showSidekick)
-                                    .toggleStyle(.checkbox)
-
-                                Toggle("Chat History", isOn: $showHistory)
-                                    .toggleStyle(.checkbox)
-
-                                Toggle("Memory", isOn: $showMemory)
-                                    .toggleStyle(.checkbox)
-
-                                Toggle("Settings", isOn: $showSettings)
-                                    .toggleStyle(.checkbox)
-
-                                Toggle("Switch Sides", isOn: $showSwitchSides)
-                                    .toggleStyle(.checkbox)
-                            })
-
-                            Toggle("Show Shortcut Hints", isOn: $shortcutHints)
-                                .toggleStyle(.switch)
-                                .gridCellColumns(2)
-                                .padding(.top, 12)
-                        }
-                    })
-
-                    // Beta features
-                    Collapsible(collapsed: true, label: "Beta Features", content: {
-                        VStack(alignment: .leading) {
-                            Text("Turn on beta fatures")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                                .padding(.bottom, 6)
-
-                            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
-                                Toggle("Animate Buttons", isOn: $animateButtons)
-                                    .toggleStyle(.checkbox)
-
-                                Toggle("All LLMs", isOn: $dynamicLLMLoad)
-                                    .toggleStyle(.checkbox)
-                                    .onChange(of: dynamicLLMLoad) {
-                                        Task { @MainActor in await viewModel.loadDynamicModels() }
-                                    }
-                            })
-                        }
-                    })
-                }
-                .padding(.vertical, 20)
+                
+                settingsSection
+                    .padding(.vertical, 20)
 
                 Divider()
                     .padding(.horizontal, 30)
                     .padding(.bottom, 12)
 
-                // Account
-                Grid {
-                    GridRow {
-                        Button("Reset Onboarding") {
-                            viewModel.startOnboarding()
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button("Export Chat") {
-                            let text = viewModel.getExportChatText()
-                            document = TextDocument(text: text)
-                            showingExporter = true
-                        }
-                        .buttonStyle(.bordered)
-                    }
-
-                    GridRow {
-                        Button("Check for Updates") {
-                            viewModel.checkForUpdates()
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button("Feedback") {
-                            if let url = URL(string: "mailto:support@i.inc") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                }
-
+                accountMenu
+                
                 Spacer()
-
-                // Footer
-                HStack {
-                    Button("Acknowledgments") {
-                        if let url = URL(string: "https://github.com/InvisibilityInc/Invisibility/tree/master/LICENSES") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                    .buttonStyle(.link)
-
-                    Button("Privacy") {
-                        if let url = URL(string: "https://i.inc/privacy") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                    .buttonStyle(.link)
-                }
-
-                Image("MenuBarIcon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
-                    .padding(.bottom, -5)
-                    .onTapGesture {
-                        if let url = URL(string: "https://invisibility.so") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-
-                Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.bottom, 5)
+     
+                footer
             }
         }
         .scrollIndicators(.never)
@@ -276,6 +113,231 @@ struct SettingsView: View {
             }
         }
     }
+    
+    // MARK: - Header
+    var header: some View {
+        VStack {
+            // User profile pic and login/logout button
+            SettingsUserCardView()
+                .visible(if: viewModel.user != nil)
+            loginButton
+                .visible(if: viewModel.user == nil, removeCompletely: true)
+        }
+    }
+    
+    var loginButton: some View {
+        Button(action: {
+            viewModel.login()
+        }) {
+            Text("Login")
+        }
+        .buttonStyle(.bordered)
+    }
+    
+    // MARK: - Model Picker
+    var modelsPicker: some View {
+        HStack {
+            Text("Model:")
+            
+            Picker("", selection: $llmModel) {
+                ForEach(viewModel.availableLLMModels, id: \.self) { model in
+                    Text(model.human_name).tag(model.human_name)
+                }
+            }
+            .pickerStyle(.menu)
+        }
+    }
+    
+    // MARK: - Settings Section
+    var settingsSection: some View {
+        VStack (spacing: 12) {
+            generalSettingsMenu
+            shortcutsMenu
+            betaFeaturesMenu
+        }
+    }
+    
+    // General Settings
+    var generalSettingsMenu: some View {
+        Collapsible(collapsed: true, label: "General Settings", content: {
+            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                
+                Text("Toggle Invisibility:")
+                KeyboardShortcuts.Recorder(for: .summon)
+                
+                Text("Screenshot:")
+                KeyboardShortcuts.Recorder(for: .screenshot)
+                
+                LaunchAtLogin.Toggle("Launch at Login")
+                    .toggleStyle(.checkbox)
+                    .padding(.top, 12)
+                
+                Toggle("Show on Menu Bar", isOn: $showMenuBar)
+                    .toggleStyle(.checkbox)
+                    .padding(.top, 12)
+            })
+        })
+    }
+    
+    // Shortcuts
+    var shortcutsMenu: some View {
+        Collapsible(collapsed: true, label: "Shortcuts", content: {
+            VStack (alignment: .leading) {
+                Text("Choose which shortcuts appear in you chat menu bar")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 6)
+                
+                LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                    Toggle("New Chat", isOn: $showNewChat)
+                        .toggleStyle(.checkbox)
+                    
+                    // Maybe move
+                    Toggle("Microphone", isOn: $showMicrophone)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Screenshot", isOn: $showScreenshot)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Sidekick", isOn: $showSidekick)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Chat History", isOn: $showHistory)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Memory", isOn: $showMemory)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Settings", isOn: $showSettings)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Switch Sides", isOn: $showSwitchSides)
+                        .toggleStyle(.checkbox)
+                })
+                
+                Toggle("Show Shortcut Hints", isOn: $shortcutHints)
+                    .toggleStyle(.switch)
+                    .gridCellColumns(2)
+                    .padding(.top, 12)
+            }
+        })
+    }
+    
+    // Beta Features
+    var betaFeaturesMenu: some View {
+        Collapsible(collapsed: true, label: "Beta Features", content: {
+            VStack (alignment: .leading) {
+                Text("Turn on beta fatures")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 6)
+                
+                LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                    
+                    Toggle("Animate Buttons", isOn: $animateButtons)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("All LLMs", isOn: $dynamicLLMLoad)
+                        .toggleStyle(.checkbox)
+                        .onChange(of: dynamicLLMLoad) {
+                            Task { @MainActor in await viewModel.loadDynamicModels() }
+                        }
+                })
+            }
+        })
+    }
+    
+    // MARK: - Account Setting
+    var accountMenu: some View {
+        Grid {
+            GridRow {
+                Button("Reset Onboarding") {
+                    viewModel.startOnboarding()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("Export Chat") {
+                    let text = viewModel.getExportChatText()
+                    document = TextDocument(text: text)
+                    showingExporter = true
+                }
+                .buttonStyle(.bordered)
+            }
+            
+            GridRow {
+                Button("Check for Updates") {
+                    viewModel.checkForUpdates()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("Feedback") {
+                    if let url = URL(string: "mailto:support@i.inc") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+    }
+    
+    // MARK: - Footer
+    var footer: some View {
+        Group {
+            HStack {
+                Button("Acknowledgments") {
+                    if let url = URL(string: "https://github.com/InvisibilityInc/Invisibility/tree/master/LICENSES") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.link)
+
+                Button("Privacy") {
+                    if let url = URL(string: "https://i.inc/privacy") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.link)
+            }
+
+            Image("MenuBarIcon")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 18, height: 18)
+                .padding(.bottom, -5)
+                .onTapGesture {
+                    if let url = URL(string: "https://invisibility.so") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+
+            HStack(spacing: 0) {
+                Text("Founded by ")
+                    .font(.headline)
+                Text("Sulaiman Ghori")
+                    .font(.headline)
+                    .onTapGesture {
+                        if let url = URL(string: "https://x.com/sulaimanghori") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                Text(" and ")
+                    .font(.headline)
+                Text("Tye Daniel")
+                    .font(.headline)
+                    .onTapGesture {
+                        if let url = URL(string: "https://x.com/TyeDan") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+            }
+
+            Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.bottom, 5)
+        }
+    }
+    
 }
 
 struct TextDocument: FileDocument {

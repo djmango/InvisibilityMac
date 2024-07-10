@@ -17,26 +17,10 @@ struct WhatsNewCardView: View {
                 Text("What's New in Invisibility")
                     .font(.title)
                     .fontWeight(.bold)
-
-                VStack(alignment: .center, spacing: 16) {
-                    LazyVGrid(columns: [GridItem(.fixed(32), alignment: .center), GridItem(.flexible(minimum: 100, maximum: 400))], alignment: .leading, spacing: 20) {
-                        ForEach(AppConfig.whats_new_features, id: \.self) { feature in
-                            Image(systemName: feature.iconName)
-                                .foregroundColor(feature.iconColor)
-                                .font(.system(size: 32))
-
-                            VStack(alignment: .leading) {
-                                Text(feature.title)
-                                    .font(.system(size: 14))
-                                    .fontWeight(.bold)
-                                Text(feature.description)
-                                    .foregroundColor(.gray)
-                            }
-                            .padding(.leading, 16)
-                        }
-                    }
-                }
-                .padding(.top, 32)
+        
+               newFeaturesList
+                    .padding(.top, 32)
+                
 
                 Button(action: {
                     MessageScrollViewModel.shared.hideWhatsNew()
@@ -53,9 +37,9 @@ struct WhatsNewCardView: View {
                         )
                         .cornerRadius(8)
                 }
-                .padding(.top, 80)
                 .buttonStyle(.plain)
                 .shadow(radius: 2)
+                .padding(.top, 80)
                 .onHover { hovering in
                     isHovering = hovering
                     if hovering {
@@ -76,6 +60,28 @@ struct WhatsNewCardView: View {
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
             )
             .padding(.horizontal, 10)
+        }
+    }
+    
+    var newFeaturesList: some View {
+        VStack (alignment: .center, spacing: 16) {
+            LazyVGrid(columns: [GridItem(.fixed(32), alignment: .center), GridItem(.flexible(minimum: 100, maximum: 400))], alignment: .leading, spacing: 20) {
+                
+                ForEach(AppConfig.whats_new_features, id: \.self) { feature in
+                    Image(systemName: feature.iconName)
+                        .foregroundColor(feature.iconColor)
+                        .font(.system(size: 32))
+                    
+                    VStack (alignment: .leading) {
+                        Text(feature.title)
+                            .font(.system(size: 14))
+                            .fontWeight(.bold)
+                        Text(feature.description)
+                            .foregroundColor(.gray)
+                    }
+                    .padding(.leading, 16)
+                }
+            }
         }
     }
 }
