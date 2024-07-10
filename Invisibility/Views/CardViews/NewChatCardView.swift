@@ -46,7 +46,6 @@ struct NewChatCardView: View {
             
             shareAppLink
                 .padding(.top, 16)
-                }
         }
         .padding(.vertical, 24)
         .padding(.horizontal, 24)
