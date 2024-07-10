@@ -14,7 +14,7 @@ import SwiftUI
 
 
 @MainActor
-class VoiceRecorder: NSObject {
+class VoiceRecorder: ObservableObject {
     static let shared = VoiceRecorder()
     
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "ScreenRecorder")
@@ -25,6 +25,8 @@ class VoiceRecorder: NSObject {
     private let audioEngine = AVAudioEngine()
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
 
+    /// This is a hack to update the text field rendering when the text is cleared
+    @Published public var clearToggle: Bool = false
     
     @Published var isRunning = false
     @Published var transcribedText: String = ""
@@ -43,11 +45,11 @@ class VoiceRecorder: NSObject {
             }
         }
     }
-    
+
     func toggleRecording() {
         if isRunning {
             Task {
-                await stop()
+                await stop(shouldClearText: false)
             }
         } else {
             Task {
@@ -89,10 +91,11 @@ class VoiceRecorder: NSObject {
         
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest) { [weak self] result, error in
             guard let self = self else { return }
+            
             if let result = result {
                 let text = result.bestTranscription.formattedString
                 
-                if !text.isEmpty {
+                if !text.isEmpty && isRunning {
                     transcribedText = text
                 }
             }
@@ -108,7 +111,7 @@ class VoiceRecorder: NSObject {
     }
 
     /// Stops capturing voice content.
-    func stop() async {
+    func stop(shouldClearText: Bool) async {
         guard isRunning else { return }
         defer { PostHogSDK.shared.capture("stop_stt") }
 
@@ -116,6 +119,10 @@ class VoiceRecorder: NSObject {
         recognitionRequest?.endAudio()
         recognitionTask?.cancel()
         recognitionTask = nil
+        
+        if (shouldClearText) {
+            transcribedText = ""
+        }
         
         withAnimation(AppConfig.snappy) {
             isRunning = false

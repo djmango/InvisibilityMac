@@ -101,6 +101,7 @@
 		771397F22C2E74440048B3B5 /* AnimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 771397F12C2E74440048B3B5 /* AnimationManager.swift */; };
 		7758D5782C2F7EAB0013CCED /* Hover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758D5772C2F7EAB0013CCED /* Hover.swift */; };
 		77FE29862C254AAF007D923C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29852C254AAF007D923C /* Buttons.swift */; };
+		829F67172C3DD54F0071702D /* subsciptionActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829F67162C3DD54F0071702D /* subsciptionActionButtonView.swift */; };
 		84544C03F40FD34E26F88D72 /* MessageScrollHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A94109FA33EDC8B61558970 /* MessageScrollHeaderView.swift */; };
 		C15A8C2EDB35F055B83324A3 /* MessageActionButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F56D59CFACC23B3F4A1583B /* MessageActionButtonViewModel.swift */; };
 		C793DBDE17714E9942C18089 /* HistoryCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9CCC3953052C640C77031 /* HistoryCardViewModel.swift */; };
@@ -184,14 +185,15 @@
 		4DF195022B91B47F0017365F /* VisualEffectsBlur.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualEffectsBlur.swift; sourceTree = "<group>"; };
 		4DF2D9002BA689220093CA3E /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
+		5A0054922C37269600A8490E /* VoiceRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorder.swift; sourceTree = "<group>"; };
 		5ADB74A42C35CF30004F5A78 /* WhatsNewCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewCardView.swift; sourceTree = "<group>"; };
 		5ADB74A82C36DAFA004F5A78 /* WhatsNewFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewFeature.swift; sourceTree = "<group>"; };
-		5A0054922C37269600A8490E /* VoiceRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorder.swift; sourceTree = "<group>"; };
 		6142BEC69B0A286E2D7C2ED3 /* MessageContentViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MessageContentViewModel.swift; sourceTree = "<group>"; };
 		6EC1ACA954F73F48E958AD26 /* HistoryViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
 		771397F12C2E74440048B3B5 /* AnimationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationManager.swift; sourceTree = "<group>"; };
 		7758D5772C2F7EAB0013CCED /* Hover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hover.swift; sourceTree = "<group>"; };
 		77FE29852C254AAF007D923C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
+		829F67162C3DD54F0071702D /* subsciptionActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = subsciptionActionButtonView.swift; sourceTree = "<group>"; };
 		9F56D59CFACC23B3F4A1583B /* MessageActionButtonViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MessageActionButtonViewModel.swift; sourceTree = "<group>"; };
 		A9721674ABFEFC5AF471D38D /* SettingsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		B96977A082A12FF90493A184 /* MessageScrollHeaderViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MessageScrollHeaderViewModel.swift; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 				4D885C762B96D969009A1F48 /* SettingsView.swift */,
 				4DB061B92BF3FD4C007CF7DD /* SettingsUserCardView.swift */,
 				4DB061BD2BF4A028007CF7DD /* QRView.swift */,
+				829F67162C3DD54F0071702D /* subsciptionActionButtonView.swift */,
 			);
 			path = SettingsViews;
 			sourceTree = "<group>";
@@ -606,6 +609,7 @@
 				D5BE8FF22C2C89750011D90C /* (null) in Sources */,
 				5A0054932C37269600A8490E /* VoiceRecorder.swift in Sources */,
 				4D9ADB842C07E59700A1EFC7 /* APITypes.swift in Sources */,
+				829F67172C3DD54F0071702D /* subsciptionActionButtonView.swift in Sources */,
 				4D9ADB802C07BBC500A1EFC7 /* HistoryView.swift in Sources */,
 				4D3B635D2B642A1A004AA7DF /* LLMManager.swift in Sources */,
 				5ADB74A92C36DAFA004F5A78 /* WhatsNewFeature.swift in Sources */,

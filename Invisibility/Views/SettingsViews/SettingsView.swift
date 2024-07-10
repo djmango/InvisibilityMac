@@ -18,12 +18,21 @@ struct SettingsView: View {
 
     @AppStorage("animateButtons") private var animateButtons = true
     @AppStorage("autoLaunch") private var autoLaunch: Bool = false
-    @AppStorage("betaFeatures") private var betaFeatures = false
     @AppStorage("onboardingViewed") private var onboardingViewed = false
     @AppStorage("shortcutHints") private var shortcutHints = true
     @AppStorage("showMenuBar") private var showMenuBar: Bool = true
     @AppStorage("llmModelName") public var llmModel = LLMModelRepository.shared.models[0].id
     @AppStorage("dynamicLLMLoad") private var dynamicLLMLoad = false
+
+    // Selected Shortcuts
+    @AppStorage("showNewChat") private var showNewChat: Bool = true
+    @AppStorage("showScreenshot") private var showScreenshot: Bool = false
+    @AppStorage("showSidekick") private var showSidekick: Bool = true
+    @AppStorage("showHistory") private var showHistory: Bool = true
+    @AppStorage("showMemory") private var showMemory: Bool = true
+    @AppStorage("showSettings") private var showSettings: Bool = true
+    @AppStorage("showMicrophone") private var showMicrophone: Bool = true
+    @AppStorage("showSwitchSides") private var showSwitchSides: Bool = false
 
     // TODO: func to reset to default settings
 
@@ -35,171 +44,31 @@ struct SettingsView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .center, spacing: 10) {
-                Spacer()
-                // User profile pic and login/logout button
-                SettingsUserCardView()
-                    .visible(if: viewModel.user != nil)
+            VStack(alignment: .center) {
+                header
+                    .padding(.top, 20)
 
-                Button(action: {
-                    viewModel.login()
-                }) {
-                    Text("Login")
-                }
-                .buttonStyle(.bordered)
-                .visible(if: viewModel.user == nil, removeCompletely: true)
-
-                Spacer()
+                modelsPicker
+                    .frame(maxWidth: 300)
+                    .padding(.top, 32)
+                    .padding(.bottom, 8)
+                
+                Divider()
+                    .padding(.horizontal, 30)
+                
+                settingsSection
+                    .padding(.vertical, 20)
 
                 Divider()
-                    .padding(.horizontal, 80)
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, 12)
+
+                accountMenu
+                
                 Spacer()
-
-                HStack {
-                    Text("Toggle panel")
-                    KeyboardShortcuts.Recorder(for: .summon)
-                }
-
-                HStack {
-                    Text("Screenshot")
-                    KeyboardShortcuts.Recorder(for: .screenshot)
-                }
-
-                LaunchAtLogin.Toggle("Launch at Login")
-                    .toggleStyle(.switch)
-
-                Toggle("Show on Menu Bar", isOn: $showMenuBar)
-                    .toggleStyle(.switch)
-
-                Toggle("Shortcut Hints", isOn: $shortcutHints)
-                    .toggleStyle(.switch)
-
-                Toggle("Beta Features", isOn: $betaFeatures)
-                    .toggleStyle(.switch)
-                    .onChange(of: betaFeatures) {
-                        if betaFeatures {
-                        } else {
-                            // Reset beta features
-                            animateButtons = true
-                        }
-                    }
-
-                Divider()
-                    .padding(.horizontal, 150)
-                    .visible(if: betaFeatures, removeCompletely: true)
-
-                Toggle("Animate Buttons", isOn: $animateButtons)
-                    .toggleStyle(.switch)
-                    .visible(if: betaFeatures, removeCompletely: true)
-
-                Toggle("All LLMs", isOn: $dynamicLLMLoad)
-                    .toggleStyle(.switch)
-                    .visible(if: betaFeatures, removeCompletely: true)
-                    .onChange(of: dynamicLLMLoad) {
-                        Task { @MainActor in await viewModel.loadDynamicModels() }
-                    }
-
-                Picker("", selection: $llmModel) {
-                    ForEach(viewModel.availableLLMModels, id: \.self) { model in
-                        Text(model.human_name).tag(model.human_name)
-                    }
-                }
-                .pickerStyle(.menu)
-                .frame(maxWidth: 180)
-
-                Spacer()
-
-                Divider()
-                    .padding(.horizontal, 80)
-
-                Spacer()
-
-                Grid {
-                    GridRow {
-                        Button("Reset Onboarding") {
-                            viewModel.startOnboarding()
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button("Export Chat") {
-                            let text = viewModel.getExportChatText()
-                            document = TextDocument(text: text)
-                            showingExporter = true
-                        }
-                        .buttonStyle(.bordered)
-                    }
-
-                    GridRow {
-                        Button("Check for Updates") {
-                            viewModel.checkForUpdates()
-                        }
-                        .buttonStyle(.bordered)
-
-                        Button("Feedback") {
-                            if let url = URL(string: "mailto:support@i.inc") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                }
-
-                Spacer()
-
-                HStack {
-                    Button("Acknowledgments") {
-                        if let url = URL(string: "https://github.com/InvisibilityInc/Invisibility/tree/master/LICENSES") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                    .buttonStyle(.link)
-
-                    Button("Privacy") {
-                        if let url = URL(string: "https://i.inc/privacy") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                    .buttonStyle(.link)
-                }
-
-                Image("MenuBarIcon")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 18, height: 18)
-                    .padding(.bottom, -5)
-                    .onTapGesture {
-                        if let url = URL(string: "https://invisibility.so") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-
-                HStack(spacing: 0) {
-                    Text("Founded by ")
-                        .font(.headline)
-                    Text("Sulaiman Ghori")
-                        .font(.headline)
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/sulaimanghori") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                    Text(" and ")
-                        .font(.headline)
-                    Text("Tye Daniel")
-                        .font(.headline)
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/TyeDan") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                }
-
-                Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.bottom, 5)
+     
+                footer
             }
-            .animation(.easeIn, value: betaFeatures)
         }
         .scrollIndicators(.never)
         .background(
@@ -244,6 +113,231 @@ struct SettingsView: View {
             }
         }
     }
+    
+    // MARK: - Header
+    var header: some View {
+        VStack {
+            // User profile pic and login/logout button
+            SettingsUserCardView()
+                .visible(if: viewModel.user != nil)
+            loginButton
+                .visible(if: viewModel.user == nil, removeCompletely: true)
+        }
+    }
+    
+    var loginButton: some View {
+        Button(action: {
+            viewModel.login()
+        }) {
+            Text("Login")
+        }
+        .buttonStyle(.bordered)
+    }
+    
+    // MARK: - Model Picker
+    var modelsPicker: some View {
+        HStack {
+            Text("Model:")
+            
+            Picker("", selection: $llmModel) {
+                ForEach(viewModel.availableLLMModels, id: \.self) { model in
+                    Text(model.human_name).tag(model.human_name)
+                }
+            }
+            .pickerStyle(.menu)
+        }
+    }
+    
+    // MARK: - Settings Section
+    var settingsSection: some View {
+        VStack (spacing: 12) {
+            generalSettingsMenu
+            shortcutsMenu
+            betaFeaturesMenu
+        }
+    }
+    
+    // General Settings
+    var generalSettingsMenu: some View {
+        Collapsible(collapsed: true, label: "General Settings", content: {
+            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                
+                Text("Toggle Invisibility:")
+                KeyboardShortcuts.Recorder(for: .summon)
+                
+                Text("Screenshot:")
+                KeyboardShortcuts.Recorder(for: .screenshot)
+                
+                LaunchAtLogin.Toggle("Launch at Login")
+                    .toggleStyle(.checkbox)
+                    .padding(.top, 12)
+                
+                Toggle("Show on Menu Bar", isOn: $showMenuBar)
+                    .toggleStyle(.checkbox)
+                    .padding(.top, 12)
+            })
+        })
+    }
+    
+    // Shortcuts
+    var shortcutsMenu: some View {
+        Collapsible(collapsed: true, label: "Shortcuts", content: {
+            VStack (alignment: .leading) {
+                Text("Choose which shortcuts appear in you chat menu bar")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 6)
+                
+                LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                    Toggle("New Chat", isOn: $showNewChat)
+                        .toggleStyle(.checkbox)
+                    
+                    // Maybe move
+                    Toggle("Microphone", isOn: $showMicrophone)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Screenshot", isOn: $showScreenshot)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Sidekick", isOn: $showSidekick)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Chat History", isOn: $showHistory)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Memory", isOn: $showMemory)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Settings", isOn: $showSettings)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("Switch Sides", isOn: $showSwitchSides)
+                        .toggleStyle(.checkbox)
+                })
+                
+                Toggle("Show Shortcut Hints", isOn: $shortcutHints)
+                    .toggleStyle(.switch)
+                    .gridCellColumns(2)
+                    .padding(.top, 12)
+            }
+        })
+    }
+    
+    // Beta Features
+    var betaFeaturesMenu: some View {
+        Collapsible(collapsed: true, label: "Beta Features", content: {
+            VStack (alignment: .leading) {
+                Text("Turn on beta fatures")
+                    .font(.caption)
+                    .foregroundColor(.gray)
+                    .padding(.bottom, 6)
+                
+                LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                    
+                    Toggle("Animate Buttons", isOn: $animateButtons)
+                        .toggleStyle(.checkbox)
+                    
+                    Toggle("All LLMs", isOn: $dynamicLLMLoad)
+                        .toggleStyle(.checkbox)
+                        .onChange(of: dynamicLLMLoad) {
+                            Task { @MainActor in await viewModel.loadDynamicModels() }
+                        }
+                })
+            }
+        })
+    }
+    
+    // MARK: - Account Setting
+    var accountMenu: some View {
+        Grid {
+            GridRow {
+                Button("Reset Onboarding") {
+                    viewModel.startOnboarding()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("Export Chat") {
+                    let text = viewModel.getExportChatText()
+                    document = TextDocument(text: text)
+                    showingExporter = true
+                }
+                .buttonStyle(.bordered)
+            }
+            
+            GridRow {
+                Button("Check for Updates") {
+                    viewModel.checkForUpdates()
+                }
+                .buttonStyle(.bordered)
+                
+                Button("Feedback") {
+                    if let url = URL(string: "mailto:support@i.inc") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.bordered)
+            }
+        }
+    }
+    
+    // MARK: - Footer
+    var footer: some View {
+        Group {
+            HStack {
+                Button("Acknowledgments") {
+                    if let url = URL(string: "https://github.com/InvisibilityInc/Invisibility/tree/master/LICENSES") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.link)
+
+                Button("Privacy") {
+                    if let url = URL(string: "https://i.inc/privacy") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+                .buttonStyle(.link)
+            }
+
+            Image("MenuBarIcon")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 18, height: 18)
+                .padding(.bottom, -5)
+                .onTapGesture {
+                    if let url = URL(string: "https://invisibility.so") {
+                        NSWorkspace.shared.open(url)
+                    }
+                }
+
+            HStack(spacing: 0) {
+                Text("Founded by ")
+                    .font(.headline)
+                Text("Sulaiman Ghori")
+                    .font(.headline)
+                    .onTapGesture {
+                        if let url = URL(string: "https://x.com/sulaimanghori") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+                Text(" and ")
+                    .font(.headline)
+                Text("Tye Daniel")
+                    .font(.headline)
+                    .onTapGesture {
+                        if let url = URL(string: "https://x.com/TyeDan") {
+                            NSWorkspace.shared.open(url)
+                        }
+                    }
+            }
+
+            Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .padding(.bottom, 5)
+        }
+    }
+    
 }
 
 struct TextDocument: FileDocument {
@@ -268,4 +362,8 @@ struct TextDocument: FileDocument {
         let data = text.data(using: .utf8)
         return .init(regularFileWithContents: data!)
     }
+}
+
+#Preview {
+    SettingsView()
 }

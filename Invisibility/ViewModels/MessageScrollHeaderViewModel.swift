@@ -10,15 +10,9 @@ class MessageScrollHeaderViewModel: ObservableObject {
     private let chatViewModel: ChatViewModel = ChatViewModel.shared
 
     init() {
-        messageViewModel.$api_messages
-            .sink { [weak self] _ in
-                self?.messageCount = self?.messageViewModel.api_messages_in_chat.count ?? 0
-            }
-            .store(in: &cancellables)
-
-        chatViewModel.$chat
-            .sink { [weak self] _ in
-                self?.messageCount = self?.messageViewModel.api_messages_in_chat.count ?? 0
+        Publishers.CombineLatest(chatViewModel.$chat, messageViewModel.$api_messages)
+            .sink { [weak self] chat, messages in
+                self?.messageCount = messages.filter { $0.chat_id == chat?.id && $0.regenerated == false }.count
             }
             .store(in: &cancellables)
     }
