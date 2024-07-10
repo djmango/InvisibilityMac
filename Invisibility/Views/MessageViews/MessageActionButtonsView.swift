@@ -56,31 +56,39 @@ struct MessageActionButtonsView: View {
 
             HStack {
                 Spacer()
-                MessageButtonItemView(
-                    label: "Regenerate",
-                    icon: "arrow.clockwise",
-                    shortcut_hint: "⌘ ⇧ R"
-                ) {
-                    viewModel.regenerate()
-                }
-                .keyboardShortcut("r", modifiers: [.command, .shift])
-                .visible(if: isRegenerateButtonVisible, removeCompletely: true)
+                regenerateButton
+                    .visible(if: isRegenerateButtonVisible, removeCompletely: true)
 
-                MessageButtonItemView(
-                    label: "Copy",
-                    icon: isCopied ? "checkmark" : "square.on.square",
-                    shortcut_hint: "⌘ ⌥ C"
-                ) {
-                    copyAction()
-                }
-                .keyboardShortcut("c", modifiers: [.command, .option])
-                .changeEffect(.jump(height: 10), value: isCopied)
-                .visible(if: isCopyButtonVisible)
+                copyButton
+                    .visible(if: isCopyButtonVisible)
             }
         }
         .padding(8)
     }
-
+    
+    var regenerateButton: some View {
+        MessageButtonItemView(
+            label: "Regenerate",
+            icon: "arrow.clockwise",
+            shortcut_hint: "⌘ ⇧ R"
+        ) {
+            viewModel.regenerate()
+        }
+        .keyboardShortcut("r", modifiers: [.command, .shift])
+    }
+    
+    var copyButton: some View {
+        MessageButtonItemView(
+            label: "Copy",
+            icon: isCopied ? "checkmark" : "square.on.square",
+            shortcut_hint: "⌘ ⌥ C"
+        ) {
+            copyAction()
+        }
+        .keyboardShortcut("c", modifiers: [.command, .option])
+        .changeEffect(.jump(height: 10), value: isCopied)
+    }
+    
     // MARK: - Actions
 
     private func copyAction() {

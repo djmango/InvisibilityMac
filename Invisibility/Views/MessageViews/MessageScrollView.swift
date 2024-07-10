@@ -10,101 +10,107 @@ import SwiftUI
 
 struct MessageScrollView: View {
     @ObservedObject private var viewModel: MessageScrollViewModel = .shared
-
     @State private var numMessagesDisplayed = 10
+    @State private var scrollViewHeight: CGFloat = .zero
+    @State private var contentHeight: CGFloat = .zero
+    @State private var outsideHeight: CGFloat = .zero
 
     private var displayedMessages: [APIMessage] {
         viewModel.api_messages_in_chat.suffix(numMessagesDisplayed)
     }
 
     var body: some View {
-        // let _ = Self._printChanges()
-        ScrollViewReader { proxy in
-            ScrollView {
-                VStack {
-                    HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
-
-                    Spacer()
-
-                    VStack(spacing: 5) {
-                        ForEach(displayedMessages) { message in
-                            MessageListItemView(message: message)
-                                .id(message.id)
-                        }
-                    }
-
-                    FreeTierCardView()
-                        .visible(if: !viewModel.canSendMessages, removeCompletely: true)
-                        .padding(.top, 10)
-
-                    NewChatCardView()
-                        .visible(if: displayedMessages.isEmpty && viewModel.canSendMessages, removeCompletely: true)
-
-                    CaptureView()
-                        .visible(if: viewModel.isRecording, removeCompletely: true)
-
-                    Rectangle()
-                        .hidden()
-                        .frame(height: 1)
-                        .id("bottom")
+        GeometryReader { outsideProxy in
+            ScrollViewReader { scrollProxy in
+                Spacer()
+                ScrollView {
+                    contentView
+                        .background(
+                            GeometryReader { geometry in
+                                Color.clear.preference(key: ContentHeightPreferenceKey.self, value: geometry.size.height)
+                            }
+                        )
                 }
-                .animation(AppConfig.snappy, value: viewModel.canSendMessages)
-                .padding(.top, 10)
-            }
-            .mask(
-                LinearGradient(
-                    gradient: Gradient(stops: [
-                        .init(color: .clear, location: 0),
-                        .init(color: .black, location: 0.005), // Finish fading in
-                        .init(color: .black, location: 0.995), // Start fading out
-                        .init(color: .clear, location: 1.0),
-                    ]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-            )
-            .scrollIndicators(.never)
-            .defaultScrollAnchor(.bottom)
-            .onChange(of: viewModel.isGenerating) {
-                if viewModel.isGenerating == true {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        withAnimation(AppConfig.easeIn) {
-                            proxy.scrollTo("bottom", anchor: .bottom)
-                        }
-                    }
+                .defaultScrollAnchor(.bottom)
+                .background(Rectangle().fill(Color.white.opacity(0.001)))
+                .frame(height: min(max(contentHeight, 100), outsideProxy.size.height))
+                .onChange(of: viewModel.isGenerating) {
+                    if viewModel.isGenerating { scrollToBottom(proxy: scrollProxy) }
                 }
-            }
-            .onChange(of: viewModel.isRecording) {
-                if viewModel.isRecording == true {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        withAnimation(AppConfig.easeIn) {
-                            proxy.scrollTo("bottom", anchor: .bottom)
-                        }
-                    }
+                .onChange(of: viewModel.isRecording) {
+                    if viewModel.isRecording { scrollToBottom(proxy: scrollProxy) }
                 }
-            }
-            // this also work for BranchManager api_message updates?
-            .onChange(of: viewModel.shouldScrollToBottom) {
-                if viewModel.shouldScrollToBottom {
-                    // print("scrolling to bottom cuz we should")
-                    withAnimation(AppConfig.easeIn) {
-                        proxy.scrollTo("bottom", anchor: .bottom)
+                .onChange(of: viewModel.shouldScrollToBottom) {
+                    if viewModel.shouldScrollToBottom {
+                        scrollToBottom(proxy: scrollProxy)
                         viewModel.shouldScrollToBottom = false
                     }
                 }
-            }
-
-            .onChange(of: viewModel.chat) {
-                // Wait before scrolling to the bottom to allow the chat to load
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    // print("scrolling to bottom")
-                    withAnimation(AppConfig.easeIn) {
-                        proxy.scrollTo("bottom", anchor: .bottom)
+                .onChange(of: viewModel.chat) {
+                    numMessagesDisplayed = 10
+                    print("Chat changed, numMessagesDisplayed reset to 10")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        scrollToBottom(proxy: scrollProxy)
                     }
                 }
             }
-            .animation(AppConfig.snappy, value: viewModel.api_messages_in_chat)
-            .background(Rectangle().fill(Color.white.opacity(0.001)))
+            .onAppear {
+                outsideHeight = outsideProxy.size.height
+                // print("Outside height: \(outsideHeight)")
+            }
+            // .animation(AppConfig.easeInOut, value: contentHeight)
         }
+        .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
+            self.contentHeight = height
+            // print("Content height updated: \(height)")
+        }
+    }
+
+    private var contentView: some View {
+        VStack {
+            HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
+
+            VStack(spacing: 5) {
+                ForEach(displayedMessages) { message in
+                    MessageListItemView(message: message)
+                        .id(message.id)
+                }
+            }
+
+            FreeTierCardView()
+                .visible(if: !viewModel.canSendMessages, removeCompletely: true)
+                .padding(.top, 10)
+
+            NewChatCardView()
+                .visible(if: displayedMessages.isEmpty && viewModel.canSendMessages && !viewModel.isShowingWhatsNew, removeCompletely: true)
+
+            CaptureView()
+                .visible(if: viewModel.isRecording, removeCompletely: true)
+
+            WhatsNewCardView()
+                .visible(if: viewModel.isShowingWhatsNew, removeCompletely: true)
+
+            Rectangle()
+                .hidden()
+                .frame(height: 1)
+                .id("bottom")
+        }
+        // .animation(AppConfig.snappy, value: viewModel.canSendMessages)
+        // .animation(AppConfig.snappy, value: viewModel.isShowingWhatsNew)
+        // .animation(AppConfig.snappy, value: viewModel.api_messages_in_chat)
+        .padding(.top, 10)
+    }
+
+    private func scrollToBottom(proxy: ScrollViewProxy) {
+        withAnimation(AppConfig.easeIn) {
+            proxy.scrollTo("bottom", anchor: .bottom)
+        }
+    }
+}
+
+struct ContentHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
     }
 }

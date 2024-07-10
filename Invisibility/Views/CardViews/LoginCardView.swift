@@ -13,49 +13,23 @@ struct LoginCardView: View {
     @State private var isLoggingIn = false
     @State private var isHovering = false
     @AppStorage("onboardingViewed") private var onboardingViewed = false
-
+    
     var body: some View {
         VStack {
             VStack {
-                VStack(spacing: 2) {
-                    Text("Welcome to Invisibility 💙")
-                        .font(.system(size: 24, weight: .semibold))
-
-                    Text("Log in to continue")
-                        .font(.title3)
-                        .foregroundColor(.gray)
-                }
-
+                header
                 Spacer()
-
-                Button(action: {
-                    isLoggingIn = true
-                    UserManager.shared.login()
-                }) {
-                    Text("Log In")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 28)
-                        .background(Color.blue)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color(nsColor: .separatorColor))
-                        )
-                        .cornerRadius(8)
-                }
-                .buttonStyle(.plain)
-                .shadow(radius: 2)
-                .disabled(isLoggingIn)
-                .onHover { hovering in
-                    isHovering = hovering
-                    if hovering {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
+                loginButton
+                    .disabled(isLoggingIn)
+                    .onHover { hovering in
+                        isHovering = hovering
+                        if hovering {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
                     }
-                }
-
+                
                 if isLoggingIn {
                     ProgressView()
                         .scaleEffect(0.5)
@@ -75,10 +49,42 @@ struct LoginCardView: View {
             .cornerRadius(16)
             .frame(maxWidth: 400)
             .frame(maxHeight: .infinity, alignment: .bottom)
-
+            
             Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
+    }
+    
+    var header: some View {
+        VStack(spacing: 2) {
+            Text("Welcome to Invisibility 💙")
+                .font(.system(size: 24, weight: .semibold))
+            
+            Text("Log in to continue")
+                .font(.title3)
+                .foregroundColor(.gray)
+        }
+    }
+    
+    var loginButton: some View {
+        Button(action: {
+            isLoggingIn = true
+            UserManager.shared.login()
+        }) {
+            Text("Log In")
+                .font(.system(size: 20, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 28)
+                .background(Color.blue)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color(nsColor: .separatorColor))
+                )
+                .cornerRadius(8)
+        }
+        .buttonStyle(.plain)
+        .shadow(radius: 2)
     }
 }

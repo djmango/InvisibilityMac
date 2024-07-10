@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import SwiftUI
 
 final class MessageScrollViewModel: ObservableObject {
     static let shared = MessageScrollViewModel()
@@ -17,6 +18,7 @@ final class MessageScrollViewModel: ObservableObject {
     @Published private(set) var isGenerating: Bool = false
     @Published private(set) var isRecording: Bool = false
     @Published private(set) var canSendMessages: Bool = false
+    @Published private(set) var isShowingWhatsNew: Bool = false
     @Published public var shouldScrollToBottom: Bool = false
 
     private var cancellables: Set<AnyCancellable> = []
@@ -57,5 +59,13 @@ final class MessageScrollViewModel: ObservableObject {
     @MainActor
     public func scrollToBottom() {
         shouldScrollToBottom = true
+    }
+
+    @MainActor public func showWhatsNew() {
+        isShowingWhatsNew = true
+    }
+
+    @MainActor public func hideWhatsNew() {
+        isShowingWhatsNew = false
     }
 }
