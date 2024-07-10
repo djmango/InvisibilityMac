@@ -20,6 +20,8 @@ final class MessageViewModel: ObservableObject {
     @Published public var api_chats: [APIChat] = []
     @Published public var api_messages: [APIMessage] = []
     @Published public var api_files: [APIFile] = []
+    @Published public var api_memories: [APIMemory] = []
+    @Published public var api_memory_groups: [APIMemoryGroup] = []
     @Published public var windowHeight: CGFloat = 0
     @Published public var isGenerating: Bool = false
     @Published public var shouldScrollToBottom: Bool = false
@@ -37,9 +39,9 @@ final class MessageViewModel: ObservableObject {
         }
     }
 
-    func fetchAPISync() { Task { await fetchAPI() } }
+    public func fetchAPISync() { Task { await fetchAPI() } }
 
-    func fetchAPI() async {
+    public func fetchAPI() async {
         let url = URL(string: AppConfig.invisibility_api_base + "/sync/all")!
 
         guard let token else {
@@ -63,6 +65,8 @@ final class MessageViewModel: ObservableObject {
                 self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
                 self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
                 self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
+                self.api_memories = fetched.memories.sorted(by: { $0.created_at < $1.created_at })
+                self.api_memory_groups = fetched.memory_groups.sorted(by: { $0.name < $1.name })
                 self.logger.debug("Fetched messages: \(self.api_messages.count)")
                 ChatViewModel.shared.switchChat(self.api_chats.last)
             }

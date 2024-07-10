@@ -200,7 +200,7 @@ final class LLMManager {
         var chat_query = ChatQuery(messages: chat_messages, model: model_id)
 
         if let last_message = messages.last {
-            let show_files_to_user: [Bool] = await  MessageViewModel.shared.imagesFor(message: last_message).map(\.show_to_user)
+            let show_files_to_user: [Bool] = MessageViewModel.shared.imagesFor(message: last_message).map(\.show_to_user)
 
             chat_query.invisibility = ChatQuery.InvisibilityMetadata(
                 chat_id: chat.id,

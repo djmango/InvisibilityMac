@@ -10,19 +10,20 @@ import SwiftUI
 
 struct WhatsNewCardView: View {
     @State private var isHovering = false
-    
+
     var body: some View {
-        ScrollView {            
+        ScrollView {
             VStack {
                 Text("What's New in Invisibility")
                     .font(.title)
                     .fontWeight(.bold)
-                
+        
                newFeaturesList
                     .padding(.top, 32)
                 
+
                 Button(action: {
-                    let _ = MainWindowViewModel.shared.changeView(to: .chat)
+                    MessageScrollViewModel.shared.hideWhatsNew()
                 }) {
                     Text("Continue")
                         .frame(maxWidth: .infinity)
@@ -58,7 +59,7 @@ struct WhatsNewCardView: View {
             .background(
                 VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
             )
-            .padding(15)
+            .padding(.horizontal, 10)
         }
     }
     
@@ -88,4 +89,3 @@ struct WhatsNewCardView: View {
 #Preview {
     WhatsNewCardView()
 }
-

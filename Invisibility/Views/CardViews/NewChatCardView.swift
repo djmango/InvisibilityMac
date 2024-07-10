@@ -6,54 +6,46 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
-import SwiftUI
 import MarkdownWebView
+import SwiftUI
 
 struct NewChatCardView: View {
     @ObservedObject private var userManager = UserManager.shared
-    @State private var isRefreshAnimating = false
     @State private var isCopied = false
     @State private var shareButtonView: NSView?
     @State private var currentTip: String = ""
 
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
-    
+
     private let tips: [String] = [
         "Turn on Sidekick (`⌘ ⇧ 2`) to share your screen with Invisibility.",
         "Enter Setting (`⌘ ,`) to change which LLM Invisibility uses to generate responses.",
         "Use the Memory tab (`⌘ M`) to view and edit what Invisibility remembers about you.",
         "You can explore your chat history in the History tab (`⌘ F`).",
         "Press `⌥ Space` to easily open and close Invisibility.",
-        "Easily start a new chat by pressing `⌘ N`."
+        "Easily start a new chat by pressing `⌘ N`.",
     ]
-    
+
     init() {
         _currentTip = State(initialValue: getRandomTip())
     }
 
     private func getRandomTip() -> String {
-        let randomIndex = Int.random(in: 0..<tips.count)
+        let randomIndex = Int.random(in: 0 ..< tips.count)
         return tips[randomIndex]
     }
-    
 
     var body: some View {
-        VStack (alignment: .leading) {
+        VStack(alignment: .leading) {
             Text("Chat with Invisibility")
                 .font(.title)
                 .fontWeight(.semibold)
-            
+          
             tipMessage
                 .padding(.top, 8)
             
             shareAppLink
                 .padding(.top, 16)
-                .onHover { hovering in
-                    if hovering {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
-                    }
                 }
         }
         .padding(.vertical, 24)
@@ -66,22 +58,6 @@ struct NewChatCardView: View {
         .background(
             VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
         )
-        .overlay(
-            VStack {
-                HStack {
-                    Spacer()
-                    Image(systemName: "arrow.clockwise")
-                        .rotationEffect(.degrees(isRefreshAnimating ? 360 : 0))
-                        .frame(width: 10, height: 10)
-                        .opacity(isRefreshAnimating ? 1 : 0)
-                        .padding(10)
-                }
-                Spacer()
-            }
-        )
-        .onTapGesture {
-            onTap()
-        }
         .padding(.horizontal, 10)
         .padding(.bottom, 3)
     }
@@ -122,18 +98,6 @@ struct NewChatCardView: View {
         .background(ShareButtonView(nsView: $shareButtonView))
     }
 
-    func onTap() {
-        withAnimation(.easeInOut(duration: 0.5)) {
-            isRefreshAnimating = true
-        }
-
-        UserManager.shared.getInviteCount()
-        // Set the animation state back to false after a short delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-            isRefreshAnimating = false
-        }
-    }
-
     func onCopyReferralLink() {
         // Copy the invite link to the clipboard
         let pasteboard = NSPasteboard.general
@@ -146,7 +110,6 @@ struct NewChatCardView: View {
         }
     }
 }
-
 
 #Preview {
     NewChatCardView()

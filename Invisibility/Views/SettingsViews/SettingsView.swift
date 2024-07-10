@@ -33,7 +33,7 @@ struct SettingsView: View {
     @AppStorage("showSettings") private var showSettings: Bool = true
     @AppStorage("showMicrophone") private var showMicrophone: Bool = true
     @AppStorage("showSwitchSides") private var showSwitchSides: Bool = false
-    
+
     // TODO: func to reset to default settings
 
     @State private var showingExporter = false
@@ -66,7 +66,7 @@ struct SettingsView: View {
                 accountMenu
                 
                 Spacer()
-                
+     
                 footer
             }
         }
