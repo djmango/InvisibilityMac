@@ -102,30 +102,14 @@ struct FreeTierCardView: View {
                     .fontWeight(.semibold)
                     .multilineTextAlignment(.center)
 
-                Button(action: {
-                    UserManager.shared.pay()
-                }) {
-                    Text("Start Free Trial")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 28)
-                        .background(Color.blue)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color(nsColor: .separatorColor))
-                        )
-                        .cornerRadius(8)
-                }
-                .buttonStyle(.plain)
-                .shadow(radius: 2)
-                .onHover { hovering in
-                    if hovering {
-                        NSCursor.pointingHand.set()
-                    } else {
-                        NSCursor.arrow.set()
+                freeTrialButton
+                    .onHover { hovering in
+                        if hovering {
+                            NSCursor.pointingHand.set()
+                        } else {
+                            NSCursor.arrow.set()
+                        }
                     }
-                }
             }
         }
         .frame(width: 360)
@@ -146,6 +130,7 @@ struct FreeTierCardView: View {
                 HStack {
                     Spacer()
                     ProgressView()
+                        .controlSize(.small)
                         .visible(if: isRefreshAnimating)
                         .padding(.vertical, 15)
                         .padding(.trailing, 12)
@@ -157,7 +142,28 @@ struct FreeTierCardView: View {
         .frame(maxWidth: .infinity)
         .padding(.bottom, 3)
     }
-
+    
+    var freeTrialButton: some View {
+        Button(action: {
+            UserManager.shared.pay()
+        }) {
+            Text("Start Free Trial")
+                .font(.system(size: 20, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.vertical, 8)
+                .padding(.horizontal, 28)
+                .background(Color.blue)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color(nsColor: .separatorColor))
+                )
+                .cornerRadius(8)
+        }
+        .buttonStyle(.plain)
+        .shadow(radius: 2)
+    }
+    
+    // MARK: - Helper Functions
     func onTap() {
         withAnimation(.easeInOut(duration: 0.5)) {
             isRefreshAnimating = true

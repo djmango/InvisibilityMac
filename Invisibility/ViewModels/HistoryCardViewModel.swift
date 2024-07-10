@@ -81,6 +81,5 @@ class HistoryCardViewModel: ObservableObject {
     @MainActor func switchChat() {
         chatViewModel.switchChat(chat)
         _ = mainWindowViewModel.changeView(to: .chat)
-        print("switching to chat cuz view model yk")
     }
 }
