@@ -146,6 +146,7 @@ struct FreeTierCardView: View {
                 HStack {
                     Spacer()
                     ProgressView()
+                        .controlSize(.small)
                         .visible(if: isRefreshAnimating)
                         .padding(.vertical, 15)
                         .padding(.trailing, 12)

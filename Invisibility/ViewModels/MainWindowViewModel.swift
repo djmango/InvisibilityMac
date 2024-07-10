@@ -15,7 +15,6 @@ enum mainWindowView {
     case settings
     case history
     case memory
-    case whatsNew
 }
 
 import OSLog

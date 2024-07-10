@@ -33,7 +33,7 @@ struct SettingsView: View {
     @AppStorage("showSettings") private var showSettings: Bool = true
     @AppStorage("showMicrophone") private var showMicrophone: Bool = true
     @AppStorage("showSwitchSides") private var showSwitchSides: Bool = false
-    
+
     // TODO: func to reset to default settings
 
     @State private var showingExporter = false
@@ -49,7 +49,7 @@ struct SettingsView: View {
                     // User profile pic and login/logout button
                     SettingsUserCardView()
                         .visible(if: viewModel.user != nil)
-                    
+
                     Button(action: {
                         viewModel.login()
                     }) {
@@ -60,10 +60,9 @@ struct SettingsView: View {
                 }
                 .padding(.top, 20)
 
-                
                 HStack {
                     Text("Model:")
-                    
+
                     Picker("", selection: $llmModel) {
                         ForEach(viewModel.availableLLMModels, id: \.self) { model in
                             Text(model.human_name).tag(model.human_name)
@@ -75,86 +74,83 @@ struct SettingsView: View {
                 .padding(.top, 32)
                 .padding(.bottom, 8)
 
-                
                 Divider()
                     .padding(.horizontal, 30)
-                
-                VStack (spacing: 12) {
+
+                VStack(spacing: 12) {
                     // General Settings
                     Collapsible(collapsed: true, label: "General Settings", content: {
-                            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                        LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
+                            Text("Toggle Invisibility:")
+                            KeyboardShortcuts.Recorder(for: .summon)
 
-                                Text("Toggle Invisibility:")
-                                KeyboardShortcuts.Recorder(for: .summon)
-                            
-                                Text("Screenshot:")
-                                KeyboardShortcuts.Recorder(for: .screenshot)
-                            
-                                LaunchAtLogin.Toggle("Launch at Login")
-                                    .toggleStyle(.checkbox)
-                                    .padding(.top, 12)
-                                
-                                Toggle("Show on Menu Bar", isOn: $showMenuBar)
-                                    .toggleStyle(.checkbox)
-                                    .padding(.top, 12)
-                            })
+                            Text("Screenshot:")
+                            KeyboardShortcuts.Recorder(for: .screenshot)
+
+                            LaunchAtLogin.Toggle("Launch at Login")
+                                .toggleStyle(.checkbox)
+                                .padding(.top, 12)
+
+                            Toggle("Show on Menu Bar", isOn: $showMenuBar)
+                                .toggleStyle(.checkbox)
+                                .padding(.top, 12)
+                        })
                     })
-                    
+
                     // Shortcuts
                     Collapsible(collapsed: true, label: "Shortcuts", content: {
-                        VStack (alignment: .leading) {
+                        VStack(alignment: .leading) {
                             Text("Choose which shortcuts appear in you chat menu bar")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                                 .padding(.bottom, 6)
-                            
-                            LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
+
+                            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
                                 Toggle("New Chat", isOn: $showNewChat)
                                     .toggleStyle(.checkbox)
-                                
+
                                 // Maybe move
                                 Toggle("Microphone", isOn: $showMicrophone)
                                     .toggleStyle(.checkbox)
-                                
+
                                 Toggle("Screenshot", isOn: $showScreenshot)
                                     .toggleStyle(.checkbox)
-                                
+
                                 Toggle("Sidekick", isOn: $showSidekick)
                                     .toggleStyle(.checkbox)
-                                
+
                                 Toggle("Chat History", isOn: $showHistory)
                                     .toggleStyle(.checkbox)
-                                
+
                                 Toggle("Memory", isOn: $showMemory)
                                     .toggleStyle(.checkbox)
-                                
+
                                 Toggle("Settings", isOn: $showSettings)
                                     .toggleStyle(.checkbox)
-                                
+
                                 Toggle("Switch Sides", isOn: $showSwitchSides)
                                     .toggleStyle(.checkbox)
                             })
-                            
+
                             Toggle("Show Shortcut Hints", isOn: $shortcutHints)
                                 .toggleStyle(.switch)
                                 .gridCellColumns(2)
                                 .padding(.top, 12)
                         }
                     })
-                    
+
                     // Beta features
                     Collapsible(collapsed: true, label: "Beta Features", content: {
-                        VStack (alignment: .leading) {
+                        VStack(alignment: .leading) {
                             Text("Turn on beta fatures")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                                 .padding(.bottom, 6)
-                            
-                            LazyVGrid (columns: [GridItem(), GridItem()], alignment: .leading, content: {
-                                
+
+                            LazyVGrid(columns: [GridItem(), GridItem()], alignment: .leading, content: {
                                 Toggle("Animate Buttons", isOn: $animateButtons)
                                     .toggleStyle(.checkbox)
-                                
+
                                 Toggle("All LLMs", isOn: $dynamicLLMLoad)
                                     .toggleStyle(.checkbox)
                                     .onChange(of: dynamicLLMLoad) {
@@ -230,27 +226,6 @@ struct SettingsView: View {
                             NSWorkspace.shared.open(url)
                         }
                     }
-
-                HStack(spacing: 0) {
-                    Text("Founded by ")
-                        .font(.headline)
-                    Text("Sulaiman Ghori")
-                        .font(.headline)
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/sulaimanghori") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                    Text(" and ")
-                        .font(.headline)
-                    Text("Tye Daniel")
-                        .font(.headline)
-                        .onTapGesture {
-                            if let url = URL(string: "https://x.com/TyeDan") {
-                                NSWorkspace.shared.open(url)
-                            }
-                        }
-                }
 
                 Text("© 2024 Invisibility, Inc. All rights reserved. Version \(bundleVersion)")
                     .font(.caption)
