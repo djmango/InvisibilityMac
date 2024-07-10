@@ -32,15 +32,20 @@ class VideoWriter {
     private let processingQueue = DispatchQueue(label: "videowriter.processing")
     private var isProcessing = false
 
-    private func getPresignedUrl() async throws -> String? {
-        let urlString = AppConfig.invisibility_api_base + "/storage/sidekick/presigned_url"
+    private func getPresignedUrl(timestamp: Int) async throws -> String? {
+        let urlString = AppConfig.invisibility_api_base + "/recordings/sidekick/fetch_save_url"
         guard let jwtToken = userManager.token else {
             logger.warning("No JWT token")
             return nil
         }
         
         return try await withCheckedThrowingContinuation { continuation in
-            AF.request(urlString, method: .get, headers: ["Authorization": "Bearer \(jwtToken)"])
+            let body: [String: Any] = [
+                "session_id": userManager.sessionId,
+                "start_timestamp": timestamp
+            ]
+            
+            AF.request(urlString, method: .post, parameters: body, encoding: JSONEncoding.default, headers: ["Authorization": "Bearer \(jwtToken)"])
                 .validate()
                 .responseString() { response in
                     switch response.result {
@@ -54,11 +59,11 @@ class VideoWriter {
         }
     }
     
-    private func uploadVideoToS3(fileUrl: URL) async -> Bool {
+    private func uploadVideoToS3(fileUrl: URL, timestamp: Int) async -> Bool {
         logger.info("Uploading: \(fileUrl)")
         
         do {
-            guard let presignedUrl = try await self.getPresignedUrl() else { return false }
+            guard let presignedUrl = try await self.getPresignedUrl(timestamp: timestamp) else { return false }
             guard fileManager.fileExists(atPath: fileUrl.path) else { return false }
             
             let headers: HTTPHeaders = [
@@ -131,7 +136,7 @@ class VideoWriter {
         }
         
         finishWritingVideo {
-            if await self.uploadVideoToS3(fileUrl: outputFileUrl) {
+            if await self.uploadVideoToS3(fileUrl: outputFileUrl, timestamp: timestamp) {
                 do {
                     try self.fileManager.removeItem(at: outputFileUrl)
                 } catch {
