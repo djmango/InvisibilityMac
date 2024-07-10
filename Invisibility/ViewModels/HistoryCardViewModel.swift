@@ -57,13 +57,10 @@ class HistoryCardViewModel: ObservableObject {
             let newName = await self.chatViewModel.autoRename(self.chat, body: self.lastMessageText)
             // Update the UI on the main thread
             DispatchQueue.main.async {
-                withAnimation(.interactiveSpring) {
-                    self.isRenaming = false
-                    self.editedName = newName
-                    self.chat.name = newName
-                    self.chatViewModel.renameChat(self.chat, name: self.editedName)
-                }
-               
+                self.isRenaming = false
+                self.editedName = newName
+                self.chat.name = newName
+                self.chatViewModel.renameChat(self.chat, name: self.editedName)
             }
         }
     }
