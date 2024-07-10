@@ -193,24 +193,12 @@ class ScreenRecorder: NSObject,
             isPickerActive = true
 
             // Set up the video writer to record the video
-            let frameSize: CGSize
-            switch captureType {
-            case .display:
-                guard let display = selectedDisplay else { fatalError("No display selected.") }
-                frameSize = CGSize(width: display.width * scaleFactor, height: display.height * scaleFactor)
-            case .window:
-                guard let window = selectedWindow else { fatalError("No window selected.") }
-                frameSize = CGSize(width: window.frame.width * 2, height: window.frame.height * 2)
-            }
-
-            videoWriterQueue.async {
-                self.videoWriter.setupVideoWriter(frameSize: frameSize)
-                self.videoWriter.startWritingVideo()
-            }
+            let frameSize = CGSize(width: config.width, height: config.height)
+            videoWriter.frameSize = frameSize
+            
+            var frameIndex: Int64 = 0
             
             // Start the stream and await new video frames.
-            var frameIndex: Int64 = 0
-
             for try await frame in self.captureEngine.startCapture(configuration: config, filter: filter) {
                 
                 self.capturePreview.updateFrame(frame)
@@ -222,8 +210,7 @@ class ScreenRecorder: NSObject,
                 videoWriterQueue.async {
                     if (frameIndex % 6 == 0) {
                         if let image = self.getCurrentFrameAsCGImage() {
-                            let currentFrameTime = CMTime(value: frameIndex / 6, timescale: 10)
-                            self.videoWriter.appendFrameToVideo(image, at: currentFrameTime)
+                            self.videoWriter.recordFrame(frame: image)
                         }
                     }
                 }
@@ -244,11 +231,13 @@ class ScreenRecorder: NSObject,
         defer { PostHogSDK.shared.capture("stop_recording") }
         guard isRunning else { return }
 
-        videoWriterQueue.async {
-            self.videoWriter.finishWritingVideo {
-                self.logger.info("Video recording finished")
-            }
-        }
+        videoWriter.frameSize = nil
+
+//        videoWriterQueue.async {
+//            self.videoWriter.finishWritingVideo {
+//                self.logger.info("Video recording finished")
+//            }
+//        }
 
         await captureEngine.stopCapture()
         withAnimation(AppConfig.snappy) {

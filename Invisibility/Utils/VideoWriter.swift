@@ -11,23 +11,26 @@ import Foundation
 import ScreenCaptureKit
 
 class VideoWriter {
-
+    private let userManager: UserManager = .shared
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "VideoWriter")
 
     let fileManager = FileManager.default
-    let outputFileUrl: URL
     
     // Tools for saving video recordings
     private var videoWriter: AVAssetWriter?
     private var videoWriterInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     
-    private let userManager: UserManager = .shared
-    
-    init() {
-       outputFileUrl = FileManager.default.temporaryDirectory.appendingPathComponent("captured_video.mp4")
-        logger.info("saving sidekick videos to \(outputFileUrl)")
+    var frameSize: CGSize?
+    private var recordedFrames: [(Int, [CGImage])] = []
+    private var clipsToUpload: [(Int, [CGImage])] = [] {
+        didSet {
+            processClips()
+        }
     }
+
+    private let processingQueue = DispatchQueue(label: "videowriter.processing")
+    private var isProcessing = false
 
     private func getPresignedUrl() async throws -> String? {
         let urlString = AppConfig.invisibility_api_base + "/storage/sidekick/presigned_url"
@@ -51,17 +54,19 @@ class VideoWriter {
         }
     }
     
-    private func uploadVideoToS3() async -> Bool {
+    private func uploadVideoToS3(fileUrl: URL) async -> Bool {
+        logger.info("Uploading: \(fileUrl)")
+        
         do {
             guard let presignedUrl = try await self.getPresignedUrl() else { return false }
-            guard fileManager.fileExists(atPath: outputFileUrl.path) else { return false }
+            guard fileManager.fileExists(atPath: fileUrl.path) else { return false }
             
             let headers: HTTPHeaders = [
                 "Content-Type": "video/mp4"
             ]
             
-            let success =  try await withCheckedThrowingContinuation { continuation in
-                AF.upload(outputFileUrl, to: presignedUrl, method: .put, headers: headers)
+            let success = try await withCheckedThrowingContinuation { continuation in
+                AF.upload(fileUrl, to: presignedUrl, method: .put, headers: headers)
                     .validate(statusCode: 200..<300)
                     .response { response in
                         switch response.result {
@@ -75,8 +80,6 @@ class VideoWriter {
                     }
             }
             
-            try fileManager.removeItem(at: outputFileUrl)
-            
             return success
         } catch {
             self.logger.error("Error fetching the presigned URL: \(error)")
@@ -84,9 +87,65 @@ class VideoWriter {
         }
     }
     
-    func setupVideoWriter(frameSize: CGSize) {
+    func recordFrame(frame: CGImage) {
+        if recordedFrames.isEmpty {
+            let timestamp = Int(Date().timeIntervalSince1970)
+            recordedFrames.append((timestamp, []))
+        }
+
+        let lastIndex = recordedFrames.endIndex - 1
+        recordedFrames[lastIndex].1.append(frame)
+
+        if recordedFrames.last?.1.count == 300 {
+            let clip = recordedFrames.removeLast()
+            clipsToUpload.append(clip)
+            
+            let timestamp = Int(Date().timeIntervalSince1970)
+            recordedFrames.append((timestamp, []))
+        }
+    }
+
+    private func processClips() {
+        processingQueue.async {
+            guard !self.isProcessing, !self.clipsToUpload.isEmpty else { return }
+            self.isProcessing = true
+            let clip = self.clipsToUpload.removeFirst()
+            Task {
+                await self.writeVideoClip(timestamp: clip.0, frames: clip.1)
+                self.isProcessing = false
+                self.processClips()
+            }
+        }
+    }
+    
+    func writeVideoClip(timestamp: Int, frames: [CGImage]) async {
+        logger.info("Writing new 30s clip")
+        let outputFileUrl: URL = FileManager.default.temporaryDirectory.appendingPathComponent("video-\(timestamp).mp4")
+
+        setupVideoWriter(fileUrl: outputFileUrl)
+        startWritingVideo()
+        
+        for (index, frame) in frames.enumerated() {
+            let currentFrameTime = CMTime(value: Int64(index), timescale: 10)
+            appendFrameToVideo(frame, at: currentFrameTime)
+        }
+        
+        finishWritingVideo {
+            if await self.uploadVideoToS3(fileUrl: outputFileUrl) {
+                do {
+                    try self.fileManager.removeItem(at: outputFileUrl)
+                } catch {
+                    self.logger.error("Error deleting local file: \(error)")
+                }
+            }
+        }
+    }
+    
+    private func setupVideoWriter(fileUrl: URL) {
+        guard let frameSize = frameSize else { return }
+        
         do {
-            videoWriter = try AVAssetWriter(outputURL: outputFileUrl, fileType: .mp4)
+            videoWriter = try AVAssetWriter(outputURL: fileUrl, fileType: .mp4)
             
             let videoSettings: [String: Any] = [
                 AVVideoCodecKey: AVVideoCodecType.hevc,
@@ -119,7 +178,7 @@ class VideoWriter {
         }
     }
 
-    func startWritingVideo() {
+    private func startWritingVideo() {
         guard videoWriter != nil else {
             logger.error("Video writer is nil")
             return
@@ -129,21 +188,20 @@ class VideoWriter {
         videoWriter?.startSession(atSourceTime: .zero)
     }
 
-    func finishWritingVideo(completion: @escaping () -> Void) {
+    private func finishWritingVideo(completion: @escaping () async -> Void) {
         videoWriterInput?.markAsFinished()
         videoWriter?.finishWriting {
-            completion()
             Task {
-                await self.uploadVideoToS3()
+                await completion()
+                
+                self.videoWriter = nil
+                self.videoWriterInput = nil
+                self.pixelBufferAdaptor = nil
             }
         }
-
-        videoWriter = nil
-        videoWriterInput = nil
-        pixelBufferAdaptor = nil
     }
 
-    func appendFrameToVideo(_ cgImage: CGImage, at time: CMTime) {
+    private func appendFrameToVideo(_ cgImage: CGImage, at time: CMTime) {
         guard let pixelBufferAdaptor = pixelBufferAdaptor,
             let pixelBufferPool = pixelBufferAdaptor.pixelBufferPool else {
             return
