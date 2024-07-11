@@ -18,16 +18,16 @@ struct MessageScrollView: View {
     let minimumOffset: CGFloat = 16 // Optional
     @State private var contentHeight: CGFloat = .zero
     @State private var outsideHeight: CGFloat = .zero
-    
+
     private var displayedMessages: [APIMessage] {
         viewModel.api_messages_in_chat.suffix(numMessagesDisplayed)
     }
-    
+
     var body: some View {
         GeometryReader { outsideProxy in
             ScrollViewReader { scrollProxy in
                 Spacer()
-                ZStack(alignment:.bottom) {
+                ZStack(alignment: .bottom) {
                     ScrollView {
                         contentView
                             .background(
@@ -49,7 +49,6 @@ struct MessageScrollView: View {
                                         showScrollToBottomButton = offsetDifference > 0
                                         self.previousViewOffset = $0
                                     }
-                                    
                                 }
                             }
                     }
@@ -59,7 +58,8 @@ struct MessageScrollView: View {
                     .frame(height: min(max(contentHeight, 100), outsideProxy.size.height))
                     .onChange(of: viewModel.isGenerating) {
                         if viewModel.isGenerating {
-                            scrollToBottom(proxy: scrollProxy) }
+                            scrollToBottom(proxy: scrollProxy)
+                        }
                     }
                     .onChange(of: viewModel.isRecording) {
                         if viewModel.isRecording { scrollToBottom(proxy: scrollProxy) }
@@ -77,7 +77,7 @@ struct MessageScrollView: View {
                             scrollToBottom(proxy: scrollProxy)
                         }
                     }
-                    
+
                     VStack {
                         Spacer()
                         MessageButtonItemView(label: nil, icon: "arrow.down", shortcut_hint: nil, action: {
@@ -92,7 +92,7 @@ struct MessageScrollView: View {
                 }
             }
             .onAppear {
-                defer {isFirstLoad = false}
+                defer { isFirstLoad = false }
                 outsideHeight = outsideProxy.size.height
                 isFirstLoad = true
             }
@@ -101,31 +101,31 @@ struct MessageScrollView: View {
             self.contentHeight = height
         }
     }
-    
+
     private var contentView: some View {
         VStack {
             HeaderView(numMessagesDisplayed: $numMessagesDisplayed)
-            
+
             VStack(spacing: 5) {
                 ForEach(displayedMessages) { message in
                     MessageListItemView(message: message)
                         .id(message.id)
                 }
             }
-            
+
             FreeTierCardView()
                 .visible(if: !viewModel.canSendMessages, removeCompletely: true)
                 .padding(.top, 10)
-            
+
             NewChatCardView()
                 .visible(if: displayedMessages.isEmpty && viewModel.canSendMessages && !viewModel.isShowingWhatsNew, removeCompletely: true)
-            
+
             CaptureView()
                 .visible(if: viewModel.isRecording, removeCompletely: true)
-            
+
             WhatsNewCardView()
                 .visible(if: viewModel.isShowingWhatsNew, removeCompletely: true)
-            
+
             Rectangle()
                 .hidden()
                 .frame(height: 1)
@@ -133,7 +133,7 @@ struct MessageScrollView: View {
         }
         .padding(.top, 10)
     }
-    
+
     private func scrollToBottom(proxy: ScrollViewProxy) {
         withAnimation(AppConfig.easeIn) {
             proxy.scrollTo("bottom", anchor: .bottom)

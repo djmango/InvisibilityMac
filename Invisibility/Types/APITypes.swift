@@ -206,7 +206,61 @@ struct APIMemory: Encodable, Decodable, Identifiable {
     let updated_at: Date
     let deleted_at: Date?
     let memory_prompt_id: UUID?
-    let group: String?
+    let grouping: GroupName?
+}
+
+enum GroupName: String, CaseIterable, Encodable, Decodable {
+    case projects = "Projects"
+    case learning = "Learning"
+    case interests = "Interests"
+    case work = "Work"
+    case tools = "Tools"
+    case skills = "Skills"
+    case personal = "Personal"
+    case communication = "Communication"
+    case health = "Health"
+    case relationships = "Relationships"
+    case finance = "Finance"
+    case goals = "Goals"
+    case entertainment = "Entertainment"
+    case travel = "Travel"
+    case habits = "Habits"
+    case achievements = "Achievements"
+    case preferences = "Preferences"
+    case schedule = "Schedule"
+    case home = "Home"
+    case shopping = "Shopping"
+    case education = "Education"
+    case hobbies = "Hobbies"
+    case food = "Food"
+
+    var sfSymbol: String {
+        switch self {
+        case .projects: "folder"
+        case .learning: "book"
+        case .interests: "star"
+        case .work: "briefcase"
+        case .tools: "hammer"
+        case .skills: "brain"
+        case .personal: "person"
+        case .communication: "message"
+        case .health: "heart"
+        case .relationships: "person.2"
+        case .finance: "dollarsign.circle"
+        case .goals: "target"
+        case .entertainment: "tv"
+        case .travel: "airplane"
+        case .habits: "repeat"
+        case .achievements: "trophy"
+        case .preferences: "slider.horizontal.3"
+        case .schedule: "calendar"
+        case .home: "house"
+        case .shopping: "cart"
+        case .education: "graduationcap"
+        case .hobbies: "paintpalette"
+        case .food: "fork.knife"
+        }
+    }
 }
 
 struct APISyncResponse: Codable {
