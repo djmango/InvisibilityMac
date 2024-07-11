@@ -12,7 +12,7 @@ struct MessageScrollView: View {
     @ObservedObject private var viewModel: MessageScrollViewModel = .shared
     @State private var numMessagesDisplayed = 10
     @State private var showScrollToBottomButton = false
-    @State var isFirstLoad: Bool = true // New state to track the first load
+    @State var isFirstLoad: Bool = true
     @State private var scrollViewHeight: CGFloat = .zero
     @State var previousViewOffset: CGFloat = .zero
     let minimumOffset: CGFloat = 16 // Optional
@@ -46,7 +46,7 @@ struct MessageScrollView: View {
                                 let offsetDifference: CGFloat = self.previousViewOffset - $0
                                 if abs(offsetDifference) > minimumOffset { // This condition is optional but the scroll direction is often too sensitive without a minimum offset.
                                     if !isFirstLoad {
-                                        showScrollToBottomButton = offsetDifference > 0
+                                        showScrollToBottomButton = $0 < contentHeight - outsideHeight - minimumOffset
                                         self.previousViewOffset = $0
                                     }
                                 }
@@ -92,9 +92,10 @@ struct MessageScrollView: View {
                 }
             }
             .onAppear {
-                defer { isFirstLoad = false }
                 outsideHeight = outsideProxy.size.height
-                isFirstLoad = true
+                DispatchQueue.main.async {
+                    isFirstLoad = false
+                }
             }
         }
         .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
