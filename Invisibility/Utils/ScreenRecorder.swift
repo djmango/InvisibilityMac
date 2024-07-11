@@ -231,7 +231,7 @@ class ScreenRecorder: NSObject,
         guard isRunning else { return }
 
         videoWriterQueue.async {
-            self.videoWriter.sendAllClips()
+            self.videoWriter.sendCurrentClip()
         }
         
         await captureEngine.stopCapture()

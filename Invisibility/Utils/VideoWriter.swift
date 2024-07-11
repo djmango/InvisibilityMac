@@ -22,8 +22,8 @@ class VideoWriter {
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     
     var frameSize: CGSize?
-    private var recordedFrames: [(Int, [CGImage])] = []
-    private var clipsToUpload: [(Int, [CGImage])] = [] {
+    private var currentClip: Clip?
+    private var clipsToUpload: [Clip] = [] {
         didSet {
             processClips()
         }
@@ -37,17 +37,17 @@ class VideoWriter {
             guard !self.isProcessing, !self.clipsToUpload.isEmpty else { return }
             self.isProcessing = true
             let clip = self.clipsToUpload.removeFirst()
-            guard !clip.1.isEmpty else { return }
+            guard !clip.frames.isEmpty else { return }
             
             Task {
-                await self.writeVideoClip(timestamp: clip.0, frames: clip.1)
+                await self.writeVideoClip(clip: clip)
                 self.isProcessing = false
                 self.processClips()
             }
         }
     }
 
-    private func getPresignedUrl(timestamp: Int) async throws -> String? {
+    private func getPresignedUrl(timestamp: Int64) async throws -> String? {
         let urlString = AppConfig.invisibility_api_base + "/recordings/sidekick/fetch_save_url"
         guard let jwtToken = userManager.token else {
             logger.warning("No JWT token")
@@ -74,7 +74,7 @@ class VideoWriter {
         }
     }
     
-    private func uploadVideoToS3(fileUrl: URL, timestamp: Int) async -> Bool {
+    private func uploadVideoToS3(fileUrl: URL, timestamp: Int64) async -> Bool {
         do {
             guard let presignedUrl = try await self.getPresignedUrl(timestamp: timestamp) else { return false }
             guard fileManager.fileExists(atPath: fileUrl.path) else { return false }
@@ -106,47 +106,41 @@ class VideoWriter {
     }
     
     func recordFrame(frame: CGImage) {
-        if recordedFrames.isEmpty {
+        if currentClip == nil {
             let timestamp = Int(Date().timeIntervalSince1970)
-            recordedFrames.append((timestamp, []))
+            currentClip = Clip(startTime: Int64(timestamp), frames: [])
         }
 
-        let lastIndex = recordedFrames.endIndex - 1
-        recordedFrames[lastIndex].1.append(frame)
+        currentClip!.frames.append(frame)
 
-        if recordedFrames.last?.1.count == 300 {
-            let clip = recordedFrames.removeLast()
-            clipsToUpload.append(clip)
+        if currentClip!.frames.count == 300 {
+            clipsToUpload.append(currentClip!)
             
             let timestamp = Int(Date().timeIntervalSince1970)
-            recordedFrames.append((timestamp, []))
+            self.currentClip = Clip(startTime: Int64(timestamp), frames: [])
         }
     }
     
-    func sendAllClips() {
-        guard !recordedFrames.isEmpty else { return }
+    func sendCurrentClip() {
+        guard let currentClip = currentClip else { return }
         
-        for clip in recordedFrames {
-            clipsToUpload.append(clip)
-        }
-        
-        recordedFrames.removeAll()
+        clipsToUpload.append(currentClip)
     }
     
-    func writeVideoClip(timestamp: Int, frames: [CGImage]) async {
+    func writeVideoClip(clip: Clip) async {
         logger.info("Writing new video clip")
-        let outputFileUrl: URL = FileManager.default.temporaryDirectory.appendingPathComponent("video-\(timestamp).mp4")
+        let outputFileUrl: URL = FileManager.default.temporaryDirectory.appendingPathComponent("video-\(clip.startTime).mp4")
 
         setupVideoWriter(fileUrl: outputFileUrl)
         startWritingVideo()
         
-        for (index, frame) in frames.enumerated() {
+        for (index, frame) in clip.frames.enumerated() {
             let currentFrameTime = CMTime(value: Int64(index), timescale: 10)
             appendFrameToVideo(frame, at: currentFrameTime)
         }
         
         finishWritingVideo {
-            if await self.uploadVideoToS3(fileUrl: outputFileUrl, timestamp: timestamp) {
+            if await self.uploadVideoToS3(fileUrl: outputFileUrl, timestamp: clip.startTime) {
                 do {
                     try self.fileManager.removeItem(at: outputFileUrl)
                 } catch {
@@ -237,4 +231,9 @@ class VideoWriter {
             pixelBufferAdaptor.append(buffer, withPresentationTime: time)
         }
     }
+}
+
+struct Clip {
+    var startTime: Int64
+    var frames: [CGImage]
 }
