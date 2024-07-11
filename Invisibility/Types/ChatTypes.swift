@@ -12,6 +12,10 @@ struct RenameRequest: Codable {
     let name: String
 }
 
+struct AutoRenameRequest: Codable {
+    let text: String
+}
+
 struct ChatDataItem: Identifiable, Equatable, Hashable {
     let id = UUID()
     let data: Data

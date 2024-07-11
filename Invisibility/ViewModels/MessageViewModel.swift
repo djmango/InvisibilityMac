@@ -349,4 +349,9 @@ final class MessageViewModel: ObservableObject {
     func lastMessageWithTextFor(chat: APIChat) -> APIMessage? {
         api_messages.filter { $0.chat_id == chat.id }.filter { $0.text.count > 0 }.last
     }
+    
+    func firstMessageWithTextFor(chat: APIChat) -> APIMessage? {
+        api_messages.filter { $0.chat_id == chat.id }.filter { $0.text.count > 0 }.first
+    }
+    
 }
