@@ -31,6 +31,21 @@ class VideoWriter {
 
     private let processingQueue = DispatchQueue(label: "videowriter.processing")
     private var isProcessing = false
+    
+    private func processClips() {
+        processingQueue.async {
+            guard !self.isProcessing, !self.clipsToUpload.isEmpty else { return }
+            self.isProcessing = true
+            let clip = self.clipsToUpload.removeFirst()
+            guard !clip.1.isEmpty else { return }
+            
+            Task {
+                await self.writeVideoClip(timestamp: clip.0, frames: clip.1)
+                self.isProcessing = false
+                self.processClips()
+            }
+        }
+    }
 
     private func getPresignedUrl(timestamp: Int) async throws -> String? {
         let urlString = AppConfig.invisibility_api_base + "/recordings/sidekick/fetch_save_url"
@@ -60,8 +75,6 @@ class VideoWriter {
     }
     
     private func uploadVideoToS3(fileUrl: URL, timestamp: Int) async -> Bool {
-        logger.info("Uploading: \(fileUrl)")
-        
         do {
             guard let presignedUrl = try await self.getPresignedUrl(timestamp: timestamp) else { return false }
             guard fileManager.fileExists(atPath: fileUrl.path) else { return false }
@@ -109,22 +122,19 @@ class VideoWriter {
             recordedFrames.append((timestamp, []))
         }
     }
-
-    private func processClips() {
-        processingQueue.async {
-            guard !self.isProcessing, !self.clipsToUpload.isEmpty else { return }
-            self.isProcessing = true
-            let clip = self.clipsToUpload.removeFirst()
-            Task {
-                await self.writeVideoClip(timestamp: clip.0, frames: clip.1)
-                self.isProcessing = false
-                self.processClips()
-            }
+    
+    func sendAllClips() {
+        guard !recordedFrames.isEmpty else { return }
+        
+        for clip in recordedFrames {
+            clipsToUpload.append(clip)
         }
+        
+        recordedFrames.removeAll()
     }
     
     func writeVideoClip(timestamp: Int, frames: [CGImage]) async {
-        logger.info("Writing new 30s clip")
+        logger.info("Writing new video clip")
         let outputFileUrl: URL = FileManager.default.temporaryDirectory.appendingPathComponent("video-\(timestamp).mp4")
 
         setupVideoWriter(fileUrl: outputFileUrl)
@@ -148,7 +158,7 @@ class VideoWriter {
     
     private func setupVideoWriter(fileUrl: URL) {
         guard let frameSize = frameSize else { return }
-        
+
         do {
             videoWriter = try AVAssetWriter(outputURL: fileUrl, fileType: .mp4)
             

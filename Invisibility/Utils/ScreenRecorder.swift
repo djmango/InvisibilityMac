@@ -200,7 +200,6 @@ class ScreenRecorder: NSObject,
             
             // Start the stream and await new video frames.
             for try await frame in self.captureEngine.startCapture(configuration: config, filter: filter) {
-                
                 self.capturePreview.updateFrame(frame)
                 if self.contentSize != frame.size {
                     // Update the content size if it changed.
@@ -231,14 +230,10 @@ class ScreenRecorder: NSObject,
         defer { PostHogSDK.shared.capture("stop_recording") }
         guard isRunning else { return }
 
-        videoWriter.frameSize = nil
-
-//        videoWriterQueue.async {
-//            self.videoWriter.finishWritingVideo {
-//                self.logger.info("Video recording finished")
-//            }
-//        }
-
+        videoWriterQueue.async {
+            self.videoWriter.sendAllClips()
+        }
+        
         await captureEngine.stopCapture()
         withAnimation(AppConfig.snappy) {
             isRunning = false
