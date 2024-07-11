@@ -14,7 +14,6 @@ class MemoryViewModel: ObservableObject {
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MemoryViewModel")
 
     @Published var memories: [APIMemory] = []
-    @Published var memory_groups: [APIMemoryGroup] = []
     @Published var isRefreshing: Bool = false
 
     private let mainWindowViewModel: MainWindowViewModel = .shared
@@ -25,12 +24,10 @@ class MemoryViewModel: ObservableObject {
     @AppStorage("token") private var token: String?
 
     init() {
-        Publishers.CombineLatest(messageViewModel.$api_memories, messageViewModel.$api_memory_groups)
-            .map { [weak self] memories, memory_groups in
+        messageViewModel.$api_memories
+            .sink { [weak self] memories in
                 self?.memories = memories
-                self?.memory_groups = memory_groups
             }
-            .sink { _ in }
             .store(in: &cancellables)
     }
 

@@ -11,6 +11,7 @@ import SwiftUI
 struct HistoryCardView: View {
     @StateObject private var viewModel: HistoryCardViewModel
     @State private var isHovering: Bool = false
+    @State private var isHoveringAutorename: Bool = false
 
     init(chat: APIChat) {
         _viewModel = StateObject(wrappedValue: HistoryCardViewModel(chat: chat))
@@ -70,8 +71,9 @@ struct HistoryCardView: View {
             viewModel.switchChat()
         }
     }
-    
+
     // MARK: - Information
+
     var editabletitle: some View {
         TextField("Enter new name", text: $viewModel.editedName)
             .onSubmit {
@@ -82,22 +84,22 @@ struct HistoryCardView: View {
             .fixedSize(horizontal: true, vertical: false)
             .animation(.bouncy, value: viewModel.editedName)
     }
-    
+
     var subContent: some View {
         Text(viewModel.lastMessageText)
             .font(.subheadline)
             .foregroundColor(.secondary)
             .lineLimit(2)
     }
-    
+
     var timeCreated: some View {
         Text(timeAgo(viewModel.lastMessageDate))
             .font(.subheadline)
             .foregroundColor(.secondary)
     }
-    
-    
+
     // MARK: - Buttons
+
     var confirmButton: some View {
         Button(action: viewModel.commitEdit) {
             Image(systemName: "checkmark")
@@ -108,7 +110,7 @@ struct HistoryCardView: View {
         }
         .buttonStyle(.plain)
     }
-    
+
     var cancelButton: some View {
         Button(action: viewModel.cancelEdit) {
             Image(systemName: "xmark")
@@ -119,17 +121,36 @@ struct HistoryCardView: View {
         }
         .buttonStyle(.plain)
     }
-    
+
     var autoRenameButton: some View {
         Button(action: viewModel.autoRename) {
-            Image(systemName: "pencil.circle.fill")
+            Image(systemName: "wand.and.rays")
                 .resizable()
-                .frame(width: 12, height: 12)
+                .padding(4)
                 .foregroundColor(.chatButtonForeground)
+                .background(
+                    Circle()
+                        .fill(Color.cardBackground)
+                        .shadow(radius: 2)
+                        .visible(if: isHoveringAutorename)
+                )
         }
+        .frame(width: 21, height: 21)
         .buttonStyle(.plain)
+        .whenHovered { hovering in
+            if hovering {
+                withAnimation(.easeIn(duration: 0.2)) {
+                    isHoveringAutorename = true
+                }
+            } else {
+                withAnimation(.easeOut(duration: 0.2)) {
+                    isHoveringAutorename = false
+                }
+            }
+        }
+        .scaleEffect(isHoveringAutorename ? 1.3 : 1)
     }
-    
+
     var deleteCardButton: some View {
         VStack {
             HStack {
