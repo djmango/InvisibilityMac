@@ -142,4 +142,56 @@ final class ChatViewModel: ObservableObject {
             logger.debug("Response Data: \(responseString)")
         }
     }
+    
+    @MainActor
+    func autoRename(_ chat: APIChat, body: String? = nil) async -> String {
+        var resultName = ""
+        let limit = 4000
+        let firstMessagePrefix = String((MessageViewModel.shared.firstMessageWithTextFor(chat: chat)?.text.prefix(limit)) ?? "")
+        let lastMessagePrefix = String(body?.suffix(limit) ?? "")
+        let bodyText = firstMessagePrefix + lastMessagePrefix
+        
+        guard let url = URL(string: AppConfig.invisibility_api_base + "/chats/\(chat.id)/autorename") else {
+            return resultName
+        }
+        guard let token else {
+            logger.warning("No token for patch")
+            return resultName
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let encoder = JSONEncoder()
+        let payload = AutoRenameRequest(text: bodyText)
+
+        // Try encoding the payload to JSON data, handling any encoding errors
+        do {
+            let data = try encoder.encode(payload)
+            request.httpBody = data
+        } catch {
+            logger.error("Failed to encode payload: \(error)")
+            return resultName
+        }
+
+        do {
+            let (responseData, response) = try await URLSession.shared.data(for: request)
+
+            if let httpResponse = response as? HTTPURLResponse {
+                logger.debug("HTTP Response Status Code: \(httpResponse.statusCode)")
+            }
+            
+            let decoder = iso8601Decoder()
+            let resultChat = try decoder.decode(APIChat.self, from: responseData)
+            resultName = resultChat.name
+            logger.debug("Response Data: \(resultName)")
+            
+        } catch {
+            logger.error("Request failed: \(error)")
+        }
+
+        return resultName
+    }
 }

@@ -25,10 +25,14 @@ struct HistoryCardView: View {
 
             VStack(alignment: .leading) {
                 HStack {
-                    Editabletitle
+                    editabletitle
+                    ProgressView()
+                        .scaleEffect(0.4)
+                        .visible(if: viewModel.isRenaming)
                     cancelButton
                     confirmButton
                     Spacer()
+                    autoRenameButton
                     timeCreated
                 }
 
@@ -68,13 +72,15 @@ struct HistoryCardView: View {
     }
     
     // MARK: - Information
-    var Editabletitle: some View {
+    var editabletitle: some View {
         TextField("Enter new name", text: $viewModel.editedName)
             .onSubmit {
                 viewModel.commitEdit()
             }
             .font(.title3)
             .textFieldStyle(.plain)
+            .fixedSize(horizontal: true, vertical: false)
+            .animation(.bouncy, value: viewModel.editedName)
     }
     
     var subContent: some View {
@@ -110,6 +116,16 @@ struct HistoryCardView: View {
                 .frame(width: 12, height: 12)
                 .foregroundColor(.chatButtonForeground)
                 .visible(if: viewModel.isEditing)
+        }
+        .buttonStyle(.plain)
+    }
+    
+    var autoRenameButton: some View {
+        Button(action: viewModel.autoRename) {
+            Image(systemName: "pencil.circle.fill")
+                .resizable()
+                .frame(width: 12, height: 12)
+                .foregroundColor(.chatButtonForeground)
         }
         .buttonStyle(.plain)
     }
