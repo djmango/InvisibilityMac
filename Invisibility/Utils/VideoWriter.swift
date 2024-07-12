@@ -21,6 +21,12 @@ class VideoWriter {
     private var videoWriterInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
     
+    // testing this config rn. next -> 3_000_000, what is storage growth?
+    // test recording when not keyed
+    let vid_duration = 30
+    let bitrate = 3_000_000
+    let fps = 30
+    
     var frameSize: CGSize?
     private var currentClip: Clip?
     private var clipsToUpload: [Clip] = [] {
@@ -46,6 +52,8 @@ class VideoWriter {
             }
         }
     }
+    
+    // testing this at 30fps, 1mbps bitrate.
 
     private func getPresignedUrl(timestamp: Int64) async throws -> String? {
         let urlString = AppConfig.invisibility_api_base + "/sidekick/fetch_save_url"
@@ -59,6 +67,8 @@ class VideoWriter {
                 "session_id": userManager.sessionId,
                 "start_timestamp": timestamp
             ]
+            
+            print("session id: \(userManager.sessionId)")
             
             AF.request(urlString, method: .post, parameters: body, encoding: JSONEncoding.default, headers: ["Authorization": "Bearer \(jwtToken)"])
                 .validate()
@@ -77,6 +87,7 @@ class VideoWriter {
     private func uploadVideoToS3(fileUrl: URL, timestamp: Int64) async -> Bool {
         do {
             guard let presignedUrl = try await self.getPresignedUrl(timestamp: timestamp) else { return false }
+            
             guard fileManager.fileExists(atPath: fileUrl.path) else { return false }
             
             let headers: HTTPHeaders = [
@@ -93,7 +104,13 @@ class VideoWriter {
                             continuation.resume(returning: true)
                         case .failure(let error):
                             self.logger.error("Upload failed with error: \(error.localizedDescription)")
-                            continuation.resume(returning: true)
+                            if let data = response.data, let str = String(data: data, encoding: .utf8) {
+                               self.logger.error("Response body: \(str)")
+                           }
+                           if let statusCode = response.response?.statusCode {
+                               self.logger.error("Status code: \(statusCode)")
+                           }
+                           continuation.resume(returning: false)
                         }
                     }
             }
@@ -113,7 +130,7 @@ class VideoWriter {
 
         currentClip!.frames.append(frame)
 
-        if currentClip!.frames.count == 300 {
+        if currentClip!.frames.count == vid_duration * fps {
             clipsToUpload.append(currentClip!)
             
             currentClip = nil
@@ -134,7 +151,7 @@ class VideoWriter {
         startWritingVideo()
         
         for (index, frame) in clip.frames.enumerated() {
-            let currentFrameTime = CMTime(value: Int64(index), timescale: 10)
+            let currentFrameTime = CMTime(value: Int64(index), timescale: CMTimeScale(fps))
             appendFrameToVideo(frame, at: currentFrameTime)
         }
         
@@ -160,7 +177,7 @@ class VideoWriter {
                 AVVideoWidthKey: frameSize.width,
                 AVVideoHeightKey: frameSize.height,
                 AVVideoCompressionPropertiesKey: [
-                    AVVideoAverageBitRateKey: 1_000_000
+                    AVVideoAverageBitRateKey: bitrate
                 ]
             ]
             
