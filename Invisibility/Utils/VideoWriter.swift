@@ -25,7 +25,7 @@ class VideoWriter {
     // test recording when not keyed
     let vid_duration = 30
     let bitrate = 3_000_000
-    let fps = 30
+    let fps = 10
     
     var frameSize: CGSize?
     private var currentClip: Clip?
@@ -156,13 +156,14 @@ class VideoWriter {
         }
         
         finishWritingVideo {
-            if await self.uploadVideoToS3(fileUrl: outputFileUrl, timestamp: clip.startTime) {
-                do {
-                    try self.fileManager.removeItem(at: outputFileUrl)
-                } catch {
-                    self.logger.error("Error deleting local file: \(error)")
-                }
+            let _ = await self.uploadVideoToS3(fileUrl: outputFileUrl, timestamp: clip.startTime)
+            
+            do {
+                try self.fileManager.removeItem(at: outputFileUrl)
+            } catch {
+                self.logger.error("Error deleting local file: \(error)")
             }
+            
         }
     }
     
@@ -254,7 +255,7 @@ class VideoWriter {
         let ciImage = CIImage(cgImage: cgImage)
         context.render(ciImage, to: buffer)
         
-        if videoWriterInput!.isReadyForMoreMediaData {
+        if videoWriterInput != nil, videoWriterInput!.isReadyForMoreMediaData {
             pixelBufferAdaptor.append(buffer, withPresentationTime: time)
         }
     }
