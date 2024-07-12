@@ -26,7 +26,7 @@ struct HistoryCardView: View {
 
             VStack(alignment: .leading) {
                 HStack {
-                    editabletitle
+                    editableTitle
                     ProgressView()
                         .scaleEffect(0.4)
                         .visible(if: viewModel.isRenaming)
@@ -74,15 +74,25 @@ struct HistoryCardView: View {
 
     // MARK: - Information
 
-    var editabletitle: some View {
-        TextField("Enter new name", text: $viewModel.editedName)
-            .onSubmit {
-                viewModel.commitEdit()
+    var editableTitle: some View {
+        TextField("Enter new name", text: Binding(
+            get: { viewModel.editedName },
+            set: { newValue in
+                if newValue.count <= viewModel.charsLimit {
+                    viewModel.editedName = newValue
+                } else {
+                    // Truncate to the character limit
+                    let trimmedValue = String(newValue.prefix(viewModel.charsLimit))
+                    viewModel.editedName = trimmedValue
+                }
             }
-            .font(.title3)
-            .textFieldStyle(.plain)
-            .fixedSize(horizontal: true, vertical: false)
-            .animation(.bouncy, value: viewModel.editedName)
+        ))
+        .onSubmit {
+            viewModel.commitEdit()
+        }
+        .font(.title3)
+        .textFieldStyle(.plain)
+        .animation(.bouncy, value: viewModel.editedName)
     }
 
     var subContent: some View {
