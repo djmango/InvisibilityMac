@@ -94,7 +94,7 @@ class WindowManager {
 
     public func toggleWindow() {
         guard let window else { return }
-        if window.isVisible == true {
+        if window.alphaValue == 1 {
             hideWindow()
         } else {
             showWindow()
@@ -122,7 +122,7 @@ class WindowManager {
             context.duration = animationDuration
             window.animator().alphaValue = 0
         }, completionHandler: {
-            window.orderOut(nil)
+            window.orderBack(nil)
             PostHogSDK.shared.capture("hide_window")
             completion?()
         })

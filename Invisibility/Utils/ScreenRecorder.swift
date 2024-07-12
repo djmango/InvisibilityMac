@@ -126,6 +126,9 @@ class ScreenRecorder: NSObject,
     // Combine subscribers.
     private var subscriptions = Set<AnyCancellable>()
 
+    private var videoWriter: VideoWriter = VideoWriter()
+    private let videoWriterQueue = DispatchQueue(label: "videowriter.queue")
+
     var canRecord: Bool {
         get async {
             do {
@@ -188,19 +191,36 @@ class ScreenRecorder: NSObject,
             }
             setPickerUpdate(false)
             isPickerActive = true
+
+            // Set up the video writer to record the video
+            let frameSize = CGSize(width: config.width, height: config.height)
+            videoWriter.frameSize = frameSize
+            
+            var frameIndex: Int64 = 0
+            
             // Start the stream and await new video frames.
-            for try await frame in captureEngine.startCapture(configuration: config, filter: filter) {
-                capturePreview.updateFrame(frame)
-                if contentSize != frame.size {
+            for try await frame in self.captureEngine.startCapture(configuration: config, filter: filter) {
+                self.capturePreview.updateFrame(frame)
+                if self.contentSize != frame.size {
                     // Update the content size if it changed.
-                    contentSize = frame.size
+                    self.contentSize = frame.size
                 }
+
+                videoWriterQueue.async {
+                    if (frameIndex % 6 == 0) {
+                        if let image = self.getCurrentFrameAsCGImage() {
+                            self.videoWriter.recordFrame(frame: image)
+                        }
+                    }
+                }
+                
+                frameIndex += 1
             }
         } catch {
-            logger.error("\(error.localizedDescription)")
+            self.logger.error("\(error.localizedDescription)")
             // Unable to start the stream. Set the running state to false.
             withAnimation(AppConfig.snappy) {
-                isRunning = false
+                self.isRunning = false
             }
         }
     }
@@ -209,6 +229,11 @@ class ScreenRecorder: NSObject,
     func stop() async {
         defer { PostHogSDK.shared.capture("stop_recording") }
         guard isRunning else { return }
+
+        videoWriterQueue.async {
+            self.videoWriter.sendCurrentClip()
+        }
+        
         await captureEngine.stopCapture()
         withAnimation(AppConfig.snappy) {
             isRunning = false

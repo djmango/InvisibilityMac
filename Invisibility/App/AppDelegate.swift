@@ -12,6 +12,7 @@ import RollbarNotifier
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
+    private let userManager: UserManager = .shared
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "AppDelegate")
 
     private var shouldResumeRecording = false
@@ -73,12 +74,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
 
         Task { @MainActor in
-            await UserManager.shared.setup()
-            let refresh_status = await UserManager.shared.refresh_jwt()
+            await userManager.setup()
+            let refresh_status = await userManager.refresh_jwt()
             if !refresh_status {
                 logger.warning("Failed to refresh JWT token")
             }
         }
+        
 
         WindowManager.shared.setupWindow()
 
@@ -106,18 +108,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if let token = components.queryItems?.first(where: { $0.name == "token" })?.value {
                     logger.debug("Received JWT Token: \(token)")
                     // Handle the authentication with the received token
-                    UserManager.shared.token = token
+                    userManager.token = token
                     Task {
-                        await UserManager.shared.setup()
+                        await userManager.setup()
                     }
                 } else if url == URL(string: "invisibility://paid") {
-                    UserManager.shared.isPaid = true
+                    userManager.isPaid = true
                 } else {
                     logger.error("No token found in URL")
                     logger.debug("URL: \(url)")
                     // Just run it anyway, good enough for now
                     Task {
-                        await UserManager.shared.setup()
+                        await userManager.setup()
                     }
                 }
             }
