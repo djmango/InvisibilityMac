@@ -48,7 +48,7 @@ class VideoWriter {
     }
 
     private func getPresignedUrl(timestamp: Int64) async throws -> String? {
-        let urlString = AppConfig.invisibility_api_base + "/recordings/sidekick/fetch_save_url"
+        let urlString = AppConfig.invisibility_api_base + "/sidekick/fetch_save_url"
         guard let jwtToken = userManager.token else {
             logger.warning("No JWT token")
             return nil
@@ -116,8 +116,7 @@ class VideoWriter {
         if currentClip!.frames.count == 300 {
             clipsToUpload.append(currentClip!)
             
-            let timestamp = Int(Date().timeIntervalSince1970)
-            self.currentClip = Clip(startTime: Int64(timestamp), frames: [])
+            currentClip = nil
         }
     }
     
@@ -166,7 +165,13 @@ class VideoWriter {
             ]
             
             videoWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
-            videoWriterInput?.expectsMediaDataInRealTime = true
+            
+            guard videoWriterInput != nil && videoWriter != nil else {
+                logger.error("Error initializing video writer")
+                return
+            }
+            
+            videoWriterInput!.expectsMediaDataInRealTime = true
             
             let sourcePixelBufferAttributes: [String: Any] = [
                 kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32ARGB),
@@ -183,7 +188,7 @@ class VideoWriter {
                 videoWriter!.add(videoWriterInput!)
             }
         } catch {
-            print("Error setting up video writer: \(error)")
+            logger.error("Error setting up video writer: \(error)")
         }
     }
 
@@ -193,8 +198,8 @@ class VideoWriter {
             return
         }
 
-        videoWriter?.startWriting()
-        videoWriter?.startSession(atSourceTime: .zero)
+        videoWriter!.startWriting()
+        videoWriter!.startSession(atSourceTime: .zero)
     }
 
     private func finishWritingVideo(completion: @escaping () async -> Void) {
@@ -211,6 +216,11 @@ class VideoWriter {
     }
 
     private func appendFrameToVideo(_ cgImage: CGImage, at time: CMTime) {
+        guard videoWriterInput != nil else {
+            logger.error("Video writer input is nil")
+            return
+        }
+        
         guard let pixelBufferAdaptor = pixelBufferAdaptor,
             let pixelBufferPool = pixelBufferAdaptor.pixelBufferPool else {
             return
