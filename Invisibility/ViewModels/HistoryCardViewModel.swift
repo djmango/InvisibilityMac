@@ -5,7 +5,7 @@ class HistoryCardViewModel: ObservableObject {
     @Published private(set) var chat: APIChat
     @Published private(set) var isEditing: Bool = false
     @Published private(set) var isRenaming: Bool = false
-    @Published private(set) var charsLimit: Int = 60
+    @Published private(set) var charsLimit: Int = 30
     @Published var editedName: String
 
     private var cancellables = Set<AnyCancellable>()
@@ -44,6 +44,7 @@ class HistoryCardViewModel: ObservableObject {
         isEditing = false
         NSApplication.shared.keyWindow?.makeFirstResponder(nil)
         if !editedName.isEmpty {
+            editedName = String(editedName.prefix(charsLimit))
             DispatchQueue.main.async { self.chatViewModel.renameChat(self.chat, name: self.editedName) }
             chat.name = editedName
         } else {

@@ -12,6 +12,7 @@ struct HistoryCardView: View {
     @StateObject private var viewModel: HistoryCardViewModel
     @State private var isHovering: Bool = false
     @State private var isHoveringAutorename: Bool = false
+    @FocusState private var isTextFieldFocused: Bool
 
     init(chat: APIChat) {
         _viewModel = StateObject(wrappedValue: HistoryCardViewModel(chat: chat))
@@ -75,24 +76,15 @@ struct HistoryCardView: View {
     // MARK: - Information
 
     var editableTitle: some View {
-        TextField("Enter new name", text: Binding(
-            get: { viewModel.editedName },
-            set: { newValue in
-                if newValue.count <= viewModel.charsLimit {
-                    viewModel.editedName = newValue
-                } else {
-                    // Truncate to the character limit
-                    let trimmedValue = String(newValue.prefix(viewModel.charsLimit))
-                    viewModel.editedName = trimmedValue
-                }
+        TextField("Enter new name", text: $viewModel.editedName)
+            .onSubmit {
+                viewModel.commitEdit()
             }
-        ))
-        .onSubmit {
-            viewModel.commitEdit()
-        }
-        .font(.title3)
-        .textFieldStyle(.plain)
-        .animation(.bouncy, value: viewModel.editedName)
+            .font(.title3)
+            .textFieldStyle(.plain)
+            .frame(maxWidth: 200)
+            .fixedSize(horizontal: true, vertical: false)
+            .animation(.bouncy, value: viewModel.editedName)
     }
 
     var subContent: some View {
