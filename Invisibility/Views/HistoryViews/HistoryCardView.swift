@@ -12,6 +12,7 @@ struct HistoryCardView: View {
     @StateObject private var viewModel: HistoryCardViewModel
     @State private var isHovering: Bool = false
     @State private var isHoveringAutorename: Bool = false
+    @FocusState private var isTextFieldFocused: Bool
 
     init(chat: APIChat) {
         _viewModel = StateObject(wrappedValue: HistoryCardViewModel(chat: chat))
@@ -26,7 +27,7 @@ struct HistoryCardView: View {
 
             VStack(alignment: .leading) {
                 HStack {
-                    editabletitle
+                    editableTitle
                     ProgressView()
                         .scaleEffect(0.4)
                         .visible(if: viewModel.isRenaming)
@@ -74,13 +75,14 @@ struct HistoryCardView: View {
 
     // MARK: - Information
 
-    var editabletitle: some View {
+    var editableTitle: some View {
         TextField("Enter new name", text: $viewModel.editedName)
             .onSubmit {
                 viewModel.commitEdit()
             }
             .font(.title3)
             .textFieldStyle(.plain)
+            .frame(maxWidth: 200)
             .fixedSize(horizontal: true, vertical: false)
             .animation(.bouncy, value: viewModel.editedName)
     }
