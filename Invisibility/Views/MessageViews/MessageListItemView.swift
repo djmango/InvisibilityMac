@@ -12,7 +12,6 @@ struct MessageListItemView: View {
                     isHovered = hovering
                 }
             }
-
             .background(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color(nsColor: .separatorColor))
@@ -25,9 +24,10 @@ struct MessageListItemView: View {
                     message: message,
                     isHovered: $isHovered
                 )
+                
             )
             .padding(.horizontal, 10)
             .frame(maxWidth: .infinity)
-            .padding(.bottom, 3)
+            .padding(.bottom, 13)
     }
 }
