@@ -20,35 +20,29 @@ class VideoWriter {
     private var videoWriter: AVAssetWriter?
     private var videoWriterInput: AVAssetWriterInput?
     private var pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor?
+    private var pixelBufferPool: CVPixelBufferPool?
+
+    // testing this config rn. next -> 3_000_000, what is storage growth?
+    // test recording when not keyed
+    let vid_duration = 30
+    let bitrate = 3_000_000
+    let fps = 30
     
     var frameSize: CGSize?
-    private var currentClip: Clip?
-    private var clipsToUpload: [Clip] = [] {
-        didSet {
-            processClips()
-        }
-    }
-
-    private let processingQueue = DispatchQueue(label: "videowriter.processing")
-    private var isProcessing = false
     
-    private func processClips() {
-        processingQueue.async {
-            guard !self.isProcessing, !self.clipsToUpload.isEmpty else { return }
-            self.isProcessing = true
-            let clip = self.clipsToUpload.removeFirst()
-            guard !clip.frames.isEmpty else { return }
-            
-            Task {
-                await self.writeVideoClip(clip: clip)
-                self.isProcessing = false
-                self.processClips()
-            }
-        }
+    var currentClipStartTime: Int64?
+    var currentClipFrameCount: Int64 = 0
+    
+    // testing this at 30fps, 1mbps bitrate.
+    
+    private func getClipFileUrl(timestamp: Int64?) -> URL? {
+        guard let timestamp = timestamp ?? currentClipStartTime else { return nil }
+
+        return FileManager.default.temporaryDirectory.appendingPathComponent("video-\(timestamp).mp4")
     }
 
     private func getPresignedUrl(timestamp: Int64) async throws -> String? {
-        let urlString = AppConfig.invisibility_api_base + "/recordings/sidekick/fetch_save_url"
+        let urlString = AppConfig.invisibility_api_base + "/sidekick/fetch_save_url"
         guard let jwtToken = userManager.token else {
             logger.warning("No JWT token")
             return nil
@@ -59,6 +53,8 @@ class VideoWriter {
                 "session_id": userManager.sessionId,
                 "start_timestamp": timestamp
             ]
+            
+            print("session id: \(userManager.sessionId)")
             
             AF.request(urlString, method: .post, parameters: body, encoding: JSONEncoding.default, headers: ["Authorization": "Bearer \(jwtToken)"])
                 .validate()
@@ -74,11 +70,14 @@ class VideoWriter {
         }
     }
     
-    private func uploadVideoToS3(fileUrl: URL, timestamp: Int64) async -> Bool {
+    private func uploadVideoToS3(timestamp: Int64) async -> Bool {
         do {
             guard let presignedUrl = try await self.getPresignedUrl(timestamp: timestamp) else { return false }
+            guard let fileUrl = getClipFileUrl(timestamp: timestamp) else { return false }
             guard fileManager.fileExists(atPath: fileUrl.path) else { return false }
             
+            self.logger.info("Uploading file: \(fileUrl)")
+
             let headers: HTTPHeaders = [
                 "Content-Type": "video/mp4"
             ]
@@ -93,7 +92,13 @@ class VideoWriter {
                             continuation.resume(returning: true)
                         case .failure(let error):
                             self.logger.error("Upload failed with error: \(error.localizedDescription)")
-                            continuation.resume(returning: true)
+                            if let data = response.data, let str = String(data: data, encoding: .utf8) {
+                               self.logger.error("Response body: \(str)")
+                           }
+                           if let statusCode = response.response?.statusCode {
+                               self.logger.error("Status code: \(statusCode)")
+                           }
+                           continuation.resume(returning: false)
                         }
                     }
             }
@@ -106,53 +111,61 @@ class VideoWriter {
     }
     
     func recordFrame(frame: CGImage) {
-        if currentClip == nil {
-            let timestamp = Int(Date().timeIntervalSince1970)
-            currentClip = Clip(startTime: Int64(timestamp), frames: [])
-        }
-
-        currentClip!.frames.append(frame)
-
-        if currentClip!.frames.count == 300 {
-            clipsToUpload.append(currentClip!)
+        if currentClipStartTime == nil {
+            currentClipStartTime = Int64(Date().timeIntervalSince1970)
+            currentClipFrameCount = 0
             
-            let timestamp = Int(Date().timeIntervalSince1970)
-            self.currentClip = Clip(startTime: Int64(timestamp), frames: [])
+            setupVideoWriter()
+            startWritingVideo()
         }
-    }
-    
-    func sendCurrentClip() {
-        guard let currentClip = currentClip else { return }
-        
-        clipsToUpload.append(currentClip)
-    }
-    
-    func writeVideoClip(clip: Clip) async {
-        logger.info("Writing new video clip")
-        let outputFileUrl: URL = FileManager.default.temporaryDirectory.appendingPathComponent("video-\(clip.startTime).mp4")
 
-        setupVideoWriter(fileUrl: outputFileUrl)
-        startWritingVideo()
+        // Append frame to video
+        let currentFrameTime = CMTime(value: currentClipFrameCount, timescale: CMTimeScale(fps))
+        appendFrameToVideo(frame, at: currentFrameTime)
+        currentClipFrameCount += 1
         
-        for (index, frame) in clip.frames.enumerated() {
-            let currentFrameTime = CMTime(value: Int64(index), timescale: 10)
-            appendFrameToVideo(frame, at: currentFrameTime)
-        }
-        
-        finishWritingVideo {
-            if await self.uploadVideoToS3(fileUrl: outputFileUrl, timestamp: clip.startTime) {
+        if currentClipFrameCount == vid_duration * fps {
+            let clipTimestamp = currentClipStartTime!
+
+            finishWritingVideo {
+                let _ = await self.uploadVideoToS3(timestamp: clipTimestamp)
+                guard let fileUrl = self.getClipFileUrl(timestamp: clipTimestamp) else { return }
+
                 do {
-                    try self.fileManager.removeItem(at: outputFileUrl)
+                    try self.fileManager.removeItem(at: fileUrl)
                 } catch {
                     self.logger.error("Error deleting local file: \(error)")
                 }
             }
+            
+            videoWriter = nil
+            videoWriterInput = nil
+            pixelBufferAdaptor = nil
+            currentClipStartTime = nil
         }
     }
     
-    private func setupVideoWriter(fileUrl: URL) {
-        guard let frameSize = frameSize else { return }
+    func sendCurrentClip() {
+        let clipTimestamp = currentClipStartTime!
 
+        finishWritingVideo {
+            let _ = await self.uploadVideoToS3(timestamp: clipTimestamp)
+            guard let fileUrl = self.getClipFileUrl(timestamp: clipTimestamp) else { return }
+
+            do {
+                try self.fileManager.removeItem(at: fileUrl)
+            } catch {
+                self.logger.error("Error deleting local file: \(error)")
+            }
+        }
+        
+        currentClipStartTime = nil
+    }
+
+    private func setupVideoWriter() {
+        guard let frameSize = frameSize else { return }
+        guard let fileUrl = getClipFileUrl(timestamp: nil) else { return }
+        
         do {
             videoWriter = try AVAssetWriter(outputURL: fileUrl, fileType: .mp4)
             
@@ -161,12 +174,18 @@ class VideoWriter {
                 AVVideoWidthKey: frameSize.width,
                 AVVideoHeightKey: frameSize.height,
                 AVVideoCompressionPropertiesKey: [
-                    AVVideoAverageBitRateKey: 1_000_000
+                    AVVideoAverageBitRateKey: bitrate
                 ]
             ]
             
             videoWriterInput = AVAssetWriterInput(mediaType: .video, outputSettings: videoSettings)
-            videoWriterInput?.expectsMediaDataInRealTime = true
+            
+            guard videoWriterInput != nil && videoWriter != nil else {
+                logger.error("Error initializing video writer")
+                return
+            }
+            
+            videoWriterInput!.expectsMediaDataInRealTime = true
             
             let sourcePixelBufferAttributes: [String: Any] = [
                 kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32ARGB),
@@ -182,8 +201,10 @@ class VideoWriter {
             if videoWriter!.canAdd(videoWriterInput!) {
                 videoWriter!.add(videoWriterInput!)
             }
+
+            CVPixelBufferPoolCreate(nil, nil, sourcePixelBufferAttributes as CFDictionary, &pixelBufferPool)
         } catch {
-            print("Error setting up video writer: \(error)")
+            logger.error("Error setting up video writer: \(error)")
         }
     }
 
@@ -193,8 +214,8 @@ class VideoWriter {
             return
         }
 
-        videoWriter?.startWriting()
-        videoWriter?.startSession(atSourceTime: .zero)
+        videoWriter!.startWriting()
+        videoWriter!.startSession(atSourceTime: .zero)
     }
 
     private func finishWritingVideo(completion: @escaping () async -> Void) {
@@ -202,17 +223,18 @@ class VideoWriter {
         videoWriter?.finishWriting {
             Task {
                 await completion()
-                
-                self.videoWriter = nil
-                self.videoWriterInput = nil
-                self.pixelBufferAdaptor = nil
             }
         }
     }
 
     private func appendFrameToVideo(_ cgImage: CGImage, at time: CMTime) {
+        guard videoWriterInput != nil else {
+            logger.error("Video writer input is nil")
+            return
+        }
+        
         guard let pixelBufferAdaptor = pixelBufferAdaptor,
-            let pixelBufferPool = pixelBufferAdaptor.pixelBufferPool else {
+            let pixelBufferPool = pixelBufferPool else {
             return
         }
         
@@ -227,7 +249,7 @@ class VideoWriter {
         let ciImage = CIImage(cgImage: cgImage)
         context.render(ciImage, to: buffer)
         
-        if videoWriterInput!.isReadyForMoreMediaData {
+        if videoWriterInput != nil, videoWriterInput!.isReadyForMoreMediaData {
             pixelBufferAdaptor.append(buffer, withPresentationTime: time)
         }
     }
