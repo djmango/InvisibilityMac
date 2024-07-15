@@ -16,7 +16,9 @@ struct MessageActionButtonsView: View {
     @StateObject private var viewModel: MessageActionButtonViewModel
     
     @State private var isCopied: Bool = false
+    @State private var buttonSize: CGFloat = 14
     @Binding private var isHovered: Bool
+    @State private var isUpvoted: Bool?
     
     @AppStorage("shortcutHints") private var shortcutHints = true
     
@@ -47,6 +49,7 @@ struct MessageActionButtonsView: View {
         self.message = message
         self._isHovered = isHovered
         self._viewModel = StateObject(wrappedValue: MessageActionButtonViewModel(message: message))
+        self._isUpvoted = State(initialValue: message.upvoted)
     }
     
     var body: some View {
@@ -85,7 +88,7 @@ struct MessageActionButtonsView: View {
             label: "Retry",
             icon: "arrow.clockwise",
             iconColor: Color.white,
-            size: 14
+            size: buttonSize
         ) {
             viewModel.regenerate()
         }
@@ -96,7 +99,7 @@ struct MessageActionButtonsView: View {
             label: message.role == .assistant ? "Copy" : nil,
             icon: isCopied ? "checkmark" : "square.on.square",
             iconColor: Color.white,
-            size: 14
+            size: buttonSize
         ) {
             copyAction()
         }
@@ -106,22 +109,24 @@ struct MessageActionButtonsView: View {
     var upvoteButton: some View {
         MessageActionButtonItemView(
             label: nil,
-            icon: "hand.thumbsup",
+            icon: isUpvoted == true ? "hand.thumbsup.fill" : "hand.thumbsup",
             iconColor: Color.white,
-            size: 14
+            size: buttonSize
         ) {
-            print("Upvote pressed")
+            isUpvoted = true
+            message.upvoted = true
         }
     }
     
     var downvoteButton: some View {
         MessageActionButtonItemView(
             label: nil,
-            icon: "hand.thumbsdown",
+            icon: isUpvoted == false ? "hand.thumbsdown.fill" : "hand.thumbsdown",
             iconColor: Color.white,
-            size: 14
+            size: buttonSize
         ) {
-            print("Downvote pressed")
+            isUpvoted = false
+            message.upvoted = false
         }
     }
     
