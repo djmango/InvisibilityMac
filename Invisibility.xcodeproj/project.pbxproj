@@ -103,6 +103,7 @@
 		7758D5782C2F7EAB0013CCED /* Hover.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7758D5772C2F7EAB0013CCED /* Hover.swift */; };
 		77FE29862C254AAF007D923C /* Buttons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77FE29852C254AAF007D923C /* Buttons.swift */; };
 		829F67172C3DD54F0071702D /* subsciptionActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 829F67162C3DD54F0071702D /* subsciptionActionButtonView.swift */; };
+		82DC7EC82C41F97600080F7B /* MessageActionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DC7EC72C41F97600080F7B /* MessageActionButtonView.swift */; };
 		84544C03F40FD34E26F88D72 /* MessageScrollHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A94109FA33EDC8B61558970 /* MessageScrollHeaderView.swift */; };
 		C15A8C2EDB35F055B83324A3 /* MessageActionButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F56D59CFACC23B3F4A1583B /* MessageActionButtonViewModel.swift */; };
 		C793DBDE17714E9942C18089 /* HistoryCardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F9CCC3953052C640C77031 /* HistoryCardViewModel.swift */; };
@@ -196,6 +197,7 @@
 		7758D5772C2F7EAB0013CCED /* Hover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hover.swift; sourceTree = "<group>"; };
 		77FE29852C254AAF007D923C /* Buttons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Buttons.swift; sourceTree = "<group>"; };
 		829F67162C3DD54F0071702D /* subsciptionActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = subsciptionActionButtonView.swift; sourceTree = "<group>"; };
+		82DC7EC72C41F97600080F7B /* MessageActionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageActionButtonView.swift; sourceTree = "<group>"; };
 		9F56D59CFACC23B3F4A1583B /* MessageActionButtonViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MessageActionButtonViewModel.swift; sourceTree = "<group>"; };
 		A9721674ABFEFC5AF471D38D /* SettingsViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		B96977A082A12FF90493A184 /* MessageScrollHeaderViewModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MessageScrollHeaderViewModel.swift; sourceTree = "<group>"; };
@@ -408,6 +410,7 @@
 				4D2428DA2BCF42FE00BE444C /* MessagePDFsView.swift */,
 				4A94109FA33EDC8B61558970 /* MessageScrollHeaderView.swift */,
 				0ED1F41C999A908BFD71A76A /* MessageActionButtonsView.swift */,
+				82DC7EC72C41F97600080F7B /* MessageActionButtonView.swift */,
 			);
 			path = MessageViews;
 			sourceTree = "<group>";
@@ -676,6 +679,7 @@
 				C793DBDE17714E9942C18089 /* HistoryCardViewModel.swift in Sources */,
 				361B8F1430C4598F5FADDA2F /* ChatButtonsViewModel.swift in Sources */,
 				84544C03F40FD34E26F88D72 /* MessageScrollHeaderView.swift in Sources */,
+				82DC7EC82C41F97600080F7B /* MessageActionButtonView.swift in Sources */,
 				644F9A6DD98AABA0C1576B62 /* MessageScrollHeaderViewModel.swift in Sources */,
 				23B5E98A8D39EDF64A9403F4 /* MessageContentViewModel.swift in Sources */,
 				4D12BB9D2C2F738D00EF8970 /* MemoryView.swift in Sources */,
