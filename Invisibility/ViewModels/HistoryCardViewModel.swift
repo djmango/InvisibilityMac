@@ -5,7 +5,6 @@ class HistoryCardViewModel: ObservableObject {
     @Published private(set) var chat: APIChat
     @Published private(set) var isEditing: Bool = false
     @Published private(set) var isRenaming: Bool = false
-    @Published private(set) var charsLimit: Int = 30
     @Published var editedName: String
 
     private var cancellables = Set<AnyCancellable>()
@@ -41,33 +40,32 @@ class HistoryCardViewModel: ObservableObject {
     }
 
     func commitEdit() {
-        isEditing = false
         NSApplication.shared.keyWindow?.makeFirstResponder(nil)
         if !editedName.isEmpty {
-            editedName = String(editedName.prefix(charsLimit))
             DispatchQueue.main.async { self.chatViewModel.renameChat(self.chat, name: self.editedName) }
             chat.name = editedName
+            isEditing = false
         } else {
             editedName = chat.name
         }
     }
-    
+
     func autoRename() {
         Task {
             // Call the autoRename async method and await its result
             self.isRenaming = true
             let newName = await self.chatViewModel.autoRename(self.chat, body: self.lastMessageText)
             // Update the UI on the main thread
-            let truncatedName = String(newName.prefix(charsLimit))
             DispatchQueue.main.async {
                 self.isRenaming = false
-                self.editedName = truncatedName
-                self.chat.name = truncatedName
-                self.chatViewModel.renameChat(self.chat, name: self.editedName)
+                self.chat.name = newName
+                self.editedName = newName
+                self.isEditing = false
             }
         }
     }
 
+    @MainActor
     func cancelEdit() {
         isEditing = false
         editedName = chat.name

@@ -12,7 +12,7 @@ import SwiftUI
 struct VisualEffectBlur: NSViewRepresentable {
     var material: NSVisualEffectView.Material
     var blendingMode: NSVisualEffectView.BlendingMode = .behindWindow
-    var cornerRadius: CGFloat
+    var cornerRadius: CGFloat = 0
 
     func makeNSView(context _: Context) -> NSVisualEffectView {
         let view = NSVisualEffectView()

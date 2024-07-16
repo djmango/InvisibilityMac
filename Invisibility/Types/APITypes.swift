@@ -203,7 +203,7 @@ struct APIFile: Codable, Equatable {
     }
 }
 
-struct APIMemory: Encodable, Decodable, Identifiable {
+struct APIMemory: Encodable, Decodable, Identifiable, Equatable {
     let id: UUID
     let user_id: String
     var content: String
@@ -212,9 +212,14 @@ struct APIMemory: Encodable, Decodable, Identifiable {
     let deleted_at: Date?
     let memory_prompt_id: UUID?
     let grouping: GroupName?
+
+    static func == (lhs: APIMemory, rhs: APIMemory) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
 enum GroupName: String, CaseIterable, Encodable, Decodable {
+    case generic = "Generic"
     case projects = "Projects"
     case learning = "Learning"
     case interests = "Interests"
@@ -241,6 +246,7 @@ enum GroupName: String, CaseIterable, Encodable, Decodable {
 
     var sfSymbol: String {
         switch self {
+        case .generic: "questionmark.circle"
         case .projects: "folder"
         case .learning: "book"
         case .interests: "star"
@@ -306,4 +312,9 @@ struct UserInvite: Decodable {
         case code
         case createdAt = "created_at"
     }
+}
+
+struct UpdateMemoryRequest: Codable {
+    var content: String
+    var grouping: String?
 }

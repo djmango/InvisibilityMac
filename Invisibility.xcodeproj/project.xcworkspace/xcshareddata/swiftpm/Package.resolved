@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/rollbar/rollbar-apple",
       "state" : {
-        "revision" : "2dce6849ca1ecb2154578eed87c48709edd502ff",
-        "version" : "3.3.0"
+        "revision" : "456e0cdb06805e5317f295891ac034f201fe50c4",
+        "version" : "3.3.1"
       }
     },
     {
