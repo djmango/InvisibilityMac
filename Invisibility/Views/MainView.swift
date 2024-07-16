@@ -43,7 +43,7 @@ struct MainView: View {
                             .opacity(isShowingHistory ? 1 : 0)
 
                         MemoryView()
-                            .offset(x: 0, y: isShowingMemory ? 0 : -1000)
+                            .offset(x: isShowingMemory ? 0 : sideSwitched ? 1000 : -1000, y: 0)
                             .opacity(isShowingMemory ? 1 : 0)
 
                         SettingsView()
