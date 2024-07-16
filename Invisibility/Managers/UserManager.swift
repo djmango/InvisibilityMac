@@ -20,6 +20,8 @@ struct RefreshTokenResponse: Decodable {
 final class UserManager: ObservableObject {
     static let shared = UserManager()
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "UserManager")
+    
+    public let sessionId: String
 
     @Published public var user: User?
     @Published public var isPaid: Bool = false
@@ -64,6 +66,8 @@ final class UserManager: ObservableObject {
     }
 
     private init() {
+        self.sessionId = UUID().uuidString
+        logger.debug("Using session id: \(sessionId)")
         resetMessagesIfNeeded()
     }
 
