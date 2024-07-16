@@ -58,15 +58,7 @@ struct MessageActionButtonsView: View {
             
             HStack {
                 Spacer()
-                HStack {
-                    regenerateButton
-                        .visible(if: message.role == .assistant, removeCompletely: true)
-                    copyButton
-                    upvoteButton
-                        .visible(if: message.role == .assistant, removeCompletely: true)
-                    downvoteButton
-                        .visible(if: message.role == .assistant, removeCompletely: true)
-                }
+                buttonsRow
                 .background(
                     RoundedRectangle(cornerRadius: 16)
                         .stroke(Color(nsColor: .separatorColor))
@@ -75,12 +67,23 @@ struct MessageActionButtonsView: View {
                     VisualEffectBlur(material: .sidebar, blendingMode: .behindWindow, cornerRadius: 16)
                 )
             }
-            
         }
         .visible(if: isHovered)
         .padding(9)
         .padding(.bottom,-19)
         .padding(.trailing,-8)
+    }
+    
+    var buttonsRow: some View {
+        HStack {
+            regenerateButton
+                .visible(if: message.role == .assistant, removeCompletely: true)
+            copyButton
+            upvoteButton
+                .visible(if: message.role == .assistant, removeCompletely: true)
+            downvoteButton
+                .visible(if: message.role == .assistant, removeCompletely: true)
+        }
     }
     
     var regenerateButton: some View {
