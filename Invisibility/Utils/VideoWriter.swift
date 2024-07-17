@@ -76,8 +76,6 @@ class VideoWriter {
             guard let fileUrl = getClipFileUrl(timestamp: timestamp) else { return false }
             guard fileManager.fileExists(atPath: fileUrl.path) else { return false }
             
-            self.logger.info("Uploading file: \(fileUrl)")
-
             let headers: HTTPHeaders = [
                 "Content-Type": "video/mp4"
             ]
@@ -124,7 +122,7 @@ class VideoWriter {
         appendFrameToVideo(frame, at: currentFrameTime)
         currentClipFrameCount += 1
         
-        if currentClipFrameCount == vid_duration * fps {
+        if currentClipFrameCount % Int64(vid_duration * fps) == 0 {
             let clipTimestamp = currentClipStartTime!
 
             finishWritingVideo {

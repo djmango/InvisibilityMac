@@ -207,7 +207,7 @@ class ScreenRecorder: NSObject,
                 }
 
                 videoWriterQueue.async {
-                    if (frameIndex % Int64(60/self.videoWriter.fps) == 0) {
+                    if (frameIndex % Int64(60 / self.videoWriter.fps) == 0) {
                         if let image = self.getCurrentFrameAsCGImage() {
                             self.videoWriter.recordFrame(frame: image)
                         }
