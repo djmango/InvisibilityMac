@@ -6,6 +6,7 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import PostHog
 import Pow
 import SwiftUI
 
@@ -57,16 +58,19 @@ struct MessageActionButtonItemView: View {
             .contentShape(RoundedRectangle(cornerRadius: 100))
         }
         .whenHovered { hovering in
-            withAnimation(AppConfig.snappy) {
+            withAnimation(AppConfig.easeInOut) {
                 isHovering = hovering
             }
         }
+        .scaleEffect(isHovering ? 1.05 : 1.0)
+        // .shadow(radius: isHovering ? 1 : 0)
         .buttonStyle(.plain)
         .animation(AppConfig.snappy, value: label)
         .animation(.easeInOut(duration: 0.2), value: isPressed)
     }
 
     func actionWrapped() {
+        defer { PostHogSDK.shared.capture("pressed_\(label ?? icon)") }
         isPressed = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             isPressed = false
@@ -74,4 +78,3 @@ struct MessageActionButtonItemView: View {
         action()
     }
 }
-

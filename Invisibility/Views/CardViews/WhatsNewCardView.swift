@@ -17,10 +17,20 @@ struct WhatsNewCardView: View {
                 Text("What's New in Invisibility")
                     .font(.title)
                     .fontWeight(.bold)
-        
-               newFeaturesList
+
+                newFeaturesList
                     .padding(.top, 32)
-                
+
+                Spacer()
+
+                // Join discord button
+                Button(action: {
+                    NSWorkspace.shared.open(URL(string: "https://discord.i.inc")!)
+                }) {
+                    Text("Join Discord")
+                }
+                .buttonStyle(.link)
+                .padding(.top, 60)
 
                 Button(action: {
                     MessageScrollViewModel.shared.hideWhatsNew()
@@ -39,7 +49,6 @@ struct WhatsNewCardView: View {
                 }
                 .buttonStyle(.plain)
                 .shadow(radius: 2)
-                .padding(.top, 80)
                 .onHover { hovering in
                     isHovering = hovering
                     if hovering {
@@ -49,7 +58,7 @@ struct WhatsNewCardView: View {
                     }
                 }
             }
-            .frame(minHeight: nil, maxHeight: nil)
+            // .frame(minHeight: nil, maxHeight: nil)
             .padding(.vertical, 32)
             .padding(.horizontal, 24)
             .background(
@@ -62,17 +71,17 @@ struct WhatsNewCardView: View {
             .padding(.horizontal, 10)
         }
     }
-    
+
     var newFeaturesList: some View {
-        VStack (alignment: .center, spacing: 16) {
+        VStack(alignment: .center, spacing: 16) {
             LazyVGrid(columns: [GridItem(.fixed(32), alignment: .center), GridItem(.flexible(minimum: 100, maximum: 400))], alignment: .leading, spacing: 20) {
-                
                 ForEach(AppConfig.whats_new_features, id: \.self) { feature in
                     Image(systemName: feature.iconName)
                         .foregroundColor(feature.iconColor)
                         .font(.system(size: 32))
-                    
-                    VStack (alignment: .leading) {
+                        .shadow(radius: 1)
+
+                    VStack(alignment: .leading) {
                         Text(feature.title)
                             .font(.system(size: 14))
                             .fontWeight(.bold)
