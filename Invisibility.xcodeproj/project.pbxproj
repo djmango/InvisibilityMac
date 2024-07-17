@@ -94,6 +94,7 @@
 		4DF46B362BBE1A2700846217 /* MarkdownWebView in Frameworks */ = {isa = PBXBuildFile; productRef = 4DF46B352BBE1A2700846217 /* MarkdownWebView */; };
 		4DF9E3FF2B843B8C00A7C023 /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */; };
 		5A0054932C37269600A8490E /* VoiceRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0054922C37269600A8490E /* VoiceRecorder.swift */; };
+		5A0A38DF2C4822E9004806E9 /* MouseEventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0A38DE2C4822E9004806E9 /* MouseEventManager.swift */; };
 		5AA8059F82659778F21737C5 /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1ACA954F73F48E958AD26 /* HistoryViewModel.swift */; };
 		5AADEAA52C3C478900F4D23E /* VideoWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AADEAA42C3C478900F4D23E /* VideoWriter.swift */; };
 		5ADB74A52C35CF30004F5A78 /* WhatsNewCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADB74A42C35CF30004F5A78 /* WhatsNewCardView.swift */; };
@@ -188,6 +189,7 @@
 		4DF2D9002BA689220093CA3E /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		4DF9E3FE2B843B8C00A7C023 /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 		5A0054922C37269600A8490E /* VoiceRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRecorder.swift; sourceTree = "<group>"; };
+		5A0A38DE2C4822E9004806E9 /* MouseEventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MouseEventManager.swift; sourceTree = "<group>"; };
 		5AADEAA42C3C478900F4D23E /* VideoWriter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoWriter.swift; sourceTree = "<group>"; };
 		5ADB74A42C35CF30004F5A78 /* WhatsNewCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNewCardView.swift; sourceTree = "<group>"; };
 		5ADB74A82C36DAFA004F5A78 /* WhatsNewFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsNewFeature.swift; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 				4D885C7B2B96E53E009A1F48 /* UserManager.swift */,
 				4D93542A2B99A81400C34A63 /* OnboardingManager.swift */,
 				4D9ADB812C07E1EF00A1EFC7 /* InvisibilityFileManager.swift */,
+				5A0A38DE2C4822E9004806E9 /* MouseEventManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -627,6 +630,7 @@
 				4DE4ACDF2C257CC3002D8156 /* LLMTypes.swift in Sources */,
 				4D9ADB822C07E1EF00A1EFC7 /* InvisibilityFileManager.swift in Sources */,
 				4D3A15532C13D1AC00272B84 /* Date.swift in Sources */,
+				5A0A38DF2C4822E9004806E9 /* MouseEventManager.swift in Sources */,
 				4DB061BE2BF4A028007CF7DD /* QRView.swift in Sources */,
 				4DF2D9012BA689220093CA3E /* AppConfig.swift in Sources */,
 				4D2428D92BCF39CA00BE444C /* ChatPDFView.swift in Sources */,
