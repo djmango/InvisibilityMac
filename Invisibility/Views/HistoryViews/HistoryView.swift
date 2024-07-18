@@ -11,7 +11,7 @@ import SwiftUI
 
 struct HistoryView: View {
     @StateObject private var viewModel: HistoryViewModel = HistoryViewModel()
-
+    @State private var searchText: String = ""
     var body: some View {
         ScrollView {
             Spacer()

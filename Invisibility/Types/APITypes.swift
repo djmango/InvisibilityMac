@@ -52,7 +52,7 @@ enum APIRole: String, Codable {
     }
 }
 
-class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
+class APIMessage: ObservableObject, Codable, Identifiable, Equatable, FuzzySearchable {
     let id: UUID
     let chat_id: UUID
     let user_id: String
@@ -71,6 +71,10 @@ class APIMessage: ObservableObject, Codable, Identifiable, Equatable {
     /// Conforms to `CustomStringConvertible` for debugging output.
     var description: String {
         "\(role): \(text)"
+    }
+    
+    var searchableString: String {
+            return text
     }
 
     // Initializer for convenience
