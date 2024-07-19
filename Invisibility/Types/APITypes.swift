@@ -244,6 +244,9 @@ enum GroupName: String, CaseIterable, Encodable, Decodable {
     case hobbies = "Hobbies"
     case food = "Food"
     case language = "Language"
+    case tasks = "Tasks"
+    case events = "Events"
+    case services = "Services"
 
     var sfSymbol: String {
         switch self {
@@ -272,6 +275,9 @@ enum GroupName: String, CaseIterable, Encodable, Decodable {
         case .hobbies: "paintpalette"
         case .food: "fork.knife"
         case .language: "character.book.closed.fill"
+        case .tasks: "checkmark.circle"
+        case .events: "calendar"
+        case .services: "gearshape"
         }
     }
 }
