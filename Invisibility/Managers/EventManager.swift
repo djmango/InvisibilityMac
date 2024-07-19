@@ -18,7 +18,7 @@ enum MouseAction: String, Codable {
     case button4 = "button4"
     case button5 = "button5"
 }
-  
+
 struct ScrollAction: Codable {
     let x: Int
     let y: Int
