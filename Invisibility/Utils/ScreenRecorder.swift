@@ -126,7 +126,7 @@ class ScreenRecorder: NSObject,
     // Combine subscribers.
     private var subscriptions = Set<AnyCancellable>()
 
-    private var videoWriter: VideoWriter = VideoWriter()
+    private var videoWriter: VideoWriter = .shared
     private let videoWriterQueue = DispatchQueue(label: "videowriter.queue")
 
     var canRecord: Bool {

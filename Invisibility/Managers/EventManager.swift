@@ -34,6 +34,7 @@ enum EventType {
 class EventManager {
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MouseEventManager")
     private let userManager: UserManager = .shared
+    private let videoWriter: VideoWriter = .shared
 
     static let shared = EventManager()
 
@@ -48,6 +49,7 @@ class EventManager {
     
     private func recordEvent(eventType: EventType, timestamp: Int64) async {
         let urlString = AppConfig.invisibility_api_base + "/devents/create"
+        guard let clipId = videoWriter.getCurrentClipId() else { return }
         guard let jwtToken = userManager.token else {
             logger.warning("No JWT token")
             return
@@ -56,6 +58,7 @@ class EventManager {
         do {
             let devent = try await withCheckedThrowingContinuation { continuation in
                 var body: [String: Any] = [
+                    "recording_id": clipId,
                     "session_id": userManager.sessionId,
                     "event_timestamp": timestamp,
                     "mouse_x": Int32(mouseX),
