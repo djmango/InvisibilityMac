@@ -13,7 +13,6 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     private let userManager: UserManager = .shared
-    private let mouseEventManager: MouseEventManager = .shared
     
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "AppDelegate")
 
@@ -97,8 +96,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             WindowManager.shared.showWindow()
         }
-        
-        mouseEventManager.startTrackingMouseEvents()
     }
 
     func application(_: NSApplication, open urls: [URL]) {

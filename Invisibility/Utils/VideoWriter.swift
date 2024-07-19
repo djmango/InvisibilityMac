@@ -63,7 +63,7 @@ class VideoWriter {
                     case let .success(presignedUrl):
                         continuation.resume(returning: presignedUrl)
                     case let .failure(error):
-                        self.logger.error("Error fetching user: \(error)")
+                        self.logger.error("Error fetching presigned url: \(error)")
                         continuation.resume(throwing: error)
                     }
                 }
