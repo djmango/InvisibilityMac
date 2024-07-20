@@ -13,6 +13,7 @@ import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     private let userManager: UserManager = .shared
+    
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "AppDelegate")
 
     private var shouldResumeRecording = false
