@@ -6,6 +6,7 @@
 //  Copyright © 2024 Invisibility Inc. All rights reserved.
 //
 
+import PostHog
 import SwiftUI
 import ViewCondition
 
@@ -21,6 +22,9 @@ struct MessageActionButtonsView: View {
     @State private var isUpvoted: Bool?
 
     @AppStorage("shortcutHints") private var shortcutHints = true
+    @AppStorage("token") private var token: String?
+
+    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "MessageActionButtonsView")
 
     private var isAssistant: Bool {
         message.role == .assistant
@@ -118,6 +122,27 @@ struct MessageActionButtonsView: View {
         ) {
             isUpvoted = true
             message.upvoted = true
+
+            defer { PostHogSDK.shared.capture("upvote_message") }
+
+            // PUT /messages/message_id/upvote
+            Task {
+                guard let url = URL(string: AppConfig.invisibility_api_base + "/messages/\(message.id)/upvote") else {
+                    return
+                }
+                guard let token else {
+                    logger.warning("No token for upvote")
+                    return
+                }
+
+                var request = URLRequest(url: url)
+                request.httpMethod = "PUT"
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+                let (data, _) = try await URLSession.shared.data(for: request)
+
+                logger.debug(String(data: data, encoding: .utf8) ?? "No data")
+            }
         }
     }
 
@@ -130,6 +155,27 @@ struct MessageActionButtonsView: View {
         ) {
             isUpvoted = false
             message.upvoted = false
+
+            defer { PostHogSDK.shared.capture("downvote_message") }
+
+            // PUT /messages/message_id/upvote
+            Task {
+                guard let url = URL(string: AppConfig.invisibility_api_base + "/messages/\(message.id)/downvote") else {
+                    return
+                }
+                guard let token else {
+                    logger.warning("No token for upvote")
+                    return
+                }
+
+                var request = URLRequest(url: url)
+                request.httpMethod = "PUT"
+                request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+
+                let (data, _) = try await URLSession.shared.data(for: request)
+
+                logger.debug(String(data: data, encoding: .utf8) ?? "No data")
+            }
         }
     }
 
