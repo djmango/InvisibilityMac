@@ -25,9 +25,12 @@ class LLMModelRepository: ObservableObject {
 
     static let hardcodedModels = [
         LLMModel(text: "claude-3-5-sonnet-20240620", vision: "claude-3-5-sonnet-20240620", human_name: "Claude-3.5 Sonnet"),
+        LLMModel(text: "fireworks_ai/llama-v3p1-405b-instruct", vision: nil, human_name: "Llama-3.1 405B"),
+        LLMModel(text: "fireworks_ai/llama-v3p1-70b-instruct", vision: nil, human_name: "Llama-3.1 70B"),
+        LLMModel(text: "fireworks_ai/llama-v3p1-8b-instruct", vision: nil, human_name: "Llama-3.1 8B"),
         LLMModel(text: "gpt-4o", vision: "gpt-4o", human_name: "GPT-4o"),
-        LLMModel(text: "bedrock/anthropic.claude-3-opus-20240229-v1:0", vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0", human_name: "Claude-3 Opus"),
         LLMModel(text: "groq/llama3-70b-8192", vision: nil, human_name: "Llama-3 70B"),
+        LLMModel(text: "bedrock/anthropic.claude-3-opus-20240229-v1:0", vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0", human_name: "Claude-3 Opus"),
         LLMModel(text: "openrouter/google/gemini-pro-1.5", vision: "openrouter/google/gemini-pro-1.5", human_name: "Gemini Pro 1.5"),
         LLMModel(text: "openrouter/perplexity/llama-3-sonar-large-32k-online", vision: nil, human_name: "Perplexity"),
     ]
@@ -79,11 +82,11 @@ class LLMModelRepository: ObservableObject {
             models[index] = model
         }
     }
-    
+
     func model_id_2_name(_ model_id: String?) -> String {
-       guard let id = model_id else { return "Invisibility" }
-       return models.first { $0.text == id || $0.human_name == id }?.human_name ?? "Invisibility"
-   }
+        guard let id = model_id else { return "Invisibility" }
+        return models.first { $0.text == id || $0.human_name == id }?.human_name ?? "Invisibility"
+    }
 }
 
 final class LLMManager {
