@@ -184,7 +184,7 @@ class ScreenRecorder: NSObject,
 
         do {
             // Start tracking events
-            EventManager.shared.startTrackingMouseEvents()
+            DeventManager.shared.startTrackingDevents()
 
             let config = streamConfiguration
             let filter = contentFilter
@@ -221,7 +221,7 @@ class ScreenRecorder: NSObject,
             }
         } catch {
             self.logger.error("\(error.localizedDescription)")
-            EventManager.shared.stopTrackingMouseEvents()
+            DeventManager.shared.stopTrackingDevents()
 
             // Unable to start the stream. Set the running state to false.
             withAnimation(AppConfig.snappy) {
@@ -239,7 +239,7 @@ class ScreenRecorder: NSObject,
             self.videoWriter.sendCurrentClip()
         }
         
-        EventManager.shared.stopTrackingMouseEvents()
+        DeventManager.shared.stopTrackingDevents()
         await captureEngine.stopCapture()
         withAnimation(AppConfig.snappy) {
             isRunning = false

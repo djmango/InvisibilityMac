@@ -33,16 +33,14 @@ class VideoWriter {
     var frameSize: CGSize?
     
     private var currentClip: Clip?
-    
-    // testing this at 30fps, 1mbps bitrate.
-    
-    private func getClipFileUrl(timestamp: Int64?) -> URL? {
+        
+    private func getClipFileUrl(timestamp: Double?) -> URL? {
         guard let timestamp = timestamp ?? currentClip?.startTime else { return nil }
 
         return FileManager.default.temporaryDirectory.appendingPathComponent("video-\(timestamp).mp4")
     }
 
-    private func getPresignedUrl(clipId: String, timestamp: Int64) async throws -> String? {
+    private func getPresignedUrl(clipId: String, timestamp: Double, duration: Int64) async throws -> String? {
         let urlString = AppConfig.invisibility_api_base + "/sidekick/fetch_save_url"
         guard let jwtToken = userManager.token else {
             logger.warning("No JWT token")
@@ -53,11 +51,13 @@ class VideoWriter {
             let body: [String: Any] = [
                 "recording_id": clipId,
                 "session_id": userManager.sessionId,
-                "start_timestamp": timestamp
+                "start_timestamp": [
+                    "seconds": Int64(timestamp),
+                    "nanos": Int32(timestamp.truncatingRemainder(dividingBy: 1) * 1_000_000_000),
+                ],
+                "duration_ms": duration
             ]
-            
-            print("session id: \(userManager.sessionId)")
-            
+                        
             AF.request(urlString, method: .post, parameters: body, encoding: JSONEncoding.default, headers: ["Authorization": "Bearer \(jwtToken)"])
                 .validate()
                 .responseString() { response in
@@ -72,9 +72,9 @@ class VideoWriter {
         }
     }
     
-    private func uploadVideoToS3(clipId: String, timestamp: Int64) async -> Bool {
+    private func uploadVideoToS3(clipId: String, timestamp: Double, duration: Int64) async -> Bool {
         do {
-            guard let presignedUrl = try await self.getPresignedUrl(clipId: clipId, timestamp: timestamp) else { return false }
+            guard let presignedUrl = try await self.getPresignedUrl(clipId: clipId, timestamp: timestamp, duration: duration) else { return false }
             guard let fileUrl = getClipFileUrl(timestamp: timestamp) else { return false }
             guard fileManager.fileExists(atPath: fileUrl.path) else { return false }
             
@@ -116,7 +116,7 @@ class VideoWriter {
     
     func recordFrame(frame: CGImage) {
         if currentClip == nil {
-            currentClip = Clip(id: UUID().uuidString, startTime: Int64(Date().timeIntervalSince1970), frameCount: 0)
+            currentClip = Clip(id: UUID().uuidString, startTime: Date().timeIntervalSince1970, frameCount: 0)
             
             setupVideoWriter()
             startWritingVideo()
@@ -130,9 +130,11 @@ class VideoWriter {
         if currentClip!.frameCount % Int64(vid_duration * fps) == 0 {
             let clipTimestamp = currentClip!.startTime
             let clipId = self.currentClip!.id
+            let frameCount = self.currentClip!.frameCount
             
             finishWritingVideo {
-                let _ = await self.uploadVideoToS3(clipId: clipId, timestamp: clipTimestamp)
+                let durationMs = Int64((frameCount * 1000) / Int64(self.fps))
+                let _ = await self.uploadVideoToS3(clipId: clipId, timestamp: clipTimestamp, duration: durationMs)
                 guard let fileUrl = self.getClipFileUrl(timestamp: clipTimestamp) else { return }
 
                 do {
@@ -153,7 +155,8 @@ class VideoWriter {
         guard let clip = currentClip else { return }
 
         finishWritingVideo {
-            let _ = await self.uploadVideoToS3(clipId: clip.id, timestamp: clip.startTime)
+            let durationMs = Int64((clip.frameCount * 1000) / Int64(self.fps))
+            let _ = await self.uploadVideoToS3(clipId: clip.id, timestamp: clip.startTime, duration: durationMs)
             guard let fileUrl = self.getClipFileUrl(timestamp: clip.startTime) else { return }
 
             do {
@@ -261,6 +264,6 @@ class VideoWriter {
 
 struct Clip {
     let id: String
-    let startTime: Int64
+    let startTime: Double
     var frameCount: Int64
 }
