@@ -70,7 +70,7 @@
       "location" : "https://github.com/djmango/OpenAI.git",
       "state" : {
         "branch" : "master",
-        "revision" : "6ad166a6b0695f3ac8e99df9ff0627a7c4c3faf6"
+        "revision" : "9954bfa6d8389745fffd5605db28d3c34d518ee0"
       }
     },
     {
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PostHog/posthog-ios.git",
       "state" : {
-        "revision" : "08b53e64abd503ca3e5f0eebd6b89a32fbe33850",
-        "version" : "3.6.1"
+        "revision" : "6377be7d8423df126966ddf83d62c34458a8625b",
+        "version" : "3.6.2"
       }
     },
     {

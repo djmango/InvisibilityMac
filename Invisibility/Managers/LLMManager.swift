@@ -117,10 +117,14 @@ final class LLMManager {
     }
 
     func setup() {
+        let host = AppConfig.invisibility_api_base.replacingOccurrences(of: "https://", with: "").replacingOccurrences(of: "http://", with: "")
+        let scheme = if AppConfig.invisibility_api_base.hasPrefix("https") { "https" } else { "http" }
         let configuration = OpenAI.Configuration(
             token: token ?? "",
-            host: AppConfig.invisibility_api_base + "/oai",
-            timeoutInterval: timeoutInterval
+            host: host,
+            scheme: scheme,
+            timeoutInterval: timeoutInterval,
+            prefix: "/oai"
         )
         ai = OpenAI(configuration: configuration)
     }
@@ -155,7 +159,7 @@ final class LLMManager {
                 processOutput(content, assistantMessage)
             }
             if !receivedData {
-                logger.error("No data received from chat")
+                logger.error("No data received from model")
                 PostHogSDK.shared.capture("chat_error", properties: ["error": "No data received from chat", "model": model.human_name])
                 ToastViewModel.shared.showToast(title: "No data received from model. Please try again.")
                 DispatchQueue.main.async {
@@ -163,9 +167,9 @@ final class LLMManager {
                 }
             }
         } catch {
-            logger.error("Error in chat: \(error)")
+            logger.error("Error when chatting: \(error)")
             PostHogSDK.shared.capture("chat_error", properties: ["error": error.localizedDescription, "model": model.human_name])
-            ToastViewModel.shared.showToast(title: "Chat Error: \(error.localizedDescription)")
+            ToastViewModel.shared.showToast(title: "Error when chatting: \(error.localizedDescription)")
             DispatchQueue.main.async {
                 MessageViewModel.shared.isGenerating = false
             }

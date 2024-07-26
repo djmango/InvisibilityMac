@@ -83,6 +83,7 @@ struct MessageScrollView: View {
                         MessageButtonItemView(label: nil, icon: "arrow.down", shortcut_hint: nil, action: {
                             withAnimation(AppConfig.easeIn) {
                                 scrollProxy.scrollTo("bottom", anchor: .bottom)
+                                showScrollToBottomButton = false
                             }
                         })
                     }
