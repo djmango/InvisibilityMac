@@ -42,10 +42,7 @@ class DeventManager {
                 var body: [String: Any] = [
                     "recording_id": clipId,
                     "session_id": userManager.sessionId,
-                    "event_timestamp": [
-                        "seconds": Int64(timestamp),
-                        "nanos": Int32(timestamp.truncatingRemainder(dividingBy: 1) * 1_000_000_000),
-                    ],
+                    "event_timestamp_nanos": Int64(timestamp * 1_000_000_000),
                     "mouse_x": Int32(mouseX),
                     "mouse_y": Int32(mouseY),
                 ]

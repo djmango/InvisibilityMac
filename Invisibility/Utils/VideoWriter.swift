@@ -51,10 +51,7 @@ class VideoWriter {
             let body: [String: Any] = [
                 "recording_id": clipId,
                 "session_id": userManager.sessionId,
-                "start_timestamp": [
-                    "seconds": Int64(timestamp),
-                    "nanos": Int32(timestamp.truncatingRemainder(dividingBy: 1) * 1_000_000_000),
-                ],
+                "start_timestamp_nanos": Int64(timestamp * 1_000_000_000),
                 "duration_ms": duration
             ]
                         
