@@ -82,7 +82,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         
-
         WindowManager.shared.setupWindow()
 
         if !onboardingViewed {
