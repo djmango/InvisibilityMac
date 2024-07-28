@@ -81,10 +81,7 @@ struct MessageScrollView: View {
                     VStack {
                         Spacer()
                         MessageButtonItemView(label: nil, icon: "arrow.down", shortcut_hint: nil, action: {
-                            withAnimation(AppConfig.easeIn) {
-                                scrollProxy.scrollTo("bottom", anchor: .bottom)
-                                showScrollToBottomButton = false
-                            }
+                            scrollToBottom(proxy: scrollProxy)
                         })
                     }
                     .padding(.bottom, 20)
@@ -137,6 +134,7 @@ struct MessageScrollView: View {
     }
 
     private func scrollToBottom(proxy: ScrollViewProxy) {
+        showScrollToBottomButton = false
         withAnimation(AppConfig.easeIn) {
             proxy.scrollTo("bottom", anchor: .bottom)
         }
