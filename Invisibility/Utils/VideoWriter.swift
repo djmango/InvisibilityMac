@@ -86,6 +86,7 @@ class VideoWriter {
                         switch response.result {
                         case .success:
                             self.logger.info("File uploaded successfully")
+                            print(clipId, presignedUrl)
                             continuation.resume(returning: true)
                         case .failure(let error):
                             self.logger.error("Upload failed with error: \(error.localizedDescription)")

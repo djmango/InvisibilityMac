@@ -94,16 +94,27 @@ class DeventManager {
         guard monitor == nil else { return }
 
         let initialMouseLocation = NSEvent.mouseLocation
+        let scalingFactor = NSScreen.main?.backingScaleFactor ?? 1
         self.mouseX = initialMouseLocation.x
         self.mouseY = initialMouseLocation.y
-        logger.info("Initial mouse position: (\(self.mouseX), \(self.mouseY))")
         
+        if let screen = NSScreen.main {
+            // Scale the mouse coordinates
+            let scaleFactor = screen.backingScaleFactor
+            self.mouseX *= scaleFactor
+            self.mouseY *= scaleFactor
+        }
+        
+        logger.info("Initial mouse position: (\(self.mouseX), \(self.mouseY))")
+
         self.monitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDown, .rightMouseDown, .scrollWheel, .leftMouseDragged, .rightMouseDragged, .keyDown]) { event in
             switch event.type {
             case .mouseMoved:
-                let mouseLocation = event.locationInWindow
-                self.mouseX = mouseLocation.x
-                self.mouseY = mouseLocation.y
+                let mouseLocation = NSEvent.mouseLocation
+
+                self.mouseX = mouseLocation.x * scalingFactor
+                self.mouseY = mouseLocation.y * scalingFactor
+                
                 break
                 
             case .leftMouseDown:
@@ -119,15 +130,15 @@ class DeventManager {
                 break
             
             case .leftMouseDragged:
-                let mouseLocation = event.locationInWindow
-                self.mouseX = mouseLocation.x
-                self.mouseY = mouseLocation.y
+                let mouseLocation = NSEvent.mouseLocation
+                self.mouseX = mouseLocation.x * scalingFactor
+                self.mouseY = mouseLocation.y * scalingFactor
                 break
 
             case .rightMouseDragged:
-                let mouseLocation = event.locationInWindow
-                self.mouseX = mouseLocation.x
-                self.mouseY = mouseLocation.y
+                let mouseLocation = NSEvent.mouseLocation
+                self.mouseX = mouseLocation.x * scalingFactor
+                self.mouseY = mouseLocation.y * scalingFactor
                 break
                 
             case .keyDown:
