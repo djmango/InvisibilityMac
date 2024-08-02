@@ -15,7 +15,6 @@ struct FreeTierCardView: View {
     @State private var isCopied = false
     @State private var whoIsHovering: String?
     @State private var shareButtonView: NSView?
-    @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
 
     var friendsInvitedText: String {
         if userManager.inviteCount == 0 {
@@ -30,10 +29,6 @@ struct FreeTierCardView: View {
             VStack {
                 Text("Daily Limit Reached")
                     .font(.system(size: 24, weight: .bold))
-
-                Text("\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today")
-                    .font(.body)
-                    .foregroundColor(.gray)
             }
 
             Spacer()
@@ -142,7 +137,7 @@ struct FreeTierCardView: View {
         .frame(maxWidth: .infinity)
         .padding(.bottom, 3)
     }
-    
+
     var freeTrialButton: some View {
         Button(action: {
             UserManager.shared.pay()
@@ -162,8 +157,9 @@ struct FreeTierCardView: View {
         .buttonStyle(.plain)
         .shadow(radius: 2)
     }
-    
+
     // MARK: - Helper Functions
+
     func onTap() {
         withAnimation(.easeInOut(duration: 0.5)) {
             isRefreshAnimating = true

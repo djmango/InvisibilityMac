@@ -20,7 +20,7 @@ struct RefreshTokenResponse: Decodable {
 final class UserManager: ObservableObject {
     static let shared = UserManager()
     private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "UserManager")
-    
+
     public let sessionId: String
 
     @Published public var user: User?
@@ -72,7 +72,8 @@ final class UserManager: ObservableObject {
     }
 
     private func updateCanSendMessages() {
-        canSendMessages = isPaid || numMessagesLeft > 0
+        // canSendMessages = isPaid || numMessagesLeft > 0
+        canSendMessages = isPaid
     }
 
     private func resetMessagesIfNeeded() {
