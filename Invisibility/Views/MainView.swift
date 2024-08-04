@@ -5,7 +5,8 @@ struct MainView: View {
     @State private var isDraggingResize = false
     @State private var xOffset: Int = 10000
 
-    @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel.shared
+    @ObservedObject private var mainWindowViewModel: MainWindowViewModel = MainWindowViewModel
+        .shared
 
     @ObservedObject private var userManager: UserManager = UserManager.shared
 
@@ -35,20 +36,16 @@ struct MainView: View {
                 if userManager.isLoginStatusChecked {
                     if userManager.isLoggedIn {
                         MessageScrollView()
-                            .offset(x: isShowingMessages ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                            .opacity(isShowingMessages ? 1 : 0)
+                            .visible(if: isShowingMessages, removeCompletely: true)
 
                         HistoryView()
-                            .offset(x: 0, y: isShowingHistory ? 0 : -1000)
-                            .opacity(isShowingHistory ? 1 : 0)
+                            .visible(if: isShowingHistory, removeCompletely: true)
 
                         MemoryView()
-                            .offset(x: isShowingMemory ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                            .opacity(isShowingMemory ? 1 : 0)
+                            .visible(if: isShowingMemory, removeCompletely: true)
 
                         SettingsView()
-                            .offset(x: isShowingSettings ? 0 : sideSwitched ? 1000 : -1000, y: 0)
-                            .opacity(isShowingSettings ? 1 : 0)
+                            .visible(if: isShowingSettings, removeCompletely: true)
                     } else {
                         LoginCardView()
                     }
