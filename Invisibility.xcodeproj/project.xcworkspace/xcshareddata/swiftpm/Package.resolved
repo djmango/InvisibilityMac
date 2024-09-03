@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PostHog/posthog-ios.git",
       "state" : {
-        "revision" : "49217934452aec8f9ffc4a529b6089a62cf19569",
-        "version" : "3.6.3"
+        "revision" : "a54c52533f9fc624edcaf5ef69ed9983db13b5e8",
+        "version" : "3.8.1"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/rollbar/rollbar-apple",
       "state" : {
-        "revision" : "456e0cdb06805e5317f295891ac034f201fe50c4",
-        "version" : "3.3.1"
+        "revision" : "c89ed08a441a4ac079fac793e9fb9aaf430cff19",
+        "version" : "3.3.2"
       }
     },
     {

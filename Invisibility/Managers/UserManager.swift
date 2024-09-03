@@ -157,6 +157,7 @@ final class UserManager: ObservableObject {
         guard token != nil else {
             return nil
         }
+        logger.debug(token ?? "No token")
         if self.user != nil {
             return self.user
         }

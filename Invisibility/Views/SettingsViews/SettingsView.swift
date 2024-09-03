@@ -311,21 +311,12 @@ struct SettingsView: View {
                 }
 
             HStack(spacing: 0) {
-                Text("Founded by ")
+                Text("Built by ")
                     .font(.headline)
-                Text("Sulaiman Ghori")
+                Text("Sulaiman Khan Ghori")
                     .font(.headline)
                     .onTapGesture {
                         if let url = URL(string: "https://x.com/sulaimanghori") {
-                            NSWorkspace.shared.open(url)
-                        }
-                    }
-                Text(" and ")
-                    .font(.headline)
-                Text("Tye Daniel")
-                    .font(.headline)
-                    .onTapGesture {
-                        if let url = URL(string: "https://x.com/TyeDan") {
                             NSWorkspace.shared.open(url)
                         }
                     }
