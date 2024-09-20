@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/PostHog/posthog-ios.git",
       "state" : {
-        "revision" : "a54c52533f9fc624edcaf5ef69ed9983db13b5e8",
-        "version" : "3.8.1"
+        "revision" : "0e74908ca569d64d768ab7de7891c406035995b5",
+        "version" : "3.12.4"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sanzaru/SimpleToast.git",
       "state" : {
-        "revision" : "8dbc2e7c33cda25c0b2efafd59716cb9820c83eb",
-        "version" : "0.8.1"
+        "revision" : "217c9c38dead686e05896fb3dd652880adedfedf",
+        "version" : "0.9.0"
       }
     },
     {

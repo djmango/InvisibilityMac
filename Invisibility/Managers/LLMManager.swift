@@ -13,26 +13,50 @@ import PostHog
 import SwiftUI
 
 // Alias for ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent(images: images)
-typealias VisionContent = ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam.Content.VisionContent
+typealias VisionContent = ChatQuery.ChatCompletionMessageParam.ChatCompletionUserMessageParam
+    .Content.VisionContent
 
 class LLMModelRepository: ObservableObject {
     static let shared = LLMModelRepository()
-    private let logger = InvisibilityLogger(subsystem: AppConfig.subsystem, category: "LLMModelRepository")
+    private let logger = InvisibilityLogger(
+        subsystem: AppConfig.subsystem, category: "LLMModelRepository"
+    )
 
     @Published public var models: [LLMModel] = []
 
     @AppStorage("dynamicLLMLoad") private var dynamicLLMLoad = false
 
     static let hardcodedModels = [
-        LLMModel(text: "claude-3-5-sonnet-20240620", vision: "claude-3-5-sonnet-20240620", human_name: "Claude-3.5 Sonnet"),
-        LLMModel(text: "fireworks_ai/llama-v3p1-405b-instruct", vision: nil, human_name: "Llama-3.1 405B"),
-        LLMModel(text: "fireworks_ai/llama-v3p1-70b-instruct", vision: nil, human_name: "Llama-3.1 70B"),
-        LLMModel(text: "fireworks_ai/llama-v3p1-8b-instruct", vision: nil, human_name: "Llama-3.1 8B"),
+        LLMModel(
+            text: "claude-3-5-sonnet-20240620", vision: "claude-3-5-sonnet-20240620",
+            human_name: "Claude-3.5 Sonnet"
+        ),
+        LLMModel(text: "gpt-4o-mini", vision: "gpt-4o-mini", human_name: "GPT-4o Mini"),
+        LLMModel(text: "o1-mini", vision: "o1-mini", human_name: "O1 Mini"),
+        LLMModel(text: "o1-preview", vision: "o1-preview", human_name: "O1 Preview"),
+        LLMModel(
+            text: "fireworks_ai/llama-v3p1-405b-instruct", vision: nil, human_name: "Llama-3.1 405B"
+        ),
+        LLMModel(
+            text: "fireworks_ai/llama-v3p1-70b-instruct", vision: nil, human_name: "Llama-3.1 70B"
+        ),
+        LLMModel(
+            text: "fireworks_ai/llama-v3p1-8b-instruct", vision: nil, human_name: "Llama-3.1 8B"
+        ),
         LLMModel(text: "gpt-4o", vision: "gpt-4o", human_name: "GPT-4o"),
         LLMModel(text: "groq/llama3-70b-8192", vision: nil, human_name: "Llama-3 70B"),
-        LLMModel(text: "bedrock/anthropic.claude-3-opus-20240229-v1:0", vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0", human_name: "Claude-3 Opus"),
-        LLMModel(text: "openrouter/google/gemini-pro-1.5", vision: "openrouter/google/gemini-pro-1.5", human_name: "Gemini Pro 1.5"),
-        LLMModel(text: "openrouter/perplexity/llama-3-sonar-large-32k-online", vision: nil, human_name: "Perplexity"),
+        LLMModel(
+            text: "bedrock/anthropic.claude-3-opus-20240229-v1:0",
+            vision: "bedrock/anthropic.claude-3-opus-20240229-v1:0", human_name: "Claude-3 Opus"
+        ),
+        LLMModel(
+            text: "gemini/gemini-1.5-pro-latest", vision: "gemini/gemini-1.5-pro-latest",
+            human_name: "Gemini Pro 1.5"
+        ),
+        LLMModel(
+            text: "perplexity/llama-3.1-sonar-huge-128k-online", vision: nil,
+            human_name: "Perplexity Llama-3.1 Sonar Huge"
+        ),
     ]
 
     private init() {
@@ -117,8 +141,10 @@ final class LLMManager {
     }
 
     func setup() {
-        let host = AppConfig.invisibility_api_base.replacingOccurrences(of: "https://", with: "").replacingOccurrences(of: "http://", with: "")
-        let scheme = if AppConfig.invisibility_api_base.hasPrefix("https") { "https" } else { "http" }
+        let host = AppConfig.invisibility_api_base.replacingOccurrences(of: "https://", with: "")
+            .replacingOccurrences(of: "http://", with: "")
+        let scheme =
+            if AppConfig.invisibility_api_base.hasPrefix("https") { "https" } else { "http" }
         let configuration = OpenAI.Configuration(
             token: token ?? "",
             host: host,
@@ -160,31 +186,43 @@ final class LLMManager {
             }
             if !receivedData {
                 logger.error("No data received from model")
-                PostHogSDK.shared.capture("chat_error", properties: ["error": "No data received from chat", "model": model.human_name])
-                ToastViewModel.shared.showToast(title: "No data received from model. Please try again.")
+                PostHogSDK.shared.capture(
+                    "chat_error",
+                    properties: ["error": "No data received from chat", "model": model.human_name]
+                )
+                ToastViewModel.shared.showToast(
+                    title: "No data received from model. Please try again.")
                 DispatchQueue.main.async {
                     MessageViewModel.shared.isGenerating = false
                 }
             }
         } catch {
             logger.error("Error when chatting: \(error)")
-            PostHogSDK.shared.capture("chat_error", properties: ["error": error.localizedDescription, "model": model.human_name])
-            ToastViewModel.shared.showToast(title: "Error when chatting: \(error.localizedDescription)")
+            PostHogSDK.shared.capture(
+                "chat_error",
+                properties: ["error": error.localizedDescription, "model": model.human_name]
+            )
+            ToastViewModel.shared.showToast(
+                title: "Error when chatting: \(error.localizedDescription)")
             DispatchQueue.main.async {
                 MessageViewModel.shared.isGenerating = false
             }
         }
     }
 
-    func constructChatQuery(messages: [APIMessage], chat: APIChat, regenerate_from_message_id: UUID? = nil, branch_from_message_id: UUID?) async -> ChatQuery {
+    func constructChatQuery(
+        messages: [APIMessage], chat: APIChat, regenerate_from_message_id: UUID? = nil,
+        branch_from_message_id: UUID?
+    ) async -> ChatQuery {
         // If the last message has any images use the vision model, otherwise use the regular model
         let allow_images = model.vision != nil
 
-        let model_id: String = if allow_images {
-            model.vision ?? model.text
-        } else {
-            model.text
-        }
+        let model_id: String =
+            if allow_images {
+                model.vision ?? model.text
+            } else {
+                model.text
+            }
 
         var chat_messages = messages.compactMap { message in
             oaiFromAPIMessage(api_message: message, allow_images: allow_images)
@@ -207,7 +245,9 @@ final class LLMManager {
         var chat_query = ChatQuery(messages: chat_messages, model: model_id)
 
         if let last_message = messages.last {
-            let show_files_to_user: [Bool] = MessageViewModel.shared.imagesFor(message: last_message).map(\.show_to_user)
+            let show_files_to_user: [Bool] = MessageViewModel.shared.imagesFor(
+                message: last_message
+            ).map(\.show_to_user)
 
             chat_query.invisibility = ChatQuery.InvisibilityMetadata(
                 chat_id: chat.id,
@@ -222,7 +262,9 @@ final class LLMManager {
     }
 }
 
-func oaiFromAPIMessage(api_message: APIMessage, allow_images: Bool = false) -> ChatQuery.ChatCompletionMessageParam? {
+func oaiFromAPIMessage(api_message: APIMessage, allow_images: Bool = false) -> ChatQuery
+    .ChatCompletionMessageParam?
+{
     var role: ChatQuery.ChatCompletionMessageParam.Role = .user
     if api_message.role == .assistant {
         role = .assistant
@@ -235,12 +277,19 @@ func oaiFromAPIMessage(api_message: APIMessage, allow_images: Bool = false) -> C
 
     if allow_images, !api_files.isEmpty {
         // Images, multimodal
-        let imageUrls = api_files.compactMap { file -> VisionContent.ChatCompletionContentPartImageParam.ImageURL? in
+        let imageUrls = api_files.compactMap {
+            file -> VisionContent.ChatCompletionContentPartImageParam.ImageURL? in
             guard let url = file.url else { return nil }
-            return VisionContent.ChatCompletionContentPartImageParam.ImageURL(url: url, detail: .auto)
+            return VisionContent.ChatCompletionContentPartImageParam.ImageURL(
+                url: url, detail: .auto
+            )
         }
-        let imageParams = imageUrls.map { VisionContent.ChatCompletionContentPartImageParam(imageUrl: $0) }
-        let visionContent = imageParams.map { VisionContent(chatCompletionContentPartImageParam: $0) }
+        let imageParams = imageUrls.map {
+            VisionContent.ChatCompletionContentPartImageParam(imageUrl: $0)
+        }
+        let visionContent = imageParams.map {
+            VisionContent(chatCompletionContentPartImageParam: $0)
+        }
 
         let textParam = VisionContent.ChatCompletionContentPartTextParam(text: complete_text)
         let textVisionContent = [VisionContent(chatCompletionContentPartTextParam: textParam)]
