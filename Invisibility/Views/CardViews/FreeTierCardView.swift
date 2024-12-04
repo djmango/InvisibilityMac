@@ -15,12 +15,14 @@ struct FreeTierCardView: View {
     @State private var isCopied = false
     @State private var whoIsHovering: String?
     @State private var shareButtonView: NSView?
+    @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
 
     var friendsInvitedText: String {
         if userManager.inviteCount == 0 {
             "No friends invited yet :("
         } else {
-            "\(userManager.inviteCount) friend" + (userManager.inviteCount > 1 ? "s invited!" : " invited!")
+            "\(userManager.inviteCount) friend"
+                + (userManager.inviteCount > 1 ? "s invited!" : " invited!")
         }
     }
 
@@ -29,6 +31,12 @@ struct FreeTierCardView: View {
             VStack {
                 Text("Daily Limit Reached")
                     .font(.system(size: 24, weight: .bold))
+
+                Text(
+                    "\(numMessagesSentToday)/\(userManager.numMessagesAllowed) messages sent today"
+                )
+                .font(.body)
+                .foregroundColor(.gray)
             }
 
             Spacer()
@@ -45,7 +53,9 @@ struct FreeTierCardView: View {
 
                 // Link is invite.i.inc/firstName
                 Button(action: {
-                    if let url = URL(string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")") {
+                    if let url = URL(
+                        string: "https://invite.i.inc/\(userManager.user?.firstName ?? "")")
+                    {
                         NSWorkspace.shared.open(url)
                     }
                 }) {
@@ -176,7 +186,9 @@ struct FreeTierCardView: View {
         // Copy the invite link to the clipboard
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
-        pasteboard.setString("https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")", forType: .string)
+        pasteboard.setString(
+            "https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")",
+            forType: .string)
         isCopied = true
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
@@ -185,7 +197,9 @@ struct FreeTierCardView: View {
     }
 
     func onShareButtonClicked(sender: NSView) {
-        let picker = NSSharingServicePicker(items: ["https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"])
+        let picker = NSSharingServicePicker(items: [
+            "https://invite.i.inc/\(userManager.user?.firstName?.lowercased() ?? "")"
+        ])
         picker.show(relativeTo: sender.bounds, of: sender, preferredEdge: .minY)
     }
 }

@@ -55,9 +55,9 @@ final class UserManager: ObservableObject {
         "https://invite.i.inc/\(user?.firstName?.lowercased() ?? "")"
     }
 
-    /// per day free 10 messages + 20 per invite also per day
+    /// per day free 5 messages + 5 per invite also per day
     var numMessagesAllowed: Int {
-        10 + (20 * inviteCount)
+        5 + (5 * inviteCount)
     }
 
     var numMessagesLeft: Int {
@@ -72,8 +72,8 @@ final class UserManager: ObservableObject {
     }
 
     private func updateCanSendMessages() {
-        // canSendMessages = isPaid || numMessagesLeft > 0
-        canSendMessages = isPaid
+        canSendMessages = isPaid || numMessagesLeft > 0
+        // canSendMessages = isPaid
     }
 
     private func resetMessagesIfNeeded() {
@@ -109,12 +109,17 @@ final class UserManager: ObservableObject {
                 // Identify for logs
                 PostHogSDK.shared.identify(
                     user.email,
-                    userProperties: ["name": "\(user.firstName ?? "") \(user.lastName ?? "")", "email": user.email, "id": user.id]
+                    userProperties: [
+                        "name": "\(user.firstName ?? "") \(user.lastName ?? "")",
+                        "email": user.email, "id": user.id,
+                    ]
                 )
 
                 // And crash reporting
                 let config = RollbarConfig.mutableConfig(withAccessToken: AppConfig.rollbar_key)
-                config.setPersonId(user.id, username: "\(user.firstName ?? "") \(user.lastName ?? "")", email: user.email)
+                config.setPersonId(
+                    user.id, username: "\(user.firstName ?? "") \(user.lastName ?? "")",
+                    email: user.email)
                 Rollbar.initWithConfiguration(config)
             }
             if await checkPaymentStatus() {
@@ -232,7 +237,8 @@ final class UserManager: ObservableObject {
             return
         }
 
-        let url = AppConfig.invisibility_api_base + "/pay/list_invites?code=" + firstName.lowercased()
+        let url =
+            AppConfig.invisibility_api_base + "/pay/list_invites?code=" + firstName.lowercased()
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .formatted(DateFormatter.extendedISO8601)
@@ -265,9 +271,13 @@ final class UserManager: ObservableObject {
             return
         }
 
-        defer { PostHogSDK.shared.capture("pay", properties: ["num_messages_left": numMessagesLeft]) }
+        defer {
+            PostHogSDK.shared.capture("pay", properties: ["num_messages_left": numMessagesLeft])
+        }
 
-        if let url = URL(string: AppConfig.invisibility_api_base + "/pay/checkout?email=\(user.email)") {
+        if let url = URL(
+            string: AppConfig.invisibility_api_base + "/pay/checkout?email=\(user.email)")
+        {
             NSWorkspace.shared.open(url)
             Task { await WindowManager.shared.hideWindow() }
         }
@@ -320,7 +330,9 @@ final class UserManager: ObservableObject {
                                 }
                             }
                         } else {
-                            self.logger.error("Error refreshing token, status code: \(response.response?.statusCode ?? -1)")
+                            self.logger.error(
+                                "Error refreshing token, status code: \(response.response?.statusCode ?? -1)"
+                            )
                             continuation.resume(returning: false)
                         }
                     case .failure:
@@ -333,7 +345,9 @@ final class UserManager: ObservableObject {
 
     @MainActor
     func logout() {
-        defer { PostHogSDK.shared.capture("logout", properties: ["num_messages_left": numMessagesLeft]) }
+        defer {
+            PostHogSDK.shared.capture("logout", properties: ["num_messages_left": numMessagesLeft])
+        }
         self.isLoggedIn = false
         self.token = nil
         self.user = nil
