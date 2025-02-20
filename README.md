@@ -1,9 +1,5 @@
 # Invisibility for Mac
 
-<p align="center">
-  <img src="assets/icon.png" width="128" height="128" alt="Invisibility Logo">
-</p>
-
 Invisibility is a powerful AI assistant that seamlessly integrates with your Mac workflow. It provides instant access to AI-powered chat, image analysis, and screen recording capabilities, all accessible through intuitive keyboard shortcuts.
 
 ## 🌟 Key Features
