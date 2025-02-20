@@ -53,4 +53,13 @@ final class MainWindowViewModel: ObservableObject {
 
         return true
     }
+
+    @MainActor
+    public func toggleHistory() {
+        if whoIsVisible == .history {
+            _ = changeView(to: .chat)
+        } else {
+            _ = changeView(to: .history)
+        }
+    }
 }
