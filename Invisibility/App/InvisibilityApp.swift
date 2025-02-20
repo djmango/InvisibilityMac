@@ -17,6 +17,5 @@ struct InvisibilityApp: App {
             MenubarView()
         }
         .menuBarExtraStyle(.menu)
-        .commands { AppMenuCommands() }
     }
 }

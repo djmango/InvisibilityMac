@@ -24,9 +24,14 @@ final class MessageViewModel: ObservableObject {
     @Published public var windowHeight: CGFloat = 0
     @Published public var isGenerating: Bool = false
     @Published public var shouldScrollToBottom: Bool = false
+    @Published private(set) var isLoading: Bool = false
+
+    private let messagePageSize = 50
+    private var currentPage = 1
+    private let backgroundQueue = DispatchQueue(label: "com.invisibility.messageProcessing", qos: .userInitiated)
 
     public var api_messages_in_chat: [APIMessage] {
-        api_messages.filter { $0.chat_id == ChatViewModel.shared.chat?.id }.filter { $0.regenerated == false }
+        api_messages.filter { $0.chat_id == ChatViewModel.shared.chat?.id && $0.regenerated == false }
     }
 
     @AppStorage("numMessagesSentToday") public var numMessagesSentToday: Int = 0
@@ -48,29 +53,57 @@ final class MessageViewModel: ObservableObject {
             return
         }
 
+        DispatchQueue.main.async {
+            self.isLoading = true
+        }
+        
+        defer {
+            DispatchQueue.main.async {
+                self.isLoading = false
+            }
+        }
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         do {
             let (data, _) = try await URLSession.shared.data(for: request)
-
-            // logger.debug(String(data: data, encoding: .utf8) ?? "No data")
             let decoder = iso8601Decoder()
-
-            let fetched = try decoder.decode(APISyncResponse.self, from: data)
-
-            DispatchQueue.main.async {
-                self.api_chats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
-                self.api_messages = fetched.messages.filter { $0.regenerated == false }.sorted(by: { $0.created_at < $1.created_at })
-                self.api_files = fetched.files.sorted(by: { $0.created_at < $1.created_at })
-                self.api_memories = fetched.memories.sorted(by: { $0.created_at < $1.created_at })
-                self.logger.debug("Fetched messages: \(self.api_messages.count)")
-                ChatViewModel.shared.switchChat(self.api_chats.last)
+            
+            // Process data in background
+            try await withCheckedThrowingContinuation { continuation in
+                backgroundQueue.async {
+                    do {
+                        let fetched = try decoder.decode(APISyncResponse.self, from: data)
+                        
+                        // Process messages in chunks
+                        let sortedMessages = fetched.messages
+                            .filter { $0.regenerated == false }
+                            .sorted(by: { $0.created_at < $1.created_at })
+                        
+                        let sortedChats = fetched.chats.sorted(by: { $0.created_at < $1.created_at })
+                        let sortedFiles = fetched.files.sorted(by: { $0.created_at < $1.created_at })
+                        let sortedMemories = fetched.memories.sorted(by: { $0.created_at < $1.created_at })
+                        
+                        DispatchQueue.main.async {
+                            self.api_chats = sortedChats
+                            self.api_messages = sortedMessages
+                            self.api_files = sortedFiles
+                            self.api_memories = sortedMemories
+                            self.logger.debug("Fetched messages: \(sortedMessages.count)")
+                            ChatViewModel.shared.switchChat(sortedChats.last)
+                            continuation.resume()
+                        }
+                    } catch {
+                        DispatchQueue.main.async {
+                            self.logger.error("Failed to process API response: \(error)")
+                            continuation.resume(throwing: error)
+                        }
+                    }
+                }
             }
-        }
-
-        catch {
+        } catch {
             logger.error("Failed to fetch API: \(error)")
         }
     }

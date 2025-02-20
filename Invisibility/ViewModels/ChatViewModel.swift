@@ -66,6 +66,23 @@ final class ChatViewModel: ObservableObject {
     }
 
     @MainActor
+    func clearCurrentChat() {
+        defer { PostHogSDK.shared.capture("clear_chat") }
+        guard let currentChat = chat else {
+            logger.warning("No chat to clear")
+            return
+        }
+
+        // Remove all messages for the current chat
+        withAnimation(AppConfig.snappy) {
+            MessageViewModel.shared.api_messages.removeAll { $0.chat_id == currentChat.id }
+        }
+
+        // Create a new chat and switch to it
+        _ = newChat()
+    }
+
+    @MainActor
     func deleteChat(_ chat: APIChat) {
         defer { PostHogSDK.shared.capture("delete_chat") }
         withAnimation {
